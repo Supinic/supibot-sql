@@ -220,13 +220,10 @@ VALUES
 				return { reply: \"No such suggestion exists!\" };
 			}
 
-			if (row.values.User_Alias !== context.user.ID) {
-				return { reply: \"That suggestion was not yours!\" };
-			}
-
-			const {ID, Date: date, Text: text, Status: status} = row.values;
+			const {ID, Date: date, Text: text, Status: status, User_Alias: user} = row.values;
+			const {Name: username} = await sb.User.get(user, true);
 			return {
-				reply: `Suggestion ID ${ID}, status ${status} (posted ${sb.Utils.timeDelta(date)}): ${text}`
+				reply: `Suggestion ID ${ID} from ${username}, status ${status} (posted ${sb.Utils.timeDelta(date)}): ${text}`
 			};
 		}
 
@@ -441,13 +438,10 @@ ON DUPLICATE KEY UPDATE
 				return { reply: \"No such suggestion exists!\" };
 			}
 
-			if (row.values.User_Alias !== context.user.ID) {
-				return { reply: \"That suggestion was not yours!\" };
-			}
-
-			const {ID, Date: date, Text: text, Status: status} = row.values;
+			const {ID, Date: date, Text: text, Status: status, User_Alias: user} = row.values;
+			const {Name: username} = await sb.User.get(user, true);
 			return {
-				reply: `Suggestion ID ${ID}, status ${status} (posted ${sb.Utils.timeDelta(date)}): ${text}`
+				reply: `Suggestion ID ${ID} from ${username}, status ${status} (posted ${sb.Utils.timeDelta(date)}): ${text}`
 			};
 		}
 
