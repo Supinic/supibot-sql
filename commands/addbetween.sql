@@ -58,7 +58,10 @@ VALUES
 
 	result.push(word);
 	return {
-		reply: result.join(\" \")
+		reply: result.join(\" \"),
+		meta: {
+			skipCooldown: Boolean(context.append.pipe) // Only skip cooldown if used within a pipe.
+		}
 	};
 })',
 		NULL,
@@ -85,6 +88,9 @@ ON DUPLICATE KEY UPDATE
 
 	result.push(word);
 	return {
-		reply: result.join(\" \")
+		reply: result.join(\" \"),
+		meta: {
+			skipCooldown: Boolean(context.append.pipe) // Only skip cooldown if used within a pipe.
+		}
 	};
 })'
