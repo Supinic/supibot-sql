@@ -71,7 +71,14 @@ VALUES
 			return { reply: \"Command \" + cmd + \" cannot be used in a pipe!\" };
 		}
 
-		const result = await sb.Command.checkAndExecute(cmd, cmdArgs, fakeChannel, context.user, {platform: context.platform, pipe: true});
+		const result = await sb.Command.checkAndExecute(
+			cmd,
+			cmdArgs,
+			fakeChannel,
+			context.user, 
+			{...context.append, platform: context.platform, pipe: true}
+		);
+
 		console.debug(\"Pipe\", result);
 		
 		if (!result) { // Banphrase result: Do not reply
@@ -141,7 +148,14 @@ ON DUPLICATE KEY UPDATE
 			return { reply: \"Command \" + cmd + \" cannot be used in a pipe!\" };
 		}
 
-		const result = await sb.Command.checkAndExecute(cmd, cmdArgs, fakeChannel, context.user, {platform: context.platform, pipe: true});
+		const result = await sb.Command.checkAndExecute(
+			cmd,
+			cmdArgs,
+			fakeChannel,
+			context.user, 
+			{...context.append, platform: context.platform, pipe: true}
+		);
+
 		console.debug(\"Pipe\", result);
 		
 		if (!result) { // Banphrase result: Do not reply
