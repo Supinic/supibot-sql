@@ -39,7 +39,7 @@ VALUES
 		1,
 		1,
 		0,
-		'(async function russianRoulette (context) {
+		'(async function russianRoulette (context, timeoutLength) {
 	if (context.channel === null || context.channel.Mode !== \"Moderator\") {
 		return { reply: \"You cannot play the roulette in here!\" };
 	}
@@ -62,9 +62,21 @@ VALUES
 		return { reply: \"Admins can\'t be timed out, cheaters! monkaS\" };
 	}
 
+	timeoutLength = (timeoutLength) ? Number(timeoutLength) : 1;
+	if (timeoutLength < 1 || !Number.isFinite(timeoutLength) || Math.round(timeoutLength) !== timeoutLength) {
+		return { reply: \"Invalid timeout length provided!\" };
+	}
+	else if (timeoutLength > 600) {
+		return { reply: \"Maximum timeout length exceeded!\" };
+	}
+
 	const result = sb.Utils.random(1, 6);
 	if (result === 1) {
-		sb.Master.clients.twitch.client.privmsg(context.channel.Name, \"/timeout \" + context.user.Name + \" 1 Lost the roulette\");
+		sb.Master.clients.twitch.client.privmsg(
+			context.channel.Name, 
+			`/timeout ${context.user.Name} ${timeoutLength} Lost the roulette`
+		);
+
 		return { reply: \"Bang! It\'s over.\" };
 	}
 	else {
@@ -76,7 +88,7 @@ VALUES
 	)
 
 ON DUPLICATE KEY UPDATE
-	Code = '(async function russianRoulette (context) {
+	Code = '(async function russianRoulette (context, timeoutLength) {
 	if (context.channel === null || context.channel.Mode !== \"Moderator\") {
 		return { reply: \"You cannot play the roulette in here!\" };
 	}
@@ -99,9 +111,21 @@ ON DUPLICATE KEY UPDATE
 		return { reply: \"Admins can\'t be timed out, cheaters! monkaS\" };
 	}
 
+	timeoutLength = (timeoutLength) ? Number(timeoutLength) : 1;
+	if (timeoutLength < 1 || !Number.isFinite(timeoutLength) || Math.round(timeoutLength) !== timeoutLength) {
+		return { reply: \"Invalid timeout length provided!\" };
+	}
+	else if (timeoutLength > 600) {
+		return { reply: \"Maximum timeout length exceeded!\" };
+	}
+
 	const result = sb.Utils.random(1, 6);
 	if (result === 1) {
-		sb.Master.clients.twitch.client.privmsg(context.channel.Name, \"/timeout \" + context.user.Name + \" 1 Lost the roulette\");
+		sb.Master.clients.twitch.client.privmsg(
+			context.channel.Name, 
+			`/timeout ${context.user.Name} ${timeoutLength} Lost the roulette`
+		);
+
 		return { reply: \"Bang! It\'s over.\" };
 	}
 	else {
