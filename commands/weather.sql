@@ -42,7 +42,7 @@ VALUES
 		'(async function weather (context, ...args) {
 	let skipLocation = false;
 
-	if (!args[0]) {
+	if (args.length === 0) {
 		if (context.user.Data.defaultWeather) {
 			skipLocation = context.user.Data.defaultWeather.private;
 			args = context.user.Data.defaultWeather.location;
@@ -57,7 +57,8 @@ VALUES
 		const userData = await sb.User.get(args[0]);
 		if (userData && userData.Data.defaultWeather) {
 			skipLocation = userData.Data.defaultWeather.private;
-			args = userData.Data.defaultWeather.location;
+			args = args.slice(1);
+			args.unshift(...context.user.Data.defaultWeather.location);
 		}
 	}
 	else if (args[0].toLowerCase() === \"supibot\") {
@@ -80,6 +81,13 @@ VALUES
 		if (args.length === 0) {
 			return {
 				reply: \"No default location provided!\"
+			};
+		}
+
+		const check = (await sb.Command.get(\"weather\").execute(context, ...args)).reply;
+		if (!check || !check.includes(\"(now)\")) {
+			return {
+				reply: \"Your location must be valid, and contain no extra arguments!\"
 			};
 		}
 
@@ -109,6 +117,8 @@ VALUES
 		\"tornado\": \"🌪️\",
 		\"wind\": \"💨\"
 	};
+
+console.log(args);
 
 	let number = null;
 	let type = \"currently\";
@@ -233,7 +243,7 @@ ON DUPLICATE KEY UPDATE
 	Code = '(async function weather (context, ...args) {
 	let skipLocation = false;
 
-	if (!args[0]) {
+	if (args.length === 0) {
 		if (context.user.Data.defaultWeather) {
 			skipLocation = context.user.Data.defaultWeather.private;
 			args = context.user.Data.defaultWeather.location;
@@ -248,7 +258,8 @@ ON DUPLICATE KEY UPDATE
 		const userData = await sb.User.get(args[0]);
 		if (userData && userData.Data.defaultWeather) {
 			skipLocation = userData.Data.defaultWeather.private;
-			args = userData.Data.defaultWeather.location;
+			args = args.slice(1);
+			args.unshift(...context.user.Data.defaultWeather.location);
 		}
 	}
 	else if (args[0].toLowerCase() === \"supibot\") {
@@ -271,6 +282,13 @@ ON DUPLICATE KEY UPDATE
 		if (args.length === 0) {
 			return {
 				reply: \"No default location provided!\"
+			};
+		}
+
+		const check = (await sb.Command.get(\"weather\").execute(context, ...args)).reply;
+		if (!check || !check.includes(\"(now)\")) {
+			return {
+				reply: \"Your location must be valid, and contain no extra arguments!\"
 			};
 		}
 
@@ -300,6 +318,8 @@ ON DUPLICATE KEY UPDATE
 		\"tornado\": \"🌪️\",
 		\"wind\": \"💨\"
 	};
+
+console.log(args);
 
 	let number = null;
 	let type = \"currently\";
