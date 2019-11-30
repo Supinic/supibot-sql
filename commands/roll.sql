@@ -51,9 +51,13 @@ VALUES
 			};
 		}
 
-		return {
-			reply: \"Your specific roll (no dice) is \" + sb.Utils.random(first, second)
-		};
+		const number = sb.Utils.random(first, second);
+		if (context.append.pipe) {
+			return { reply: String(number ) };
+		}
+		else {
+			return { reply: \"Your specific roll (no dice) is \" + number };
+		}
 	}
 	else if (first) {
 		format = first.split(\"d\").map(Number);
@@ -87,7 +91,6 @@ VALUES
 
 	let sum = 0;
 	let [times, sides] = format;
-
 	while (times--) {
 		sum += sb.Utils.random(1, sides);
 	}
@@ -95,8 +98,12 @@ VALUES
 	if (sum === Infinity) {
 		return { reply: \"WAYTOODANK\" };
 	}
-
-	return { reply: \"Your roll is \" + sum + \".\" };
+	else if (context.append.pipe) {
+		return { reply: String(sum) };
+	}
+	else {
+		return { reply: \"Your roll is \" + sum + \".\" };
+	}
 })',
 		NULL,
 		NULL
@@ -115,9 +122,13 @@ ON DUPLICATE KEY UPDATE
 			};
 		}
 
-		return {
-			reply: \"Your specific roll (no dice) is \" + sb.Utils.random(first, second)
-		};
+		const number = sb.Utils.random(first, second);
+		if (context.append.pipe) {
+			return { reply: String(number ) };
+		}
+		else {
+			return { reply: \"Your specific roll (no dice) is \" + number };
+		}
 	}
 	else if (first) {
 		format = first.split(\"d\").map(Number);
@@ -151,7 +162,6 @@ ON DUPLICATE KEY UPDATE
 
 	let sum = 0;
 	let [times, sides] = format;
-
 	while (times--) {
 		sum += sb.Utils.random(1, sides);
 	}
@@ -159,6 +169,10 @@ ON DUPLICATE KEY UPDATE
 	if (sum === Infinity) {
 		return { reply: \"WAYTOODANK\" };
 	}
-
-	return { reply: \"Your roll is \" + sum + \".\" };
+	else if (context.append.pipe) {
+		return { reply: String(sum) };
+	}
+	else {
+		return { reply: \"Your roll is \" + sum + \".\" };
+	}
 })'
