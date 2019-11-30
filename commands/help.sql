@@ -39,13 +39,13 @@ VALUES
 		1,
 		1,
 		0,
-		'async (extra, commandString) => {
+		'(async function help (context, commandString) {
 	const prefix = sb.Config.get(\"COMMAND_PREFIX\");
 
 	// No specified command - print all available commands in given channel for given user
-	if (!commandString || extra.invocation === \"commands\") {
-		return { 
-			reply: (extra.channel.Links_Allowed) 
+	if (!commandString || context.invocation === \"commands\") {
+		return {
+			reply: (!context.channel || context.channel.Links_Allowed)
 				? \"Commands available here: https://supinic.com/bot/command/list\"
 				: \"Commands available here: supinic dot com/bot/command/list\"
 		};
@@ -57,20 +57,14 @@ VALUES
 			return { reply: \"I can\'t directly help you, but maybe if you use one of my commands, you\'ll feel better? :)\" };
 		}
 
-		const command = sb.Command.data.find(cmd => cmd.Name.toLowerCase() === cmdStr || cmd.Aliases.includes(cmdStr));	
+		const command = sb.Command.data.find(cmd => cmd.Name.toLowerCase() === cmdStr || cmd.Aliases.includes(cmdStr));
 		if (!command) {
 			return { reply: \"That command does not exist!\" };
 		}
 
-		const isFiltered = sb.Filter.check({
-			channelID: extra.channel.ID,
-			commandID: command.ID,
-			userID: extra.user.ID
-		});
-		const filteredResponse = (isFiltered)
-			? \"But you don\'t have access to it here 4Head\"
+		const filteredResponse = (command.Whitelisted)
+			? \"(whitelisted)\"
 			: \"\";
-
 		const aliases = (command.Aliases.length === 0) ? \"\" : (\" (\" + command.Aliases.map(i => prefix + i).join(\", \") + \")\");
 		const reply = [
 			prefix + command.Name + aliases + \":\",
@@ -82,21 +76,20 @@ VALUES
 
 		return { reply: reply.join(\" \") };
 	}
-
-}',
+})',
 		'$help => Posts the link to all commands
 $help <command> => Short summary of the command',
 		NULL
 	)
 
 ON DUPLICATE KEY UPDATE
-	Code = 'async (extra, commandString) => {
+	Code = '(async function help (context, commandString) {
 	const prefix = sb.Config.get(\"COMMAND_PREFIX\");
 
 	// No specified command - print all available commands in given channel for given user
-	if (!commandString || extra.invocation === \"commands\") {
-		return { 
-			reply: (extra.channel.Links_Allowed) 
+	if (!commandString || context.invocation === \"commands\") {
+		return {
+			reply: (!context.channel || context.channel.Links_Allowed)
 				? \"Commands available here: https://supinic.com/bot/command/list\"
 				: \"Commands available here: supinic dot com/bot/command/list\"
 		};
@@ -108,20 +101,14 @@ ON DUPLICATE KEY UPDATE
 			return { reply: \"I can\'t directly help you, but maybe if you use one of my commands, you\'ll feel better? :)\" };
 		}
 
-		const command = sb.Command.data.find(cmd => cmd.Name.toLowerCase() === cmdStr || cmd.Aliases.includes(cmdStr));	
+		const command = sb.Command.data.find(cmd => cmd.Name.toLowerCase() === cmdStr || cmd.Aliases.includes(cmdStr));
 		if (!command) {
 			return { reply: \"That command does not exist!\" };
 		}
 
-		const isFiltered = sb.Filter.check({
-			channelID: extra.channel.ID,
-			commandID: command.ID,
-			userID: extra.user.ID
-		});
-		const filteredResponse = (isFiltered)
-			? \"But you don\'t have access to it here 4Head\"
+		const filteredResponse = (command.Whitelisted)
+			? \"(whitelisted)\"
 			: \"\";
-
 		const aliases = (command.Aliases.length === 0) ? \"\" : (\" (\" + command.Aliases.map(i => prefix + i).join(\", \") + \")\");
 		const reply = [
 			prefix + command.Name + aliases + \":\",
@@ -133,5 +120,4 @@ ON DUPLICATE KEY UPDATE
 
 		return { reply: reply.join(\" \") };
 	}
-
-}'
+})'
