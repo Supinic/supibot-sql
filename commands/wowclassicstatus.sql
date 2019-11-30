@@ -1,0 +1,80 @@
+INSERT INTO
+	`chat_data`.`Command`
+	(
+		ID,
+		Name,
+		Aliases,
+		Description,
+		Cooldown,
+		Rollbackable,
+		System,
+		Skip_Banphrases,
+		Whitelisted,
+		Whitelist_Response,
+		Read_Only,
+		Opt_Outable,
+		Blockable,
+		Ping,
+		Pipeable,
+		Archived,
+		Code,
+		Examples,
+		Dynamic_Description
+	)
+VALUES
+	(
+		87,
+		'wowclassicstatus',
+		'[\"wcs\"]',
+		'Sets your presumed WoW Classic status - whether or not you\'ll play, and how hard you want to go.',
+		5000,
+		0,
+		0,
+		1,
+		0,
+		NULL,
+		0,
+		0,
+		0,
+		1,
+		1,
+		1,
+		'async (extra, ...args) => {
+	const msg = args.join(\" \");
+	if (!msg) {
+		return { reply: \"Check others\' provided status here: supinic.com/wcs\" };
+	}
+
+	const escaped = sb.Query.escapeString(msg);
+	await sb.Query.raw([
+		\"INSERT INTO data.WoW_Classic\",
+		\"(User_Alias, Status)\",
+		\"VALUES\",
+		`(${extra.user.ID}, \"${escaped}\")`,
+		`ON DUPLICATE KEY UPDATE Status = \"${escaped}\"` 
+	].join(\" \"));
+
+	return { reply: \"Done.\" };
+}',
+		NULL,
+		NULL
+	)
+
+ON DUPLICATE KEY UPDATE
+	Code = 'async (extra, ...args) => {
+	const msg = args.join(\" \");
+	if (!msg) {
+		return { reply: \"Check others\' provided status here: supinic.com/wcs\" };
+	}
+
+	const escaped = sb.Query.escapeString(msg);
+	await sb.Query.raw([
+		\"INSERT INTO data.WoW_Classic\",
+		\"(User_Alias, Status)\",
+		\"VALUES\",
+		`(${extra.user.ID}, \"${escaped}\")`,
+		`ON DUPLICATE KEY UPDATE Status = \"${escaped}\"` 
+	].join(\" \"));
+
+	return { reply: \"Done.\" };
+}'
