@@ -58,7 +58,7 @@ VALUES
 		if (userData && userData.Data.defaultWeather) {
 			skipLocation = userData.Data.defaultWeather.private;
 			args = args.slice(1);
-			args.unshift(...context.user.Data.defaultWeather.location);
+			args.unshift(...userData.Data.defaultWeather.location);
 		}
 	}
 	else if (args[0].toLowerCase() === \"supibot\") {
@@ -259,7 +259,7 @@ ON DUPLICATE KEY UPDATE
 		if (userData && userData.Data.defaultWeather) {
 			skipLocation = userData.Data.defaultWeather.private;
 			args = args.slice(1);
-			args.unshift(...context.user.Data.defaultWeather.location);
+			args.unshift(...userData.Data.defaultWeather.location);
 		}
 	}
 	else if (args[0].toLowerCase() === \"supibot\") {
