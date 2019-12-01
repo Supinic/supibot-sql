@@ -27,7 +27,7 @@ VALUES
 		'translate',
 		NULL,
 		'Implicitly translates from auto-recognized language to English. Supports parameters \'from\' and \'to\'. Example: from:german to:french Guten Tag\",',
-		8000,
+		15000,
 		0,
 		0,
 		0,
@@ -90,11 +90,13 @@ VALUES
 		.set(\"q\", args.join(\" \"));
 
 	let response = null;
-	try {
-		response = JSON.parse(await sb.Utils.request(url + params.toString()));
+	let raw = null;
+	try {	
+		raw = await sb.Utils.request(url + params.toString());
+		response = JSON.parse(raw);
 	}
 	catch (e) {
-		console.warn(e);
+		console.warn(raw, response, e);
 		return { reply: e.statusCode + \" \" + e.name };
 	}
 
@@ -169,11 +171,13 @@ ON DUPLICATE KEY UPDATE
 		.set(\"q\", args.join(\" \"));
 
 	let response = null;
-	try {
-		response = JSON.parse(await sb.Utils.request(url + params.toString()));
+	let raw = null;
+	try {	
+		raw = await sb.Utils.request(url + params.toString());
+		response = JSON.parse(raw);
 	}
 	catch (e) {
-		console.warn(e);
+		console.warn(raw, response, e);
 		return { reply: e.statusCode + \" \" + e.name };
 	}
 
