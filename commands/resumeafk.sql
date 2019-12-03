@@ -40,6 +40,12 @@ VALUES
 		1,
 		0,
 		'(async function resumeAFK (context) {
+	if (context.privateMessage) {
+		return {
+			reply: \"Resuming your AFK status is only permitted outside of private messages!\"
+		};
+	}
+
 	const lastAFK = (await sb.Query.getRecordset(rs => rs
 		.select(\"ID\", \"Text\", \"Started\", \"Ended\", \"Status\")
 		.from(\"chat_data\", \"AFK\")
@@ -100,6 +106,12 @@ VALUES
 
 ON DUPLICATE KEY UPDATE
 	Code = '(async function resumeAFK (context) {
+	if (context.privateMessage) {
+		return {
+			reply: \"Resuming your AFK status is only permitted outside of private messages!\"
+		};
+	}
+
 	const lastAFK = (await sb.Query.getRecordset(rs => rs
 		.select(\"ID\", \"Text\", \"Started\", \"Ended\", \"Status\")
 		.from(\"chat_data\", \"AFK\")
