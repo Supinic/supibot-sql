@@ -43,7 +43,7 @@ VALUES
 	if (context.channel?.Platform === \"Discord\" && user && user.includes(\"@\")) {
 		user = await sb.Utils.getDiscordUserDataFromMentions(user, context.append) || context.user;
 	}
-	
+
 	if (user === \"total\" || context.invocation === \"tcc\") {
 		const cookies = await sb.Query.getRecordset(rs => rs
 			.select(\"SUM(Cookies_Total) AS Total\", \"SUM(Cookie_Gifts_Sent) AS Gifts\")
@@ -51,7 +51,7 @@ VALUES
 			.single()
 		);
 
-		return { 
+		return {
 			reply: cookies.Total + \" cookies have been eaten so far, out of which \" + cookies.Gifts + \" were gifted :)\"
 		};
 	}
@@ -59,8 +59,8 @@ VALUES
 		return {
 			reply: \"Check the cookie statistics here: https://supinic.com/bot/cookie/list\"
 		};
-	}	
-	
+	}
+
 	const targetUser = await sb.User.get(user || context.user, true);
 	if (!targetUser) {
 		return { reply: \"Target user does not exist in the database!\" };
@@ -86,19 +86,37 @@ VALUES
 		// Daily = amount of eaten daily cookies
 		// Received = amount of received cookies, independent of Daily
 		// Sent = amount of sent cookies, which is subtracted from Daily
-		 
+
 		const total = cookies.Daily + cookies.Received - cookies.Sent + cookies.Today;
-		const giftedString = (cookies.Sent === 0) 
-			? `${who} never given out a single cookie 😮 Selfish...`
-			: `${who} selflessly gifted away ${cookies.Sent} cookie(s) to other people 🙂`;
-	
+		const giftedString = (cookies.Sent === 0)
+			? `${who} never given out a single cookie`
+			: `${who} gifted away ${cookies.Sent} cookie(s)`;
+
+		let reaction = \"\";
+		const percentage = sb.Utils.round((cookies.Sent / total) * 100, 0);
+		if (percentage <= 0) {
+			reaction = \"😧 what a scrooge 😒\";
+			if (cookies.Received > 100) {
+				reaction += \" and a glutton 😠🍔\";
+			}
+		}
+		else if (percentage < 25) {
+			reaction = \"🙂 a fair person 👍\";
+		}
+		else if (percentage < 75) {
+			reaction = \"😮 a great samaritan 😃👌\"
+		}
+		else {
+			reaction = \"😳 an absolutely selfless saint 😇\";
+		}
+
 		let voidString = \"\";
 		if (total < cookies.Received) {
 			voidString = ` (the difference of ${cookies.Received - total} has been lost to the Void)`;
 		}
 
 		return {
-	 		reply: `${who} eaten ${total} cookies so far. Out of those, ${cookies.Received} were gifted to ${target}${voidString}. ${giftedString}`
+			reply: `${who} eaten ${total} cookies so far. Out of those, ${cookies.Received} were gifted to ${target}${voidString}. ${giftedString} ${reaction}`
 		};
 	}
 })',
@@ -122,7 +140,7 @@ ON DUPLICATE KEY UPDATE
 	if (context.channel?.Platform === \"Discord\" && user && user.includes(\"@\")) {
 		user = await sb.Utils.getDiscordUserDataFromMentions(user, context.append) || context.user;
 	}
-	
+
 	if (user === \"total\" || context.invocation === \"tcc\") {
 		const cookies = await sb.Query.getRecordset(rs => rs
 			.select(\"SUM(Cookies_Total) AS Total\", \"SUM(Cookie_Gifts_Sent) AS Gifts\")
@@ -130,7 +148,7 @@ ON DUPLICATE KEY UPDATE
 			.single()
 		);
 
-		return { 
+		return {
 			reply: cookies.Total + \" cookies have been eaten so far, out of which \" + cookies.Gifts + \" were gifted :)\"
 		};
 	}
@@ -138,8 +156,8 @@ ON DUPLICATE KEY UPDATE
 		return {
 			reply: \"Check the cookie statistics here: https://supinic.com/bot/cookie/list\"
 		};
-	}	
-	
+	}
+
 	const targetUser = await sb.User.get(user || context.user, true);
 	if (!targetUser) {
 		return { reply: \"Target user does not exist in the database!\" };
@@ -165,19 +183,37 @@ ON DUPLICATE KEY UPDATE
 		// Daily = amount of eaten daily cookies
 		// Received = amount of received cookies, independent of Daily
 		// Sent = amount of sent cookies, which is subtracted from Daily
-		 
+
 		const total = cookies.Daily + cookies.Received - cookies.Sent + cookies.Today;
-		const giftedString = (cookies.Sent === 0) 
-			? `${who} never given out a single cookie 😮 Selfish...`
-			: `${who} selflessly gifted away ${cookies.Sent} cookie(s) to other people 🙂`;
-	
+		const giftedString = (cookies.Sent === 0)
+			? `${who} never given out a single cookie`
+			: `${who} gifted away ${cookies.Sent} cookie(s)`;
+
+		let reaction = \"\";
+		const percentage = sb.Utils.round((cookies.Sent / total) * 100, 0);
+		if (percentage <= 0) {
+			reaction = \"😧 what a scrooge 😒\";
+			if (cookies.Received > 100) {
+				reaction += \" and a glutton 😠🍔\";
+			}
+		}
+		else if (percentage < 25) {
+			reaction = \"🙂 a fair person 👍\";
+		}
+		else if (percentage < 75) {
+			reaction = \"😮 a great samaritan 😃👌\"
+		}
+		else {
+			reaction = \"😳 an absolutely selfless saint 😇\";
+		}
+
 		let voidString = \"\";
 		if (total < cookies.Received) {
 			voidString = ` (the difference of ${cookies.Received - total} has been lost to the Void)`;
 		}
 
 		return {
-	 		reply: `${who} eaten ${total} cookies so far. Out of those, ${cookies.Received} were gifted to ${target}${voidString}. ${giftedString}`
+			reply: `${who} eaten ${total} cookies so far. Out of those, ${cookies.Received} were gifted to ${target}${voidString}. ${giftedString} ${reaction}`
 		};
 	}
 })'
