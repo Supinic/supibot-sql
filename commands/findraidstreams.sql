@@ -39,10 +39,10 @@ VALUES
 		0,
 		1,
 		0,
-		'async () => {
+		'(async function findRaidStreams () {
 	const excludedChannels = sb.Config.get(\"TWITCH_RAID_EXCLUDED_CHANNELS\");
 	const eligibleChannels = sb.Channel.data.filter(i => (
-		(i.Platform === \"Twitch\")
+		(i.Platform.Name === \"twitch\")
 		&& (i.Mode !== \"Read\" && i.Mode !== \"Inactive\")
 		&& (i.Specific_ID !== null)
 		&& (!excludedChannels.includes(i.ID))
@@ -82,16 +82,16 @@ VALUES
 	}
 	
 	return { reply: await sb.Pastebin.post(JSON.stringify(results, null, 4)) };
-}',
+})',
 		NULL,
 		NULL
 	)
 
 ON DUPLICATE KEY UPDATE
-	Code = 'async () => {
+	Code = '(async function findRaidStreams () {
 	const excludedChannels = sb.Config.get(\"TWITCH_RAID_EXCLUDED_CHANNELS\");
 	const eligibleChannels = sb.Channel.data.filter(i => (
-		(i.Platform === \"Twitch\")
+		(i.Platform.Name === \"twitch\")
 		&& (i.Mode !== \"Read\" && i.Mode !== \"Inactive\")
 		&& (i.Specific_ID !== null)
 		&& (!excludedChannels.includes(i.ID))
@@ -131,4 +131,4 @@ ON DUPLICATE KEY UPDATE
 	}
 	
 	return { reply: await sb.Pastebin.post(JSON.stringify(results, null, 4)) };
-}'
+})'

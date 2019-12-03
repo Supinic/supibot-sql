@@ -40,7 +40,7 @@ VALUES
 		1,
 		0,
 		'(async function cookieCount (context, user) {
-	if (context.channel?.Platform === \"Discord\" && user && user.includes(\"@\")) {
+	if (context.platform.Name === \"discord\" && user && user.includes(\"@\")) {
 		user = await sb.Utils.getDiscordUserDataFromMentions(user, context.append) || context.user;
 	}
 
@@ -137,7 +137,7 @@ VALUES
 
 ON DUPLICATE KEY UPDATE
 	Code = '(async function cookieCount (context, user) {
-	if (context.channel?.Platform === \"Discord\" && user && user.includes(\"@\")) {
+	if (context.platform.Name === \"discord\" && user && user.includes(\"@\")) {
 		user = await sb.Utils.getDiscordUserDataFromMentions(user, context.append) || context.user;
 	}
 

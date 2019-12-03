@@ -43,7 +43,7 @@ VALUES
 	const promises = [];
 	const regex = /^[^:]+$/;
 	const channels = sb.Channel.data.filter(channel => (
-		channel.Platform === \"Twitch\" && regex.test(channel.Name) && channel.Mode !== \"Inactive\"
+		channel.Platform.Name === \"twitch\" && regex.test(channel.Name) && channel.Mode !== \"Inactive\"
 	));
 
 	for (const channel of channels) {
@@ -77,7 +77,7 @@ ON DUPLICATE KEY UPDATE
 	const promises = [];
 	const regex = /^[^:]+$/;
 	const channels = sb.Channel.data.filter(channel => (
-		channel.Platform === \"Twitch\" && regex.test(channel.Name) && channel.Mode !== \"Inactive\"
+		channel.Platform.Name === \"twitch\" && regex.test(channel.Name) && channel.Mode !== \"Inactive\"
 	));
 
 	for (const channel of channels) {

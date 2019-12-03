@@ -56,7 +56,7 @@ VALUES
 	}
 
 	let liveString = \"\";
-	if (context.platform === \"twitch\") {
+	if (context.platform.Name === \"twitch\") {
 		const isLive = (await sb.Command.get(\"streaminfo\").execute(context, user)).reply;
 		if (isLive && !isLive.includes(\"not exist\") && !isLive.includes(\"offline\")) {
 			liveString = \"-- They are currently live! PogChamp\";
@@ -130,7 +130,7 @@ ON DUPLICATE KEY UPDATE
 	}
 
 	let liveString = \"\";
-	if (context.platform === \"twitch\") {
+	if (context.platform.Name === \"twitch\") {
 		const isLive = (await sb.Command.get(\"streaminfo\").execute(context, user)).reply;
 		if (isLive && !isLive.includes(\"not exist\") && !isLive.includes(\"offline\")) {
 			liveString = \"-- They are currently live! PogChamp\";

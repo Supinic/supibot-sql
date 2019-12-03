@@ -62,7 +62,7 @@ VALUES
 			Schedule: null,
 			Created: new sb.Date(),
 			Private_Message: Boolean(context.privateMessage),
-			Platform: context.channel?.Platform || context.platform
+			Platform: context.platform.ID
 		});
 	}
 	catch (e) {
@@ -106,7 +106,7 @@ ON DUPLICATE KEY UPDATE
 			Schedule: null,
 			Created: new sb.Date(),
 			Private_Message: Boolean(context.privateMessage),
-			Platform: context.channel?.Platform || context.platform
+			Platform: context.platform.ID
 		});
 	}
 	catch (e) {

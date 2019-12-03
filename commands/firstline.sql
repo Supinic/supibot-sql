@@ -39,13 +39,19 @@ VALUES
 		1,
 		1,
 		0,
-		'async (extra, user) => {
+		'(async function firstLine (context, user) {
+	if (!context.channel) {
+		return {
+			reply: \"Not available in private messages!\"
+		};
+	}
+	
 	let targetUser = null;
 	if (!user) {
-		targetUser = extra.user;
+		targetUser = context.user;
 	}
-	else if (extra.channel.Platform === \"Discord\") {
-		targetUser = await sb.Utils.getDiscordUserDataFromMentions(user, extra.append);
+	else if (context.platform.Name === \"discord\") {
+		targetUser = await sb.Utils.getDiscordUserDataFromMentions(user, context.append);
 	}
 	else {
 		targetUser = await sb.User.get(user, true);
@@ -54,9 +60,9 @@ VALUES
 	if (!targetUser) {
 		return { reply: \"That user was not found!\" };
 	}
-	
+
 	let check = null;
-	if ([7, 8, 46].includes(extra.channel.ID)) {
+	if ([7, 8, 46].includes(context.channel.ID)) {
 		check = (await sb.Query.getRecordset(rs => rs
 			.select(\"1\")
 			.from(\"chat_data\", \"Message_Meta_User_Alias\")
@@ -69,7 +75,7 @@ VALUES
 			.select(\"1\")
 			.from(\"chat_data\", \"Message_Meta_User_Alias\")
 			.where(\"User_Alias = %n\", targetUser.ID)
-			.where(\"Channel = %n\", extra.channel.ID)
+			.where(\"Channel = %n\", context.channel.ID)
 		))[0];
 	}
 	if (!check) {
@@ -77,7 +83,7 @@ VALUES
 	}
 
 	let line = null;
-	if ([7, 8, 46].includes(extra.channel.ID)) {
+	if ([7, 8, 46].includes(context.channel.ID)) {
 		const channels = [7, 8, 46].map(i => sb.Channel.get(i));
 		line = (await Promise.all(channels.map(async channel => sb.Query.getRecordset(rs => rs
 			.select(\"Text\", \"Posted\")
@@ -85,8 +91,8 @@ VALUES
 			.where(\"User_Alias = %n\", targetUser.ID)
 			.orderBy(\"ID ASC\")
 			.limit(1)
-		))))
-		.filter(i => Boolean(i[0]))
+		)))).filter(i => Boolean(i[0]));
+		
 		line.sort((a, b) => {
 			a = (a[0] && a[0].Posted) || 0;
 			b = (b[0] && b[0].Posted) || 0;
@@ -100,18 +106,18 @@ VALUES
 	}
 	else {
 		line = (await sb.Query.getRecordset(rs => rs
-		.select(\"Text\", \"Posted\")
-			.from(\"chat_line\", extra.channel.getDatabaseName())
+			.select(\"Text\", \"Posted\")
+			.from(\"chat_line\", context.channel.getDatabaseName())
 			.where(\"User_Alias = %n\", targetUser.ID)
 			.orderBy(\"ID ASC\")
 			.limit(1)
 		))[0];
 	}
-	
+
 	if (!line) {
 		return { reply: \"No chat lines found?!\" };
 	}
-	const prefix = (targetUser.ID === extra.user.ID) ? \"Your\" : \"That user\'s\";
+	const prefix = (targetUser.ID === context.user.ID) ? \"Your\" : \"That user\'s\";
 
 	return {
 		partialReplies: [
@@ -129,20 +135,26 @@ VALUES
 			}
 		]
 	};
-}',
+})',
 		'$fl => Shows your first line in the current channel (from the bot\'s logs)
 $fl <person> => Shows their frst line in the current channel (from the bot\'s logs)',
 		NULL
 	)
 
 ON DUPLICATE KEY UPDATE
-	Code = 'async (extra, user) => {
+	Code = '(async function firstLine (context, user) {
+	if (!context.channel) {
+		return {
+			reply: \"Not available in private messages!\"
+		};
+	}
+	
 	let targetUser = null;
 	if (!user) {
-		targetUser = extra.user;
+		targetUser = context.user;
 	}
-	else if (extra.channel.Platform === \"Discord\") {
-		targetUser = await sb.Utils.getDiscordUserDataFromMentions(user, extra.append);
+	else if (context.platform.Name === \"discord\") {
+		targetUser = await sb.Utils.getDiscordUserDataFromMentions(user, context.append);
 	}
 	else {
 		targetUser = await sb.User.get(user, true);
@@ -151,9 +163,9 @@ ON DUPLICATE KEY UPDATE
 	if (!targetUser) {
 		return { reply: \"That user was not found!\" };
 	}
-	
+
 	let check = null;
-	if ([7, 8, 46].includes(extra.channel.ID)) {
+	if ([7, 8, 46].includes(context.channel.ID)) {
 		check = (await sb.Query.getRecordset(rs => rs
 			.select(\"1\")
 			.from(\"chat_data\", \"Message_Meta_User_Alias\")
@@ -166,7 +178,7 @@ ON DUPLICATE KEY UPDATE
 			.select(\"1\")
 			.from(\"chat_data\", \"Message_Meta_User_Alias\")
 			.where(\"User_Alias = %n\", targetUser.ID)
-			.where(\"Channel = %n\", extra.channel.ID)
+			.where(\"Channel = %n\", context.channel.ID)
 		))[0];
 	}
 	if (!check) {
@@ -174,7 +186,7 @@ ON DUPLICATE KEY UPDATE
 	}
 
 	let line = null;
-	if ([7, 8, 46].includes(extra.channel.ID)) {
+	if ([7, 8, 46].includes(context.channel.ID)) {
 		const channels = [7, 8, 46].map(i => sb.Channel.get(i));
 		line = (await Promise.all(channels.map(async channel => sb.Query.getRecordset(rs => rs
 			.select(\"Text\", \"Posted\")
@@ -182,8 +194,8 @@ ON DUPLICATE KEY UPDATE
 			.where(\"User_Alias = %n\", targetUser.ID)
 			.orderBy(\"ID ASC\")
 			.limit(1)
-		))))
-		.filter(i => Boolean(i[0]))
+		)))).filter(i => Boolean(i[0]));
+		
 		line.sort((a, b) => {
 			a = (a[0] && a[0].Posted) || 0;
 			b = (b[0] && b[0].Posted) || 0;
@@ -197,18 +209,18 @@ ON DUPLICATE KEY UPDATE
 	}
 	else {
 		line = (await sb.Query.getRecordset(rs => rs
-		.select(\"Text\", \"Posted\")
-			.from(\"chat_line\", extra.channel.getDatabaseName())
+			.select(\"Text\", \"Posted\")
+			.from(\"chat_line\", context.channel.getDatabaseName())
 			.where(\"User_Alias = %n\", targetUser.ID)
 			.orderBy(\"ID ASC\")
 			.limit(1)
 		))[0];
 	}
-	
+
 	if (!line) {
 		return { reply: \"No chat lines found?!\" };
 	}
-	const prefix = (targetUser.ID === extra.user.ID) ? \"Your\" : \"That user\'s\";
+	const prefix = (targetUser.ID === context.user.ID) ? \"Your\" : \"That user\'s\";
 
 	return {
 		partialReplies: [
@@ -226,4 +238,4 @@ ON DUPLICATE KEY UPDATE
 			}
 		]
 	};
-}'
+})'

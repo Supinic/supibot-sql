@@ -41,7 +41,7 @@ VALUES
 		0,
 		'(async function vod (context, target) {
 	if (!target) {
-		if (context.channel?.Platform === \"Twitch\") {
+		if (context.platform.Name === \"twitch\") {
 			target = context.channel.Name;
 		}
 		else {
@@ -85,7 +85,7 @@ VALUES
 ON DUPLICATE KEY UPDATE
 	Code = '(async function vod (context, target) {
 	if (!target) {
-		if (context.channel?.Platform === \"Twitch\") {
+		if (context.platform.Name === \"twitch\") {
 			target = context.channel.Name;
 		}
 		else {

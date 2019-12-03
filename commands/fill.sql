@@ -48,7 +48,8 @@ VALUES
 
 	let length = 0;
 	const result = [];
-	const platform = (context.channel?.Platform || context.platform).toUpperCase();
+	const platform = context.platform.Name.toUpperCase();
+
 	let limit = (context.channel?.Message_Limit || sb.Config.get(\"DEFAULT_MSG_LIMIT_\" + platform)) - context.user.Name.length - 3;
 	limit = sb.Utils.round(limit / 4, 0);
 
@@ -76,7 +77,8 @@ ON DUPLICATE KEY UPDATE
 
 	let length = 0;
 	const result = [];
-	const platform = (context.channel?.Platform || context.platform).toUpperCase();
+	const platform = context.platform.Name.toUpperCase();
+
 	let limit = (context.channel?.Message_Limit || sb.Config.get(\"DEFAULT_MSG_LIMIT_\" + platform)) - context.user.Name.length - 3;
 	limit = sb.Utils.round(limit / 4, 0);
 

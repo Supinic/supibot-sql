@@ -38,17 +38,17 @@ VALUES
 		0,
 		1,
 		1,
-		1,
-		'async (extra, targetUser) => {
+		0,
+		'(async function probe (context, targetUser) {
 	if (!targetUser) {
 		return { reply: \"No user provided!\", meta: { skipCooldown: true } };
 	}
-	
+
 	const data = {
 		supibot: {},
 		twitch: {}
-	};	
-	
+	};
+
 	const userData = await sb.User.get(targetUser, true);
 	if (userData) {
 		data.supibot.channels = [];
@@ -56,7 +56,7 @@ VALUES
 		data.supibot.Discord_ID = userData.Discord_ID || null;
 		data.supibot.Twitch_ID = userData.Twitch_ID || null;
 		data.supibot.firstSeen = userData.Started_Using.sqlDate();
-		
+
 		let totalMessages = 0;
 		const activeData = await sb.Query.getRecordset(rs => rs
 			.select(\"Last_Message_Posted AS Last_Seen\")
@@ -79,8 +79,8 @@ VALUES
 				.orderBy(\"ID ASC\")
 				.limit(1)
 				.single()
-			);				
-			
+			);
+
 			totalMessages += row.Messages;
 			if (limit-- < 0) {
 				data.supibot.channels.push({
@@ -91,13 +91,13 @@ VALUES
 				});
 			}
 		}
-		
+
 		data.supibot.totalMessages = totalMessages;
 	}
 	else {
 		data.supibot.error = \"No Supibot data regarding that user found.\";
 	}
-	
+
 	try {
 		const twitchData = JSON.parse(await sb.Utils.request({
 			url:  url,
@@ -112,42 +112,42 @@ VALUES
 		data.twitch.createdAt = (twitchData.created_at)
 			? new sb.Date(twitchData.created_at).sqlDateTime()
 			: null;
-		data.twitch.lastProfileUpdate = (twitchData.update_at) ? 
+		data.twitch.lastProfileUpdate = (twitchData.update_at) ?
 			new sb.Date(twitchData.update_at).sqlDateTime()
 			: null;
 	}
 	catch {
 		data.twitch.error = \"No Twitch data regarding that user found.\";
 	}
-	
+
 	if ((userData && userData.Twitch_ID) || data.twitch.ID) {
 		data.nameChange = await sb.Command.get(\"namechange\").execute(null, (userData && userData.Twitch_ID) || data.twitch.ID);
-	}	
-	
+	}
+
 	const pastebinLink = await sb.Pastebin.post(JSON.stringify(data, null, 4), {
-		name: \"Probe of user \" + targetUser + \" requested by \" + extra.user.Name
+		name: \"Probe of user \" + targetUser + \" requested by \" + context.user.Name
 	});
-	sb.Master.clients.twitch.pm(extra.user.Name, pastebinLink);
-	
-	if (!extra.append.privateMessage) {
+	sb.Master.clients.twitch.pm(context.user.Name, pastebinLink);
+
+	if (!context.append.privateMessage) {
 		return { reply: \"The link has been private messaged to you miniDank\" };
 	}
-}',
+})',
 		NULL,
 		NULL
 	)
 
 ON DUPLICATE KEY UPDATE
-	Code = 'async (extra, targetUser) => {
+	Code = '(async function probe (context, targetUser) {
 	if (!targetUser) {
 		return { reply: \"No user provided!\", meta: { skipCooldown: true } };
 	}
-	
+
 	const data = {
 		supibot: {},
 		twitch: {}
-	};	
-	
+	};
+
 	const userData = await sb.User.get(targetUser, true);
 	if (userData) {
 		data.supibot.channels = [];
@@ -155,7 +155,7 @@ ON DUPLICATE KEY UPDATE
 		data.supibot.Discord_ID = userData.Discord_ID || null;
 		data.supibot.Twitch_ID = userData.Twitch_ID || null;
 		data.supibot.firstSeen = userData.Started_Using.sqlDate();
-		
+
 		let totalMessages = 0;
 		const activeData = await sb.Query.getRecordset(rs => rs
 			.select(\"Last_Message_Posted AS Last_Seen\")
@@ -178,8 +178,8 @@ ON DUPLICATE KEY UPDATE
 				.orderBy(\"ID ASC\")
 				.limit(1)
 				.single()
-			);				
-			
+			);
+
 			totalMessages += row.Messages;
 			if (limit-- < 0) {
 				data.supibot.channels.push({
@@ -190,13 +190,13 @@ ON DUPLICATE KEY UPDATE
 				});
 			}
 		}
-		
+
 		data.supibot.totalMessages = totalMessages;
 	}
 	else {
 		data.supibot.error = \"No Supibot data regarding that user found.\";
 	}
-	
+
 	try {
 		const twitchData = JSON.parse(await sb.Utils.request({
 			url:  url,
@@ -211,24 +211,24 @@ ON DUPLICATE KEY UPDATE
 		data.twitch.createdAt = (twitchData.created_at)
 			? new sb.Date(twitchData.created_at).sqlDateTime()
 			: null;
-		data.twitch.lastProfileUpdate = (twitchData.update_at) ? 
+		data.twitch.lastProfileUpdate = (twitchData.update_at) ?
 			new sb.Date(twitchData.update_at).sqlDateTime()
 			: null;
 	}
 	catch {
 		data.twitch.error = \"No Twitch data regarding that user found.\";
 	}
-	
+
 	if ((userData && userData.Twitch_ID) || data.twitch.ID) {
 		data.nameChange = await sb.Command.get(\"namechange\").execute(null, (userData && userData.Twitch_ID) || data.twitch.ID);
-	}	
-	
+	}
+
 	const pastebinLink = await sb.Pastebin.post(JSON.stringify(data, null, 4), {
-		name: \"Probe of user \" + targetUser + \" requested by \" + extra.user.Name
+		name: \"Probe of user \" + targetUser + \" requested by \" + context.user.Name
 	});
-	sb.Master.clients.twitch.pm(extra.user.Name, pastebinLink);
-	
-	if (!extra.append.privateMessage) {
+	sb.Master.clients.twitch.pm(context.user.Name, pastebinLink);
+
+	if (!context.append.privateMessage) {
 		return { reply: \"The link has been private messaged to you miniDank\" };
 	}
-}'
+})'

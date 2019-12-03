@@ -49,7 +49,7 @@ VALUES
 		channel = args[0];
 	}
 
-	if (context.channel.Platform !== \"Twitch\" && channel === context.channel.Name) {
+	if (context.platform.Name !== \"twitch\" && channel === context.channel.Name) {
 		return { reply: \"You must specify the target channel if you\'re not on Twitch!\" };
 	}
 
@@ -110,7 +110,7 @@ ON DUPLICATE KEY UPDATE
 		channel = args[0];
 	}
 
-	if (context.channel.Platform !== \"Twitch\" && channel === context.channel.Name) {
+	if (context.platform.Name !== \"twitch\" && channel === context.channel.Name) {
 		return { reply: \"You must specify the target channel if you\'re not on Twitch!\" };
 	}
 

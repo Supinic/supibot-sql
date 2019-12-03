@@ -48,7 +48,7 @@ VALUES
 	let targetUser = await sb.Utils.getDiscordUserDataFromMentions(args[0].toLowerCase(), context.append) || await sb.User.get(args[0], true);
 	if (context.invocation.includes(\"me\") || args[0] === \"me\" || (targetUser && targetUser.ID === context.user.ID)) {
 		targetUser = context.user;
-		
+
 		if (!context.invocation.includes(\"me\")) {
 			args.shift();
 		}
@@ -80,14 +80,14 @@ VALUES
 	}
 
 	const specificFilter = sb.Filter.data.find(i => (
-		i.User_Alias === targetUser.ID 
-		&& i.Type === \"Block\" 
+		i.User_Alias === targetUser.ID
+		&& i.Type === \"Block\"
 		&& i.Blocked_User === context.user.ID
 		&& i.Command === context.command.ID
 		&& i.Active
 	));
 	if (specificFilter) {
-		return { 
+		return {
 			reply: \"That user has opted out from being reminded by you! 🚫\"
 		};
 	}
@@ -125,7 +125,7 @@ VALUES
 			return { reply: \"You cannot set a timed reminder in less than 30 seconds!\", meta: { skipCooldown: true } };
 		}
 		else if (timestamp.valueOf() > sb.Config.get(\"SQL_DATETIME_LIMIT\")) {
-			return { 
+			return {
 				reply: \"Unfortunately, only dates within the SQL DATETIME range are supported - up to Dec 31st 9999\",
 				meta: { skipCooldown: true }
 			};
@@ -144,7 +144,7 @@ VALUES
 	try {
 		resultID = await sb.Reminder.create({
 			Channel: context?.channel?.ID ?? null,
-			Platform: context?.channel?.Platform ?? context.platform,
+			Platform: context.platform.ID,
 			User_From: context.user.ID,
 			User_To: targetUser.ID,
 			Text: text || \"(no message)\",
@@ -182,7 +182,7 @@ ON DUPLICATE KEY UPDATE
 	let targetUser = await sb.Utils.getDiscordUserDataFromMentions(args[0].toLowerCase(), context.append) || await sb.User.get(args[0], true);
 	if (context.invocation.includes(\"me\") || args[0] === \"me\" || (targetUser && targetUser.ID === context.user.ID)) {
 		targetUser = context.user;
-		
+
 		if (!context.invocation.includes(\"me\")) {
 			args.shift();
 		}
@@ -214,14 +214,14 @@ ON DUPLICATE KEY UPDATE
 	}
 
 	const specificFilter = sb.Filter.data.find(i => (
-		i.User_Alias === targetUser.ID 
-		&& i.Type === \"Block\" 
+		i.User_Alias === targetUser.ID
+		&& i.Type === \"Block\"
 		&& i.Blocked_User === context.user.ID
 		&& i.Command === context.command.ID
 		&& i.Active
 	));
 	if (specificFilter) {
-		return { 
+		return {
 			reply: \"That user has opted out from being reminded by you! 🚫\"
 		};
 	}
@@ -259,7 +259,7 @@ ON DUPLICATE KEY UPDATE
 			return { reply: \"You cannot set a timed reminder in less than 30 seconds!\", meta: { skipCooldown: true } };
 		}
 		else if (timestamp.valueOf() > sb.Config.get(\"SQL_DATETIME_LIMIT\")) {
-			return { 
+			return {
 				reply: \"Unfortunately, only dates within the SQL DATETIME range are supported - up to Dec 31st 9999\",
 				meta: { skipCooldown: true }
 			};
@@ -278,7 +278,7 @@ ON DUPLICATE KEY UPDATE
 	try {
 		resultID = await sb.Reminder.create({
 			Channel: context?.channel?.ID ?? null,
-			Platform: context?.channel?.Platform ?? context.platform,
+			Platform: context.platform.ID,
 			User_From: context.user.ID,
 			User_To: targetUser.ID,
 			Text: text || \"(no message)\",

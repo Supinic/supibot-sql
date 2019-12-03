@@ -47,20 +47,20 @@ VALUES
 			};
 		}
 
-		if (context.channel.Platform === \"Twitch\") {
+		if (context.platform.Name === \"twitch\") {
 			channel = context.channel.Name;	
 		}
 		else if (context.channel.Mirror) {
 			const mirrorChannel = sb.Channel.get(context.channel.Mirror);
-			if (mirrorChannel.Platform === \"Twitch\") {
+			if (mirrorChannel.Platform.Name === \"twitch\") {
 				channel = mirrorChannel.Name;
 			}
 		}
 		
 		if (!channel) {
 			return {
-				reply: \"Couldd not find any associated Twitch channels! Please specify one.\"
-			};			
+				reply: \"Could not find any associated Twitch channels! Please specify one.\"
+			};
 		}
 	}
 	
@@ -111,20 +111,20 @@ ON DUPLICATE KEY UPDATE
 			};
 		}
 
-		if (context.channel.Platform === \"Twitch\") {
+		if (context.platform.Name === \"twitch\") {
 			channel = context.channel.Name;	
 		}
 		else if (context.channel.Mirror) {
 			const mirrorChannel = sb.Channel.get(context.channel.Mirror);
-			if (mirrorChannel.Platform === \"Twitch\") {
+			if (mirrorChannel.Platform.Name === \"twitch\") {
 				channel = mirrorChannel.Name;
 			}
 		}
 		
 		if (!channel) {
 			return {
-				reply: \"Couldd not find any associated Twitch channels! Please specify one.\"
-			};			
+				reply: \"Could not find any associated Twitch channels! Please specify one.\"
+			};
 		}
 	}
 	

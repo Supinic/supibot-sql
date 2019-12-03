@@ -43,7 +43,7 @@ VALUES
 	if (context.channel === null || context.channel.Mode !== \"Moderator\") {
 		return { reply: \"You cannot play the roulette in here!\" };
 	}
-	else if (context.channel.Platform !== \"Twitch\") {
+	else if (context.platform.Name !== \"twitch\") {
 		return { reply: \"You cannot play the roulette outside of Twitch!\" };
 	}
 	else if (context.append.userBadges.hasModerator) {
@@ -92,7 +92,7 @@ ON DUPLICATE KEY UPDATE
 	if (context.channel === null || context.channel.Mode !== \"Moderator\") {
 		return { reply: \"You cannot play the roulette in here!\" };
 	}
-	else if (context.channel.Platform !== \"Twitch\") {
+	else if (context.platform.Name !== \"twitch\") {
 		return { reply: \"You cannot play the roulette outside of Twitch!\" };
 	}
 	else if (context.append.userBadges.hasModerator) {

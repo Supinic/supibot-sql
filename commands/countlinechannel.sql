@@ -40,6 +40,12 @@ VALUES
 		1,
 		0,
 		'(async function countLineChannel (context) {
+	if (!context.channel) {
+		return {
+			reply: \"Command not available in private messages!\"
+		};
+	}
+
 	const channelID = context.channel.ID;
 	if (channelID === 7 || channelID === 8) {
 		const [{cerebot}, {discord}, {refuge}] = await Promise.all([
@@ -66,10 +72,7 @@ VALUES
 		};
 	}
 	else {
-		const channelName = (context.channel.Platform === \"Twitch\")
-			? context.channel.Name
-			: context.channel.Platform.toLowerCase() + \"_\" + context.channel.Name;
-
+		const channelName = context.channel.getDatabaseName();
 		const {Amount: amount} = (await sb.Query.getRecordset(rs => rs
 			.select(\"MAX(ID) AS Amount\")
 			.from(\"chat_line\", channelName)
@@ -87,6 +90,12 @@ VALUES
 
 ON DUPLICATE KEY UPDATE
 	Code = '(async function countLineChannel (context) {
+	if (!context.channel) {
+		return {
+			reply: \"Command not available in private messages!\"
+		};
+	}
+
 	const channelID = context.channel.ID;
 	if (channelID === 7 || channelID === 8) {
 		const [{cerebot}, {discord}, {refuge}] = await Promise.all([
@@ -113,10 +122,7 @@ ON DUPLICATE KEY UPDATE
 		};
 	}
 	else {
-		const channelName = (context.channel.Platform === \"Twitch\")
-			? context.channel.Name
-			: context.channel.Platform.toLowerCase() + \"_\" + context.channel.Name;
-
+		const channelName = context.channel.getDatabaseName();
 		const {Amount: amount} = (await sb.Query.getRecordset(rs => rs
 			.select(\"MAX(ID) AS Amount\")
 			.from(\"chat_line\", channelName)
