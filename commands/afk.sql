@@ -40,6 +40,12 @@ VALUES
 		1,
 		0,
 		'(async function afk (context, ...args) {
+	if (context.privateMessage && sb.AwayFromKeyboard.data.find(i => i.User_Alias === context.user.ID)) {
+		return {
+			reply: \"You are already AFK!\"
+		};
+	}
+
 	let text = args.join(\" \").trim();
 	let status = \"now AFK\";
 
@@ -102,6 +108,12 @@ $afk I\'ll be back.',
 
 ON DUPLICATE KEY UPDATE
 	Code = '(async function afk (context, ...args) {
+	if (context.privateMessage && sb.AwayFromKeyboard.data.find(i => i.User_Alias === context.user.ID)) {
+		return {
+			reply: \"You are already AFK!\"
+		};
+	}
+
 	let text = args.join(\" \").trim();
 	let status = \"now AFK\";
 
