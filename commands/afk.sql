@@ -56,7 +56,7 @@ VALUES
 		case \"shower\": [status, text] = [\"now taking a shower\", (text ?  (text + \" 🚿\") : \"🚿\")]; break;
 		case \"poop\": [status, text] = [\"now pooping\", (text ?  (text + \" 🚽\") : \"💩\")]; break;
 		case \"work\": [status, text] = [\"working\", (text ?  (text + \" 💼\") : \"👷\")]; break;
-		case \"ppPoof\": [status, text] = [\"poofing away...\", (text || \"\") + \"💨\"]; break;		
+		case \"ppPoof\": [status, text] = [\"ppPoof poofing away...\", (text || \"\") + \"💨\"]; break;		
 		case \"food\": {
 			let useAutoEmoji = true;
 			const eatingEmojis = sb.Config.get(\"FOOD_EMOJIS\");
@@ -124,7 +124,7 @@ ON DUPLICATE KEY UPDATE
 		case \"shower\": [status, text] = [\"now taking a shower\", (text ?  (text + \" 🚿\") : \"🚿\")]; break;
 		case \"poop\": [status, text] = [\"now pooping\", (text ?  (text + \" 🚽\") : \"💩\")]; break;
 		case \"work\": [status, text] = [\"working\", (text ?  (text + \" 💼\") : \"👷\")]; break;
-		case \"ppPoof\": [status, text] = [\"poofing away...\", (text || \"\") + \"💨\"]; break;		
+		case \"ppPoof\": [status, text] = [\"ppPoof poofing away...\", (text || \"\") + \"💨\"]; break;		
 		case \"food\": {
 			let useAutoEmoji = true;
 			const eatingEmojis = sb.Config.get(\"FOOD_EMOJIS\");
