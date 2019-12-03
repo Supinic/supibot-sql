@@ -62,7 +62,7 @@ VALUES
 	if (existing) {
 		await existing.toggle();
 		
-		const prefix = (existing.Active) ? \"again\" : \"no longer\";
+		const prefix = (existing.Active) ? \"no longer\" : \"again\";
 		return {
 			reply: `The command \"${commandData.Name}\" will now ${prefix} ping you!`
 		};
@@ -109,7 +109,7 @@ ON DUPLICATE KEY UPDATE
 	if (existing) {
 		await existing.toggle();
 		
-		const prefix = (existing.Active) ? \"again\" : \"no longer\";
+		const prefix = (existing.Active) ? \"no longer\" : \"again\";
 		return {
 			reply: `The command \"${commandData.Name}\" will now ${prefix} ping you!`
 		};
