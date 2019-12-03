@@ -39,10 +39,10 @@ VALUES
 		1,
 		1,
 		0,
-		'async (extra, ...args) => {
+		'(async function simpleSQL (context, ...args) {
 	let query = args.join(\" \");
 	try {
-		if (!query.includes(\"LIMIT 1\")) {
+		if (!query.includes(\"AVG\") && !query.includes(\"LIMIT 1\")) {
 			query += \" LIMIT 1\";
 		}
 
@@ -53,16 +53,16 @@ VALUES
 		console.warn(e);
 		return { reply: \"An error occured!\" };
 	}
-}',
+})',
 		NULL,
 		NULL
 	)
 
 ON DUPLICATE KEY UPDATE
-	Code = 'async (extra, ...args) => {
+	Code = '(async function simpleSQL (context, ...args) {
 	let query = args.join(\" \");
 	try {
-		if (!query.includes(\"LIMIT 1\")) {
+		if (!query.includes(\"AVG\") && !query.includes(\"LIMIT 1\")) {
 			query += \" LIMIT 1\";
 		}
 
@@ -73,4 +73,4 @@ ON DUPLICATE KEY UPDATE
 		console.warn(e);
 		return { reply: \"An error occured!\" };
 	}
-}'
+})'
