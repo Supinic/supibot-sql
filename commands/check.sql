@@ -221,6 +221,12 @@ VALUES
 			}
 
 			const {ID, Date: date, Text: text, Status: status, User_Alias: user} = row.values;
+			if (status === \"Quarantined\") {
+				return {
+					reply: \"This suggestion has been quarantined.\"
+				};
+			}
+
 			const {Name: username} = await sb.User.get(user, true);
 			return {
 				reply: `Suggestion ID ${ID} from ${username}, status ${status} (posted ${sb.Utils.timeDelta(date)}): ${text}`
@@ -439,6 +445,12 @@ ON DUPLICATE KEY UPDATE
 			}
 
 			const {ID, Date: date, Text: text, Status: status, User_Alias: user} = row.values;
+			if (status === \"Quarantined\") {
+				return {
+					reply: \"This suggestion has been quarantined.\"
+				};
+			}
+
 			const {Name: username} = await sb.User.get(user, true);
 			return {
 				reply: `Suggestion ID ${ID} from ${username}, status ${status} (posted ${sb.Utils.timeDelta(date)}): ${text}`
