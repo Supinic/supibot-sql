@@ -56,12 +56,14 @@ VALUES
 	}
 	else if (!lastAFK.Ended) {
 		return {
-			reply: \"You\'re supposed to be AFK...!\"
+			reply: \"You were AFK until this moment... Try again?\",
+			meta: { skipCooldown: true }
 		};
 	}
 	else if (lastAFK.Ended.addMinutes(5) <= sb.Date.now()) {
 		return {
-			reply: \"You cannot resume your AFK status, because it ended more than 5 minutes ago!\"
+			reply: \"You cannot resume your AFK status, because it ended more than 5 minutes ago!\",
+			meta: { skipCooldown: true }
 		};
 	}
 
@@ -114,12 +116,14 @@ ON DUPLICATE KEY UPDATE
 	}
 	else if (!lastAFK.Ended) {
 		return {
-			reply: \"You\'re supposed to be AFK...!\"
+			reply: \"You were AFK until this moment... Try again?\",
+			meta: { skipCooldown: true }
 		};
 	}
 	else if (lastAFK.Ended.addMinutes(5) <= sb.Date.now()) {
 		return {
-			reply: \"You cannot resume your AFK status, because it ended more than 5 minutes ago!\"
+			reply: \"You cannot resume your AFK status, because it ended more than 5 minutes ago!\",
+			meta: { skipCooldown: true }
 		};
 	}
 
