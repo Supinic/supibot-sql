@@ -39,9 +39,12 @@ VALUES
 		1,
 		1,
 		0,
-		'async (extra, ...args) => {
+		'(async function wiki (extra, ...args) {
 	if (args.length === 0) {
-		return { reply: \"No article specified!\", meta: { skipCooldown: true } };
+		return {
+			reply: \"No article specified!\",
+			meta: { skipCooldown: true }
+		};
 	}
 
 	// const searchURL = \"https://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts&exintro=&explaintext=&redirects=1&titles=\";
@@ -53,16 +56,26 @@ VALUES
 		.set(\"redirects\", \"1\")
 		.set(\"titles\", args.join(\" \"));
 
-	const data = JSON.parse(await sb.Utils.request(url + params)).query.pages;
+	const rawData = JSON.parse(await sb.Utils.request(url + params));
+	const data = rawData.query.pages;
 	const key = Object.keys(data)[0];
 
+	console.log(rawData);
+	
 	if (key === \"-1\") {
 		return { reply: \"No results found!\" };
 	}
 	else {
-		return { reply: data[key].title + \": \" + sb.Utils.removeHTML(data[key].extract) };
-	}
-}',
+		let link = \"\";
+		if (extra?.channel?.Links_Allowed === true) {
+			link = \"https://en.wikipedia.org/?curid=\" + key;
+		};
+
+		return { 
+			reply: link + \" \" + data[key].title + \": \" + sb.Utils.removeHTML(data[key].extract)
+		};
+	}		
+})',
 		NULL,
 		'async (prefix) => {
 	return [
@@ -76,9 +89,12 @@ VALUES
 	)
 
 ON DUPLICATE KEY UPDATE
-	Code = 'async (extra, ...args) => {
+	Code = '(async function wiki (extra, ...args) {
 	if (args.length === 0) {
-		return { reply: \"No article specified!\", meta: { skipCooldown: true } };
+		return {
+			reply: \"No article specified!\",
+			meta: { skipCooldown: true }
+		};
 	}
 
 	// const searchURL = \"https://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts&exintro=&explaintext=&redirects=1&titles=\";
@@ -90,13 +106,23 @@ ON DUPLICATE KEY UPDATE
 		.set(\"redirects\", \"1\")
 		.set(\"titles\", args.join(\" \"));
 
-	const data = JSON.parse(await sb.Utils.request(url + params)).query.pages;
+	const rawData = JSON.parse(await sb.Utils.request(url + params));
+	const data = rawData.query.pages;
 	const key = Object.keys(data)[0];
 
+	console.log(rawData);
+	
 	if (key === \"-1\") {
 		return { reply: \"No results found!\" };
 	}
 	else {
-		return { reply: data[key].title + \": \" + sb.Utils.removeHTML(data[key].extract) };
-	}
-}'
+		let link = \"\";
+		if (extra?.channel?.Links_Allowed === true) {
+			link = \"https://en.wikipedia.org/?curid=\" + key;
+		};
+
+		return { 
+			reply: link + \" \" + data[key].title + \": \" + sb.Utils.removeHTML(data[key].extract)
+		};
+	}		
+})'
