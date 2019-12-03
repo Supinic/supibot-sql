@@ -26,7 +26,7 @@ VALUES
 		139,
 		'russianroulette',
 		'[\"rr\"]',
-		'Play the roulette. If you win, nothing happens; if you lose, you get timed out. Only works in channels where Supibot is Moderator, on Twitch only, obviously.',
+		'Play the roulette. If you win, nothing happens; if you lose, you get timed out. You can add a number 1-600 (default: 1) which says how long you will be timed out, should you lose. Only works in channels where Supibot is moderator.',
 		15000,
 		0,
 		0,
