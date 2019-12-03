@@ -118,8 +118,6 @@ VALUES
 		\"wind\": \"💨\"
 	};
 
-console.log(args);
-
 	let number = null;
 	let type = \"currently\";
 	const weatherRegex = /(hour|day|week)(\\+?(\\d+))?$/;
@@ -318,8 +316,6 @@ ON DUPLICATE KEY UPDATE
 		\"tornado\": \"🌪️\",
 		\"wind\": \"💨\"
 	};
-
-console.log(args);
 
 	let number = null;
 	let type = \"currently\";
