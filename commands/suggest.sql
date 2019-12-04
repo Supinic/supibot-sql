@@ -42,7 +42,7 @@ VALUES
 		'(async function suggest (context, ...args) {
 	if (args.length === 0) {
 		return { 
-			reply: \"All suggestions: https://supinic.com/bot/suggestions/list || Your suggestions (requires login): https://supinic.com/bot/suggestions/mine\"
+			reply: \"All suggestions: https://supinic.com/bot/suggestions/list || Your suggestions (requires login): https://supinic.com/bot/suggestions/mine || Statistics (requires login): https://supinic.com/bot/suggestions/stats\"
 		};
 	}
 
@@ -65,7 +65,7 @@ ON DUPLICATE KEY UPDATE
 	Code = '(async function suggest (context, ...args) {
 	if (args.length === 0) {
 		return { 
-			reply: \"All suggestions: https://supinic.com/bot/suggestions/list || Your suggestions (requires login): https://supinic.com/bot/suggestions/mine\"
+			reply: \"All suggestions: https://supinic.com/bot/suggestions/list || Your suggestions (requires login): https://supinic.com/bot/suggestions/mine || Statistics (requires login): https://supinic.com/bot/suggestions/stats\"
 		};
 	}
 
