@@ -52,6 +52,10 @@ VALUES
 		case \"fight\": 
 			return { reply: \"FightBagel FightBerry FightBox FightBurger FightCC FightCake FightCheese FightChips FightCookie FightCorn FightCup FightEgg FightFruit FightFry FightIce FightJello FightMash FightNacho FightPBJ FightPC FightPepper FightPie FightPizza FightPop FightPudding FightRamen FightSalad FightSardine FightSmoothie FightSmore FightSoda FightSoup FightSpag FightSub FightTomato food check OpieOP\" };
 
+		case \"haha\": 
+		case \"holiday\": 
+			return { reply: \"Haha2020 HahaBaby HahaBall HahaCat HahaDisapprove HahaDoge HahaDreidel HahaElf HahaGingercat HahaHide HahaLean HahaNutcracker HahaNyandeer HahaPoint HahaPresent HahaReindeer HahaShrugLeft HahaShrugMiddle HahaShrugRight HahaSleep HahaSnowhal HahaSweat HahaThink HahaThisisfine HahaTurtledove\"};
+
 		case \"rpg\":
 			return { reply: \"RPGAyaya RPGBukka RPGBukkaNoo RPGEmpty RPGEpicStaff RPGEpicSword RPGFei RPGFireball RPGGhosto RPGHP RPGMana RPGOops RPGPhatLoot RPGSeven RPGShihu RPGStaff RPGTreeNua RPGYonger TwitchRPG\" };
 
@@ -79,6 +83,10 @@ ON DUPLICATE KEY UPDATE
 		case \"food\":
 		case \"fight\": 
 			return { reply: \"FightBagel FightBerry FightBox FightBurger FightCC FightCake FightCheese FightChips FightCookie FightCorn FightCup FightEgg FightFruit FightFry FightIce FightJello FightMash FightNacho FightPBJ FightPC FightPepper FightPie FightPizza FightPop FightPudding FightRamen FightSalad FightSardine FightSmoothie FightSmore FightSoda FightSoup FightSpag FightSub FightTomato food check OpieOP\" };
+
+		case \"haha\": 
+		case \"holiday\": 
+			return { reply: \"Haha2020 HahaBaby HahaBall HahaCat HahaDisapprove HahaDoge HahaDreidel HahaElf HahaGingercat HahaHide HahaLean HahaNutcracker HahaNyandeer HahaPoint HahaPresent HahaReindeer HahaShrugLeft HahaShrugMiddle HahaShrugRight HahaSleep HahaSnowhal HahaSweat HahaThink HahaThisisfine HahaTurtledove\"};
 
 		case \"rpg\":
 			return { reply: \"RPGAyaya RPGBukka RPGBukkaNoo RPGEmpty RPGEpicStaff RPGEpicSword RPGFei RPGFireball RPGGhosto RPGHP RPGMana RPGOops RPGPhatLoot RPGSeven RPGShihu RPGStaff RPGTreeNua RPGYonger TwitchRPG\" };
