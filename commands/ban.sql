@@ -59,8 +59,26 @@ VALUES
 		return { reply: \"Didn\'t actually ban anyone Kappa\" };
 	}
 
-	const ban = await sb.Filter.create(options);
-	return { reply: \"Succesfully banned (ID \" + ban.ID + \")\" };
+	const existing = sb.Filter.data.find(i => 
+		i.Channel === options.Channel
+		&& i.Command === options.Command
+		&& i.User_Alias === options.User_Alias
+	);
+
+	if (existing) {
+		await existing.toggle();
+		const prefix = (existing.Active) ? \"re-\" : \"un\";
+
+		return { 
+			reply: `Succesfully ${prefix}banned.`
+		};
+	}
+	else {
+		const ban = await sb.Filter.create(options);
+		return { 
+			reply: \"Succesfully banned (ID \" + ban.ID + \")\"
+		};
+	}
 })',
 		NULL,
 		NULL
@@ -87,6 +105,24 @@ ON DUPLICATE KEY UPDATE
 		return { reply: \"Didn\'t actually ban anyone Kappa\" };
 	}
 
-	const ban = await sb.Filter.create(options);
-	return { reply: \"Succesfully banned (ID \" + ban.ID + \")\" };
+	const existing = sb.Filter.data.find(i => 
+		i.Channel === options.Channel
+		&& i.Command === options.Command
+		&& i.User_Alias === options.User_Alias
+	);
+
+	if (existing) {
+		await existing.toggle();
+		const prefix = (existing.Active) ? \"re-\" : \"un\";
+
+		return { 
+			reply: `Succesfully ${prefix}banned.`
+		};
+	}
+	else {
+		const ban = await sb.Filter.create(options);
+		return { 
+			reply: \"Succesfully banned (ID \" + ban.ID + \")\"
+		};
+	}
 })'
