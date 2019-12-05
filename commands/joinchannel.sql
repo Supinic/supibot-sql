@@ -39,7 +39,7 @@ VALUES
 		1,
 		1,
 		0,
-		'async (extra, channel, mode) => {
+		'(async function joinChannel (context, channel, mode) {
 	if (!channel.includes(\"#\")) {
 		return { reply: \"Channels must be denominated with #, as a safety measure!\" };
 	}
@@ -50,17 +50,17 @@ VALUES
 
 	channel = channel.replace(\"#\", \"\").toLowerCase();
 
-	const newChannel = await sb.Channel.add(channel, 1, mode || \"Write\");
+	const newChannel = await sb.Channel.add(channel, context.platform, mode || \"Write\");
 	await sb.Master.clients.twitch.client.join(channel);
 
 	return { reply: \"Success.\" };
-}',
+})',
 		NULL,
 		NULL
 	)
 
 ON DUPLICATE KEY UPDATE
-	Code = 'async (extra, channel, mode) => {
+	Code = '(async function joinChannel (context, channel, mode) {
 	if (!channel.includes(\"#\")) {
 		return { reply: \"Channels must be denominated with #, as a safety measure!\" };
 	}
@@ -71,8 +71,8 @@ ON DUPLICATE KEY UPDATE
 
 	channel = channel.replace(\"#\", \"\").toLowerCase();
 
-	const newChannel = await sb.Channel.add(channel, 1, mode || \"Write\");
+	const newChannel = await sb.Channel.add(channel, context.platform, mode || \"Write\");
 	await sb.Master.clients.twitch.client.join(channel);
 
 	return { reply: \"Success.\" };
-}'
+})'
