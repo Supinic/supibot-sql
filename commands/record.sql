@@ -53,7 +53,7 @@ VALUES
 	switch (type) {
 		case \"afk\":
 			if (userData.ID !== context.user.ID) {
-				return { 
+				return {
 					reply: \"Cannot be checked on people other than you!\"
 				};
 			}
@@ -68,18 +68,33 @@ VALUES
 				.limit(1)
 				.single()
 			);
-			
+
 			if (!data) {
 				return {
 					reply: \"No AFK status found!\"
 				};
 			}
-			
+
 			const formatted = sb.Utils.formatTime(sb.Utils.round(data.Seconds, 0), false);
 			const delta = sb.Utils.timeDelta(data.Ended);
 			return {
 				reply: `Your longest AFK period lasted for ${formatted} - this was ${delta}.`
 			};
+
+		case \"cookie\": {
+			const { Cookies_Total: cookies, User_Alias: user } = await sb.Query.getRecordset(rs => rs
+				.select(\"Cookies_Total\", \"User_Alias\")
+				.from(\"chat_data\", \"Extra_User_Data\")
+				.orderBy(\"Cookies_Total DESC\")
+				.limit(1)
+				.single()
+			);
+			
+			const userData = await sb.User.get(user, true);			
+			return {
+				reply: `Currently, the most consistent cookie consumer is ${userData.Name} with ${cookies} daily cookies eaten` 
+			};
+		}
 
 		default: return { reply: \"Invalid type provided!\" };
 	};
@@ -103,7 +118,7 @@ ON DUPLICATE KEY UPDATE
 	switch (type) {
 		case \"afk\":
 			if (userData.ID !== context.user.ID) {
-				return { 
+				return {
 					reply: \"Cannot be checked on people other than you!\"
 				};
 			}
@@ -118,18 +133,33 @@ ON DUPLICATE KEY UPDATE
 				.limit(1)
 				.single()
 			);
-			
+
 			if (!data) {
 				return {
 					reply: \"No AFK status found!\"
 				};
 			}
-			
+
 			const formatted = sb.Utils.formatTime(sb.Utils.round(data.Seconds, 0), false);
 			const delta = sb.Utils.timeDelta(data.Ended);
 			return {
 				reply: `Your longest AFK period lasted for ${formatted} - this was ${delta}.`
 			};
+
+		case \"cookie\": {
+			const { Cookies_Total: cookies, User_Alias: user } = await sb.Query.getRecordset(rs => rs
+				.select(\"Cookies_Total\", \"User_Alias\")
+				.from(\"chat_data\", \"Extra_User_Data\")
+				.orderBy(\"Cookies_Total DESC\")
+				.limit(1)
+				.single()
+			);
+			
+			const userData = await sb.User.get(user, true);			
+			return {
+				reply: `Currently, the most consistent cookie consumer is ${userData.Name} with ${cookies} daily cookies eaten` 
+			};
+		}
 
 		default: return { reply: \"Invalid type provided!\" };
 	};

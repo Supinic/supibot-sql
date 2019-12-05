@@ -55,7 +55,7 @@ VALUES
 			reply: cookies.Total + \" cookies have been eaten so far, out of which \" + cookies.Gifts + \" were gifted :)\"
 		};
 	}
-	else if (user === \"leader\" || user === \"list\") {
+	else if (user === \"list\") {
 		return {
 			reply: \"Check the cookie statistics here: https://supinic.com/bot/cookie/list\"
 		};
@@ -152,7 +152,7 @@ ON DUPLICATE KEY UPDATE
 			reply: cookies.Total + \" cookies have been eaten so far, out of which \" + cookies.Gifts + \" were gifted :)\"
 		};
 	}
-	else if (user === \"leader\" || user === \"list\") {
+	else if (user === \"list\") {
 		return {
 			reply: \"Check the cookie statistics here: https://supinic.com/bot/cookie/list\"
 		};
