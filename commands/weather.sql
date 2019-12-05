@@ -55,11 +55,22 @@ VALUES
 	}
 	else if (args[0].startsWith(\"@\")) {
 		const userData = await sb.User.get(args[0]);
-		if (userData && userData.Data.defaultWeather) {
+		if (!userData) {
+			return {
+				reply: \"Invalid user provided!\"
+			};
+		}
+		else if (!userData.Data.defaultWeather) {
+			return {
+				reply: \"That user did not set their weather location!\"
+			};
+		}
+		else {
 			skipLocation = userData.Data.defaultWeather.private;
 			args = args.slice(1);
 			args.unshift(...userData.Data.defaultWeather.location);
 		}
+
 	}
 	else if (args[0].toLowerCase() === \"supibot\") {
 		const exec = require(\"child_process\").execSync;
@@ -254,11 +265,22 @@ ON DUPLICATE KEY UPDATE
 	}
 	else if (args[0].startsWith(\"@\")) {
 		const userData = await sb.User.get(args[0]);
-		if (userData && userData.Data.defaultWeather) {
+		if (!userData) {
+			return {
+				reply: \"Invalid user provided!\"
+			};
+		}
+		else if (!userData.Data.defaultWeather) {
+			return {
+				reply: \"That user did not set their weather location!\"
+			};
+		}
+		else {
 			skipLocation = userData.Data.defaultWeather.private;
 			args = args.slice(1);
 			args.unshift(...userData.Data.defaultWeather.location);
 		}
+
 	}
 	else if (args[0].toLowerCase() === \"supibot\") {
 		const exec = require(\"child_process\").execSync;
