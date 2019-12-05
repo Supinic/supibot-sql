@@ -104,7 +104,7 @@ VALUES
 			reaction = \"🙂 a fair person 👍\";
 		}
 		else if (percentage < 75) {
-			reaction = \"😮 a great samaritan 😃👌\"
+			reaction = \"😮 a great samaritan 😃👌\";
 		}
 		else {
 			reaction = \"😳 an absolutely selfless saint 😇\";
@@ -201,7 +201,7 @@ ON DUPLICATE KEY UPDATE
 			reaction = \"🙂 a fair person 👍\";
 		}
 		else if (percentage < 75) {
-			reaction = \"😮 a great samaritan 😃👌\"
+			reaction = \"😮 a great samaritan 😃👌\";
 		}
 		else {
 			reaction = \"😳 an absolutely selfless saint 😇\";
