@@ -52,14 +52,8 @@ VALUES
 		};
 	}
 
-	const safeProxy = new Proxy({}, {
-		get: function () {
-			return undefined;
-		},
-	});
-
 	try {
-		const result = await script.runInNewContext({context, sb}, { timeout: 2500 });
+		const result = await script.runInNewContext({require, context, sb}, { timeout: 2500 });
 		if (typeof result !== \"undefined\") {
 			return { reply: String(result) };
 		}
@@ -113,14 +107,8 @@ ON DUPLICATE KEY UPDATE
 		};
 	}
 
-	const safeProxy = new Proxy({}, {
-		get: function () {
-			return undefined;
-		},
-	});
-
 	try {
-		const result = await script.runInNewContext({context, sb}, { timeout: 2500 });
+		const result = await script.runInNewContext({require, context, sb}, { timeout: 2500 });
 		if (typeof result !== \"undefined\") {
 			return { reply: String(result) };
 		}
