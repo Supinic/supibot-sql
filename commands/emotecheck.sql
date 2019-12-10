@@ -54,7 +54,7 @@ VALUES
 
 		case \"haha\": 
 		case \"holiday\": 
-			return { reply: \"Haha2020 HahaBaby HahaBall HahaCat HahaDisapprove HahaDoge HahaDreidel HahaElf HahaGingercat HahaHide HahaLean HahaNutcracker HahaNyandeer HahaPoint HahaPresent HahaReindeer HahaShrugLeft HahaShrugMiddle HahaShrugRight HahaSleep HahaSnowhal HahaSweat HahaThink HahaThisisfine HahaTurtledove\"};
+			return { reply: \"Haha2020 HahaBaby HahaBall HahaCat HahaDisapprove HahaDoge HahaDreidel HahaElf HahaGingercat HahaGoose HahaHide HahaLean HahaNutcracker HahaNyandeer HahaPoint HahaPresent HahaReindeer HahaShrugLeft HahaShrugMiddle HahaShrugRight HahaSleep HahaSnowhal HahaSweat HahaThink HahaThisisfine HahaTurtledove\"};
 
 		case \"rpg\":
 			return { reply: \"RPGAyaya RPGBukka RPGBukkaNoo RPGEmpty RPGEpicStaff RPGEpicSword RPGFei RPGFireball RPGGhosto RPGHP RPGMana RPGOops RPGPhatLoot RPGSeven RPGShihu RPGStaff RPGTreeNua RPGYonger TwitchRPG\" };
@@ -86,7 +86,7 @@ ON DUPLICATE KEY UPDATE
 
 		case \"haha\": 
 		case \"holiday\": 
-			return { reply: \"Haha2020 HahaBaby HahaBall HahaCat HahaDisapprove HahaDoge HahaDreidel HahaElf HahaGingercat HahaHide HahaLean HahaNutcracker HahaNyandeer HahaPoint HahaPresent HahaReindeer HahaShrugLeft HahaShrugMiddle HahaShrugRight HahaSleep HahaSnowhal HahaSweat HahaThink HahaThisisfine HahaTurtledove\"};
+			return { reply: \"Haha2020 HahaBaby HahaBall HahaCat HahaDisapprove HahaDoge HahaDreidel HahaElf HahaGingercat HahaGoose HahaHide HahaLean HahaNutcracker HahaNyandeer HahaPoint HahaPresent HahaReindeer HahaShrugLeft HahaShrugMiddle HahaShrugRight HahaSleep HahaSnowhal HahaSweat HahaThink HahaThisisfine HahaTurtledove\"};
 
 		case \"rpg\":
 			return { reply: \"RPGAyaya RPGBukka RPGBukkaNoo RPGEmpty RPGEpicStaff RPGEpicSword RPGFei RPGFireball RPGGhosto RPGHP RPGMana RPGOops RPGPhatLoot RPGSeven RPGShihu RPGStaff RPGTreeNua RPGYonger TwitchRPG\" };
