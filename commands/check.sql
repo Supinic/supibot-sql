@@ -61,7 +61,7 @@ VALUES
 			}
 
 			const afkData = await sb.Query.getRecordset(rs => rs
-				.select(\"Text\", \"Started\", \"Silent\")
+				.select(\"Text\", \"Started\", \"Silent\", \"Status\")
 				.from(\"chat_data\", \"AFK\")
 				.where(\"User_Alias = %n\", targetUser.ID)
 				.where(\"Active = %b\", true)
@@ -74,10 +74,11 @@ VALUES
 				};
 			}
 			else {
-				const foreign = (afkData.Silent) ? \" (set via different bot) \" : \"\";
+				const type = (afkData.Status === \"afk\") ? \"\" : ` (${afkData.Status})`;
+				const foreign = (afkData.Silent) ? \"(set via different bot)\" : \"\";
 				const delta = sb.Utils.timeDelta(afkData.Started);
 				return {
-					reply: `That user is currently AFK${foreign}: ${afkData.Text || \"(no message)\"} (since ${delta})`
+					reply: `That user is currently AFK${type}: ${afkData.Text || \"(no message)\"} ${foreign} (since ${delta})`
 				};
 			}
 		}
@@ -285,7 +286,7 @@ ON DUPLICATE KEY UPDATE
 			}
 
 			const afkData = await sb.Query.getRecordset(rs => rs
-				.select(\"Text\", \"Started\", \"Silent\")
+				.select(\"Text\", \"Started\", \"Silent\", \"Status\")
 				.from(\"chat_data\", \"AFK\")
 				.where(\"User_Alias = %n\", targetUser.ID)
 				.where(\"Active = %b\", true)
@@ -298,10 +299,11 @@ ON DUPLICATE KEY UPDATE
 				};
 			}
 			else {
-				const foreign = (afkData.Silent) ? \" (set via different bot) \" : \"\";
+				const type = (afkData.Status === \"afk\") ? \"\" : ` (${afkData.Status})`;
+				const foreign = (afkData.Silent) ? \"(set via different bot)\" : \"\";
 				const delta = sb.Utils.timeDelta(afkData.Started);
 				return {
-					reply: `That user is currently AFK${foreign}: ${afkData.Text || \"(no message)\"} (since ${delta})`
+					reply: `That user is currently AFK${type}: ${afkData.Text || \"(no message)\"} ${foreign} (since ${delta})`
 				};
 			}
 		}
