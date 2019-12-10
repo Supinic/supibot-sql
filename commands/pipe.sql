@@ -50,8 +50,11 @@ VALUES
 	let fakeChannel = null;
 	
 	if (context.channel) {
-		fakeChannel = new sb.Channel(context.channel);
-		fakeChannel.Ping = false;	
+		const tempData = {...context.channel};
+		tempData.Data = JSON.stringify(tempData.Data);
+
+		fakeChannel = new sb.Channel(tempData);
+		fakeChannel.Ping = false;
 	}	
 
 	let currentArgs = [];
@@ -127,8 +130,11 @@ ON DUPLICATE KEY UPDATE
 	let fakeChannel = null;
 	
 	if (context.channel) {
-		fakeChannel = new sb.Channel(context.channel);
-		fakeChannel.Ping = false;	
+		const tempData = {...context.channel};
+		tempData.Data = JSON.stringify(tempData.Data);
+
+		fakeChannel = new sb.Channel(tempData);
+		fakeChannel.Ping = false;
 	}	
 
 	let currentArgs = [];
