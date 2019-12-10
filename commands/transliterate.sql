@@ -26,7 +26,7 @@ VALUES
 		138,
 		'transliterate',
 		NULL,
-		'Transliterates non-latin text into latin. Currently supports Japanese, Russian and Korean are planned',
+		'Transliterates non-latin text into Latin. Should support most of the languages not using Latin (like Japanese, Chinese, Russian, ...)',
 		15000,
 		0,
 		0,
