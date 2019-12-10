@@ -67,7 +67,7 @@ VALUES
 	}
 	else {
 		let link = \"\";
-		if (extra?.channel?.Links_Allowed === true) {
+		if (!extra.channel || extra.channel.Links_Allowed === true) {
 			link = \"https://en.wikipedia.org/?curid=\" + key;
 		};
 
@@ -117,7 +117,7 @@ ON DUPLICATE KEY UPDATE
 	}
 	else {
 		let link = \"\";
-		if (extra?.channel?.Links_Allowed === true) {
+		if (!extra.channel || extra.channel.Links_Allowed === true) {
 			link = \"https://en.wikipedia.org/?curid=\" + key;
 		};
 
