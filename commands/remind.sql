@@ -138,6 +138,17 @@ VALUES
 		return { reply: \"If you want to remind yourself, you must use a timed reminder!\" };
 	}
 
+	if (context.privateMessage && timestamp !== null) {
+		if (targetUser === context.user) {
+			isPrivate = true;
+		}
+		else {
+			return { 
+				reply: \"You cannot set a timed reminder for someone else via private messages!\"
+			};
+		}
+	}
+
 	const text = args.join(\" \") || null;
 	let resultID = null;
 
@@ -270,6 +281,17 @@ ON DUPLICATE KEY UPDATE
 	}
 	else if (targetUser === context.user) {
 		return { reply: \"If you want to remind yourself, you must use a timed reminder!\" };
+	}
+
+	if (context.privateMessage && timestamp !== null) {
+		if (targetUser === context.user) {
+			isPrivate = true;
+		}
+		else {
+			return { 
+				reply: \"You cannot set a timed reminder for someone else via private messages!\"
+			};
+		}
 	}
 
 	const text = args.join(\" \") || null;
