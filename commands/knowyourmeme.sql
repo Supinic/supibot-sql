@@ -57,8 +57,6 @@ VALUES
 		}
 	});
 
-	console.log(`${baseURL}?${params.toString()}`);
-
 	const firstLink = searchData.match(/class=[\'\"]photo[\'\"] href=.(\\/meme.*?)[\'\"]/ms);
 	if (!firstLink) {
 		return {
@@ -66,12 +64,8 @@ VALUES
 		};
 	}
 
-	const memeLink = firstLink[1];
-
-	console.log(memeLink);
-
 	const memeHTML = await sb.Utils.request({
-		uri: `${baseURL}${memeLink}`,
+		uri: `${baseURL}${firstLink[1]}`,
 		headers: {
 			\"User-Agent\": fakeAgent
 		}
@@ -111,8 +105,6 @@ ON DUPLICATE KEY UPDATE
 		}
 	});
 
-	console.log(`${baseURL}?${params.toString()}`);
-
 	const firstLink = searchData.match(/class=[\'\"]photo[\'\"] href=.(\\/meme.*?)[\'\"]/ms);
 	if (!firstLink) {
 		return {
@@ -120,12 +112,8 @@ ON DUPLICATE KEY UPDATE
 		};
 	}
 
-	const memeLink = firstLink[1];
-
-	console.log(memeLink);
-
 	const memeHTML = await sb.Utils.request({
-		uri: `${baseURL}${memeLink}`,
+		uri: `${baseURL}${firstLink[1]}`,
 		headers: {
 			\"User-Agent\": fakeAgent
 		}
