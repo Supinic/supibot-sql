@@ -42,25 +42,24 @@ VALUES
 		'(async function thesaurus (context, ...words) {
 	if (words.length === 0) {
 		return {
-			reply: \"Okayga\"
+			reply: \"No message provided!\"
 		};
 	}
 
-	const thesaurus = Object.fromEntries((await sb.Query.getRecordset(rs => rs
-		.select(\"Word\", \"Result\")
-		.from(\"cache\", \"Thesaurus\")
-		.where(\"Word IN %s+\", words)
-	)).map(record => {
-		return [record.Word, JSON.parse(record.Result)];
-	}));
-
-	console.log(thesaurus);
+	const thesaurus = Object.fromEntries(
+		(await sb.Query.getRecordset(rs => rs
+			.select(\"Word\", \"Result\")
+			.from(\"cache\", \"Thesaurus\")
+			.where(\"Word IN %s+\", words)
+		)).map(record => [ record.Word, JSON.parse(record.Result) ])
+	);
 
 	const result = [];
 	for (const rawWord of words) {
 		const word = rawWord.toLowerCase();
 		const roll = sb.Utils.random(1, 3);
 
+		// With a chance of 2 in 3, transmute the word into a synonym
 		if (thesaurus[word] && roll > 1) {
 			result.push(sb.Utils.randArray(thesaurus[word]));
 		}
@@ -81,25 +80,24 @@ ON DUPLICATE KEY UPDATE
 	Code = '(async function thesaurus (context, ...words) {
 	if (words.length === 0) {
 		return {
-			reply: \"Okayga\"
+			reply: \"No message provided!\"
 		};
 	}
 
-	const thesaurus = Object.fromEntries((await sb.Query.getRecordset(rs => rs
-		.select(\"Word\", \"Result\")
-		.from(\"cache\", \"Thesaurus\")
-		.where(\"Word IN %s+\", words)
-	)).map(record => {
-		return [record.Word, JSON.parse(record.Result)];
-	}));
-
-	console.log(thesaurus);
+	const thesaurus = Object.fromEntries(
+		(await sb.Query.getRecordset(rs => rs
+			.select(\"Word\", \"Result\")
+			.from(\"cache\", \"Thesaurus\")
+			.where(\"Word IN %s+\", words)
+		)).map(record => [ record.Word, JSON.parse(record.Result) ])
+	);
 
 	const result = [];
 	for (const rawWord of words) {
 		const word = rawWord.toLowerCase();
 		const roll = sb.Utils.random(1, 3);
 
+		// With a chance of 2 in 3, transmute the word into a synonym
 		if (thesaurus[word] && roll > 1) {
 			result.push(sb.Utils.randArray(thesaurus[word]));
 		}
