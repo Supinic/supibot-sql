@@ -39,21 +39,23 @@ VALUES
 		1,
 		1,
 		0,
-		'async (extra, link, ...comment) => {
+		'(async function gachiCheck (context, link, ...comment) {
 	const originalLink = link;
 	if (!link) {
 		return { reply: \"No link provided!\" };
 	}
 
-	const trackToLink = (id) => (extra.channel.Links_Allowed)
+	const trackToLink = (id) => (!context.channel || context.channel.Links_Allowed)
 		? `https://supinic.com/track/detail/${id}`
 		: `track list ID ${id}`;
 
-	const typeMap = Object.fromEntries((await sb.Query.getRecordset(rs => rs
-		.select(\"ID\", \"Parser_Name\")
-		.from(\"data\", \"Video_Type\")
-		.where(\"Parser_Name IS NOT NULL\")
-	)).map(i => [i.Parser_Name, i.ID]));
+	const typeMap = Object.fromEntries(
+		(await sb.Query.getRecordset(rs => rs
+			.select(\"ID\", \"Parser_Name\")
+			.from(\"data\", \"Video_Type\")
+			.where(\"Parser_Name IS NOT NULL\")
+		)).map(i => [i.Parser_Name, i.ID])
+	);
 
 	const type = sb.Utils.linkParser.autoRecognize(link);
 	if (!type) {
@@ -61,7 +63,6 @@ VALUES
 	}
 
 	link = sb.Utils.linkParser.getParser(type).parseLink(link);
-
 	const check = (await sb.Query.getRecordset(rs => rs
 		.select(\"ID\")
 		.from(\"music\", \"Track\")
@@ -78,40 +79,41 @@ VALUES
 			})
 			.where(\"Track_Tag.Track = %n\", check.ID)
 		)).map(i => i.Tag_Name).join(\", \");
-		
 
 		return {
 			reply: \"Link is in the list already: \" + trackToLink(check.ID) + \" with tags: \" + tags
 		};
 	}
-	else {			
+	else {
 		const tag = { todo: 20 };
 		const videoData = await sb.Utils.linkParser.fetchData(originalLink);
 		const row = await sb.Query.getRow(\"music\", \"Track\");
+	
 		row.setValues({
 			Link: link,
 			Name: (videoData && videoData.name) || null,
-			Added_By: extra.user.ID,
+			Added_By: context.user.ID,
 			Video_Type: typeMap[type],
 			Available: Boolean(videoData),
-			Published: (videoData && videoData.published) 
+			Published: (videoData && videoData.published)
 				? new sb.Date(videoData.published)
 				: null,
 			Duration: (videoData && videoData.duration) || null,
 			Track_Type: null,
 			Notes: (comment.length === 0) ? null : comment.join(\" \")
 		});
+		
 		const {insertId: trackID} = await row.save();
-
 		const tagRow = await sb.Query.getRow(\"music\", \"Track_Tag\");
 		tagRow.setValues({
 			Track: trackID,
 			Tag: tag.todo,
-			Added_By: extra.user.ID,
+			Added_By: context.user.ID,
 			Notes: JSON.stringify(videoData)
 		});
-		await tagRow.save();
 		
+		await tagRow.save();
+
 		if (videoData.author) {
 			let authorID = null;
 			const normal = videoData.author.toLowerCase().replace(/\\s+/g, \"_\");
@@ -129,9 +131,9 @@ VALUES
 				authorRow.setValues({
 					Name: videoData.author,
 					Normalized_Name: normal,
-					Added_By: extra.user.ID	
+					Added_By: context.user.ID
 				});
-	
+
 				authorID = (await authorRow.save()).insertId;
 			}
 
@@ -140,16 +142,16 @@ VALUES
 				Track: trackID,
 				Author: authorID,
 				Role: \"Uploader\",
-				Added_By: extra.user.ID
+				Added_By: context.user.ID
 			});
-			await authorRow.save();			
+			await authorRow.save();
 		}
 
 		return {
 			reply: \"Saved as \" + trackToLink(row.values.ID) + \" and marked as TODO.\"
 		};
 	}
-}',
+})',
 		'Supports Youtube, Nicovideo, Bilibili, Soundcloud, VK, Vimeo
 
 $gc <link> => Checks the link, and adds it to the todo list if not found
@@ -161,21 +163,23 @@ $gc https://www.nicovideo.jp/watch/sm6140534 ',
 	)
 
 ON DUPLICATE KEY UPDATE
-	Code = 'async (extra, link, ...comment) => {
+	Code = '(async function gachiCheck (context, link, ...comment) {
 	const originalLink = link;
 	if (!link) {
 		return { reply: \"No link provided!\" };
 	}
 
-	const trackToLink = (id) => (extra.channel.Links_Allowed)
+	const trackToLink = (id) => (!context.channel || context.channel.Links_Allowed)
 		? `https://supinic.com/track/detail/${id}`
 		: `track list ID ${id}`;
 
-	const typeMap = Object.fromEntries((await sb.Query.getRecordset(rs => rs
-		.select(\"ID\", \"Parser_Name\")
-		.from(\"data\", \"Video_Type\")
-		.where(\"Parser_Name IS NOT NULL\")
-	)).map(i => [i.Parser_Name, i.ID]));
+	const typeMap = Object.fromEntries(
+		(await sb.Query.getRecordset(rs => rs
+			.select(\"ID\", \"Parser_Name\")
+			.from(\"data\", \"Video_Type\")
+			.where(\"Parser_Name IS NOT NULL\")
+		)).map(i => [i.Parser_Name, i.ID])
+	);
 
 	const type = sb.Utils.linkParser.autoRecognize(link);
 	if (!type) {
@@ -183,7 +187,6 @@ ON DUPLICATE KEY UPDATE
 	}
 
 	link = sb.Utils.linkParser.getParser(type).parseLink(link);
-
 	const check = (await sb.Query.getRecordset(rs => rs
 		.select(\"ID\")
 		.from(\"music\", \"Track\")
@@ -200,40 +203,41 @@ ON DUPLICATE KEY UPDATE
 			})
 			.where(\"Track_Tag.Track = %n\", check.ID)
 		)).map(i => i.Tag_Name).join(\", \");
-		
 
 		return {
 			reply: \"Link is in the list already: \" + trackToLink(check.ID) + \" with tags: \" + tags
 		};
 	}
-	else {			
+	else {
 		const tag = { todo: 20 };
 		const videoData = await sb.Utils.linkParser.fetchData(originalLink);
 		const row = await sb.Query.getRow(\"music\", \"Track\");
+	
 		row.setValues({
 			Link: link,
 			Name: (videoData && videoData.name) || null,
-			Added_By: extra.user.ID,
+			Added_By: context.user.ID,
 			Video_Type: typeMap[type],
 			Available: Boolean(videoData),
-			Published: (videoData && videoData.published) 
+			Published: (videoData && videoData.published)
 				? new sb.Date(videoData.published)
 				: null,
 			Duration: (videoData && videoData.duration) || null,
 			Track_Type: null,
 			Notes: (comment.length === 0) ? null : comment.join(\" \")
 		});
+		
 		const {insertId: trackID} = await row.save();
-
 		const tagRow = await sb.Query.getRow(\"music\", \"Track_Tag\");
 		tagRow.setValues({
 			Track: trackID,
 			Tag: tag.todo,
-			Added_By: extra.user.ID,
+			Added_By: context.user.ID,
 			Notes: JSON.stringify(videoData)
 		});
-		await tagRow.save();
 		
+		await tagRow.save();
+
 		if (videoData.author) {
 			let authorID = null;
 			const normal = videoData.author.toLowerCase().replace(/\\s+/g, \"_\");
@@ -251,9 +255,9 @@ ON DUPLICATE KEY UPDATE
 				authorRow.setValues({
 					Name: videoData.author,
 					Normalized_Name: normal,
-					Added_By: extra.user.ID	
+					Added_By: context.user.ID
 				});
-	
+
 				authorID = (await authorRow.save()).insertId;
 			}
 
@@ -262,13 +266,13 @@ ON DUPLICATE KEY UPDATE
 				Track: trackID,
 				Author: authorID,
 				Role: \"Uploader\",
-				Added_By: extra.user.ID
+				Added_By: context.user.ID
 			});
-			await authorRow.save();			
+			await authorRow.save();
 		}
 
 		return {
 			reply: \"Saved as \" + trackToLink(row.values.ID) + \" and marked as TODO.\"
 		};
 	}
-}'
+})'
