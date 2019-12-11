@@ -205,7 +205,13 @@ VALUES
 	\"Types, their aliases and short-hands are listed below, separeted by slash\",
 	\"\",
 
+	`<code>${prefix}tt 3Head This is a sample message.</code> => dis is a sample message.`,
+
 	`<code>${prefix}tt fancy This is a test</code> => 𝓣𝓱𝓲𝓼 𝓲𝓼 𝓪 𝓽𝓮𝓼𝓽`,
+
+	`<code>${prefix}tt KKona Let\'s mine some gold and buy some guns.</code> => done let\'s maahn sum color an buy sum barkin\' irons.`,
+
+	`<code>${prefix}tt KKrikey KKrikey Let\'s buy some beer at the gas station.</code> => Let\'s buy some cold one at the fuckin\' servo. Too right, mate.`,
 	
 	`<code>${prefix}tt lc/lower/lowercase This is a test</code> => this is a test`,
 	
