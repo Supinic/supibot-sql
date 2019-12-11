@@ -81,9 +81,14 @@ VALUES
 	const headline = sb.Utils.randArray(data.articles);
 	const title = sb.Utils.fixHTML(headline.title || \"\");
 	const text = title + (title ? \". \" : \"\") + sb.Utils.removeHTML(sb.Utils.fixHTML(headline.description || \"\"));
+	
+	let pastebinLink = \"\";
+	if (!context.append.pipe) {
+		pastebinLink = await sb.Pastebin.post(`${headline.url}\\n\\n${text}`, { name: headline.source.name });
+	}
 
 	return { 
-		reply: text 
+		reply: pastebinLink + \" \" + text 
 	};
 })',
 		NULL,
@@ -158,8 +163,13 @@ ON DUPLICATE KEY UPDATE
 	const headline = sb.Utils.randArray(data.articles);
 	const title = sb.Utils.fixHTML(headline.title || \"\");
 	const text = title + (title ? \". \" : \"\") + sb.Utils.removeHTML(sb.Utils.fixHTML(headline.description || \"\"));
+	
+	let pastebinLink = \"\";
+	if (!context.append.pipe) {
+		pastebinLink = await sb.Pastebin.post(`${headline.url}\\n\\n${text}`, { name: headline.source.name });
+	}
 
 	return { 
-		reply: text 
+		reply: pastebinLink + \" \" + text 
 	};
 })'
