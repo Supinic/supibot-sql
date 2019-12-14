@@ -70,7 +70,6 @@ VALUES
 			args = args.slice(1);
 			args.unshift(...userData.Data.defaultWeather.location);
 		}
-
 	}
 	else if (args[0].toLowerCase() === \"supibot\") {
 		const exec = require(\"child_process\").execSync;
@@ -280,7 +279,6 @@ ON DUPLICATE KEY UPDATE
 			args = args.slice(1);
 			args.unshift(...userData.Data.defaultWeather.location);
 		}
-
 	}
 	else if (args[0].toLowerCase() === \"supibot\") {
 		const exec = require(\"child_process\").execSync;
