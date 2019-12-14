@@ -38,7 +38,7 @@ VALUES
 		0,
 		1,
 		1,
-		0,
+		1,
 		'(async function probe (context, targetUser) {
 	if (!targetUser) {
 		return { reply: \"No user provided!\", meta: { skipCooldown: true } };
