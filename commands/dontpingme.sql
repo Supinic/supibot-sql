@@ -73,7 +73,8 @@ VALUES
 			User_Alias: context.user.ID,
 			Channel: null,
 			Type: \"Unping\",
-			Active: true
+			Active: true,
+			Issued_By: context.user.ID
 		});
 
 		return {
@@ -120,7 +121,8 @@ ON DUPLICATE KEY UPDATE
 			User_Alias: context.user.ID,
 			Channel: null,
 			Type: \"Unping\",
-			Active: true
+			Active: true,
+			Issued_By: context.user.ID
 		});
 
 		return {

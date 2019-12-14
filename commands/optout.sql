@@ -82,7 +82,8 @@ VALUES
 			User_Alias: context.user.ID,
 			Command: command.ID,
 			Type: \"Opt-out\",
-			Response: \"Auto\"
+			Response: \"Auto\",
+			Issued_By: context.user.ID
 		});
 
 		await filter.setReason(paddedReason);		
@@ -156,7 +157,8 @@ ON DUPLICATE KEY UPDATE
 			User_Alias: context.user.ID,
 			Command: command.ID,
 			Type: \"Opt-out\",
-			Response: \"Auto\"
+			Response: \"Auto\",
+			Issued_By: context.user.ID
 		});
 
 		await filter.setReason(paddedReason);		
