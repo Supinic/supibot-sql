@@ -39,42 +39,50 @@ VALUES
 		0,
 		1,
 		0,
-		'async (extra) => {
+		'(async function randomLineExtra () {
 	const channels = sb.Config.get(\"EXTRA_RANDOM_LINE_CHANNELS\");
 	const [channel, emoji] = sb.Utils.randArray(Object.entries(channels));
 
-	const maxID = (await sb.Query.getRecordset(rs => rs
-		.select(\"MAX(ID) AS MaxID\")
+	const max = (await sb.Query.getRecordset(rs => rs
+		.select(\"MAX(ID) AS ID\")
 		.from(\"chat_line\", channel)
-	))[0].MaxID;
+		.single()
+	));
 
 	const line = (await sb.Query.getRecordset(rs => rs
 		.select(\"Text\")
 		.from(\"chat_line\", channel)
-		.where(\"ID = %n\", sb.Utils.random(1, maxID))
-	))[0].Text.replace(sb.Config.get(\"LINK_REGEX\"), \"[LINK]\");
+		.where(\"ID = %n\", sb.Utils.random(1, max.ID))
+		.single()
+	));
 
-	return { reply: emoji + \" \" + line };
-};',
+	return {
+		reply: `${emoji} ${line.Text}`
+	};
+})',
 		NULL,
 		NULL
 	)
 
 ON DUPLICATE KEY UPDATE
-	Code = 'async (extra) => {
+	Code = '(async function randomLineExtra () {
 	const channels = sb.Config.get(\"EXTRA_RANDOM_LINE_CHANNELS\");
 	const [channel, emoji] = sb.Utils.randArray(Object.entries(channels));
 
-	const maxID = (await sb.Query.getRecordset(rs => rs
-		.select(\"MAX(ID) AS MaxID\")
+	const max = (await sb.Query.getRecordset(rs => rs
+		.select(\"MAX(ID) AS ID\")
 		.from(\"chat_line\", channel)
-	))[0].MaxID;
+		.single()
+	));
 
 	const line = (await sb.Query.getRecordset(rs => rs
 		.select(\"Text\")
 		.from(\"chat_line\", channel)
-		.where(\"ID = %n\", sb.Utils.random(1, maxID))
-	))[0].Text.replace(sb.Config.get(\"LINK_REGEX\"), \"[LINK]\");
+		.where(\"ID = %n\", sb.Utils.random(1, max.ID))
+		.single()
+	));
 
-	return { reply: emoji + \" \" + line };
-};'
+	return {
+		reply: `${emoji} ${line.Text}`
+	};
+})'
