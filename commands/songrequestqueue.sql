@@ -50,6 +50,12 @@ VALUES
 	}
 
 	const status = await sb.VideoLANConnector.status(); 
+	if (!status.information) {
+		return {
+			reply: \"No song currently queued. Check history here: https://supinic.com/stream/video-queue\"
+		};
+	}
+
 	const url = (status.information.category.meta.url.includes(\".mp3\"))
 		? status.information.category.meta.url
 		: sb.Utils.linkParser.parseLink(status.information.category.meta.url);
@@ -91,6 +97,12 @@ ON DUPLICATE KEY UPDATE
 	}
 
 	const status = await sb.VideoLANConnector.status(); 
+	if (!status.information) {
+		return {
+			reply: \"No song currently queued. Check history here: https://supinic.com/stream/video-queue\"
+		};
+	}
+
 	const url = (status.information.category.meta.url.includes(\".mp3\"))
 		? status.information.category.meta.url
 		: sb.Utils.linkParser.parseLink(status.information.category.meta.url);
