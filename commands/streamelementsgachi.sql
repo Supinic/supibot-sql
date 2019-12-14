@@ -30,7 +30,7 @@ VALUES
 		60000,
 		0,
 		0,
-		0,
+		1,
 		1,
 		'Only available in specific channels (that have SE)',
 		0,
