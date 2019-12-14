@@ -72,7 +72,7 @@ VALUES
 	const delta = sb.Utils.timeDelta(sb.Date.now() + length * 1000, true);
 
 	return {
-		reply: `There are ${playlist.length} videos in the queue, with a total length of ${delta}.`
+		reply: `There are ${playlist.length} videos in the queue, with a total length of ${delta}. Check it out here: https://supinic.com/stream/video-queue`
 	}
 })',
 		NULL,
@@ -113,6 +113,6 @@ ON DUPLICATE KEY UPDATE
 	const delta = sb.Utils.timeDelta(sb.Date.now() + length * 1000, true);
 
 	return {
-		reply: `There are ${playlist.length} videos in the queue, with a total length of ${delta}.`
+		reply: `There are ${playlist.length} videos in the queue, with a total length of ${delta}. Check it out here: https://supinic.com/stream/video-queue`
 	}
 })'
