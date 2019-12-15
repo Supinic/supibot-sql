@@ -102,8 +102,18 @@ VALUES
 
 	const params = new sb.URLParams().set(\"url\", url);
 	const limit = sb.Config.get(\"MAX_SONG_REQUEST_LENGTH\");
-	let data = JSON.parse(await sb.Utils.request(\"https://supinic.com/api/trackData/fetch?\" + params.toString())).data;
+	const raw = await sb.Utils.request({
+		uri: \"https://supinic.com/api/trackData/fetch?\" + params.toString(),
+		useFullResponse: true
+	});
 
+	if (raw.statusCode === 502 || raw.statusCode === 504) {
+		return {
+			reply: \"The supinic.com API is restarting or down! Please try again later.\"
+		};
+	}
+
+	let data = JSON.parse(raw.body).data;
 	if (!data) {
 		data = await sb.Utils.fetchYoutubeVideo(args.join(\" \").replace(/-/g, \"\"), sb.Config.get(\"API_GOOGLE_YOUTUBE\"));
 		if (!data) {
@@ -197,8 +207,18 @@ ON DUPLICATE KEY UPDATE
 
 	const params = new sb.URLParams().set(\"url\", url);
 	const limit = sb.Config.get(\"MAX_SONG_REQUEST_LENGTH\");
-	let data = JSON.parse(await sb.Utils.request(\"https://supinic.com/api/trackData/fetch?\" + params.toString())).data;
+	const raw = await sb.Utils.request({
+		uri: \"https://supinic.com/api/trackData/fetch?\" + params.toString(),
+		useFullResponse: true
+	});
 
+	if (raw.statusCode === 502 || raw.statusCode === 504) {
+		return {
+			reply: \"The supinic.com API is restarting or down! Please try again later.\"
+		};
+	}
+
+	let data = JSON.parse(raw.body).data;
 	if (!data) {
 		data = await sb.Utils.fetchYoutubeVideo(args.join(\" \").replace(/-/g, \"\"), sb.Config.get(\"API_GOOGLE_YOUTUBE\"));
 		if (!data) {
