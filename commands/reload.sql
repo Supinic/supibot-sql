@@ -54,7 +54,6 @@ VALUES
 			sb.Filter = require(modulePath + \"/classes/filter.js\");
 			await sb.Filter.reloadData();
 			break;
-
 		case \"bans\":
 		case \"filters\": await sb.Filter.reloadData(); break;
 
@@ -72,23 +71,19 @@ VALUES
 			break;
 		case \"commands\": await sb.Command.reloadData(); break;
 
-		case \"Reminder\": await sb.Reminder.reloadModule(); break;
-		case \"reminders\": await sb.Reminder.reloadData(); break;
-
-		case \"User\": await sb.User.reloadModule(); break;
-		case \"users\": await sb.User.reloadData(); break;
-
 		case \"Config\":
 		case \"config\": await sb.Config.reloadData(); break;
 
 		case \"Cron\":
 		case \"cron\": await sb.Cron.reloadData(); break;
-		
-		case \"Date\": 
+
+		case \"Date\":
 			sb.Date = null;
 			delete require.cache[require.resolve(modulePath + \"/objects/date.js\")];
 			sb.Date = require(modulePath + \"/objects/date.js\");
 			break;
+
+		case \"extranews\": await sb.ExtraNews.reloadData(); break;
 
 		case \"MarkovChain\":
 			sb.MarkovChain = null;
@@ -97,12 +92,21 @@ VALUES
 			sb.MarkovChain.initialize();
 			break;
 
+		case \"Reminder\": await sb.Reminder.reloadModule(); break;
+		case \"reminders\": await sb.Reminder.reloadData(); break;
+
+		case \"User\": await sb.User.reloadModule(); break;
+		case \"users\": await sb.User.reloadData(); break;
+
 		default: return { reply: \"Unrecognized module!\" };
 	}
 
 	sb.Runtime.incrementScriptHotloaded();
 	sb.Master.reloaded = new sb.Date();
-	return { reply: \"Done.\" };
+
+	return {
+		reply: \"Reloaded successfully.\"
+	};
 })',
 		NULL,
 		NULL
@@ -124,7 +128,6 @@ ON DUPLICATE KEY UPDATE
 			sb.Filter = require(modulePath + \"/classes/filter.js\");
 			await sb.Filter.reloadData();
 			break;
-
 		case \"bans\":
 		case \"filters\": await sb.Filter.reloadData(); break;
 
@@ -142,23 +145,19 @@ ON DUPLICATE KEY UPDATE
 			break;
 		case \"commands\": await sb.Command.reloadData(); break;
 
-		case \"Reminder\": await sb.Reminder.reloadModule(); break;
-		case \"reminders\": await sb.Reminder.reloadData(); break;
-
-		case \"User\": await sb.User.reloadModule(); break;
-		case \"users\": await sb.User.reloadData(); break;
-
 		case \"Config\":
 		case \"config\": await sb.Config.reloadData(); break;
 
 		case \"Cron\":
 		case \"cron\": await sb.Cron.reloadData(); break;
-		
-		case \"Date\": 
+
+		case \"Date\":
 			sb.Date = null;
 			delete require.cache[require.resolve(modulePath + \"/objects/date.js\")];
 			sb.Date = require(modulePath + \"/objects/date.js\");
 			break;
+
+		case \"extranews\": await sb.ExtraNews.reloadData(); break;
 
 		case \"MarkovChain\":
 			sb.MarkovChain = null;
@@ -167,10 +166,19 @@ ON DUPLICATE KEY UPDATE
 			sb.MarkovChain.initialize();
 			break;
 
+		case \"Reminder\": await sb.Reminder.reloadModule(); break;
+		case \"reminders\": await sb.Reminder.reloadData(); break;
+
+		case \"User\": await sb.User.reloadModule(); break;
+		case \"users\": await sb.User.reloadData(); break;
+
 		default: return { reply: \"Unrecognized module!\" };
 	}
 
 	sb.Runtime.incrementScriptHotloaded();
 	sb.Master.reloaded = new sb.Date();
-	return { reply: \"Done.\" };
+
+	return {
+		reply: \"Reloaded successfully.\"
+	};
 })'
