@@ -43,30 +43,37 @@ VALUES
 	const list = sb.VideoLANConnector.videoQueue;
 	const current = await sb.VideoLANConnector.currentlyPlayingData();
 	if (current === null) {
-		return { 
+		return {
 			reply: \"Nothing is currently playing!\"
 		};
 	}
 
 	const queued = list.filter(i => i.vlcID >= current.vlcID).sort((a, b) => a.vlcID - b.vlcID)
 	if (queued.length === 0) {
-		return { 
+		return {
 			reply: \"There are no videos queued right now!\"
 		};
 	}
-	
-	const userRequest = queued.find(i => i.user === context.user.ID);
-	if (!userRequest) {
+
+	const userRequests = queued.filter(i => i.user === context.user.ID);
+	if (userRequests.length === 0) {
 		return {
 			reply: \"You have no video(s) waiting in the queue!\"
 		};
 	}
-	else if (userRequest.vlcID === current.vlcID) {
+
+	if (userRequests[0].vlcID === current.vlcID && userRequests.length === 1) {
 		return {
-			reply: \"Your video request is playing right now!\"
+			reply: `Your request ${userRequests[0].name} is playing right now! You don\'t have any other videos in the queue.`
 		};
 	}
 
+	let prepend = \"\";
+	let userRequest = userRequests[0];
+	if (userRequest.vlcID === current.vlcID) {
+		prepend = `Your request \"${userRequests[0].name}\" is playing right now!`;
+		userRequest = userRequests[1];
+	}
 
 	const status = await sb.VideoLANConnector.status();
 	let length = status.length - status.time;
@@ -80,8 +87,10 @@ VALUES
 	}
 
 	const delta = sb.Utils.formatTime(length);
+	const bridge = (prepend) ? \"Then,\" : \"Your next video\";
+
 	return {
-		reply: `Your request \"${userRequest.name}\" (ID ${userRequest.vlcID}) is playing in ${delta}.`
+		reply: `${prepend} ${bridge} \"${userRequest.name}\" is playing in ${delta}.`
 	};
 })',
 		NULL,
@@ -93,30 +102,37 @@ ON DUPLICATE KEY UPDATE
 	const list = sb.VideoLANConnector.videoQueue;
 	const current = await sb.VideoLANConnector.currentlyPlayingData();
 	if (current === null) {
-		return { 
+		return {
 			reply: \"Nothing is currently playing!\"
 		};
 	}
 
 	const queued = list.filter(i => i.vlcID >= current.vlcID).sort((a, b) => a.vlcID - b.vlcID)
 	if (queued.length === 0) {
-		return { 
+		return {
 			reply: \"There are no videos queued right now!\"
 		};
 	}
-	
-	const userRequest = queued.find(i => i.user === context.user.ID);
-	if (!userRequest) {
+
+	const userRequests = queued.filter(i => i.user === context.user.ID);
+	if (userRequests.length === 0) {
 		return {
 			reply: \"You have no video(s) waiting in the queue!\"
 		};
 	}
-	else if (userRequest.vlcID === current.vlcID) {
+
+	if (userRequests[0].vlcID === current.vlcID && userRequests.length === 1) {
 		return {
-			reply: \"Your video request is playing right now!\"
+			reply: `Your request ${userRequests[0].name} is playing right now! You don\'t have any other videos in the queue.`
 		};
 	}
 
+	let prepend = \"\";
+	let userRequest = userRequests[0];
+	if (userRequest.vlcID === current.vlcID) {
+		prepend = `Your request \"${userRequests[0].name}\" is playing right now!`;
+		userRequest = userRequests[1];
+	}
 
 	const status = await sb.VideoLANConnector.status();
 	let length = status.length - status.time;
@@ -130,7 +146,9 @@ ON DUPLICATE KEY UPDATE
 	}
 
 	const delta = sb.Utils.formatTime(length);
+	const bridge = (prepend) ? \"Then,\" : \"Your next video\";
+
 	return {
-		reply: `Your request \"${userRequest.name}\" (ID ${userRequest.vlcID}) is playing in ${delta}.`
+		reply: `${prepend} ${bridge} \"${userRequest.name}\" is playing in ${delta}.`
 	};
 })'
