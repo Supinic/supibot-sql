@@ -92,19 +92,27 @@ $shower => Shower status
 $brb => Be right back status
 
 $afk I\'ll be back.',
-		'async (prefix) => {
-	return [
+		'async (prefix) => [
 		\"Flags you as AFK (away from keyboard).\",
 		\"While you are AFK, others can check if you are AFK.\",
 		\"On your first message while AFK, the status ends and the bot will announce you coming back.\",
 		\"Several aliases exist in order to make going AFK for different situations easier.\",		
 		\"\",
-		\"<code>\" + prefix + \"afk (status) =></code> You are now AFK with the provided status\",
-		\"<code>\" + prefix + \"poop =></code> You are now pooping.\",
-		\"<code>\" + prefix + \"brb =></code> You will be right back.\",
-		\"and more ...\"
-	];
-}	'
+
+		`<code>${prefix}afk (status)</code>`,
+		`You are now AFK with the provided status`,
+		``,
+
+		`<code>${prefix}poop (status)</code>`,
+		`You are now pooping.`,
+		``,
+
+		`<code>${prefix}brb (status)</code>`,
+		`You are now pooping.`,
+		``,
+
+		`and more - check the aliases`
+]	'
 	)
 
 ON DUPLICATE KEY UPDATE
