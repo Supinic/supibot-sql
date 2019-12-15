@@ -39,39 +39,42 @@ VALUES
 		1,
 		1,
 		0,
-		'async (extra, ...args) => {
+		'(async function urban (context, ...args) {
 	if (args.length === 0) {
-		return { 
+		return {
 			reply: \"No term has been provided!\",
 			meta: { skipCooldown: true }
 		};
 	}
 
 	let index = 0;
-	const last = args[args.length - 1];
-	if (/index:(\\d+)/.test(last)) {
-		index = Number(args.pop().split(\":\")[1]);
+	for (let i = 0; i < args.length; i++) {
+		const token = args[i];
+		if (/index:\\n+/.test(token)) {
+			index = Number(token.split(\":\")[1]);
+			args.splice(i, 1);
+		}
 	}
 
-	const url = \"https://api.urbandictionary.com/v0/define?term=\" + sb.Utils.argsToFixedURL(args);
-	
-
 	let data = null;
-
+	const params = new sb.URLParams().set(\"term\", args.join(\" \"));
 	try {
-		data = JSON.parse(await sb.Utils.request(url));
+		data = JSON.parse(await sb.Utils.request({
+			uri: `https://api.urbandictionary.com/v0/define?${params.toString()}`
+		}));
 	}
 	catch (e) {
 		console.warn(\"Urban is down\", e);
 		return { reply: \"Urban API returned an error :(\" };
 	}
+
 	if (!data.list || data.result_type === \"no_results\") {
 		sb.SystemLogger.send(\"Command.Other\", JSON.stringify(data));
 		return { reply: \"No results found!\" };
 	}
 
 	const item = data.list.filter(i => i.word.toLowerCase() === args.join(\" \").toLowerCase())[index];
-	if (!item) { 
+	if (!item) {
 		return { reply: \"There is no definition with that index!\" };
 	}
 
@@ -79,49 +82,52 @@ VALUES
 	const example = (item.example)
 		? (\" - Example: \" + item.example)
 		: \"\";
-		
+
 	return {
 		reply: thumbs + \" \" + (item.definition + example).replace(/[\\][]/g, \"\")
 	};
-}',
+})',
 		NULL,
 		NULL
 	)
 
 ON DUPLICATE KEY UPDATE
-	Code = 'async (extra, ...args) => {
+	Code = '(async function urban (context, ...args) {
 	if (args.length === 0) {
-		return { 
+		return {
 			reply: \"No term has been provided!\",
 			meta: { skipCooldown: true }
 		};
 	}
 
 	let index = 0;
-	const last = args[args.length - 1];
-	if (/index:(\\d+)/.test(last)) {
-		index = Number(args.pop().split(\":\")[1]);
+	for (let i = 0; i < args.length; i++) {
+		const token = args[i];
+		if (/index:\\n+/.test(token)) {
+			index = Number(token.split(\":\")[1]);
+			args.splice(i, 1);
+		}
 	}
 
-	const url = \"https://api.urbandictionary.com/v0/define?term=\" + sb.Utils.argsToFixedURL(args);
-	
-
 	let data = null;
-
+	const params = new sb.URLParams().set(\"term\", args.join(\" \"));
 	try {
-		data = JSON.parse(await sb.Utils.request(url));
+		data = JSON.parse(await sb.Utils.request({
+			uri: `https://api.urbandictionary.com/v0/define?${params.toString()}`
+		}));
 	}
 	catch (e) {
 		console.warn(\"Urban is down\", e);
 		return { reply: \"Urban API returned an error :(\" };
 	}
+
 	if (!data.list || data.result_type === \"no_results\") {
 		sb.SystemLogger.send(\"Command.Other\", JSON.stringify(data));
 		return { reply: \"No results found!\" };
 	}
 
 	const item = data.list.filter(i => i.word.toLowerCase() === args.join(\" \").toLowerCase())[index];
-	if (!item) { 
+	if (!item) {
 		return { reply: \"There is no definition with that index!\" };
 	}
 
@@ -129,8 +135,8 @@ ON DUPLICATE KEY UPDATE
 	const example = (item.example)
 		? (\" - Example: \" + item.example)
 		: \"\";
-		
+
 	return {
 		reply: thumbs + \" \" + (item.definition + example).replace(/[\\][]/g, \"\")
 	};
-}'
+})'
