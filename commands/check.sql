@@ -175,7 +175,7 @@ VALUES
 			}
 
 			const poll = await sb.Query.getRecordset(rs => rs
-				.select(\"Text\", \"Status\")
+				.select(\"Text\", \"Status\", \"End\")
 				.from(\"chat_data\", \"Poll\")
 				.where(\"ID = %n\", identifier)
 				.single()
@@ -187,8 +187,12 @@ VALUES
 				};
 			}
 			else if (poll.Status === \"Cancelled\" || poll.Status === \"Active\") {
+				const delta = (poll.End < sb.Date.now())
+					? \"already ended.\"
+					: `ends in ${sb.Utils.timeDelta(poll.End)}.`;
+
 				return {
-					reply: `Poll ${identifier} (${poll.Status}) - ${poll.Text}`
+					reply: `Poll ${identifier} ${delta} (${poll.Status}) - ${poll.Text}`
 				};
 			}
 
@@ -400,7 +404,7 @@ ON DUPLICATE KEY UPDATE
 			}
 
 			const poll = await sb.Query.getRecordset(rs => rs
-				.select(\"Text\", \"Status\")
+				.select(\"Text\", \"Status\", \"End\")
 				.from(\"chat_data\", \"Poll\")
 				.where(\"ID = %n\", identifier)
 				.single()
@@ -412,8 +416,12 @@ ON DUPLICATE KEY UPDATE
 				};
 			}
 			else if (poll.Status === \"Cancelled\" || poll.Status === \"Active\") {
+				const delta = (poll.End < sb.Date.now())
+					? \"already ended.\"
+					: `ends in ${sb.Utils.timeDelta(poll.End)}.`;
+
 				return {
-					reply: `Poll ${identifier} (${poll.Status}) - ${poll.Text}`
+					reply: `Poll ${identifier} ${delta} (${poll.Status}) - ${poll.Text}`
 				};
 			}
 
