@@ -40,16 +40,15 @@ VALUES
 		1,
 		0,
 		'(async function news (context, ...rest) {
-	let params = new sb.URLParams().set(\"language\", \"en\");
-
+	const params = new sb.URLParams().set(\"language\", \"en\");
 	if (rest[0] && sb.ExtraNews.check(rest[0])) {
+		const { content, link, title } = await sb.ExtraNews.fetch(rest[0]);
 		return { 
-			reply: await sb.ExtraNews.fetch(rest[0])
+			reply: `${link} ${title} - ${content}`
 		};
 	}
 	else if (/^[A-Z]{2}$/i.test(rest[0])) {
-		params.unset(\"language\")
-			.set(\"country\", rest.shift().toLowerCase());
+		params.unset(\"language\").set(\"country\", rest.shift().toLowerCase());
 	}
 
 	const url = \"https://newsapi.org/v2/top-headlines?\";
@@ -79,16 +78,10 @@ VALUES
 	}
 
 	const headline = sb.Utils.randArray(data.articles);
-	const title = sb.Utils.fixHTML(headline.title || \"\");
-	const text = title + (title ? \". \" : \"\") + sb.Utils.removeHTML(sb.Utils.fixHTML(headline.description || \"\"));
+	const text = sb.Utils.removeHTML(sb.Utils.fixHTML(headline.description || \"\"));
 	
-	let pastebinLink = \"\";
-	if (!context.append.pipe) {
-		pastebinLink = await sb.Pastebin.post(`${headline.url}\\n\\n${text}`, { name: headline.source.name });
-	}
-
 	return { 
-		reply: pastebinLink + \" \" + text 
+		reply: `${headline.url} ${text}`
 	};
 })',
 		NULL,
@@ -122,16 +115,15 @@ VALUES
 
 ON DUPLICATE KEY UPDATE
 	Code = '(async function news (context, ...rest) {
-	let params = new sb.URLParams().set(\"language\", \"en\");
-
+	const params = new sb.URLParams().set(\"language\", \"en\");
 	if (rest[0] && sb.ExtraNews.check(rest[0])) {
+		const { content, link, title } = await sb.ExtraNews.fetch(rest[0]);
 		return { 
-			reply: await sb.ExtraNews.fetch(rest[0])
+			reply: `${link} ${title} - ${content}`
 		};
 	}
 	else if (/^[A-Z]{2}$/i.test(rest[0])) {
-		params.unset(\"language\")
-			.set(\"country\", rest.shift().toLowerCase());
+		params.unset(\"language\").set(\"country\", rest.shift().toLowerCase());
 	}
 
 	const url = \"https://newsapi.org/v2/top-headlines?\";
@@ -161,15 +153,9 @@ ON DUPLICATE KEY UPDATE
 	}
 
 	const headline = sb.Utils.randArray(data.articles);
-	const title = sb.Utils.fixHTML(headline.title || \"\");
-	const text = title + (title ? \". \" : \"\") + sb.Utils.removeHTML(sb.Utils.fixHTML(headline.description || \"\"));
+	const text = sb.Utils.removeHTML(sb.Utils.fixHTML(headline.description || \"\"));
 	
-	let pastebinLink = \"\";
-	if (!context.append.pipe) {
-		pastebinLink = await sb.Pastebin.post(`${headline.url}\\n\\n${text}`, { name: headline.source.name });
-	}
-
 	return { 
-		reply: pastebinLink + \" \" + text 
+		reply: `${headline.url} ${text}`
 	};
 })'
