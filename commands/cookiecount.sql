@@ -122,16 +122,25 @@ VALUES
 })',
 		NULL,
 		'async (prefix) =>  [
-	\"Checks the amount of cookies a given person (or yourself) have eaten so far\",
-	\"You can use \\\"total\\\" or invoke \" + prefix + \"tcc to get global data\",
-	\"You can use \\\"eaters\\\" to get the data of top 10 gluttons\",
-	\"You can use \\\"gifters\\\" to get the data of top 10 cookie gifters\",
-	\"\",
-	prefix + \"cc => You have eaten 123 cookies so far. Out of those, 123 were gifted to you. You have selflessly gifted away 123 cookies to other people :)\",
-	prefix + \"cc <user> => They have eaten 123 cookies so far. Out of those, 123 were gifted to them. They have selflessly gifted away 123 cookies to other people :)\",
-	prefix + \"cc total => 123 cookies have been eaten so far, out of which 123 were gifted :)\",
-	prefix + \"cc eaters => Top 10 gluttons are: ...\",
-	prefix + \"cc gifters => Top 10 gifters are ...\"
+	`Checks the amount of cookies a given person (or yourself) have eaten so far.`,
+	`You can use <code>${prefix}cc total</code> or <code>${prefix}tcc</code> to get total statistics.`,
+	``,
+
+	`<code>${prefix}cc</code>`,
+	`You have eaten X cookies so far. Out of those, Y were gifted to you. You gifted Z cookies to other people :)`,
+	``,
+
+	`<code>${prefix}cc (user)</code>`,
+	`They have eaten X cookies so far. Out of those, Y were gifted to them. They gifted Z cookies to other people :)`,
+	``,
+
+	`<code>${prefix}cc total</code>`,
+	`X cookies have been eaten so far, out of which Y were gifted :)`,
+	``,
+	
+	`<code>${prefix}cc list</code>`,
+	`<a href=\'/bot/cookie/list\'>https://supinic.com/bot/cookie/list</a>`,
+	``
 ];'
 	)
 
