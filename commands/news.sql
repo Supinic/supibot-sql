@@ -44,7 +44,7 @@ VALUES
 	if (rest[0] && sb.ExtraNews.check(rest[0])) {
 		const { content, link, title } = await sb.ExtraNews.fetch(rest[0]);
 		return { 
-			reply: `${link} ${title} - ${content}`
+			reply: `${title} - ${content} ${link}`
 		};
 	}
 	else if (/^[A-Z]{2}$/i.test(rest[0])) {
@@ -81,7 +81,7 @@ VALUES
 	const text = sb.Utils.removeHTML(sb.Utils.fixHTML(headline.description || \"\"));
 	
 	return { 
-		reply: `${headline.url} ${text}`
+		reply: `${text} ${headline.url}`
 	};
 })',
 		NULL,
@@ -119,7 +119,7 @@ ON DUPLICATE KEY UPDATE
 	if (rest[0] && sb.ExtraNews.check(rest[0])) {
 		const { content, link, title } = await sb.ExtraNews.fetch(rest[0]);
 		return { 
-			reply: `${link} ${title} - ${content}`
+			reply: `${title} - ${content} ${link}`
 		};
 	}
 	else if (/^[A-Z]{2}$/i.test(rest[0])) {
@@ -156,6 +156,6 @@ ON DUPLICATE KEY UPDATE
 	const text = sb.Utils.removeHTML(sb.Utils.fixHTML(headline.description || \"\"));
 	
 	return { 
-		reply: `${headline.url} ${text}`
+		reply: `${text} ${headline.url}`
 	};
 })'
