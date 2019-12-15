@@ -38,7 +38,7 @@ VALUES
 		0,
 		1,
 		1,
-		0,
+		1,
 		'async (context) => ({ reply: \"https://www.dubtrack.fm/join/\" + context.channel.Name })',
 		NULL,
 		NULL
