@@ -50,36 +50,36 @@ VALUES
 	const baseURL = \"https://knowyourmeme.com/\";
 
 	const params = new sb.URLParams().set(\"q\", args.join(\" \"));
-	const searchData = await sb.Utils.request({
+	const $s = sb.Utils.cheerio(await sb.Utils.request({
 		uri: `${baseURL}/search?${params.toString()}`,
 		headers: {
 			\"User-Agent\": fakeAgent
 		}
-	});
+	}));
 
-	const firstLink = searchData.match(/class=[\'\"]photo[\'\"] href=.(\\/meme.*?)[\'\"]/ms);
+	const firstLink = $s(\".entry_list a\").first().attr(\"href\");	
 	if (!firstLink) {
 		return {
 			reply: \"No result found for given search term!\"
 		};
 	}
 
-	const memeHTML = await sb.Utils.request({
-		uri: `${baseURL}${firstLink[1]}`,
+	const $m = sb.Utils.cheerio(await sb.Utils.request({
+		uri: `${baseURL}${firstLink}`,
 		headers: {
 			\"User-Agent\": fakeAgent
 		}
-	});
+	}));	
 
-	const memeData = memeHTML.match(/h2 id=[\'\"]about[\'\"].*?<p>(.*?)<\\/p>/ms);
-	if (!memeData) {
+	const summary = $m(\"#entry_body h2#about\").first().next().text();
+	if (!summary) {
 		return {
 			reply: \"No summary found for given meme!\"
 		};
 	}
 
 	return {
-		reply: sb.Utils.removeHTML(memeData[1])
+		reply: summary
 	};
 })',
 		NULL,
@@ -98,35 +98,35 @@ ON DUPLICATE KEY UPDATE
 	const baseURL = \"https://knowyourmeme.com/\";
 
 	const params = new sb.URLParams().set(\"q\", args.join(\" \"));
-	const searchData = await sb.Utils.request({
+	const $s = sb.Utils.cheerio(await sb.Utils.request({
 		uri: `${baseURL}/search?${params.toString()}`,
 		headers: {
 			\"User-Agent\": fakeAgent
 		}
-	});
+	}));
 
-	const firstLink = searchData.match(/class=[\'\"]photo[\'\"] href=.(\\/meme.*?)[\'\"]/ms);
+	const firstLink = $s(\".entry_list a\").first().attr(\"href\");	
 	if (!firstLink) {
 		return {
 			reply: \"No result found for given search term!\"
 		};
 	}
 
-	const memeHTML = await sb.Utils.request({
-		uri: `${baseURL}${firstLink[1]}`,
+	const $m = sb.Utils.cheerio(await sb.Utils.request({
+		uri: `${baseURL}${firstLink}`,
 		headers: {
 			\"User-Agent\": fakeAgent
 		}
-	});
+	}));	
 
-	const memeData = memeHTML.match(/h2 id=[\'\"]about[\'\"].*?<p>(.*?)<\\/p>/ms);
-	if (!memeData) {
+	const summary = $m(\"#entry_body h2#about\").first().next().text();
+	if (!summary) {
 		return {
 			reply: \"No summary found for given meme!\"
 		};
 	}
 
 	return {
-		reply: sb.Utils.removeHTML(memeData[1])
+		reply: summary
 	};
 })'
