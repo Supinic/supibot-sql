@@ -38,7 +38,7 @@ VALUES
 		0,
 		0,
 		1,
-		0,
+		1,
 		'async (extra, ...args) => {
 	const input = args.join(\" \");
 	if (!input) {
