@@ -24,9 +24,9 @@ INSERT INTO
 VALUES
 	(
 		180,
-		'streamelementsgachi',
-		'[\"seg\"]',
-		'Posts a random gachi song request for streamelements song request system.',
+		'songrequestrandomgachi',
+		'[\"srg\", \"srrg\"]',
+		'Posts a random gachi in the format \"!sr <link>\" to use on other bots\' song request systems (such as StreamElements).',
 		60000,
 		0,
 		0,
