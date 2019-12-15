@@ -39,7 +39,7 @@ VALUES
 		1,
 		1,
 		0,
-		'async (context, type) => {
+		'(async function emoteCheck (context, type) {
 	if (!type) {
 		return { reply: \"No type provided\" };
 	}
@@ -47,31 +47,32 @@ VALUES
 	switch (type) {
 		case \"pride\":
 			return { reply: \"PrideFlag PridePan PrideTrans PrideBisexual PrideLesbian PrideAsexual PrideBalloons PrideSaba PrideGive PrideTake PrideLionHey PrideLionYay PrideLionChomp PrideShine PrideParty PrideWingL PrideWingR PrideCheers PrideGasp PrideHi pride emote check gachiPRIDE\" };
-		
+
 		case \"food\":
-		case \"fight\": 
+		case \"fight\":
 			return { reply: \"FightBagel FightBerry FightBox FightBurger FightCC FightCake FightCheese FightChips FightCookie FightCorn FightCup FightEgg FightFruit FightFry FightIce FightJello FightMash FightNacho FightPBJ FightPC FightPepper FightPie FightPizza FightPop FightPudding FightRamen FightSalad FightSardine FightSmoothie FightSmore FightSoda FightSoup FightSpag FightSub FightTomato food check OpieOP\" };
 
-		case \"haha\": 
-		case \"holiday\": 
-			return { reply: \"Haha2020 HahaBaby HahaBall HahaCat HahaDisapprove HahaDoge HahaDreidel HahaElf HahaGingercat HahaGoose HahaHide HahaLean HahaNutcracker HahaNyandeer HahaPoint HahaPresent HahaReindeer HahaShrugLeft HahaShrugMiddle HahaShrugRight HahaSleep HahaSnowhal HahaSweat HahaThink HahaThisisfine HahaTurtledove\"};
+		case \"haha\":
+		case \"holiday\":
+			// Removed HahaDisapprove, as it is not publicly available despite being a part of the set
+			return { reply: \"Haha2020 HahaBaby HahaBall HahaCat HahaDoge HahaDreidel HahaElf HahaGingercat HahaGoose HahaHide HahaLean HahaNutcracker HahaNyandeer HahaPoint HahaPresent HahaReindeer HahaShrugLeft HahaShrugMiddle HahaShrugRight HahaSleep HahaSnowhal HahaSweat HahaThink HahaThisisfine HahaTurtledove\"};
 
 		case \"rpg\":
 			return { reply: \"RPGAyaya RPGBukka RPGBukkaNoo RPGEmpty RPGEpicStaff RPGEpicSword RPGFei RPGFireball RPGGhosto RPGHP RPGMana RPGOops RPGPhatLoot RPGSeven RPGShihu RPGStaff RPGTreeNua RPGYonger TwitchRPG\" };
 
 		case \"fb\":
-		case \"football\": 
+		case \"football\":
 			return { reply: \"FBBlock FBCatch FBChallenge FBPass FBPenalty FBRun FBSpiral FBtouchdown KKona 🏈\" };
 
-		default: return { reply: \"No such emote set exists!\" };			
+		default: return { reply: \"No such emote set exists!\" };
 	}
-}',
+})',
 		NULL,
 		NULL
 	)
 
 ON DUPLICATE KEY UPDATE
-	Code = 'async (context, type) => {
+	Code = '(async function emoteCheck (context, type) {
 	if (!type) {
 		return { reply: \"No type provided\" };
 	}
@@ -79,22 +80,23 @@ ON DUPLICATE KEY UPDATE
 	switch (type) {
 		case \"pride\":
 			return { reply: \"PrideFlag PridePan PrideTrans PrideBisexual PrideLesbian PrideAsexual PrideBalloons PrideSaba PrideGive PrideTake PrideLionHey PrideLionYay PrideLionChomp PrideShine PrideParty PrideWingL PrideWingR PrideCheers PrideGasp PrideHi pride emote check gachiPRIDE\" };
-		
+
 		case \"food\":
-		case \"fight\": 
+		case \"fight\":
 			return { reply: \"FightBagel FightBerry FightBox FightBurger FightCC FightCake FightCheese FightChips FightCookie FightCorn FightCup FightEgg FightFruit FightFry FightIce FightJello FightMash FightNacho FightPBJ FightPC FightPepper FightPie FightPizza FightPop FightPudding FightRamen FightSalad FightSardine FightSmoothie FightSmore FightSoda FightSoup FightSpag FightSub FightTomato food check OpieOP\" };
 
-		case \"haha\": 
-		case \"holiday\": 
-			return { reply: \"Haha2020 HahaBaby HahaBall HahaCat HahaDisapprove HahaDoge HahaDreidel HahaElf HahaGingercat HahaGoose HahaHide HahaLean HahaNutcracker HahaNyandeer HahaPoint HahaPresent HahaReindeer HahaShrugLeft HahaShrugMiddle HahaShrugRight HahaSleep HahaSnowhal HahaSweat HahaThink HahaThisisfine HahaTurtledove\"};
+		case \"haha\":
+		case \"holiday\":
+			// Removed HahaDisapprove, as it is not publicly available despite being a part of the set
+			return { reply: \"Haha2020 HahaBaby HahaBall HahaCat HahaDoge HahaDreidel HahaElf HahaGingercat HahaGoose HahaHide HahaLean HahaNutcracker HahaNyandeer HahaPoint HahaPresent HahaReindeer HahaShrugLeft HahaShrugMiddle HahaShrugRight HahaSleep HahaSnowhal HahaSweat HahaThink HahaThisisfine HahaTurtledove\"};
 
 		case \"rpg\":
 			return { reply: \"RPGAyaya RPGBukka RPGBukkaNoo RPGEmpty RPGEpicStaff RPGEpicSword RPGFei RPGFireball RPGGhosto RPGHP RPGMana RPGOops RPGPhatLoot RPGSeven RPGShihu RPGStaff RPGTreeNua RPGYonger TwitchRPG\" };
 
 		case \"fb\":
-		case \"football\": 
+		case \"football\":
 			return { reply: \"FBBlock FBCatch FBChallenge FBPass FBPenalty FBRun FBSpiral FBtouchdown KKona 🏈\" };
 
-		default: return { reply: \"No such emote set exists!\" };			
+		default: return { reply: \"No such emote set exists!\" };
 	}
-}'
+})'
