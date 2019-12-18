@@ -32,7 +32,7 @@ VALUES
 		0,
 		1,
 		1,
-		'Only available in specific channels (that have SE)',
+		'Only available in specific channels (that have a song request bot, like StreamElements).',
 		0,
 		0,
 		0,
