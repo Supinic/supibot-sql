@@ -24,8 +24,8 @@ INSERT INTO
 VALUES
 	(
 		86,
-		'tts',
-		NULL,
+		'texttospeech',
+		'[\"tts\"]',
 		'Plays a text to speech message on supinic\'s stream. If it\'s enabled, that is.',
 		30000,
 		0,
@@ -44,9 +44,8 @@ VALUES
 		return { reply: \"Text-to-speech is currently disabled!\" };
 	}
 
-	const message = sb.Utils.wrapString(args.join(\" \"), 200);
-
 	let success = false;
+	const message = sb.Utils.wrapString(args.join(\" \"), 200);
 	try {
 		success = await sb.LocalRequest.playTextToSpeech(message);
 	}
@@ -58,14 +57,12 @@ VALUES
 	if (!success) {
 		return { 
 			reply: \"Someone else is currently using the TTS!\",
-			replyWithPrivateMessage: true,
 			meta: { skipCooldown: true }
 		};
 	}
 	else {
 		return {
-			reply: `Your message \"${message}\" has been succesfully played on TTS!`,
-			replyWithPrivateMessage: true
+			reply: `Your message has been succesfully played on TTS!`
 		};
 	}
 })',
@@ -79,9 +76,8 @@ ON DUPLICATE KEY UPDATE
 		return { reply: \"Text-to-speech is currently disabled!\" };
 	}
 
-	const message = sb.Utils.wrapString(args.join(\" \"), 200);
-
 	let success = false;
+	const message = sb.Utils.wrapString(args.join(\" \"), 200);
 	try {
 		success = await sb.LocalRequest.playTextToSpeech(message);
 	}
@@ -93,14 +89,12 @@ ON DUPLICATE KEY UPDATE
 	if (!success) {
 		return { 
 			reply: \"Someone else is currently using the TTS!\",
-			replyWithPrivateMessage: true,
 			meta: { skipCooldown: true }
 		};
 	}
 	else {
 		return {
-			reply: `Your message \"${message}\" has been succesfully played on TTS!`,
-			replyWithPrivateMessage: true
+			reply: `Your message has been succesfully played on TTS!`
 		};
 	}
 })'
