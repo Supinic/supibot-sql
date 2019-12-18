@@ -42,46 +42,52 @@ VALUES
 		'(async function news (context, ...rest) {
 	const params = new sb.URLParams().set(\"language\", \"en\");
 	if (rest[0] && sb.ExtraNews.check(rest[0])) {
-		const { content, link, title } = await sb.ExtraNews.fetch(rest[0]);
-		return { 
-			reply: `${title} - ${content} ${link}`
+		const { content = \"\", title, published } = await sb.ExtraNews.fetch(rest.shift());
+		let delta = \"\";
+		if (published.valueOf()) {
+			delta = \"(published \" + sb.Utils.timeDelta(published) + \")\";
+		}
+
+		return {
+			reply: `${title} ${content ?? \"\"} ${delta}`
 		};
 	}
 	else if (/^[A-Z]{2}$/i.test(rest[0])) {
 		params.unset(\"language\").set(\"country\", rest.shift().toLowerCase());
 	}
 
-	const url = \"https://newsapi.org/v2/top-headlines?\";
 	if (rest.length !== 0) {
-		params.set(\"q\", sb.Utils.argsToFixedURL(rest));
+		params.set(\"q\", rest.join(\" \"));
 	}
 	else if (!params.has(\"country\")) {
 		params.set(\"country\", \"US\");
 	}
 
 	const data = JSON.parse(await sb.Utils.request({
-		url: url + String(params).replace(/%2b/gi, \"+\"),
+		url: \"https://newsapi.org/v2/top-headlines?\" + params.toString(),
 		headers: {
 			Authorization: \"Bearer \" + sb.Config.get(\"API_NEWSAPI_ORG\")
 		}
 	}));
 
 	if (!data.articles) {
-		return { 
+		return {
 			reply: \"No news data returned!\"
 		};
 	}
 	else if (data.articles.length === 0) {
-		return { 
+		return {
 			reply: \"No relevant articles found!\"
 		};
 	}
 
-	const headline = sb.Utils.randArray(data.articles);
-	const text = sb.Utils.removeHTML(sb.Utils.fixHTML(headline.description || \"\"));
-	
-	return { 
-		reply: `${text} ${headline.url}`
+	const { description, publishedAt, title } = sb.Utils.randArray(data.articles);
+	const delta = (publishedAt) 
+		? \"(published \" + sb.Utils.timeDelta(new sb.Date(publishedAt)) + \")\"
+		: \"\";
+
+	return {
+		reply: `${title} ${description ?? \"\"} ${delta}`
 	};
 })',
 		NULL,
@@ -117,45 +123,51 @@ ON DUPLICATE KEY UPDATE
 	Code = '(async function news (context, ...rest) {
 	const params = new sb.URLParams().set(\"language\", \"en\");
 	if (rest[0] && sb.ExtraNews.check(rest[0])) {
-		const { content, link, title } = await sb.ExtraNews.fetch(rest[0]);
-		return { 
-			reply: `${title} - ${content} ${link}`
+		const { content = \"\", title, published } = await sb.ExtraNews.fetch(rest.shift());
+		let delta = \"\";
+		if (published.valueOf()) {
+			delta = \"(published \" + sb.Utils.timeDelta(published) + \")\";
+		}
+
+		return {
+			reply: `${title} ${content ?? \"\"} ${delta}`
 		};
 	}
 	else if (/^[A-Z]{2}$/i.test(rest[0])) {
 		params.unset(\"language\").set(\"country\", rest.shift().toLowerCase());
 	}
 
-	const url = \"https://newsapi.org/v2/top-headlines?\";
 	if (rest.length !== 0) {
-		params.set(\"q\", sb.Utils.argsToFixedURL(rest));
+		params.set(\"q\", rest.join(\" \"));
 	}
 	else if (!params.has(\"country\")) {
 		params.set(\"country\", \"US\");
 	}
 
 	const data = JSON.parse(await sb.Utils.request({
-		url: url + String(params).replace(/%2b/gi, \"+\"),
+		url: \"https://newsapi.org/v2/top-headlines?\" + params.toString(),
 		headers: {
 			Authorization: \"Bearer \" + sb.Config.get(\"API_NEWSAPI_ORG\")
 		}
 	}));
 
 	if (!data.articles) {
-		return { 
+		return {
 			reply: \"No news data returned!\"
 		};
 	}
 	else if (data.articles.length === 0) {
-		return { 
+		return {
 			reply: \"No relevant articles found!\"
 		};
 	}
 
-	const headline = sb.Utils.randArray(data.articles);
-	const text = sb.Utils.removeHTML(sb.Utils.fixHTML(headline.description || \"\"));
-	
-	return { 
-		reply: `${text} ${headline.url}`
+	const { description, publishedAt, title } = sb.Utils.randArray(data.articles);
+	const delta = (publishedAt) 
+		? \"(published \" + sb.Utils.timeDelta(new sb.Date(publishedAt)) + \")\"
+		: \"\";
+
+	return {
+		reply: `${title} ${description ?? \"\"} ${delta}`
 	};
 })'
