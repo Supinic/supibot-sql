@@ -40,19 +40,20 @@ VALUES
 		1,
 		0,
 		'(async function randomClip (context, ...args) {
-	let period = \"all\";
-	let channel = context.channel.Name;
-	const allowedPeriods = [\"day\", \"week\", \"month\", \"all\"];
-	const regex = new RegExp(\"period:(\" + allowedPeriods.join(\"|\") + \")\", \"i\");
-
+	let channel = context.channel?.Name ?? null;
 	if (args.length > 0 && !args[0].includes(\":\")) {
 		channel = args[0];
 	}
 
-	if (context.platform.Name !== \"twitch\" && channel === context.channel.Name) {
-		return { reply: \"You must specify the target channel if you\'re not on Twitch!\" };
+	if (!channel && context.privateMessage || context.platform.Name !== \"twitch\") {
+		return {
+			reply: \"You must specify the target channel if you\'re in PMs or not on Twitch!\"
+		};
 	}
 
+	let period = \"all\";
+	const allowedPeriods = [\"day\", \"week\", \"month\", \"all\"];
+	const regex = new RegExp(\"period:(\" + allowedPeriods.join(\"|\") + \")\", \"i\");
 	for (const token of args) {
 		const match = token.match(regex);
 		if (match) {
@@ -101,19 +102,20 @@ VALUES
 
 ON DUPLICATE KEY UPDATE
 	Code = '(async function randomClip (context, ...args) {
-	let period = \"all\";
-	let channel = context.channel.Name;
-	const allowedPeriods = [\"day\", \"week\", \"month\", \"all\"];
-	const regex = new RegExp(\"period:(\" + allowedPeriods.join(\"|\") + \")\", \"i\");
-
+	let channel = context.channel?.Name ?? null;
 	if (args.length > 0 && !args[0].includes(\":\")) {
 		channel = args[0];
 	}
 
-	if (context.platform.Name !== \"twitch\" && channel === context.channel.Name) {
-		return { reply: \"You must specify the target channel if you\'re not on Twitch!\" };
+	if (!channel && context.privateMessage || context.platform.Name !== \"twitch\") {
+		return {
+			reply: \"You must specify the target channel if you\'re in PMs or not on Twitch!\"
+		};
 	}
 
+	let period = \"all\";
+	const allowedPeriods = [\"day\", \"week\", \"month\", \"all\"];
+	const regex = new RegExp(\"period:(\" + allowedPeriods.join(\"|\") + \")\", \"i\");
 	for (const token of args) {
 		const match = token.match(regex);
 		if (match) {
