@@ -62,7 +62,8 @@ VALUES
 	}
 	else {
 		return {
-			reply: `Your message has been succesfully played on TTS!`
+			reply: `Your message has been succesfully played on TTS!`,
+			meta: { skipPending: true }
 		};
 	}
 })',
@@ -94,7 +95,8 @@ ON DUPLICATE KEY UPDATE
 	}
 	else {
 		return {
-			reply: `Your message has been succesfully played on TTS!`
+			reply: `Your message has been succesfully played on TTS!`,
+			meta: { skipPending: true }
 		};
 	}
 })'
