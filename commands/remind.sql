@@ -79,16 +79,10 @@ VALUES
 		};
 	}
 
-	const specificFilter = sb.Filter.data.find(i => (
-		i.User_Alias === targetUser.ID
-		&& i.Type === \"Block\"
-		&& i.Blocked_User === context.user.ID
-		&& i.Command === context.command.ID
-		&& i.Active
-	));
-	if (specificFilter) {
+	const blocked = await sb.Filter.checkBlocks(targetUser, context.user, context.command.ID);
+	if (blocked) {
 		return {
-			reply: \"That user has opted out from being reminded by you! 🚫\"
+			reply: blocked
 		};
 	}
 
@@ -224,16 +218,10 @@ ON DUPLICATE KEY UPDATE
 		};
 	}
 
-	const specificFilter = sb.Filter.data.find(i => (
-		i.User_Alias === targetUser.ID
-		&& i.Type === \"Block\"
-		&& i.Blocked_User === context.user.ID
-		&& i.Command === context.command.ID
-		&& i.Active
-	));
-	if (specificFilter) {
+	const blocked = await sb.Filter.checkBlocks(targetUser, context.user, context.command.ID);
+	if (blocked) {
 		return {
-			reply: \"That user has opted out from being reminded by you! 🚫\"
+			reply: blocked
 		};
 	}
 
