@@ -100,7 +100,7 @@ VALUES
 				: null,
 			Duration: (videoData && videoData.duration) || null,
 			Track_Type: null,
-			Notes: (comment.length === 0) ? null : comment.join(\" \")
+			Notes: videoData.description ?? null
 		});
 		
 		const {insertId: trackID} = await row.save();
@@ -224,7 +224,7 @@ ON DUPLICATE KEY UPDATE
 				: null,
 			Duration: (videoData && videoData.duration) || null,
 			Track_Type: null,
-			Notes: (comment.length === 0) ? null : comment.join(\" \")
+			Notes: videoData.description ?? null
 		});
 		
 		const {insertId: trackID} = await row.save();
