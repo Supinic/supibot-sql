@@ -32,7 +32,7 @@ VALUES
 		0,
 		0,
 		0,
-		NULL,
+		'Only available for Twitch users on Twitch!',
 		0,
 		0,
 		0,
@@ -43,6 +43,11 @@ VALUES
 	if (!command) {
 		return {
 			reply: \"No command provided!\"
+		};
+	}
+	else if (context.platform.Name !== \"twitch\") {
+		return {
+			reply: \"Not available outside of Twitch!\"
 		};
 	}
 
@@ -91,6 +96,11 @@ ON DUPLICATE KEY UPDATE
 	if (!command) {
 		return {
 			reply: \"No command provided!\"
+		};
+	}
+	else if (context.platform.Name !== \"twitch\") {
+		return {
+			reply: \"Not available outside of Twitch!\"
 		};
 	}
 
