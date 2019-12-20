@@ -45,7 +45,7 @@ VALUES
 		channel = args[0];
 	}
 
-	if (!channel && context.privateMessage || context.platform.Name !== \"twitch\") {
+	if (!channel && (context.privateMessage || context.platform.Name !== \"twitch\")) {
 		return {
 			reply: \"You must specify the target channel if you\'re in PMs or not on Twitch!\"
 		};
@@ -107,7 +107,7 @@ ON DUPLICATE KEY UPDATE
 		channel = args[0];
 	}
 
-	if (!channel && context.privateMessage || context.platform.Name !== \"twitch\") {
+	if (!channel && (context.privateMessage || context.platform.Name !== \"twitch\")) {
 		return {
 			reply: \"You must specify the target channel if you\'re in PMs or not on Twitch!\"
 		};
