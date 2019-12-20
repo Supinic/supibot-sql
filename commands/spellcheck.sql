@@ -24,7 +24,7 @@ INSERT INTO
 VALUES
 	(
 		182,
-		'spellecheck',
+		'spellcheck',
 		'[\"sc\"]',
 		'Spell checks your message.',
 		25000,
@@ -38,7 +38,7 @@ VALUES
 		0,
 		1,
 		1,
-		0,
+		1,
 		'(async function spellCheck (context, ...args) {
 	if (args.length === 0) {
 		return {
