@@ -39,17 +39,41 @@ VALUES
 		1,
 		1,
 		0,
-		'(async function songRequestQueue () {
+		'(async function songRequestQueue (context) {
 	const state = sb.Config.get(\"SONG_REQUESTS_STATE\");
 	if (state === \"off\") {
-		return { reply: \"Song requests are currently turned off.\" };
+		return { 
+			reply: \"Song requests are currently turned off.\" 
+		};
 	}
 	else if (state === \"dubtrack\") {
 		const dubtrack = (await sb.Command.get(\"dubtrack\").execute(context)).reply;
-		return { reply: \"Song requests are currently using dubtrack. Join here: \" + dubtrack + \" :)\" };
+		return {
+			reply: \"Song requests are currently using dubtrack. Join here: \" + dubtrack + \" :)\"
+		};
+	}
+	else if (state === \"cytube\") {
+		const cytube = (await sb.Command.get(\"cytube\").execute(context)).reply;
+		return { 
+			reply: \"Song requests are currently using Cytube. Join here: \" + cytube + \" :)\"
+		};
 	}
 
-	const status = await sb.VideoLANConnector.status(); 
+	let status = null;
+	try {
+		status = await sb.VideoLANConnector.status(); 
+	}
+	catch (e) {
+		if (e.message === \"ETIMEDOUT\") {
+			return {
+				reply: \"VLC is not available right now!\"
+			};
+		}
+		else {
+			throw e;
+		}
+	}
+
 	if (!status.information) {
 		return {
 			reply: \"No song currently queued. Check history here: https://supinic.com/stream/video-queue\"
@@ -86,17 +110,41 @@ VALUES
 	)
 
 ON DUPLICATE KEY UPDATE
-	Code = '(async function songRequestQueue () {
+	Code = '(async function songRequestQueue (context) {
 	const state = sb.Config.get(\"SONG_REQUESTS_STATE\");
 	if (state === \"off\") {
-		return { reply: \"Song requests are currently turned off.\" };
+		return { 
+			reply: \"Song requests are currently turned off.\" 
+		};
 	}
 	else if (state === \"dubtrack\") {
 		const dubtrack = (await sb.Command.get(\"dubtrack\").execute(context)).reply;
-		return { reply: \"Song requests are currently using dubtrack. Join here: \" + dubtrack + \" :)\" };
+		return {
+			reply: \"Song requests are currently using dubtrack. Join here: \" + dubtrack + \" :)\"
+		};
+	}
+	else if (state === \"cytube\") {
+		const cytube = (await sb.Command.get(\"cytube\").execute(context)).reply;
+		return { 
+			reply: \"Song requests are currently using Cytube. Join here: \" + cytube + \" :)\"
+		};
 	}
 
-	const status = await sb.VideoLANConnector.status(); 
+	let status = null;
+	try {
+		status = await sb.VideoLANConnector.status(); 
+	}
+	catch (e) {
+		if (e.message === \"ETIMEDOUT\") {
+			return {
+				reply: \"VLC is not available right now!\"
+			};
+		}
+		else {
+			throw e;
+		}
+	}
+
 	if (!status.information) {
 		return {
 			reply: \"No song currently queued. Check history here: https://supinic.com/stream/video-queue\"
