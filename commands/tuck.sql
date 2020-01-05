@@ -25,7 +25,7 @@ VALUES
 	(
 		11,
 		'tuck',
-		'[\"fuck\", \"gnkiss\", \"headpat\"]',
+		'[\"gnkiss\", \"headpat\"]',
 		'Tucks target user to bed',
 		20000,
 		0,
@@ -77,29 +77,6 @@ VALUES
 
 			return { 
 				reply: `You bid ${user} good night and gently kiss their ${forehead}`
-			};
-		}
-	}
-	else if (context.invocation === \"fuck\") {
-		let randomString = \"\";
-		if (!user) {
-			randomString = \"randomly\";
-			user = sb.Utils.randArray([...sb.User.data.values()]).Name;
-		}
-
-		if (user === context.user.Name) {
-			return {
-				reply: \"There are toys made for that, you know...\"
-			};
-		}
-		else if (user === sb.Config.get(\"SELF\")) {
-			return {
-				reply: \"Hey buddy, I think you got the wrong door.\"
-			};
-		}
-		else {
-			return {
-				reply: `You ${randomString} fucked ${user}\'s brains out ${emote || \"gachiGASM\"}`
 			};
 		}
 	}
@@ -164,29 +141,6 @@ ON DUPLICATE KEY UPDATE
 
 			return { 
 				reply: `You bid ${user} good night and gently kiss their ${forehead}`
-			};
-		}
-	}
-	else if (context.invocation === \"fuck\") {
-		let randomString = \"\";
-		if (!user) {
-			randomString = \"randomly\";
-			user = sb.Utils.randArray([...sb.User.data.values()]).Name;
-		}
-
-		if (user === context.user.Name) {
-			return {
-				reply: \"There are toys made for that, you know...\"
-			};
-		}
-		else if (user === sb.Config.get(\"SELF\")) {
-			return {
-				reply: \"Hey buddy, I think you got the wrong door.\"
-			};
-		}
-		else {
-			return {
-				reply: `You ${randomString} fucked ${user}\'s brains out ${emote || \"gachiGASM\"}`
 			};
 		}
 	}
