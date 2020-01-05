@@ -39,16 +39,16 @@ VALUES
 		0,
 		1,
 		0,
-		'async () => {
-	setTimeout(() => process.kill(process.pid), 2000);
+		'(async function restart () {
+	setTimeout(() => process.abort(), 1000);
 	return { reply: \"Restarting...\" };
-}',
+})',
 		NULL,
 		NULL
 	)
 
 ON DUPLICATE KEY UPDATE
-	Code = 'async () => {
-	setTimeout(() => process.kill(process.pid), 2000);
+	Code = '(async function restart () {
+	setTimeout(() => process.abort(), 1000);
 	return { reply: \"Restarting...\" };
-}'
+})'
