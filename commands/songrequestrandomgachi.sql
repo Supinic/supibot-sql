@@ -32,7 +32,7 @@ VALUES
 		0,
 		1,
 		1,
-		'Only available in specific channels (that have a song request bot, like StreamElements).',
+		'Only available in specific whitelisted channels (for instance, those that have a song request bot that replies to \"!sr\").',
 		0,
 		0,
 		0,
