@@ -26,7 +26,7 @@ VALUES
 		66,
 		'bancheck',
 		NULL,
-		'Checks if a given message would be banphrased (API only!) in given channel.',
+		'Checks if a given message would be banphrased in a given channel. Checks the API banphrase (if it exists for given channel) and then the bot\'s banphrases as well.',
 		10000,
 		0,
 		0,
