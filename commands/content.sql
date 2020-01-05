@@ -41,15 +41,17 @@ VALUES
 		0,
 		'(async function content () {
 	const data = await sb.Query.getRecordset(rs => rs
-		.select(\"COUNT(*) AS Count\")
+		.select(\"ID\", \"Category\", \"Status\")
 		.from(\"data\", \"Suggestion\")
-		.where(\"Category = %s\", \"Uncategorized\")
-		.where(\"Status = %s\", \"New\")
-		.single()
 	);
 
+	const count = {
+		new: data.filter(i => i.Category === \"Uncategorized\" && i.Status === \"New\").length,
+		approved: data.filter(i => i.Status === \"Approved\").length
+	};	
+
 	return {
-		reply: \"There are \" + data.Count + \" content suggestions left!\"
+		reply: `Content status: ${count.new} new suggestions, ${count.approved} are approved and waiting!`
 	};
 })',
 		NULL,
@@ -59,14 +61,16 @@ VALUES
 ON DUPLICATE KEY UPDATE
 	Code = '(async function content () {
 	const data = await sb.Query.getRecordset(rs => rs
-		.select(\"COUNT(*) AS Count\")
+		.select(\"ID\", \"Category\", \"Status\")
 		.from(\"data\", \"Suggestion\")
-		.where(\"Category = %s\", \"Uncategorized\")
-		.where(\"Status = %s\", \"New\")
-		.single()
 	);
 
+	const count = {
+		new: data.filter(i => i.Category === \"Uncategorized\" && i.Status === \"New\").length,
+		approved: data.filter(i => i.Status === \"Approved\").length
+	};	
+
 	return {
-		reply: \"There are \" + data.Count + \" content suggestions left!\"
+		reply: `Content status: ${count.new} new suggestions, ${count.approved} are approved and waiting!`
 	};
 })'
