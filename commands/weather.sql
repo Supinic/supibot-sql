@@ -43,13 +43,14 @@ VALUES
 	let skipLocation = false;
 
 	if (args.length === 0) {
-		if (context.user.Data.defaultWeather) {
-			skipLocation = context.user.Data.defaultWeather.private;
-			args = context.user.Data.defaultWeather.location;
+		if (context.user.Data.defaultLocation) {
+			skipLocation = context.user.Data.defaultLocation.private;
+			args = context.user.Data.defaultLocation.address;
 		}
 		else {
 			return {
-				reply: \"No place has been provided!\"
+				reply: \"No place has been provided!\",
+				meta: { skipCooldown: true }
 			};
 		}
 	}
@@ -60,15 +61,15 @@ VALUES
 				reply: \"Invalid user provided!\"
 			};
 		}
-		else if (!userData.Data.defaultWeather) {
+		else if (!userData.Data.defaultLocation) {
 			return {
-				reply: \"That user did not set their weather location!\"
+				reply: \"That user did not set their default location!\"
 			};
 		}
 		else {
-			skipLocation = userData.Data.defaultWeather.private;
+			skipLocation = userData.Data.defaultLocation.private;
 			args = args.slice(1);
-			args.unshift(...userData.Data.defaultWeather.location);
+			args.unshift(...userData.Data.defaultLocation.address);
 		}
 	}
 	else if (args[0].toLowerCase() === \"supibot\") {
@@ -101,8 +102,8 @@ VALUES
 			};
 		}
 
-		context.user.Data.defaultWeather = {
-			location: args,
+		context.user.Data.defaultLocation = {
+			address: args,
 			private: privateLocation
 		};
 		await context.user.saveProperty(\"Data\", context.user.Data);
@@ -151,15 +152,18 @@ VALUES
 		}
 	}
 
-	const geoURL = [
-		\"https://maps.googleapis.com/maps/api/geocode/json?\",
-		\"key=\" + sb.Config.get(\"API_GOOGLE_GEOCODING\"),
-		\"&address=\" + sb.Utils.argsToFixedURL(args)
-	].join(\"\");
+	const params = new sb.URLParams();
+	params.set(\"key\", sb.Config.get(\"API_GOOGLE_GEOCODING\"))
+		.set(\"address\", args.join(\" \"));
 
-	const geoData = JSON.parse(await sb.Utils.request(geoURL));
+	const geoData = JSON.parse(await sb.Utils.request({
+		url: \"https://maps.googleapis.com/maps/api/geocode/json?\" + params.toString()
+	}));
+
 	if (!geoData.results[0]) {
-		return { reply: \"That place was not found FeelsBadMan\" };
+		return {
+			reply: \"That place was not found FeelsBadMan\"
+		};
 	}
 
 	const coords = geoData.results[0].geometry.location;
@@ -167,9 +171,11 @@ VALUES
 	const weatherURL = [
 		\"https://api.darksky.net/forecast/\",
 		sb.Config.get(\"API_DARKSKY\") + \"/\",
-		coords.lat + \",\" + coords.lng,
-		\"?units=si\",
-		\"&exclude=\" + excluded.join(\",\")
+		coords.lat + \",\" + coords.lng + \"?\",
+		new sb.URLParams()
+			.set(\"units\", \"si\")
+			.set(\"exclude\", excluded.join(\",\"))
+			.toString()
 	].join(\"\");
 
 	let data = null;
@@ -185,7 +191,6 @@ VALUES
 			: topData[type].data[number];
 
 		const icon = icons[data.icon];
-
 		const precip = (data.precipProbability === 0)
 			? \"No precipitation expected.\"
 			: (sb.Utils.round(data.precipProbability * 100) + \"% chance of \" + sb.Utils.round(data.precipIntensity, 2) + \" mm \" + data.precipType + \".\");
@@ -252,13 +257,14 @@ ON DUPLICATE KEY UPDATE
 	let skipLocation = false;
 
 	if (args.length === 0) {
-		if (context.user.Data.defaultWeather) {
-			skipLocation = context.user.Data.defaultWeather.private;
-			args = context.user.Data.defaultWeather.location;
+		if (context.user.Data.defaultLocation) {
+			skipLocation = context.user.Data.defaultLocation.private;
+			args = context.user.Data.defaultLocation.address;
 		}
 		else {
 			return {
-				reply: \"No place has been provided!\"
+				reply: \"No place has been provided!\",
+				meta: { skipCooldown: true }
 			};
 		}
 	}
@@ -269,15 +275,15 @@ ON DUPLICATE KEY UPDATE
 				reply: \"Invalid user provided!\"
 			};
 		}
-		else if (!userData.Data.defaultWeather) {
+		else if (!userData.Data.defaultLocation) {
 			return {
-				reply: \"That user did not set their weather location!\"
+				reply: \"That user did not set their default location!\"
 			};
 		}
 		else {
-			skipLocation = userData.Data.defaultWeather.private;
+			skipLocation = userData.Data.defaultLocation.private;
 			args = args.slice(1);
-			args.unshift(...userData.Data.defaultWeather.location);
+			args.unshift(...userData.Data.defaultLocation.address);
 		}
 	}
 	else if (args[0].toLowerCase() === \"supibot\") {
@@ -310,8 +316,8 @@ ON DUPLICATE KEY UPDATE
 			};
 		}
 
-		context.user.Data.defaultWeather = {
-			location: args,
+		context.user.Data.defaultLocation = {
+			address: args,
 			private: privateLocation
 		};
 		await context.user.saveProperty(\"Data\", context.user.Data);
@@ -360,15 +366,18 @@ ON DUPLICATE KEY UPDATE
 		}
 	}
 
-	const geoURL = [
-		\"https://maps.googleapis.com/maps/api/geocode/json?\",
-		\"key=\" + sb.Config.get(\"API_GOOGLE_GEOCODING\"),
-		\"&address=\" + sb.Utils.argsToFixedURL(args)
-	].join(\"\");
+	const params = new sb.URLParams();
+	params.set(\"key\", sb.Config.get(\"API_GOOGLE_GEOCODING\"))
+		.set(\"address\", args.join(\" \"));
 
-	const geoData = JSON.parse(await sb.Utils.request(geoURL));
+	const geoData = JSON.parse(await sb.Utils.request({
+		url: \"https://maps.googleapis.com/maps/api/geocode/json?\" + params.toString()
+	}));
+
 	if (!geoData.results[0]) {
-		return { reply: \"That place was not found FeelsBadMan\" };
+		return {
+			reply: \"That place was not found FeelsBadMan\"
+		};
 	}
 
 	const coords = geoData.results[0].geometry.location;
@@ -376,9 +385,11 @@ ON DUPLICATE KEY UPDATE
 	const weatherURL = [
 		\"https://api.darksky.net/forecast/\",
 		sb.Config.get(\"API_DARKSKY\") + \"/\",
-		coords.lat + \",\" + coords.lng,
-		\"?units=si\",
-		\"&exclude=\" + excluded.join(\",\")
+		coords.lat + \",\" + coords.lng + \"?\",
+		new sb.URLParams()
+			.set(\"units\", \"si\")
+			.set(\"exclude\", excluded.join(\",\"))
+			.toString()
 	].join(\"\");
 
 	let data = null;
@@ -394,7 +405,6 @@ ON DUPLICATE KEY UPDATE
 			: topData[type].data[number];
 
 		const icon = icons[data.icon];
-
 		const precip = (data.precipProbability === 0)
 			? \"No precipitation expected.\"
 			: (sb.Utils.round(data.precipProbability * 100) + \"% chance of \" + sb.Utils.round(data.precipIntensity, 2) + \" mm \" + data.precipType + \".\");
