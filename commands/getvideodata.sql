@@ -39,15 +39,15 @@ VALUES
 		1,
 		1,
 		0,
-		'async (extra, link) => {
+		'(async function getVideoData (context, link) {
 	const data = JSON.parse(await sb.Utils.request(\"https://supinic.com/api/trackData/fetch?url=\" + link));
 	if (data.statusCode === 500) {
 		return { reply: \"Unable to parse link.\" };
 	}
 	else if (data.statusCode === 200) {
 		if (data.data) {
-			const link = await sb.Pastebin.post(JSON.stringify(data.data, null, 4), { 
-				name: data.data.name + \", requested by \" + extra.user.Name,
+			const link = await sb.Pastebin.post(JSON.stringify(data.data, null, 4), {
+				name: data.data.name + \", requested by \" + context.user.Name,
 				format: \"json\"
 			});
 			return { reply: link };
@@ -56,21 +56,21 @@ VALUES
 			return { reply: \"Link has been deleted or is otherwise not available.\" };
 		}
 	}
-}',
+})',
 		NULL,
 		NULL
 	)
 
 ON DUPLICATE KEY UPDATE
-	Code = 'async (extra, link) => {
+	Code = '(async function getVideoData (context, link) {
 	const data = JSON.parse(await sb.Utils.request(\"https://supinic.com/api/trackData/fetch?url=\" + link));
 	if (data.statusCode === 500) {
 		return { reply: \"Unable to parse link.\" };
 	}
 	else if (data.statusCode === 200) {
 		if (data.data) {
-			const link = await sb.Pastebin.post(JSON.stringify(data.data, null, 4), { 
-				name: data.data.name + \", requested by \" + extra.user.Name,
+			const link = await sb.Pastebin.post(JSON.stringify(data.data, null, 4), {
+				name: data.data.name + \", requested by \" + context.user.Name,
 				format: \"json\"
 			});
 			return { reply: link };
@@ -79,4 +79,4 @@ ON DUPLICATE KEY UPDATE
 			return { reply: \"Link has been deleted or is otherwise not available.\" };
 		}
 	}
-}'
+})'
