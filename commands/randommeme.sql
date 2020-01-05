@@ -94,8 +94,9 @@ VALUES
 		}
 	}
 	else {
+		const delta = sb.Utils.timeDelta(post.data.created_utc * 1000);
 		return {
-			reply: `${quarantine} ${post.data.title} ${post.data.url}`
+			reply: `${quarantine} ${post.data.title} ${post.data.url} (posted ${delta})`
 		}
 	}
 })',
@@ -159,8 +160,9 @@ ON DUPLICATE KEY UPDATE
 		}
 	}
 	else {
+		const delta = sb.Utils.timeDelta(post.data.created_utc * 1000);
 		return {
-			reply: `${quarantine} ${post.data.title} ${post.data.url}`
+			reply: `${quarantine} ${post.data.title} ${post.data.url} (posted ${delta})`
 		}
 	}
 })'
