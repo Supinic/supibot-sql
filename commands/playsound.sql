@@ -39,7 +39,7 @@ VALUES
 		1,
 		1,
 		0,
-		'async (extra, playsound) => {
+		'(async function playSound (context, playsound) {
 	if (!sb.Config.get(\"PLAYSOUNDS_ENABLED\")) {
 		return { reply: \"Playsounds are currently disabled!\" };
 	}
@@ -56,26 +56,31 @@ VALUES
 	))[0];
 
 	if (!data) {
-		return { 
-			reply: \"That playsound either doesn\'t exist or is not available!\", 
+		return {
+			reply: \"That playsound either doesn\'t exist or is not available!\",
 			meta: { skipCooldown: true }
 		};
 	}
 
 	const result = await sb.LocalRequest.playAudio(data.Filename);
 	if (typeof result === \"number\") {
-		return { 
+		return {
 			reply: \"The playsound\'s cooldown has not passed yet! Try again in \" + sb.Utils.timeDelta(sb.Date.now() + result),
 			meta: { skipCooldown: true }
 		};
 	}
-}',
+	else {
+		return {
+			reply: \"Your playsound has been played correctly on stream!\"
+		};
+	}
+})',
 		NULL,
 		NULL
 	)
 
 ON DUPLICATE KEY UPDATE
-	Code = 'async (extra, playsound) => {
+	Code = '(async function playSound (context, playsound) {
 	if (!sb.Config.get(\"PLAYSOUNDS_ENABLED\")) {
 		return { reply: \"Playsounds are currently disabled!\" };
 	}
@@ -92,17 +97,22 @@ ON DUPLICATE KEY UPDATE
 	))[0];
 
 	if (!data) {
-		return { 
-			reply: \"That playsound either doesn\'t exist or is not available!\", 
+		return {
+			reply: \"That playsound either doesn\'t exist or is not available!\",
 			meta: { skipCooldown: true }
 		};
 	}
 
 	const result = await sb.LocalRequest.playAudio(data.Filename);
 	if (typeof result === \"number\") {
-		return { 
+		return {
 			reply: \"The playsound\'s cooldown has not passed yet! Try again in \" + sb.Utils.timeDelta(sb.Date.now() + result),
 			meta: { skipCooldown: true }
 		};
 	}
-}'
+	else {
+		return {
+			reply: \"Your playsound has been played correctly on stream!\"
+		};
+	}
+})'
