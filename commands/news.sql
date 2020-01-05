@@ -49,7 +49,7 @@ VALUES
 		}
 
 		return {
-			reply: `${title} ${content ?? \"\"} ${delta}`
+			reply: sb.Utils.removeHTML(`${title} ${content ?? \"\"} ${delta}`)
 		};
 	}
 	else if (/^[A-Z]{2}$/i.test(rest[0])) {
@@ -130,7 +130,7 @@ ON DUPLICATE KEY UPDATE
 		}
 
 		return {
-			reply: `${title} ${content ?? \"\"} ${delta}`
+			reply: sb.Utils.removeHTML(`${title} ${content ?? \"\"} ${delta}`)
 		};
 	}
 	else if (/^[A-Z]{2}$/i.test(rest[0])) {
