@@ -62,7 +62,7 @@ VALUES
 
 	return {
 		reply: [
-			\"That channel\'s records are\",
+			\"This channel\'s records are\",
 			amountData.Amount + \" messages/min\",
 			\"(\" + amountData.Timestamp.format(\"Y-m-d H:i\") + \");\",
 			\"and\",
@@ -99,7 +99,7 @@ ON DUPLICATE KEY UPDATE
 
 	return {
 		reply: [
-			\"That channel\'s records are\",
+			\"This channel\'s records are\",
 			amountData.Amount + \" messages/min\",
 			\"(\" + amountData.Timestamp.format(\"Y-m-d H:i\") + \");\",
 			\"and\",
