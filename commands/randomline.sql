@@ -41,123 +41,137 @@ VALUES
 		0,
 		'(async function randomLine (context, user) {
 	if (context.channel === null) {
-		return { reply: \"Can\'t use this command here!\" };
+		return {
+			reply: \"This command cannot be used outside of channels!\"
+		};
 	}
 
 	const channelName = context.channel.getDatabaseName();
 	const channelID = context.channel.ID;
 	let result = null;
 
-	if (user) {
-		user = user.toLowerCase();
-		user = await sb.Utils.getDiscordUserDataFromMentions(user, context.append) || user;
-	}
-
 	if (context.invocation === \"rq\") {
 		user = context.user.Name;
+	}
+	else if (user) {
+		user = user.toLowerCase();
+		user = await sb.Utils.getDiscordUserDataFromMentions(user, context.append) || user;
 	}
 
 	if (user) {
 		const targetUser = await sb.User.get(user, true);
 		if (!targetUser) {
-			return { reply: \"User not found in the database!\" };
+			return {
+				reply: \"User not found in the database!\"
+			};
 		}
 
 		if (channelID === 7 || channelID === 8 || channelID === 82) {
-			const channels = ((channelID === 82)
-					? [\"nasabot\", \"_core54_1464148741723\", \"240523866026278913\"]
-					: [\"cerebot\", \"_trump_nonsub_refuge\", \"150782269382983689\"]
-			).map(i => sb.Channel.get(i));
-
+			const channels = ((channelID === 82) ? [27, 45, 82] : [7, 8, 46]).map(i => sb.Channel.get(i));
 			const counts = (await Promise.all(
 				channels.map(channel => sb.Query.getRecordset(rs => rs
 					.select(\"IFNULL(Message_Count, 0) AS Messages\")
 					.from(\"chat_data\", \"Message_Meta_User_Alias\")
 					.where(\"User_Alias = %n\", targetUser.ID)
 					.where(\"Channel = %n\", channel.ID)
+					.single()
 				))
-			)).map(i => (i[0]) ? i[0].Messages : 0);
+			)).map(i => i?.Messages ?? 0);
 
 			const randomID = sb.Utils.random(1, counts.reduce((prev, cur) => prev += cur, 0));
 			let targetID = null;
-			let targetChannel = null;if (randomID < counts[0]) {
+			let targetChannel = null;
+
+			if (randomID < counts[0]) {
 				targetID = randomID;
-				targetChannel = channels[0].getDatabaseName();
+				targetChannel = channels[0];
 			}
 			else if (randomID < (counts[0] + counts[1])) {
 				targetID = randomID - counts[0];
-				targetChannel = channels[1].getDatabaseName();
+				targetChannel = channels[1];
 			}
 			else {
 				targetID = randomID - counts[0] - counts[1];
-				targetChannel = channels[2].getDatabaseName();
+				targetChannel = channels[2];
 			}
 
-			const rsID = (await sb.Query.getRecordset(rs => rs
+			const data = await sb.Query.getRecordset(rs => rs
 				.select(\"ID\")
-				.from(\"chat_line\", targetChannel)
+				.from(\"chat_line\", targetChannel.getDatabaseName())
 				.where(\"User_Alias = %n\", targetUser.ID)
 				.limit(1)
 				.offset(targetID)
-			))[0];
+				.single()
+			);
 
-			if (!rsID) {
-				return { reply: \"That user did not post any lines in any of the relevant channels here!\" };
+			if (!data) {
+				return {
+					reply: \"That user did not post any lines in any of the relevant channels here!\"
+				};
 			}
 
-			const ID = rsID.ID;
-			result = (await sb.Query.getRecordset(rs => rs
+			result = await sb.Query.getRecordset(rs => rs
 				.select(\"Text\", \"Posted\", `\"${targetUser.Name}\" AS Name`)
-				.from(\"chat_line\", targetChannel)
-				.where(\"ID = %n\", ID)
-			))[0];
+				.from(\"chat_line\", targetChannel.getDatabaseName())
+				.where(\"ID = %n\", data.ID)
+				.single()
+			);
 		}
 		else {
-			const count = (await sb.Query.getRecordset(rs => rs
-				.select(\"Message_Count\")
+			const data = (await sb.Query.getRecordset(rs => rs
+				.select(\"Message_Count AS Count\")
 				.from(\"chat_data\", \"Message_Meta_User_Alias\")
 				.where(\"User_Alias = %n\", targetUser.ID)
 				.where(\"Channel = %n\", channelID)
+				.single()
 			));
 
-			if (!count[0]) {
-				return { reply: \"That user has not posted any messages in this channel!\" };
+			if (!data) {
+				return {
+					reply: \"That user has not posted any messages in this channel!\"
+				};
 			}
-			else if (!count[0].Message_Count) {
-				return { reply: \"That user has no metadata associated with them!\" };
+			else if (!data.Count) {
+				return {
+					reply: \"That user has no metadata associated with them!\"
+				};
 			}
 
-			const random = sb.Utils.random(1, count[0].Message_Count);
-			const randomObject = (await sb.Query.getRecordset(rs => rs
+			const random = await sb.Query.getRecordset(rs => rs
 				.select(\"ID\")
 				.from(\"chat_line\", channelName)
 				.where(\"User_Alias = %n\", targetUser.ID)
 				.limit(1)
-				.offset(random - 1)
-			));
+				.offset(sb.Utils.random(1, data.Count) - 1)
+				.single()
+			);
 
-			if (!randomObject) {
-				return { reply: \"No messages could be fetched\" };
+			if (!random) {
+				return {
+					reply: \"No messages could be fetched!\"
+				};
 			}
 
-			const ID = randomObject[0].ID;
-			result = (await sb.Query.getRecordset(rs => rs
+			result = await sb.Query.getRecordset(rs => rs
 				.select(\"Text\", \"Posted\", `\"${targetUser.Name}\" AS Name`)
 				.from(\"chat_line\", channelName)
-				.where(\"ID = %n\", ID)
-			))[0];
+				.where(\"ID = %n\", random.ID)
+				.single()
+			);
 		}
 	}
 	else {
 		if (channelID === 7 || channelID === 8 || channelID === 82) {
-			const channels = (channelID === 82)
-				? [\"nasabot\", \"_core54_1464148741723\", \"discord_240523866026278913\"]
-				: [\"cerebot\", \"_trump_nonsub_refuge\", \"discord_150782269382983689\"];
-			const counts = (await Promise.all(
-				channels.map(channel => sb.Query.raw(\"SELECT MAX(ID) AS Total FROM `chat_line`.`\" + channel + \"`\"))
-			)).map(i => i[0].Total);
+			const channels = ((channelID === 82) ? [27, 45, 82] : [7, 8, 46]).map(i => sb.Channel.get(i).getDatabaseName());
+			const counts = (await Promise.all(channels.map(channel =>
+				sb.Query.getRecordset(rs => rs
+					.select(\"MAX(ID) AS Total\")
+					.from(\"chat_line\", channel)
+					.single()
+				)
+			))).map(i => i.Total);
 
-			const ID = sb.Utils.random(1, counts.reduce((prev, cur) => prev += cur, 0));
+			const ID = sb.Utils.random(1, counts.reduce((acc, cur) => acc += cur, 0));
 			let targetID = null;
 			let targetChannel = null;
 
@@ -173,43 +187,43 @@ VALUES
 				targetID = ID - counts[0] - counts[1];
 				targetChannel = channels[2];
 			}
-
-			result = (await sb.Query.getRecordset(rs => rs
+			
+			result = await sb.Query.getRecordset(rs => rs
 				.select(\"Text\", \"Posted\", \"Name\")
 				.from(\"chat_line\", targetChannel)
 				.join(\"chat_data\", \"User_Alias\")
 				.where(targetChannel + \".ID = %n\", targetID)
-			))[0];
+				.single()
+			);
+			
+			console.log({result, ID, targetID, targetChannel, channels})
 		}
 		else {
-			const maxID = (await sb.Query.raw(\"SELECT MAX(ID) AS MaxID FROM `chat_line`.`\" + channelName + \"`\"))[0].MaxID;
-			if (!maxID) {
-				return { reply: \"This channel doesn\'t have enough chat lines saved yet!\" };
+			const data = await sb.Query.getRecordset(rs => rs
+				.select(\"MAX(ID) AS Total\")
+				.from(\"chat_line\", channelName)
+				.single()
+			);
+
+			if (!data || !data.Total) {
+				return {
+					reply: \"This channel doesn\'t have enough chat lines saved yet!\"
+				};
 			}
 
 			result = (await sb.Query.getRecordset(rs => rs
 				.select(\"Text\", \"Posted\", \"Name\")
 				.from(\"chat_line\", channelName)
 				.join(\"chat_data\", \"User_Alias\")
-				.where(\"`\" + channelName + \"`.ID = %n\", sb.Utils.random(1, maxID))
+				.where(\"`\" + channelName + \"`.ID = %n\", sb.Utils.random(1, data.Total))
 				.single()
 			));
-
-			if (!result) {
-				console.warn({message: \"No result in $rl!\", maxID, context});
-			}
 		}
 	}
 
-	// const aiazymemeDelta = sb.Date.now() - new sb.Date(result.Posted);
 	return {
-		reply: [
-			//\"(\" + aiazymemeDelta + \" milliseconds ago)\",
-			\"(\" + sb.Utils.timeDelta(result.Posted) + \")\",
-			result.Name + \":\",
-			result.Text
-		].join(\" \")
-	}
+		reply: `(${sb.Utils.timeDelta(result.Posted)}) ${result.Name}: ${result.Text}`
+	};
 })',
 		NULL,
 		'async (prefix) => [
@@ -225,123 +239,137 @@ VALUES
 ON DUPLICATE KEY UPDATE
 	Code = '(async function randomLine (context, user) {
 	if (context.channel === null) {
-		return { reply: \"Can\'t use this command here!\" };
+		return {
+			reply: \"This command cannot be used outside of channels!\"
+		};
 	}
 
 	const channelName = context.channel.getDatabaseName();
 	const channelID = context.channel.ID;
 	let result = null;
 
-	if (user) {
-		user = user.toLowerCase();
-		user = await sb.Utils.getDiscordUserDataFromMentions(user, context.append) || user;
-	}
-
 	if (context.invocation === \"rq\") {
 		user = context.user.Name;
+	}
+	else if (user) {
+		user = user.toLowerCase();
+		user = await sb.Utils.getDiscordUserDataFromMentions(user, context.append) || user;
 	}
 
 	if (user) {
 		const targetUser = await sb.User.get(user, true);
 		if (!targetUser) {
-			return { reply: \"User not found in the database!\" };
+			return {
+				reply: \"User not found in the database!\"
+			};
 		}
 
 		if (channelID === 7 || channelID === 8 || channelID === 82) {
-			const channels = ((channelID === 82)
-					? [\"nasabot\", \"_core54_1464148741723\", \"240523866026278913\"]
-					: [\"cerebot\", \"_trump_nonsub_refuge\", \"150782269382983689\"]
-			).map(i => sb.Channel.get(i));
-
+			const channels = ((channelID === 82) ? [27, 45, 82] : [7, 8, 46]).map(i => sb.Channel.get(i));
 			const counts = (await Promise.all(
 				channels.map(channel => sb.Query.getRecordset(rs => rs
 					.select(\"IFNULL(Message_Count, 0) AS Messages\")
 					.from(\"chat_data\", \"Message_Meta_User_Alias\")
 					.where(\"User_Alias = %n\", targetUser.ID)
 					.where(\"Channel = %n\", channel.ID)
+					.single()
 				))
-			)).map(i => (i[0]) ? i[0].Messages : 0);
+			)).map(i => i?.Messages ?? 0);
 
 			const randomID = sb.Utils.random(1, counts.reduce((prev, cur) => prev += cur, 0));
 			let targetID = null;
-			let targetChannel = null;if (randomID < counts[0]) {
+			let targetChannel = null;
+
+			if (randomID < counts[0]) {
 				targetID = randomID;
-				targetChannel = channels[0].getDatabaseName();
+				targetChannel = channels[0];
 			}
 			else if (randomID < (counts[0] + counts[1])) {
 				targetID = randomID - counts[0];
-				targetChannel = channels[1].getDatabaseName();
+				targetChannel = channels[1];
 			}
 			else {
 				targetID = randomID - counts[0] - counts[1];
-				targetChannel = channels[2].getDatabaseName();
+				targetChannel = channels[2];
 			}
 
-			const rsID = (await sb.Query.getRecordset(rs => rs
+			const data = await sb.Query.getRecordset(rs => rs
 				.select(\"ID\")
-				.from(\"chat_line\", targetChannel)
+				.from(\"chat_line\", targetChannel.getDatabaseName())
 				.where(\"User_Alias = %n\", targetUser.ID)
 				.limit(1)
 				.offset(targetID)
-			))[0];
+				.single()
+			);
 
-			if (!rsID) {
-				return { reply: \"That user did not post any lines in any of the relevant channels here!\" };
+			if (!data) {
+				return {
+					reply: \"That user did not post any lines in any of the relevant channels here!\"
+				};
 			}
 
-			const ID = rsID.ID;
-			result = (await sb.Query.getRecordset(rs => rs
+			result = await sb.Query.getRecordset(rs => rs
 				.select(\"Text\", \"Posted\", `\"${targetUser.Name}\" AS Name`)
-				.from(\"chat_line\", targetChannel)
-				.where(\"ID = %n\", ID)
-			))[0];
+				.from(\"chat_line\", targetChannel.getDatabaseName())
+				.where(\"ID = %n\", data.ID)
+				.single()
+			);
 		}
 		else {
-			const count = (await sb.Query.getRecordset(rs => rs
-				.select(\"Message_Count\")
+			const data = (await sb.Query.getRecordset(rs => rs
+				.select(\"Message_Count AS Count\")
 				.from(\"chat_data\", \"Message_Meta_User_Alias\")
 				.where(\"User_Alias = %n\", targetUser.ID)
 				.where(\"Channel = %n\", channelID)
+				.single()
 			));
 
-			if (!count[0]) {
-				return { reply: \"That user has not posted any messages in this channel!\" };
+			if (!data) {
+				return {
+					reply: \"That user has not posted any messages in this channel!\"
+				};
 			}
-			else if (!count[0].Message_Count) {
-				return { reply: \"That user has no metadata associated with them!\" };
+			else if (!data.Count) {
+				return {
+					reply: \"That user has no metadata associated with them!\"
+				};
 			}
 
-			const random = sb.Utils.random(1, count[0].Message_Count);
-			const randomObject = (await sb.Query.getRecordset(rs => rs
+			const random = await sb.Query.getRecordset(rs => rs
 				.select(\"ID\")
 				.from(\"chat_line\", channelName)
 				.where(\"User_Alias = %n\", targetUser.ID)
 				.limit(1)
-				.offset(random - 1)
-			));
+				.offset(sb.Utils.random(1, data.Count) - 1)
+				.single()
+			);
 
-			if (!randomObject) {
-				return { reply: \"No messages could be fetched\" };
+			if (!random) {
+				return {
+					reply: \"No messages could be fetched!\"
+				};
 			}
 
-			const ID = randomObject[0].ID;
-			result = (await sb.Query.getRecordset(rs => rs
+			result = await sb.Query.getRecordset(rs => rs
 				.select(\"Text\", \"Posted\", `\"${targetUser.Name}\" AS Name`)
 				.from(\"chat_line\", channelName)
-				.where(\"ID = %n\", ID)
-			))[0];
+				.where(\"ID = %n\", random.ID)
+				.single()
+			);
 		}
 	}
 	else {
 		if (channelID === 7 || channelID === 8 || channelID === 82) {
-			const channels = (channelID === 82)
-				? [\"nasabot\", \"_core54_1464148741723\", \"discord_240523866026278913\"]
-				: [\"cerebot\", \"_trump_nonsub_refuge\", \"discord_150782269382983689\"];
-			const counts = (await Promise.all(
-				channels.map(channel => sb.Query.raw(\"SELECT MAX(ID) AS Total FROM `chat_line`.`\" + channel + \"`\"))
-			)).map(i => i[0].Total);
+			const channels = ((channelID === 82) ? [27, 45, 82] : [7, 8, 46]).map(i => sb.Channel.get(i).getDatabaseName());
+			const counts = (await Promise.all(channels.map(channel =>
+				sb.Query.getRecordset(rs => rs
+					.select(\"MAX(ID) AS Total\")
+					.from(\"chat_line\", channel)
+					.single()
+				)
+			))).map(i => i.Total);
 
-			const ID = sb.Utils.random(1, counts.reduce((prev, cur) => prev += cur, 0));
+			const ID = sb.Utils.random(1, counts.reduce((acc, cur) => acc += cur, 0));
 			let targetID = null;
 			let targetChannel = null;
 
@@ -357,41 +385,41 @@ ON DUPLICATE KEY UPDATE
 				targetID = ID - counts[0] - counts[1];
 				targetChannel = channels[2];
 			}
-
-			result = (await sb.Query.getRecordset(rs => rs
+			
+			result = await sb.Query.getRecordset(rs => rs
 				.select(\"Text\", \"Posted\", \"Name\")
 				.from(\"chat_line\", targetChannel)
 				.join(\"chat_data\", \"User_Alias\")
 				.where(targetChannel + \".ID = %n\", targetID)
-			))[0];
+				.single()
+			);
+			
+			console.log({result, ID, targetID, targetChannel, channels})
 		}
 		else {
-			const maxID = (await sb.Query.raw(\"SELECT MAX(ID) AS MaxID FROM `chat_line`.`\" + channelName + \"`\"))[0].MaxID;
-			if (!maxID) {
-				return { reply: \"This channel doesn\'t have enough chat lines saved yet!\" };
+			const data = await sb.Query.getRecordset(rs => rs
+				.select(\"MAX(ID) AS Total\")
+				.from(\"chat_line\", channelName)
+				.single()
+			);
+
+			if (!data || !data.Total) {
+				return {
+					reply: \"This channel doesn\'t have enough chat lines saved yet!\"
+				};
 			}
 
 			result = (await sb.Query.getRecordset(rs => rs
 				.select(\"Text\", \"Posted\", \"Name\")
 				.from(\"chat_line\", channelName)
 				.join(\"chat_data\", \"User_Alias\")
-				.where(\"`\" + channelName + \"`.ID = %n\", sb.Utils.random(1, maxID))
+				.where(\"`\" + channelName + \"`.ID = %n\", sb.Utils.random(1, data.Total))
 				.single()
 			));
-
-			if (!result) {
-				console.warn({message: \"No result in $rl!\", maxID, context});
-			}
 		}
 	}
 
-	// const aiazymemeDelta = sb.Date.now() - new sb.Date(result.Posted);
 	return {
-		reply: [
-			//\"(\" + aiazymemeDelta + \" milliseconds ago)\",
-			\"(\" + sb.Utils.timeDelta(result.Posted) + \")\",
-			result.Name + \":\",
-			result.Text
-		].join(\" \")
-	}
+		reply: `(${sb.Utils.timeDelta(result.Posted)}) ${result.Name}: ${result.Text}`
+	};
 })'
