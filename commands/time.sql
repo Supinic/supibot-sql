@@ -40,17 +40,44 @@ VALUES
 		1,
 		0,
 		'(async function time (context, ...args) {
-	const place = args.join(\" \");
-	if (!place) {
+	let skipLocation = false;
+
+	if (args.length === 0) {
+		if (context.user.Data.defaultLocation) {
+			args = context.user.Data.defaultLocation.address;
+			skipLocation = context.user.Data.defaultLocation.private;
+		}
+		else {
+			return {
+				reply: \"You must search for something first!\",
+				meta: { skipCooldown: true }
+			};
+		}
+	}
+	else if (args[0].startsWith(\"@\")) {
+		const targetUser = await sb.User.get(args[0]);
+		if (!targetUser) {
+			return {
+				reply: \"That user does not exist!\"
+			};
+		}
+		else if (!targetUser.Data.defaultLocation) {
+			return {
+				reply: \"That user has not set their default location!\"
+			};
+		}
+		else {
+			args = targetUser.Data.defaultLocation.address;
+			skipLocation = targetUser.Data.defaultLocation.private;
+		}
+	}
+	else if (args[0].toLowerCase() === sb.Config.get(\"SELF\")) {
 		return {
-			reply: \"You must search for something first!\",
-			meta: { skipCooldown: true }
+			reply: \"🤖 My current time: \" + sb.Date.now() + \" 🤖\"
 		};
 	}
-	else if (place.toLowerCase() === sb.Config.get(\"SELF\")) {
-		return { reply: \"🤖 My current time: \" + sb.Date.now() + \" 🤖\" };
-	}
 
+	const place = args.join(\" \");
 	const timezone = await sb.Query.getRecordset(rs => rs
 		.select(\"Abbreviation\", \"Offset\", \"Name\")
 		.from(\"data\", \"Timezone\")
@@ -67,16 +94,16 @@ VALUES
 
 		const date = new sb.Date().setTimezoneOffset(timezone.Offset * 60).format(\"H:i (Y-m-d)\");
 
-		return { 
+		return {
 			reply: \"Timezone detected! \"
-				+ timezone.Abbreviation 
-				+ \" is \" 
-				+ timezone.Name 
-				+ \", which is UTC\" 
-				+ prettyOffset 
-				+ \", and it is \" 
-				+ date 
-				+ \" there right now.\" 
+				+ timezone.Abbreviation
+				+ \" is \"
+				+ timezone.Name
+				+ \", which is UTC\"
+				+ prettyOffset
+				+ \", and it is \"
+				+ date
+				+ \" there right now.\"
 		};
 	}
 
@@ -105,8 +132,10 @@ VALUES
 
 	const time = new sb.Date();
 	time.setTimezoneOffset(totalOffset / 60);
+
+	const replyPlace = (skipLocation) ? \"(location hidden)\" : place;
 	const reply = [
-		place + \" is currently observing \" + timeData.timeZoneName,
+		replyPlace + \" is currently observing \" + timeData.timeZoneName,
 		\"which is GMT\" + offset,
 		\"and it\'s \" + time.format(\"H:i (Y-m-d)\") + \" there right now.\"
 	];
@@ -119,17 +148,44 @@ VALUES
 
 ON DUPLICATE KEY UPDATE
 	Code = '(async function time (context, ...args) {
-	const place = args.join(\" \");
-	if (!place) {
+	let skipLocation = false;
+
+	if (args.length === 0) {
+		if (context.user.Data.defaultLocation) {
+			args = context.user.Data.defaultLocation.address;
+			skipLocation = context.user.Data.defaultLocation.private;
+		}
+		else {
+			return {
+				reply: \"You must search for something first!\",
+				meta: { skipCooldown: true }
+			};
+		}
+	}
+	else if (args[0].startsWith(\"@\")) {
+		const targetUser = await sb.User.get(args[0]);
+		if (!targetUser) {
+			return {
+				reply: \"That user does not exist!\"
+			};
+		}
+		else if (!targetUser.Data.defaultLocation) {
+			return {
+				reply: \"That user has not set their default location!\"
+			};
+		}
+		else {
+			args = targetUser.Data.defaultLocation.address;
+			skipLocation = targetUser.Data.defaultLocation.private;
+		}
+	}
+	else if (args[0].toLowerCase() === sb.Config.get(\"SELF\")) {
 		return {
-			reply: \"You must search for something first!\",
-			meta: { skipCooldown: true }
+			reply: \"🤖 My current time: \" + sb.Date.now() + \" 🤖\"
 		};
 	}
-	else if (place.toLowerCase() === sb.Config.get(\"SELF\")) {
-		return { reply: \"🤖 My current time: \" + sb.Date.now() + \" 🤖\" };
-	}
 
+	const place = args.join(\" \");
 	const timezone = await sb.Query.getRecordset(rs => rs
 		.select(\"Abbreviation\", \"Offset\", \"Name\")
 		.from(\"data\", \"Timezone\")
@@ -146,16 +202,16 @@ ON DUPLICATE KEY UPDATE
 
 		const date = new sb.Date().setTimezoneOffset(timezone.Offset * 60).format(\"H:i (Y-m-d)\");
 
-		return { 
+		return {
 			reply: \"Timezone detected! \"
-				+ timezone.Abbreviation 
-				+ \" is \" 
-				+ timezone.Name 
-				+ \", which is UTC\" 
-				+ prettyOffset 
-				+ \", and it is \" 
-				+ date 
-				+ \" there right now.\" 
+				+ timezone.Abbreviation
+				+ \" is \"
+				+ timezone.Name
+				+ \", which is UTC\"
+				+ prettyOffset
+				+ \", and it is \"
+				+ date
+				+ \" there right now.\"
 		};
 	}
 
@@ -184,8 +240,10 @@ ON DUPLICATE KEY UPDATE
 
 	const time = new sb.Date();
 	time.setTimezoneOffset(totalOffset / 60);
+
+	const replyPlace = (skipLocation) ? \"(location hidden)\" : place;
 	const reply = [
-		place + \" is currently observing \" + timeData.timeZoneName,
+		replyPlace + \" is currently observing \" + timeData.timeZoneName,
 		\"which is GMT\" + offset,
 		\"and it\'s \" + time.format(\"H:i (Y-m-d)\") + \" there right now.\"
 	];
