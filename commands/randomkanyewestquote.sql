@@ -39,10 +39,18 @@ VALUES
 		1,
 		1,
 		0,
-		'async () => ({ reply: JSON.parse(await sb.Utils.request(\"https://api.kanye.rest/\")).quote })',
+		'(async function randomKanyeWestQuote () {
+	return {
+		reply: JSON.parse(await sb.Utils.request(\"https://api.kanye.rest/\")).quote
+	}
+})',
 		NULL,
 		NULL
 	)
 
 ON DUPLICATE KEY UPDATE
-	Code = 'async () => ({ reply: JSON.parse(await sb.Utils.request(\"https://api.kanye.rest/\")).quote })'
+	Code = '(async function randomKanyeWestQuote () {
+	return {
+		reply: JSON.parse(await sb.Utils.request(\"https://api.kanye.rest/\")).quote
+	}
+})'
