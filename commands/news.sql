@@ -87,7 +87,7 @@ VALUES
 		: \"\";
 
 	return {
-		reply: `${title} ${description ?? \"\"} ${delta}`
+		reply: sb.Utils.removeHTML(`${title} ${description ?? \"\"} ${delta}`)
 	};
 })',
 		NULL,
@@ -168,6 +168,6 @@ ON DUPLICATE KEY UPDATE
 		: \"\";
 
 	return {
-		reply: `${title} ${description ?? \"\"} ${delta}`
+		reply: sb.Utils.removeHTML(`${title} ${description ?? \"\"} ${delta}`)
 	};
 })'
