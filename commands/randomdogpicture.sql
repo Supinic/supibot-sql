@@ -32,7 +32,7 @@ VALUES
 		0,
 		0,
 		1,
-		'Only people who verified that they have a dog can use this command.',
+		'Only people who verified that they have a dog can use this command. You can verify by using the $suggest command with a picture of your dog.',
 		0,
 		0,
 		0,
