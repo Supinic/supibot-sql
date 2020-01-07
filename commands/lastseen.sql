@@ -45,8 +45,8 @@ VALUES
 	}
 
 	const targetUser = await sb.Utils.getDiscordUserDataFromMentions(user.toLowerCase(), context.append) || await sb.User.get(user.toLowerCase(), true);
-	if (!targetUser) {
-		return { reply: \"No such user exists!\" };
+	if (!targetUser) {		
+		return { reply: \"User not found in the database!\" };
 	}
 	else if (targetUser.ID === context.user.ID) {
 		return { reply: \"You\'re right here NaM\" };
@@ -119,8 +119,8 @@ ON DUPLICATE KEY UPDATE
 	}
 
 	const targetUser = await sb.Utils.getDiscordUserDataFromMentions(user.toLowerCase(), context.append) || await sb.User.get(user.toLowerCase(), true);
-	if (!targetUser) {
-		return { reply: \"No such user exists!\" };
+	if (!targetUser) {		
+		return { reply: \"User not found in the database!\" };
 	}
 	else if (targetUser.ID === context.user.ID) {
 		return { reply: \"You\'re right here NaM\" };

@@ -45,8 +45,8 @@ VALUES
 	}
 
 	const targetUser = await sb.Utils.getDiscordUserDataFromMentions(user, context.append) || (await sb.User.get(user, true))
-	if (!targetUser) {
-		return { reply: \"No user found in the database!\" };
+	if (!targetUser) {		
+		return { reply: \"User not found in the database!\" };
 	}
 
 	const userID = targetUser.ID;
@@ -106,8 +106,8 @@ ON DUPLICATE KEY UPDATE
 	}
 
 	const targetUser = await sb.Utils.getDiscordUserDataFromMentions(user, context.append) || (await sb.User.get(user, true))
-	if (!targetUser) {
-		return { reply: \"No user found in the database!\" };
+	if (!targetUser) {		
+		return { reply: \"User not found in the database!\" };
 	}
 
 	const userID = targetUser.ID;

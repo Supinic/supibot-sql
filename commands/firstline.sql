@@ -58,7 +58,7 @@ VALUES
 	}
 
 	if (!targetUser) {
-		return { reply: \"That user was not found!\" };
+		return { reply: \"User not found in the database!\" };
 	}
 
 	let check = null;
@@ -161,7 +161,7 @@ ON DUPLICATE KEY UPDATE
 	}
 
 	if (!targetUser) {
-		return { reply: \"That user was not found!\" };
+		return { reply: \"User not found in the database!\" };
 	}
 
 	let check = null;
