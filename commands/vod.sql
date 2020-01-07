@@ -72,10 +72,16 @@ VALUES
 		};
 	}
 
+	let liveString = \"\";
+	const isLive = (await sb.Command.get(\"streaminfo\").execute(context, target)).reply;
+	if (isLive && !isLive.includes(\"not exist\") && !isLive.includes(\"offline\")) {
+		liveString = \" The stream is still online!\";
+	}
+
 	const data = vod.data[0];
 	const delta = sb.Utils.timeDelta(new sb.Date(data.created_at));
 	return {
-		reply: `${data.title} - published ${delta} ${data.url}`
+		reply: `${data.title} - published ${delta} ${data.url}${liveString}`
 	};
 })',
 		NULL,
@@ -116,9 +122,15 @@ ON DUPLICATE KEY UPDATE
 		};
 	}
 
+	let liveString = \"\";
+	const isLive = (await sb.Command.get(\"streaminfo\").execute(context, target)).reply;
+	if (isLive && !isLive.includes(\"not exist\") && !isLive.includes(\"offline\")) {
+		liveString = \" The stream is still online!\";
+	}
+
 	const data = vod.data[0];
 	const delta = sb.Utils.timeDelta(new sb.Date(data.created_at));
 	return {
-		reply: `${data.title} - published ${delta} ${data.url}`
+		reply: `${data.title} - published ${delta} ${data.url}${liveString}`
 	};
 })'
