@@ -38,7 +38,7 @@ VALUES
 		0,
 		1,
 		1,
-		0,
+		1,
 		'async (extra, ...args) => {
 	return {
 		reply: \"Command is deprecated. Use $texttransform OMEGALUL (or $tt OMEGALUL for short)\"
