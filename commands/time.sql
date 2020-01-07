@@ -54,7 +54,12 @@ VALUES
 			};
 		}
 	}
-	else if (args[0].startsWith(\"@\")) {
+	else if (args[0].toLowerCase().replace(/^@/, \"\") === sb.Config.get(\"SELF\")) {
+		return {
+			reply: \"🤖 My current time: \" + sb.Date.now() + \" 🤖\"
+		};
+	}
+	else if (args[0].startsWith(\"@\") ) {
 		const targetUser = await sb.User.get(args[0]);
 		if (!targetUser) {
 			return {
@@ -70,11 +75,6 @@ VALUES
 			args = targetUser.Data.defaultLocation.address;
 			skipLocation = targetUser.Data.defaultLocation.private;
 		}
-	}
-	else if (args[0].toLowerCase() === sb.Config.get(\"SELF\")) {
-		return {
-			reply: \"🤖 My current time: \" + sb.Date.now() + \" 🤖\"
-		};
 	}
 
 	const place = args.join(\" \");
@@ -162,7 +162,12 @@ ON DUPLICATE KEY UPDATE
 			};
 		}
 	}
-	else if (args[0].startsWith(\"@\")) {
+	else if (args[0].toLowerCase().replace(/^@/, \"\") === sb.Config.get(\"SELF\")) {
+		return {
+			reply: \"🤖 My current time: \" + sb.Date.now() + \" 🤖\"
+		};
+	}
+	else if (args[0].startsWith(\"@\") ) {
 		const targetUser = await sb.User.get(args[0]);
 		if (!targetUser) {
 			return {
@@ -178,11 +183,6 @@ ON DUPLICATE KEY UPDATE
 			args = targetUser.Data.defaultLocation.address;
 			skipLocation = targetUser.Data.defaultLocation.private;
 		}
-	}
-	else if (args[0].toLowerCase() === sb.Config.get(\"SELF\")) {
-		return {
-			reply: \"🤖 My current time: \" + sb.Date.now() + \" 🤖\"
-		};
 	}
 
 	const place = args.join(\" \");

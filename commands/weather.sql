@@ -54,6 +54,14 @@ VALUES
 			};
 		}
 	}
+	else if (args[0].toLowerCase().replace(/^@/, \"\") === \"supibot\") {
+		const exec = require(\"child_process\").execSync;
+		const temperature = exec(\"/opt/vc/bin/vcgencmd measure_temp\").toString().match(/([\\d\\.]+)/)[1] + \"°C\";
+
+		return { 
+			reply: \"Supibot, Supinic\'s table, Raspberry Pi 3B: \" + temperature + \". No wind detected. No precipitation expected.\" 
+		};
+	}
 	else if (args[0].startsWith(\"@\")) {
 		const userData = await sb.User.get(args[0]);
 		if (!userData) {
@@ -71,14 +79,6 @@ VALUES
 			args = args.slice(1);
 			args.unshift(...userData.Data.defaultLocation.address);
 		}
-	}
-	else if (args[0].toLowerCase() === \"supibot\") {
-		const exec = require(\"child_process\").execSync;
-		const temperature = exec(\"/opt/vc/bin/vcgencmd measure_temp\").toString().match(/([\\d\\.]+)/)[1] + \"°C\";
-
-		return { 
-			reply: \"Supibot, Supinic\'s table, Raspberry Pi 3B: \" + temperature + \". No wind detected. No precipitation expected.\" 
-		};
 	}
 	else if (args[0] === \"set\" && args[1] === \"location\") {
 		args = args.slice(2);
@@ -268,6 +268,14 @@ ON DUPLICATE KEY UPDATE
 			};
 		}
 	}
+	else if (args[0].toLowerCase().replace(/^@/, \"\") === \"supibot\") {
+		const exec = require(\"child_process\").execSync;
+		const temperature = exec(\"/opt/vc/bin/vcgencmd measure_temp\").toString().match(/([\\d\\.]+)/)[1] + \"°C\";
+
+		return { 
+			reply: \"Supibot, Supinic\'s table, Raspberry Pi 3B: \" + temperature + \". No wind detected. No precipitation expected.\" 
+		};
+	}
 	else if (args[0].startsWith(\"@\")) {
 		const userData = await sb.User.get(args[0]);
 		if (!userData) {
@@ -285,14 +293,6 @@ ON DUPLICATE KEY UPDATE
 			args = args.slice(1);
 			args.unshift(...userData.Data.defaultLocation.address);
 		}
-	}
-	else if (args[0].toLowerCase() === \"supibot\") {
-		const exec = require(\"child_process\").execSync;
-		const temperature = exec(\"/opt/vc/bin/vcgencmd measure_temp\").toString().match(/([\\d\\.]+)/)[1] + \"°C\";
-
-		return { 
-			reply: \"Supibot, Supinic\'s table, Raspberry Pi 3B: \" + temperature + \". No wind detected. No precipitation expected.\" 
-		};
 	}
 	else if (args[0] === \"set\" && args[1] === \"location\") {
 		args = args.slice(2);
