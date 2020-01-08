@@ -54,7 +54,7 @@ VALUES
 	}
 
 	return {
-		reply: \"https://supinic.com/bot/command/\" + command.ID + \"/code\"
+		reply: `Website: https://supinic.com/bot/command/${command.ID}/code || Github: https://github.com/Supinic/supibot-sql/blob/master/commands/${command.Name}.sql`
 	};	
 })',
 		NULL,
@@ -77,6 +77,6 @@ ON DUPLICATE KEY UPDATE
 	}
 
 	return {
-		reply: \"https://supinic.com/bot/command/\" + command.ID + \"/code\"
+		reply: `Website: https://supinic.com/bot/command/${command.ID}/code || Github: https://github.com/Supinic/supibot-sql/blob/master/commands/${command.Name}.sql`
 	};	
 })'
