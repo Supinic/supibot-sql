@@ -46,7 +46,14 @@ VALUES
 
 	subreddit = subreddit.toLowerCase();
 
+	const banned = [\"moobs\"];
 	const safeSpace = Boolean(!context.privateMessage && !context.channel.NSFW);
+	if (banned.includes(subreddit)) {
+		return {
+			reply: \"That subreddit has been banned from viewing!\"
+		};
+	}
+
 	const check = JSON.parse(await sb.Utils.request({
 		uri: `https://www.reddit.com/r/${subreddit}/about.json`,
 		headers: {
@@ -112,7 +119,14 @@ ON DUPLICATE KEY UPDATE
 
 	subreddit = subreddit.toLowerCase();
 
+	const banned = [\"moobs\"];
 	const safeSpace = Boolean(!context.privateMessage && !context.channel.NSFW);
+	if (banned.includes(subreddit)) {
+		return {
+			reply: \"That subreddit has been banned from viewing!\"
+		};
+	}
+
 	const check = JSON.parse(await sb.Utils.request({
 		uri: `https://www.reddit.com/r/${subreddit}/about.json`,
 		headers: {
