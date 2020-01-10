@@ -75,7 +75,7 @@ VALUES
 	let liveString = \"\";
 	const isLive = (await sb.Command.get(\"streaminfo\").execute(context, target)).reply;
 	if (isLive && !isLive.includes(\"not exist\") && !isLive.includes(\"offline\")) {
-		liveString = \" The stream is still online!\";
+		liveString = \" 🔴\";
 	}
 
 	const data = vod.data[0];
@@ -125,7 +125,7 @@ ON DUPLICATE KEY UPDATE
 	let liveString = \"\";
 	const isLive = (await sb.Command.get(\"streaminfo\").execute(context, target)).reply;
 	if (isLive && !isLive.includes(\"not exist\") && !isLive.includes(\"offline\")) {
-		liveString = \" The stream is still online!\";
+		liveString = \" 🔴\";
 	}
 
 	const data = vod.data[0];
