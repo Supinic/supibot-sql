@@ -23,11 +23,11 @@ INSERT INTO
 	)
 VALUES
 	(
-		103,
+		194,
 		'bot',
 		NULL,
-		'Posts a summary of what supibot does, and what it is.',
-		60000,
+		'Allows broadcasters to set various parameters for the bot in their own channel. Usable anywhere, but only applies to their own channel.',
+		2500,
 		0,
 		0,
 		0,
@@ -39,14 +39,124 @@ VALUES
 		1,
 		1,
 		0,
-		'async () => ({
-	reply: \"Supibot is a smol variety and utility bot supiniL running on a smol Raspberry Pi 3B supiniL not primarily designed for moderation supiniHack running on Node.js since Feb 2018.\"
-})',
-		'No arguments.',
+		'(async function bot (context, command, user) {
+	if (!command) {
+		return {
+			reply: \"No command provided!\"
+		};
+	}
+
+	user = (user) 
+		? await sb.User.get(user, true)
+		: context.user;
+
+	if (!user) {
+		return {
+			reply: \"Invalid user provided!\"
+		};
+	}
+
+	if (!context.user.Data.bypassOptOuts && (user !== context.user || !sb.Channel.get(user.Name))) {
+		return {
+			reply: \"Combination of user and channel is invalid!\"
+		};
+	}
+
+	const channel = sb.Channel.get(user.Name);
+	const prefix = sb.Config.get(\"COMMAND_PREFIX\");
+	command = command.toLowerCase();
+
+	switch (command) {
+		case \"disable\":
+			if (channel.Mode === \"Read\") {
+				return {
+					reply: \"Channel is already set to read-only!\"
+				};
+			}
+
+			setTimeout(() => channel.Mode = \"Read\", 5000);
+			return {
+				reply: `Channel set to read-only mode in 5 seconds. Use \"${prefix}${context.command.Name}\" enable in a different channel to re-enable.`
+			};
+
+		case \"enable\":
+			if (channel.Mode !== \"Read\") {
+				return {
+					reply: \"Channel is already set to write!\"
+				};
+			}
+
+			channel.Mode = \"Write\";
+			return {
+				reply: \"Channel mode reset back to write.\"
+			};
+
+		default: return {
+			reply: \"Invalid command provided!\"
+		}
+	}
+})
+',
+		NULL,
 		NULL
 	)
 
 ON DUPLICATE KEY UPDATE
-	Code = 'async () => ({
-	reply: \"Supibot is a smol variety and utility bot supiniL running on a smol Raspberry Pi 3B supiniL not primarily designed for moderation supiniHack running on Node.js since Feb 2018.\"
-})'
+	Code = '(async function bot (context, command, user) {
+	if (!command) {
+		return {
+			reply: \"No command provided!\"
+		};
+	}
+
+	user = (user) 
+		? await sb.User.get(user, true)
+		: context.user;
+
+	if (!user) {
+		return {
+			reply: \"Invalid user provided!\"
+		};
+	}
+
+	if (!context.user.Data.bypassOptOuts && (user !== context.user || !sb.Channel.get(user.Name))) {
+		return {
+			reply: \"Combination of user and channel is invalid!\"
+		};
+	}
+
+	const channel = sb.Channel.get(user.Name);
+	const prefix = sb.Config.get(\"COMMAND_PREFIX\");
+	command = command.toLowerCase();
+
+	switch (command) {
+		case \"disable\":
+			if (channel.Mode === \"Read\") {
+				return {
+					reply: \"Channel is already set to read-only!\"
+				};
+			}
+
+			setTimeout(() => channel.Mode = \"Read\", 5000);
+			return {
+				reply: `Channel set to read-only mode in 5 seconds. Use \"${prefix}${context.command.Name}\" enable in a different channel to re-enable.`
+			};
+
+		case \"enable\":
+			if (channel.Mode !== \"Read\") {
+				return {
+					reply: \"Channel is already set to write!\"
+				};
+			}
+
+			channel.Mode = \"Write\";
+			return {
+				reply: \"Channel mode reset back to write.\"
+			};
+
+		default: return {
+			reply: \"Invalid command provided!\"
+		}
+	}
+})
+'
