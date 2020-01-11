@@ -25,7 +25,7 @@ VALUES
 	(
 		6,
 		'afk',
-		'[\"gn\", \"brb\", \"shower\", \"food\", \"lurk\", \"poop\", \"ppPoof\", \"work\", \"study\"]',
+		'[\"gn\", \"brb\", \"shower\", \"food\", \"lurk\", \"poop\", \"💩\", \"ppPoof\", \"work\", \"study\"]',
 		'Flags you as AFK. Supports a custom AFK message.',
 		10000,
 		0,
@@ -54,7 +54,13 @@ VALUES
 		case \"gn\": [status, text] = [\"now sleeping\", (text ? (text + \" 💤\") : \"🛏💤\")]; break;
 		case \"brb\": [status, text] = [\"going to be right back\", text || \"ppHop\"]; break;
 		case \"shower\": [status, text] = [\"now taking a shower\", (text ? (text + \" 🚿\") : \"🚿\")]; break;
-		case \"poop\": [status, text] = [\"now pooping\", (text ?  (text + \" 🚽\") : \"💩\")]; break;
+		
+		case \"💩\":			
+		case \"poop\": 
+			context.invocation = \"poop\";
+			[status, text] = [\"now pooping\", (text ?  (text + \" 🚽\") : \"💩\")]; 
+			break;
+
 		case \"work\": [status, text] = [\"working\", (text ?  (text + \" 💼\") : \"👷\")]; break;
 		case \"ppPoof\": [status, text] = [\"ppPoof poofing away...\", (text || \"\") + \"💨\"]; break;
 		case \"study\": [status, text] = [\"now studying\", (text || \"🤓\") + \"📚\"]; break;
@@ -131,7 +137,13 @@ ON DUPLICATE KEY UPDATE
 		case \"gn\": [status, text] = [\"now sleeping\", (text ? (text + \" 💤\") : \"🛏💤\")]; break;
 		case \"brb\": [status, text] = [\"going to be right back\", text || \"ppHop\"]; break;
 		case \"shower\": [status, text] = [\"now taking a shower\", (text ? (text + \" 🚿\") : \"🚿\")]; break;
-		case \"poop\": [status, text] = [\"now pooping\", (text ?  (text + \" 🚽\") : \"💩\")]; break;
+		
+		case \"💩\":			
+		case \"poop\": 
+			context.invocation = \"poop\";
+			[status, text] = [\"now pooping\", (text ?  (text + \" 🚽\") : \"💩\")]; 
+			break;
+
 		case \"work\": [status, text] = [\"working\", (text ?  (text + \" 💼\") : \"👷\")]; break;
 		case \"ppPoof\": [status, text] = [\"ppPoof poofing away...\", (text || \"\") + \"💨\"]; break;
 		case \"study\": [status, text] = [\"now studying\", (text || \"🤓\") + \"📚\"]; break;
