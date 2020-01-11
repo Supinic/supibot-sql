@@ -27,7 +27,7 @@ VALUES
 		'texttospeech',
 		'[\"tts\"]',
 		'Plays a text to speech message on supinic\'s stream. If it\'s enabled, that is.',
-		30000,
+		10000,
 		0,
 		0,
 		1,
@@ -44,10 +44,23 @@ VALUES
 		return { reply: \"Text-to-speech is currently disabled!\" };
 	}
 
+	let voice = \"Brian\";
+	for (let i = args.length - 1; i >= 0; i--) {
+		const token = args[i];
+		if (/voice:\\w+/.test(token)) {
+			voice = sb.Utils.capitalize(token.split(\":\")[1]);
+			args.splice(i, 1);
+		}
+	}
+
 	let success = false;
-	const message = sb.Utils.wrapString(args.join(\" \"), 200);
+	const message = sb.Utils.wrapString(args.join(\" \"), 100);
 	try {
-		success = await sb.LocalRequest.playTextToSpeech(message);
+		success = await sb.LocalRequest.playTextToSpeech({
+			text: message,
+			volume: sb.Config.get(\"TTS_VOLUME\"),
+			voice
+		});
 	}
 	catch (e) {
 		await sb.Config.set(\"TTS_ENABLED\", false);
@@ -77,10 +90,23 @@ ON DUPLICATE KEY UPDATE
 		return { reply: \"Text-to-speech is currently disabled!\" };
 	}
 
+	let voice = \"Brian\";
+	for (let i = args.length - 1; i >= 0; i--) {
+		const token = args[i];
+		if (/voice:\\w+/.test(token)) {
+			voice = sb.Utils.capitalize(token.split(\":\")[1]);
+			args.splice(i, 1);
+		}
+	}
+
 	let success = false;
-	const message = sb.Utils.wrapString(args.join(\" \"), 200);
+	const message = sb.Utils.wrapString(args.join(\" \"), 100);
 	try {
-		success = await sb.LocalRequest.playTextToSpeech(message);
+		success = await sb.LocalRequest.playTextToSpeech({
+			text: message,
+			volume: sb.Config.get(\"TTS_VOLUME\"),
+			voice
+		});
 	}
 	catch (e) {
 		await sb.Config.set(\"TTS_ENABLED\", false);

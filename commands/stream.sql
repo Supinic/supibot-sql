@@ -77,6 +77,18 @@ VALUES
 			return { reply: \"Text to speech is now set to \" + value };
 		}
 
+		case \"ttsvolume\": {
+			const volume = Number(rest.shift());
+			if (!Number.isFinite(volume) || volume < 0 || volume > 8) {
+				return {
+					reply: \"Invalid value provided! Must be in the range <0, 8>.\"
+				};
+			}
+
+			sb.Config.set(\"TTS_VOLUME\", volume);
+			return { reply: \"Text to speech volume is now set to \" + volume };
+		}
+
 		case \"ps\":
 		case \"playsounds\":
 		case \"playsound\": {
@@ -160,6 +172,18 @@ ON DUPLICATE KEY UPDATE
 			const value = (rest.shift() === \"true\");
 			sb.Config.set(\"TTS_ENABLED\", value ? \"1\" : \"0\");
 			return { reply: \"Text to speech is now set to \" + value };
+		}
+
+		case \"ttsvolume\": {
+			const volume = Number(rest.shift());
+			if (!Number.isFinite(volume) || volume < 0 || volume > 8) {
+				return {
+					reply: \"Invalid value provided! Must be in the range <0, 8>.\"
+				};
+			}
+
+			sb.Config.set(\"TTS_VOLUME\", volume);
+			return { reply: \"Text to speech volume is now set to \" + volume };
 		}
 
 		case \"ps\":
