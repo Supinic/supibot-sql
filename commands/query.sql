@@ -51,7 +51,12 @@ VALUES
 
 	try {
 		let data = await sb.Utils.request(url + query.toString());
-		data = sb.Config.get(\"WOLFRAM_QUERY_CENSOR_FN\")(data);		
+		data = sb.Config.get(\"WOLFRAM_QUERY_CENSOR_FN\")(data);	
+
+		if (data.toLowerCase().includes(\"<html>\")) {
+			return { reply: \"Seems like the API is down eShrug\" };
+		}
+		
 		return { reply: data };
 	}
 	catch (e) {
@@ -80,7 +85,12 @@ ON DUPLICATE KEY UPDATE
 
 	try {
 		let data = await sb.Utils.request(url + query.toString());
-		data = sb.Config.get(\"WOLFRAM_QUERY_CENSOR_FN\")(data);		
+		data = sb.Config.get(\"WOLFRAM_QUERY_CENSOR_FN\")(data);	
+
+		if (data.toLowerCase().includes(\"<html>\")) {
+			return { reply: \"Seems like the API is down eShrug\" };
+		}
+		
 		return { reply: data };
 	}
 	catch (e) {
