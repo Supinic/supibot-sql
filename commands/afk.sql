@@ -62,7 +62,7 @@ VALUES
 			break;
 
 		case \"work\": [status, text] = [\"working\", (text ?  (text + \" 💼\") : \"👷\")]; break;
-		case \"ppPoof\": [status, text] = [\"ppPoof poofing away...\", (text || \"\") + \"💨\"]; break;
+		case \"ppPoof\": [status, text] = [\"ppPoof poofing away...\", (text || \"\") + \" 💨\"]; break;
 		case \"study\": [status, text] = [\"now studying\", (text || \"🤓\") + \"📚\"]; break;
 		case \"food\": {
 			let useAutoEmoji = true;
@@ -145,7 +145,7 @@ ON DUPLICATE KEY UPDATE
 			break;
 
 		case \"work\": [status, text] = [\"working\", (text ?  (text + \" 💼\") : \"👷\")]; break;
-		case \"ppPoof\": [status, text] = [\"ppPoof poofing away...\", (text || \"\") + \"💨\"]; break;
+		case \"ppPoof\": [status, text] = [\"ppPoof poofing away...\", (text || \"\") + \" 💨\"]; break;
 		case \"study\": [status, text] = [\"now studying\", (text || \"🤓\") + \"📚\"]; break;
 		case \"food\": {
 			let useAutoEmoji = true;
