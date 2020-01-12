@@ -41,9 +41,20 @@ VALUES
 		0,
 		'(async function textToSpeech (context, ...args) {
 	if (!sb.Config.get(\"TTS_ENABLED\")) {
-		return { reply: \"Text-to-speech is currently disabled!\" };
+		return { 
+			reply: \"Text-to-speech is currently disabled!\"
+		};
+	}
+	else if (args.length === 0) {
+		return {
+			reply: \"No message provided!\",
+			cooldown: {
+				length: 1000
+			}
+		};
 	}
 
+	const availableVoices = Object.values(sb.Config.get(\"TTS_VOICE_DATA\")).map(i => i.name.toLowerCase());
 	let voice = \"Brian\";
 	for (let i = args.length - 1; i >= 0; i--) {
 		const token = args[i];
@@ -51,6 +62,15 @@ VALUES
 			voice = sb.Utils.capitalize(token.split(\":\")[1]);
 			args.splice(i, 1);
 		}
+	}
+
+	if (!availableVoices.includes(voice.toLowerCase())) {
+		return {
+			reply: \"Provided voice does not exist!\",
+			cooldown: {
+				length: 2500
+			}
+		};
 	}
 
 	let success = false;
@@ -72,23 +92,17 @@ VALUES
 		return { reply: \"TTS is not currently running, setting config to false :(\" }
 	}
 
-	if (!success) {
-		return { 
-			reply: \"Someone else is currently using the TTS!\",
-			cooldown: null
-		};
-	}
-	else {
-		const duration = sb.Utils.round(Number(messageTime) / 1e6, 0);
-		return {
-			reply: `Your message has been succesfully played on TTS! It took ${duration / 1e3} seconds to read out.`,
-			cooldown: {
-				length: (duration > 10000) 
-					? (context.command.Cooldown + (duration - 10000) * 5)
-					: context.command.Cooldown
-			}
-		};
-	}
+	const duration = sb.Utils.round(Number(messageTime) / 1e6, 0);
+	const cooldown = (duration > 10000) 
+		? (context.command.Cooldown + (duration - 10000) * 5)
+		: context.command.Cooldown
+
+	return {
+		reply: `Your message has been succesfully played on TTS! It took ${duration / 1e3} seconds to read out, and your cooldown is ${cooldown / 1e3} seconds.`,
+		cooldown: {
+			length: cooldown
+		}
+	};
 })',
 		NULL,
 		NULL
@@ -97,9 +111,20 @@ VALUES
 ON DUPLICATE KEY UPDATE
 	Code = '(async function textToSpeech (context, ...args) {
 	if (!sb.Config.get(\"TTS_ENABLED\")) {
-		return { reply: \"Text-to-speech is currently disabled!\" };
+		return { 
+			reply: \"Text-to-speech is currently disabled!\"
+		};
+	}
+	else if (args.length === 0) {
+		return {
+			reply: \"No message provided!\",
+			cooldown: {
+				length: 1000
+			}
+		};
 	}
 
+	const availableVoices = Object.values(sb.Config.get(\"TTS_VOICE_DATA\")).map(i => i.name.toLowerCase());
 	let voice = \"Brian\";
 	for (let i = args.length - 1; i >= 0; i--) {
 		const token = args[i];
@@ -107,6 +132,15 @@ ON DUPLICATE KEY UPDATE
 			voice = sb.Utils.capitalize(token.split(\":\")[1]);
 			args.splice(i, 1);
 		}
+	}
+
+	if (!availableVoices.includes(voice.toLowerCase())) {
+		return {
+			reply: \"Provided voice does not exist!\",
+			cooldown: {
+				length: 2500
+			}
+		};
 	}
 
 	let success = false;
@@ -128,21 +162,15 @@ ON DUPLICATE KEY UPDATE
 		return { reply: \"TTS is not currently running, setting config to false :(\" }
 	}
 
-	if (!success) {
-		return { 
-			reply: \"Someone else is currently using the TTS!\",
-			cooldown: null
-		};
-	}
-	else {
-		const duration = sb.Utils.round(Number(messageTime) / 1e6, 0);
-		return {
-			reply: `Your message has been succesfully played on TTS! It took ${duration / 1e3} seconds to read out.`,
-			cooldown: {
-				length: (duration > 10000) 
-					? (context.command.Cooldown + (duration - 10000) * 5)
-					: context.command.Cooldown
-			}
-		};
-	}
+	const duration = sb.Utils.round(Number(messageTime) / 1e6, 0);
+	const cooldown = (duration > 10000) 
+		? (context.command.Cooldown + (duration - 10000) * 5)
+		: context.command.Cooldown
+
+	return {
+		reply: `Your message has been succesfully played on TTS! It took ${duration / 1e3} seconds to read out, and your cooldown is ${cooldown / 1e3} seconds.`,
+		cooldown: {
+			length: cooldown
+		}
+	};
 })'
