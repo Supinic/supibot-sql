@@ -92,8 +92,6 @@ VALUES
 		if (!userData) {
 			return { reply: \"No requester user data found\" };
 		}
-
-		console.log(song);
 		
 		const data = song.category.meta;
 		if (!song.category.meta.title || !song.category.meta.url) {
@@ -166,8 +164,6 @@ ON DUPLICATE KEY UPDATE
 		if (!userData) {
 			return { reply: \"No requester user data found\" };
 		}
-
-		console.log(song);
 		
 		const data = song.category.meta;
 		if (!song.category.meta.title || !song.category.meta.url) {
