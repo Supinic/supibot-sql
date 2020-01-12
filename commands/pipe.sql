@@ -79,7 +79,12 @@ VALUES
 			cmdArgs,
 			fakeChannel,
 			context.user, 
-			{...context.append, platform: context.platform, pipe: true}
+			{
+				...context.append,
+				platform: context.platform, 
+				pipe: true,
+				skipPending: true
+			}
 		);
 
 		console.debug(\"Pipe\", result);
@@ -159,7 +164,12 @@ ON DUPLICATE KEY UPDATE
 			cmdArgs,
 			fakeChannel,
 			context.user, 
-			{...context.append, platform: context.platform, pipe: true}
+			{
+				...context.append,
+				platform: context.platform, 
+				pipe: true,
+				skipPending: true
+			}
 		);
 
 		console.debug(\"Pipe\", result);
