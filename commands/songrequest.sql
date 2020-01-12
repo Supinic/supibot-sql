@@ -26,7 +26,7 @@ VALUES
 		56,
 		'songrequest',
 		'[\"sr\"]',
-		'Requests a song to play on supinic stream. Uses a local VLC API to enqueue songs to the playlist.',
+		'Requests a song to play on supinic stream. Uses a local VLC API to enqueue songs to the playlist, or links to Cytube, or uses the necrodancer command to download a song. This all depends on the song request status.',
 		5000,
 		0,
 		0,
