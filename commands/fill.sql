@@ -27,7 +27,7 @@ VALUES
 		'fill',
 		NULL,
 		'Takes the input and scrambles it around randomly.',
-		60000,
+		20000,
 		0,
 		0,
 		0,
@@ -50,9 +50,7 @@ VALUES
 	const result = [];
 	const platform = context.platform.Name.toUpperCase();
 
-	let limit = (context.channel?.Message_Limit || sb.Config.get(\"DEFAULT_MSG_LIMIT_\" + platform)) - context.user.Name.length - 3;
-	limit = sb.Utils.round(limit / 4, 0);
-
+	const limit = (context.channel?.Message_Limit ?? sb.Config.get(\"DEFAULT_MSG_LIMIT_\" + platform)) - context.user.Name.length - 3;
 	while (length < limit) {
 		const randomWord = sb.Utils.randArray(words);
 		result.push(randomWord);
@@ -60,7 +58,12 @@ VALUES
 	}
 
 	return {
-		reply: result.slice(0, -1).join(\" \")
+		reply: result.slice(0, -1).join(\" \"),
+		cooldown: {
+			user: null,
+			channel: context.channel.ID,
+			length: context.command.Cooldown
+		}
 	};
 })',
 		NULL,
@@ -79,9 +82,7 @@ ON DUPLICATE KEY UPDATE
 	const result = [];
 	const platform = context.platform.Name.toUpperCase();
 
-	let limit = (context.channel?.Message_Limit || sb.Config.get(\"DEFAULT_MSG_LIMIT_\" + platform)) - context.user.Name.length - 3;
-	limit = sb.Utils.round(limit / 4, 0);
-
+	const limit = (context.channel?.Message_Limit ?? sb.Config.get(\"DEFAULT_MSG_LIMIT_\" + platform)) - context.user.Name.length - 3;
 	while (length < limit) {
 		const randomWord = sb.Utils.randArray(words);
 		result.push(randomWord);
@@ -89,6 +90,11 @@ ON DUPLICATE KEY UPDATE
 	}
 
 	return {
-		reply: result.slice(0, -1).join(\" \")
+		reply: result.slice(0, -1).join(\" \"),
+		cooldown: {
+			user: null,
+			channel: context.channel.ID,
+			length: context.command.Cooldown
+		}
 	};
 })'
