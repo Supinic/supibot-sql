@@ -167,19 +167,26 @@ VALUES
 		}
 
 		case \"poll\": {
-			identifier = Number(identifier);
-			if (!identifier) {
+			if (identifier && !Number(identifier)) {
 				return {
-					reply: \"You can only check for specific polls by ID right now!\"
+					reply: \"Invalid ID provided!\"
 				};
 			}
 
-			const poll = await sb.Query.getRecordset(rs => rs
-				.select(\"Text\", \"Status\", \"End\")
-				.from(\"chat_data\", \"Poll\")
-				.where(\"ID = %n\", identifier)
-				.single()
-			);
+			const poll = await sb.Query.getRecordset(rs => {
+				rs.select(\"Text\", \"Status\", \"End\", \"ID\")
+					.from(\"chat_data\", \"Poll\")
+					.single();
+
+				if (identifier) {
+					rs.where(\"ID = %n\", Number(identifier));
+				}
+				else {
+					rs.orderBy(\"ID DESC\").limit(1);
+				}
+
+				return rs;
+			});
 
 			if (!poll) {
 				return {
@@ -199,12 +206,12 @@ VALUES
 			const votes = await sb.Query.getRecordset(rs => rs
 				.select(\"Vote\")
 				.from(\"chat_data\", \"Poll_Vote\")
-				.where(\"Poll = %n\", identifier)
+				.where(\"Poll = %n\", poll.ID)
 			);
 
 			const [yes, no] = sb.Utils.splitByCondition(votes, i => i.Vote === \"Yes\");
 			return {
-				reply: `Poll ${identifier} (${poll.Status}) - ${poll.Text} - Votes: ${yes.length}:${no.length}`
+				reply: `Poll ${poll.ID} (${poll.Status}) - ${poll.Text} - Votes: ${yes.length}:${no.length}`
 			}
 		}
 
@@ -396,19 +403,26 @@ ON DUPLICATE KEY UPDATE
 		}
 
 		case \"poll\": {
-			identifier = Number(identifier);
-			if (!identifier) {
+			if (identifier && !Number(identifier)) {
 				return {
-					reply: \"You can only check for specific polls by ID right now!\"
+					reply: \"Invalid ID provided!\"
 				};
 			}
 
-			const poll = await sb.Query.getRecordset(rs => rs
-				.select(\"Text\", \"Status\", \"End\")
-				.from(\"chat_data\", \"Poll\")
-				.where(\"ID = %n\", identifier)
-				.single()
-			);
+			const poll = await sb.Query.getRecordset(rs => {
+				rs.select(\"Text\", \"Status\", \"End\", \"ID\")
+					.from(\"chat_data\", \"Poll\")
+					.single();
+
+				if (identifier) {
+					rs.where(\"ID = %n\", Number(identifier));
+				}
+				else {
+					rs.orderBy(\"ID DESC\").limit(1);
+				}
+
+				return rs;
+			});
 
 			if (!poll) {
 				return {
@@ -428,12 +442,12 @@ ON DUPLICATE KEY UPDATE
 			const votes = await sb.Query.getRecordset(rs => rs
 				.select(\"Vote\")
 				.from(\"chat_data\", \"Poll_Vote\")
-				.where(\"Poll = %n\", identifier)
+				.where(\"Poll = %n\", poll.ID)
 			);
 
 			const [yes, no] = sb.Utils.splitByCondition(votes, i => i.Vote === \"Yes\");
 			return {
-				reply: `Poll ${identifier} (${poll.Status}) - ${poll.Text} - Votes: ${yes.length}:${no.length}`
+				reply: `Poll ${poll.ID} (${poll.Status}) - ${poll.Text} - Votes: ${yes.length}:${no.length}`
 			}
 		}
 
