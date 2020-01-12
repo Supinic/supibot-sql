@@ -54,13 +54,18 @@ VALUES
 	}
 
 	let success = false;
-	const message = sb.Utils.wrapString(args.join(\" \"), 100);
+	let messageTime = 0n;
+	const message = sb.Utils.wrapString(args.join(\" \"), 250);	
+
 	try {
+		messageTime = process.hrtime.bigint(),
 		success = await sb.LocalRequest.playTextToSpeech({
 			text: message,
 			volume: sb.Config.get(\"TTS_VOLUME\"),
 			voice
 		});
+		
+		messageTime = process.hrtime.bigint() - messageTime;
 	}
 	catch (e) {
 		await sb.Config.set(\"TTS_ENABLED\", false);
@@ -70,13 +75,18 @@ VALUES
 	if (!success) {
 		return { 
 			reply: \"Someone else is currently using the TTS!\",
-			meta: { skipCooldown: true }
+			cooldown: null
 		};
 	}
 	else {
+		const duration = sb.Utils.round(Number(messageTime) / 1e6, 0);
 		return {
-			reply: `Your message has been succesfully played on TTS!`,
-			// meta: { skipPending: true }
+			reply: `Your message has been succesfully played on TTS! It took ${duration / 1e3} seconds to read out.`,
+			cooldown: {
+				length: (duration > 10000) 
+					? (context.command.Cooldown + (duration - 10000) * 5)
+					: context.command.Cooldown
+			}
 		};
 	}
 })',
@@ -100,13 +110,18 @@ ON DUPLICATE KEY UPDATE
 	}
 
 	let success = false;
-	const message = sb.Utils.wrapString(args.join(\" \"), 100);
+	let messageTime = 0n;
+	const message = sb.Utils.wrapString(args.join(\" \"), 250);	
+
 	try {
+		messageTime = process.hrtime.bigint(),
 		success = await sb.LocalRequest.playTextToSpeech({
 			text: message,
 			volume: sb.Config.get(\"TTS_VOLUME\"),
 			voice
 		});
+		
+		messageTime = process.hrtime.bigint() - messageTime;
 	}
 	catch (e) {
 		await sb.Config.set(\"TTS_ENABLED\", false);
@@ -116,13 +131,18 @@ ON DUPLICATE KEY UPDATE
 	if (!success) {
 		return { 
 			reply: \"Someone else is currently using the TTS!\",
-			meta: { skipCooldown: true }
+			cooldown: null
 		};
 	}
 	else {
+		const duration = sb.Utils.round(Number(messageTime) / 1e6, 0);
 		return {
-			reply: `Your message has been succesfully played on TTS!`,
-			// meta: { skipPending: true }
+			reply: `Your message has been succesfully played on TTS! It took ${duration / 1e3} seconds to read out.`,
+			cooldown: {
+				length: (duration > 10000) 
+					? (context.command.Cooldown + (duration - 10000) * 5)
+					: context.command.Cooldown
+			}
 		};
 	}
 })'
