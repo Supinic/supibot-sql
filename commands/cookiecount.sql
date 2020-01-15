@@ -65,6 +65,9 @@ VALUES
 	if (!targetUser) {
 		return { reply: \"Target user does not exist in the database!\" };
 	}
+	else if (targetUser.ID === sb.Config.get(\"SELF_ID\")) {
+		return { reply: \"I don\'t eat cookies, sugar is bad for my circuits!\" };
+	}	
 
 	const cookies = await sb.Query.getRecordset(rs => rs
 		.select(\"Cookie_Today AS Today\", \"Cookies_Total AS Daily\")
@@ -171,6 +174,9 @@ ON DUPLICATE KEY UPDATE
 	if (!targetUser) {
 		return { reply: \"Target user does not exist in the database!\" };
 	}
+	else if (targetUser.ID === sb.Config.get(\"SELF_ID\")) {
+		return { reply: \"I don\'t eat cookies, sugar is bad for my circuits!\" };
+	}	
 
 	const cookies = await sb.Query.getRecordset(rs => rs
 		.select(\"Cookie_Today AS Today\", \"Cookies_Total AS Daily\")
