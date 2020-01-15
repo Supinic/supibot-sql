@@ -64,6 +64,11 @@ VALUES
 		case \"football\":
 			return { reply: \"FBBlock FBCatch FBChallenge FBPass FBPenalty FBRun FBSpiral FBtouchdown KKona 🏈\" };
 
+		case \"kk\":
+			return {
+				reply: \"KKona KKomrade KKrikey KKurwa KKebab KKroissant KKozak KKhan KKarjala CCabron CChile GGyros BBrexit KKraut\"
+			};
+
 		default: return { reply: \"No such emote set exists!\" };
 	}
 })',
@@ -96,6 +101,11 @@ ON DUPLICATE KEY UPDATE
 		case \"fb\":
 		case \"football\":
 			return { reply: \"FBBlock FBCatch FBChallenge FBPass FBPenalty FBRun FBSpiral FBtouchdown KKona 🏈\" };
+
+		case \"kk\":
+			return {
+				reply: \"KKona KKomrade KKrikey KKurwa KKebab KKroissant KKozak KKhan KKarjala CCabron CChile GGyros BBrexit KKraut\"
+			};
 
 		default: return { reply: \"No such emote set exists!\" };
 	}
