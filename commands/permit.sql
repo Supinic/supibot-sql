@@ -38,7 +38,7 @@ VALUES
 		0,
 		1,
 		1,
-		0,
+		1,
 		'async (extra, user, command) => {
 	if (!user || !command) {
 		return { reply: \"Select a user and a command!\" };
