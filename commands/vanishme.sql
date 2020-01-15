@@ -39,10 +39,18 @@ VALUES
 		0,
 		1,
 		0,
-		'async () => ({ reply: \"!vanish monkaS\" })',
+		'(async function vanishMe (context) {
+	return {
+		reply: \"!vanish monkaS\"
+	};
+})',
 		NULL,
 		NULL
 	)
 
 ON DUPLICATE KEY UPDATE
-	Code = 'async () => ({ reply: \"!vanish monkaS\" })'
+	Code = '(async function vanishMe (context) {
+	return {
+		reply: \"!vanish monkaS\"
+	};
+})'
