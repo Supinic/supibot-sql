@@ -64,10 +64,16 @@ VALUES
 
 	timeoutLength = (timeoutLength) ? Number(timeoutLength) : 1;
 	if (timeoutLength < 1 || !Number.isFinite(timeoutLength) || Math.round(timeoutLength) !== timeoutLength) {
-		return { reply: \"Invalid timeout length provided!\" };
+		return { 
+			reply: \"Invalid timeout length provided!\",
+			cooldown: 1000
+		};
 	}
 	else if (timeoutLength > 600) {
-		return { reply: \"Maximum timeout length exceeded!\" };
+		return { 
+			reply: \"Maximum timeout length exceeded!\",
+			cooldown: 1000
+		};
 	}
 
 	const result = sb.Utils.random(1, 6);
@@ -113,10 +119,16 @@ ON DUPLICATE KEY UPDATE
 
 	timeoutLength = (timeoutLength) ? Number(timeoutLength) : 1;
 	if (timeoutLength < 1 || !Number.isFinite(timeoutLength) || Math.round(timeoutLength) !== timeoutLength) {
-		return { reply: \"Invalid timeout length provided!\" };
+		return { 
+			reply: \"Invalid timeout length provided!\",
+			cooldown: 1000
+		};
 	}
 	else if (timeoutLength > 600) {
-		return { reply: \"Maximum timeout length exceeded!\" };
+		return { 
+			reply: \"Maximum timeout length exceeded!\",
+			cooldown: 1000
+		};
 	}
 
 	const result = sb.Utils.random(1, 6);
