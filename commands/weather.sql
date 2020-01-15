@@ -50,7 +50,9 @@ VALUES
 		else {
 			return {
 				reply: \"No place has been provided!\",
-				meta: { skipCooldown: true }
+				cooldown: {
+					length: 1000
+				}
 			};
 		}
 	}
@@ -66,12 +68,18 @@ VALUES
 		const userData = await sb.User.get(args[0]);
 		if (!userData) {
 			return {
-				reply: \"Invalid user provided!\"
+				reply: \"Invalid user provided!\",
+				cooldown: {
+					length: 1000
+				}
 			};
 		}
 		else if (!userData.Data.defaultLocation) {
 			return {
-				reply: \"That user did not set their default location!\"
+				reply: \"That user did not set their default location!\",
+				cooldown: {
+					length: 1000
+				}
 			};
 		}
 		else {
@@ -91,14 +99,20 @@ VALUES
 
 		if (args.length === 0) {
 			return {
-				reply: \"No default location provided!\"
+				reply: \"No default location provided!\",
+				cooldown: {
+					length: 1000
+				}
 			};
 		}
 
 		const check = (await sb.Command.get(\"weather\").execute(context, ...args)).reply;
 		if (!check || !check.includes(\"(now)\")) {
 			return {
-				reply: \"Your location must be valid, and contain no extra arguments!\"
+				reply: \"Your location must be valid, and contain no extra arguments!\",
+				cooldown: {
+					length: 1000
+				}
 			};
 		}
 
@@ -109,7 +123,10 @@ VALUES
 		await context.user.saveProperty(\"Data\", context.user.Data);
 
 		return {
-			reply: \"Default location has been set! Use $weather without parameters, it will now find your default location\'s weather.\"
+			reply: \"Default location has been set! Use $weather without parameters, it will now find your default location\'s weather.\",
+			cooldown: {
+				length: 1000
+			}
 		}
 	}
 
@@ -264,7 +281,9 @@ ON DUPLICATE KEY UPDATE
 		else {
 			return {
 				reply: \"No place has been provided!\",
-				meta: { skipCooldown: true }
+				cooldown: {
+					length: 1000
+				}
 			};
 		}
 	}
@@ -280,12 +299,18 @@ ON DUPLICATE KEY UPDATE
 		const userData = await sb.User.get(args[0]);
 		if (!userData) {
 			return {
-				reply: \"Invalid user provided!\"
+				reply: \"Invalid user provided!\",
+				cooldown: {
+					length: 1000
+				}
 			};
 		}
 		else if (!userData.Data.defaultLocation) {
 			return {
-				reply: \"That user did not set their default location!\"
+				reply: \"That user did not set their default location!\",
+				cooldown: {
+					length: 1000
+				}
 			};
 		}
 		else {
@@ -305,14 +330,20 @@ ON DUPLICATE KEY UPDATE
 
 		if (args.length === 0) {
 			return {
-				reply: \"No default location provided!\"
+				reply: \"No default location provided!\",
+				cooldown: {
+					length: 1000
+				}
 			};
 		}
 
 		const check = (await sb.Command.get(\"weather\").execute(context, ...args)).reply;
 		if (!check || !check.includes(\"(now)\")) {
 			return {
-				reply: \"Your location must be valid, and contain no extra arguments!\"
+				reply: \"Your location must be valid, and contain no extra arguments!\",
+				cooldown: {
+					length: 1000
+				}
 			};
 		}
 
@@ -323,7 +354,10 @@ ON DUPLICATE KEY UPDATE
 		await context.user.saveProperty(\"Data\", context.user.Data);
 
 		return {
-			reply: \"Default location has been set! Use $weather without parameters, it will now find your default location\'s weather.\"
+			reply: \"Default location has been set! Use $weather without parameters, it will now find your default location\'s weather.\",
+			cooldown: {
+				length: 1000
+			}
 		}
 	}
 
