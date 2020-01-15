@@ -40,6 +40,10 @@ VALUES
 		1,
 		0,
 		'(async function shuffle (context, ...message) {
+	if (message.length < 2) {
+		return { reply: \"You must supply at least two words!\" };
+	}
+
 	const result = [];
 	while (message.length > 0) {
 		const randomIndex = sb.Utils.random(0, message.length - 1);
@@ -68,6 +72,10 @@ VALUES
 
 ON DUPLICATE KEY UPDATE
 	Code = '(async function shuffle (context, ...message) {
+	if (message.length < 2) {
+		return { reply: \"You must supply at least two words!\" };
+	}
+
 	const result = [];
 	while (message.length > 0) {
 		const randomIndex = sb.Utils.random(0, message.length - 1);

@@ -40,21 +40,19 @@ VALUES
 		1,
 		0,
 		'(async function sort (context, ...args) {
-	const reply = args.sort().join(\" \");
-
-	if (/^!/.test(reply[0]) && context.channel && !context.channel.Ping) {
+	if (args.length < 2) {
 		return {
-			reply: \"Potential abuse detected 🐝🍯. First character: \" + reply[0]
-		};
-	}	
-	else {	
-		return {
-			reply: reply,
-			meta: {
-				skipCooldown: Boolean(context.append.pipe) // Only skip cooldown if used in a pipe
-			}
+			reply: \"You must supply at leats two words!\"
 		};
 	}
+
+	const reply = args.sort().join(\" \");
+	return {
+		reply: reply,
+		meta: {
+			skipCooldown: Boolean(context.append.pipe) // Only skip cooldown if used in a pipe
+		}
+	};
 })',
 		NULL,
 		NULL
@@ -62,19 +60,17 @@ VALUES
 
 ON DUPLICATE KEY UPDATE
 	Code = '(async function sort (context, ...args) {
-	const reply = args.sort().join(\" \");
-
-	if (/^!/.test(reply[0]) && context.channel && !context.channel.Ping) {
+	if (args.length < 2) {
 		return {
-			reply: \"Potential abuse detected 🐝🍯. First character: \" + reply[0]
-		};
-	}	
-	else {	
-		return {
-			reply: reply,
-			meta: {
-				skipCooldown: Boolean(context.append.pipe) // Only skip cooldown if used in a pipe
-			}
+			reply: \"You must supply at leats two words!\"
 		};
 	}
+
+	const reply = args.sort().join(\" \");
+	return {
+		reply: reply,
+		meta: {
+			skipCooldown: Boolean(context.append.pipe) // Only skip cooldown if used in a pipe
+		}
+	};
 })'
