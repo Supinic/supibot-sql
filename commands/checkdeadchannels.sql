@@ -58,12 +58,20 @@ VALUES
 				.single()
 			);
 
+			if (!data) {
+				return {
+					Posted: new Date(0),
+					stuff: \"Nothing?\",
+					channel: channel.Name
+				};
+			}
+
 			data.Channel = channel.Name;
 			return data;
 		})());
 	}
 
-	const results = (await Promise.all(promises)).sort((a, b) => a.Posted - b.Posted);
+	const results = (await Promise.all(promises)).filter(Boolean).sort((a, b) => a.Posted - b.Posted);
 	return { 
 		reply: await sb.Pastebin.post(JSON.stringify(results, null, 4))
 	};
@@ -92,12 +100,20 @@ ON DUPLICATE KEY UPDATE
 				.single()
 			);
 
+			if (!data) {
+				return {
+					Posted: new Date(0),
+					stuff: \"Nothing?\",
+					channel: channel.Name
+				};
+			}
+
 			data.Channel = channel.Name;
 			return data;
 		})());
 	}
 
-	const results = (await Promise.all(promises)).sort((a, b) => a.Posted - b.Posted);
+	const results = (await Promise.all(promises)).filter(Boolean).sort((a, b) => a.Posted - b.Posted);
 	return { 
 		reply: await sb.Pastebin.post(JSON.stringify(results, null, 4))
 	};
