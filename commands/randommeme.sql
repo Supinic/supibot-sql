@@ -54,12 +54,18 @@ VALUES
 		};
 	}
 
-	const check = JSON.parse(await sb.Utils.request({
-		uri: `https://www.reddit.com/r/${subreddit}/about.json`,
-		headers: {
-			\"Cookie\": \"_options={%22pref_quarantine_optin%22:true};\"
-		}
-	}));
+	let check = null;
+	if (context.command.data[subreddit]) {
+		check = context.command.data[subreddit];
+	}
+	else {
+		check = JSON.parse(await sb.Utils.request({
+			uri: `https://www.reddit.com/r/${subreddit}/about.json`,
+			headers: {
+				\"Cookie\": \"_options={%22pref_quarantine_optin%22:true};\"
+			}
+		}));
+	}
 
 	if (!check) {
 		return {
@@ -82,6 +88,17 @@ VALUES
 		};
 	}
 
+	if (!context.command.data[subreddit]) {
+		context.command.data[subreddit] = {
+			error: check.error ?? null,
+			data: {
+				over18: check.data?.over18,
+				children: check.data?.children,
+				quarantine: check.data?.quarantine
+			}
+		};
+	}
+
 	const posts = JSON.parse(await sb.Utils.request({
 		uri: `https://www.reddit.com/r/${subreddit}/hot.json`,	
 		headers: {
@@ -89,10 +106,9 @@ VALUES
 		}
 	}));
 
-	const children = (safeSpace)
-		? posts.data.children.filter(i => !i.over_18)
-		: posts.data.children;
-	
+//	console.log(posts);
+
+	const children = posts.data.children.filter(i => (!safeSpace || !i.over_18) && !i.selftext);	
 	const quarantine = (check.data.quarantine) ? \"⚠\" : \"\";
 	const post = sb.Utils.randArray(children);
 	if (!post) {
@@ -127,12 +143,18 @@ ON DUPLICATE KEY UPDATE
 		};
 	}
 
-	const check = JSON.parse(await sb.Utils.request({
-		uri: `https://www.reddit.com/r/${subreddit}/about.json`,
-		headers: {
-			\"Cookie\": \"_options={%22pref_quarantine_optin%22:true};\"
-		}
-	}));
+	let check = null;
+	if (context.command.data[subreddit]) {
+		check = context.command.data[subreddit];
+	}
+	else {
+		check = JSON.parse(await sb.Utils.request({
+			uri: `https://www.reddit.com/r/${subreddit}/about.json`,
+			headers: {
+				\"Cookie\": \"_options={%22pref_quarantine_optin%22:true};\"
+			}
+		}));
+	}
 
 	if (!check) {
 		return {
@@ -155,6 +177,17 @@ ON DUPLICATE KEY UPDATE
 		};
 	}
 
+	if (!context.command.data[subreddit]) {
+		context.command.data[subreddit] = {
+			error: check.error ?? null,
+			data: {
+				over18: check.data?.over18,
+				children: check.data?.children,
+				quarantine: check.data?.quarantine
+			}
+		};
+	}
+
 	const posts = JSON.parse(await sb.Utils.request({
 		uri: `https://www.reddit.com/r/${subreddit}/hot.json`,	
 		headers: {
@@ -162,10 +195,9 @@ ON DUPLICATE KEY UPDATE
 		}
 	}));
 
-	const children = (safeSpace)
-		? posts.data.children.filter(i => !i.over_18)
-		: posts.data.children;
-	
+//	console.log(posts);
+
+	const children = posts.data.children.filter(i => (!safeSpace || !i.over_18) && !i.selftext);	
 	const quarantine = (check.data.quarantine) ? \"⚠\" : \"\";
 	const post = sb.Utils.randArray(children);
 	if (!post) {
