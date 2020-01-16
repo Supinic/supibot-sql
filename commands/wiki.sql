@@ -54,7 +54,8 @@ VALUES
 			language = sb.Utils.languageISO.getCode(token.split(\":\")[1]);
 			if (language === null) {
 				return {
-					reply: \"Invalid language provided!\"
+					reply: \"Invalid language provided!\",
+					cooldown: { length: 1000 }
 				};
 			}
 
@@ -75,8 +76,6 @@ VALUES
 	const rawData = JSON.parse(await sb.Utils.request(url + params));
 	const data = rawData.query.pages;
 	const key = Object.keys(data)[0];
-
-	console.log(rawData);
 	
 	if (key === \"-1\") {
 		return { reply: \"No results found!\" };
@@ -120,7 +119,8 @@ ON DUPLICATE KEY UPDATE
 			language = sb.Utils.languageISO.getCode(token.split(\":\")[1]);
 			if (language === null) {
 				return {
-					reply: \"Invalid language provided!\"
+					reply: \"Invalid language provided!\",
+					cooldown: { length: 1000 }
 				};
 			}
 
@@ -141,8 +141,6 @@ ON DUPLICATE KEY UPDATE
 	const rawData = JSON.parse(await sb.Utils.request(url + params));
 	const data = rawData.query.pages;
 	const key = Object.keys(data)[0];
-
-	console.log(rawData);
 	
 	if (key === \"-1\") {
 		return { reply: \"No results found!\" };
