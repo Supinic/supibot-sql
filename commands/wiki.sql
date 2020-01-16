@@ -47,8 +47,24 @@ VALUES
 		};
 	}
 
+	let language = \"en\";
+	for (let i = args.length - 1; i >= 0; i--) {
+		const token = args[i];
+		if (/lang:\\w+/.test(token)) {
+			language = sb.Utils.languageISO.getCode(token.split(\":\")[1]);
+			if (language === null) {
+				return {
+					reply: \"Invalid language provided!\"
+				};
+			}
+
+			language = language.toLowerCase();
+			args.splice(i, 1);		
+		}
+	}
+
 	// const searchURL = \"https://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts&exintro=&explaintext=&redirects=1&titles=\";
-	const url = \"https://en.wikipedia.org/w/api.php?\";
+	const url = `https://${language}.wikipedia.org/w/api.php?`;
 	let params = new sb.URLParams()
 		.set(\"format\", \"json\")
 		.set(\"action\", \"query\")
@@ -97,8 +113,24 @@ ON DUPLICATE KEY UPDATE
 		};
 	}
 
+	let language = \"en\";
+	for (let i = args.length - 1; i >= 0; i--) {
+		const token = args[i];
+		if (/lang:\\w+/.test(token)) {
+			language = sb.Utils.languageISO.getCode(token.split(\":\")[1]);
+			if (language === null) {
+				return {
+					reply: \"Invalid language provided!\"
+				};
+			}
+
+			language = language.toLowerCase();
+			args.splice(i, 1);		
+		}
+	}
+
 	// const searchURL = \"https://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts&exintro=&explaintext=&redirects=1&titles=\";
-	const url = \"https://en.wikipedia.org/w/api.php?\";
+	const url = `https://${language}.wikipedia.org/w/api.php?`;
 	let params = new sb.URLParams()
 		.set(\"format\", \"json\")
 		.set(\"action\", \"query\")
