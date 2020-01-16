@@ -87,8 +87,16 @@ VALUES
 		}
 	});
 
+		console.log(data);
+
 	if (/following.*for/.test(data)) {
 		const split = data.split(\" for \");
+		if (split.length < 2) {
+			const errorID = await sb.SystemLogger.sendError(\"Other\", new Error(\"Logging stack for followage\"), {user, channel});						return { 
+				reply: \"Twitch API responded in an unexpcted way! Please contact @supinic to fix with error ID: \" + errorID
+			};
+		}
+
 		const delta = sb.Utils.timeDelta(sb.Date.now() - sb.Utils.parseDuration(split[1].trim(), \"ms\"));
 		data = split[0] + \" for \" + delta.replace(/\\s*ago\\s*/, \"\") + \".\";
 	}
@@ -151,8 +159,16 @@ ON DUPLICATE KEY UPDATE
 		}
 	});
 
+		console.log(data);
+
 	if (/following.*for/.test(data)) {
 		const split = data.split(\" for \");
+		if (split.length < 2) {
+			const errorID = await sb.SystemLogger.sendError(\"Other\", new Error(\"Logging stack for followage\"), {user, channel});						return { 
+				reply: \"Twitch API responded in an unexpcted way! Please contact @supinic to fix with error ID: \" + errorID
+			};
+		}
+
 		const delta = sb.Utils.timeDelta(sb.Date.now() - sb.Utils.parseDuration(split[1].trim(), \"ms\"));
 		data = split[0] + \" for \" + delta.replace(/\\s*ago\\s*/, \"\") + \".\";
 	}
