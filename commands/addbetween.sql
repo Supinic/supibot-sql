@@ -59,8 +59,8 @@ VALUES
 	result.push(word);
 	return {
 		reply: result.join(\" \"),
-		meta: {
-			skipCooldown: Boolean(context.append.pipe) // Only skip cooldown if used within a pipe.
+		cooldown: {
+			length: (context.append.pipe) ? null : context.command.Cooldown
 		}
 	};
 })',
@@ -89,8 +89,8 @@ ON DUPLICATE KEY UPDATE
 	result.push(word);
 	return {
 		reply: result.join(\" \"),
-		meta: {
-			skipCooldown: Boolean(context.append.pipe) // Only skip cooldown if used within a pipe.
+		cooldown: {
+			length: (context.append.pipe) ? null : context.command.Cooldown
 		}
 	};
 })'
