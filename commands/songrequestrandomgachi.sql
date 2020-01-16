@@ -25,7 +25,7 @@ VALUES
 	(
 		180,
 		'songrequestrandomgachi',
-		'[\"srg\", \"srrg\"]',
+		'[\"gsr\", \"srg\", \"srrg\"]',
 		'Posts a random gachi in the format \"!sr <link>\" to use on other bots\' song request systems (such as StreamElements).',
 		60000,
 		0,
