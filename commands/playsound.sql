@@ -62,7 +62,16 @@ VALUES
 		};
 	}
 
-	const result = await sb.LocalRequest.playAudio(data.Filename);
+	let result = null;
+	try {
+		result = await sb.LocalRequest.playAudio(data.Filename);
+	}
+	catch (e) {
+		await sb.Config.set(\"PLAYSOUNDS_ENABLED\", false);
+		return { reply: \"The desktop listener is not currently running, turning off playsounds!\" }
+	}
+	
+
 	if (typeof result === \"number\") {
 		return {
 			reply: \"The playsound\'s cooldown has not passed yet! Try again in \" + sb.Utils.timeDelta(sb.Date.now() + result),
@@ -103,7 +112,16 @@ ON DUPLICATE KEY UPDATE
 		};
 	}
 
-	const result = await sb.LocalRequest.playAudio(data.Filename);
+	let result = null;
+	try {
+		result = await sb.LocalRequest.playAudio(data.Filename);
+	}
+	catch (e) {
+		await sb.Config.set(\"PLAYSOUNDS_ENABLED\", false);
+		return { reply: \"The desktop listener is not currently running, turning off playsounds!\" }
+	}
+	
+
 	if (typeof result === \"number\") {
 		return {
 			reply: \"The playsound\'s cooldown has not passed yet! Try again in \" + sb.Utils.timeDelta(sb.Date.now() + result),

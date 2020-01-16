@@ -133,7 +133,17 @@ VALUES
 		};
 	}
 	else {
-		const id = await sb.VideoLANConnector.add(data.link, context.user.ID, data);
+		let id = null;
+		try {
+			id = await sb.VideoLANConnector.add(data.link, context.user.ID, data);
+		}
+		catch (e) {
+			await sb.Config.set(\"SONG_REQUESTS_STATE\", \"off\");
+			return {
+				reply: `The desktop listener is currently turned off. Turning song requests off.`
+			};
+		}
+
 		return {
 			reply: `Video \"${data.name}\" by ${data.author} successfully added to queue with ID ${id}!`
 		};
@@ -238,7 +248,17 @@ ON DUPLICATE KEY UPDATE
 		};
 	}
 	else {
-		const id = await sb.VideoLANConnector.add(data.link, context.user.ID, data);
+		let id = null;
+		try {
+			id = await sb.VideoLANConnector.add(data.link, context.user.ID, data);
+		}
+		catch (e) {
+			await sb.Config.set(\"SONG_REQUESTS_STATE\", \"off\");
+			return {
+				reply: `The desktop listener is currently turned off. Turning song requests off.`
+			};
+		}
+
 		return {
 			reply: `Video \"${data.name}\" by ${data.author} successfully added to queue with ID ${id}!`
 		};

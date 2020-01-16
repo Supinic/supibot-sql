@@ -89,7 +89,7 @@ VALUES
 	}
 	catch (e) {
 		await sb.Config.set(\"TTS_ENABLED\", false);
-		return { reply: \"TTS is not currently running, setting config to false :(\" }
+		return { reply: \"The desktop listener is not currently running, turning off text to speech!\" }
 	}
 
 	const duration = sb.Utils.round(Number(messageTime) / 1e6, 0);
@@ -159,7 +159,7 @@ ON DUPLICATE KEY UPDATE
 	}
 	catch (e) {
 		await sb.Config.set(\"TTS_ENABLED\", false);
-		return { reply: \"TTS is not currently running, setting config to false :(\" }
+		return { reply: \"The desktop listener is not currently running, turning off text to speech!\" }
 	}
 
 	const duration = sb.Utils.round(Number(messageTime) / 1e6, 0);
