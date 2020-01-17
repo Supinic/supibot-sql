@@ -52,19 +52,12 @@ VALUES
 	}
 
 	const reply = result.join(\" \");
-	if (/^!/.test(result[0]) && context.channel && !context.channel.Ping) {
-		return {
-			reply: \"Potential abuse detected 🐝🍯. First character: \" + reply[0]
-		};
-	}	
-	else {
-		return { 
-			reply: reply,
-			meta: {
-				skipCooldown: Boolean(context.append.pipe) // Only skip cooldown if used within a pipe.
-			}
-		};
-	}
+	return { 
+		reply: reply,
+		cooldown: {
+			length: (context.append.pipe) ? null : this.Cooldown
+		}
+	};
 })',
 		NULL,
 		NULL
@@ -84,17 +77,10 @@ ON DUPLICATE KEY UPDATE
 	}
 
 	const reply = result.join(\" \");
-	if (/^!/.test(result[0]) && context.channel && !context.channel.Ping) {
-		return {
-			reply: \"Potential abuse detected 🐝🍯. First character: \" + reply[0]
-		};
-	}	
-	else {
-		return { 
-			reply: reply,
-			meta: {
-				skipCooldown: Boolean(context.append.pipe) // Only skip cooldown if used within a pipe.
-			}
-		};
-	}
+	return { 
+		reply: reply,
+		cooldown: {
+			length: (context.append.pipe) ? null : this.Cooldown
+		}
+	};
 })'
