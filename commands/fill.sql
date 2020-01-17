@@ -62,7 +62,9 @@ VALUES
 		cooldown: {
 			user: null,
 			channel: context.channel.ID,
-			length: context.command.Cooldown
+			length: (context.channel.sessionData.live && !context.append.pipe)
+				? 60.0e3 // 1 minute
+				: context.command.Cooldown
 		}
 	};
 })',
@@ -94,7 +96,9 @@ ON DUPLICATE KEY UPDATE
 		cooldown: {
 			user: null,
 			channel: context.channel.ID,
-			length: context.command.Cooldown
+			length: (context.channel.sessionData.live && !context.append.pipe)
+				? 60.0e3 // 1 minute
+				: context.command.Cooldown
 		}
 	};
 })'
