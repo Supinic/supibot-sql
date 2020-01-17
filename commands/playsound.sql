@@ -48,17 +48,18 @@ VALUES
 		return { reply: \"Currently available playsounds: https://supinic.com/bot/playsound\"};
 	}
 
-	const data = (await sb.Query.getRecordset(rs => rs
+	const data = await sb.Query.getRecordset(rs => rs
 		.select(\"Filename\")
 		.from(\"data\", \"Playsound\")
 		.where(\"Name = %s\", playsound.toLowerCase())
 		.where(\"Access = %s\", \"Everyone\")
-	))[0];
+		.single()
+	);
 
 	if (!data) {
 		return {
 			reply: \"That playsound either doesn\'t exist or is not available!\",
-			meta: { skipCooldown: true }
+			cooldown: null
 		};
 	}
 
@@ -75,7 +76,7 @@ VALUES
 	if (typeof result === \"number\") {
 		return {
 			reply: \"The playsound\'s cooldown has not passed yet! Try again in \" + sb.Utils.timeDelta(sb.Date.now() + result),
-			meta: { skipCooldown: true }
+			cooldown: null
 		};
 	}
 	else {
@@ -98,17 +99,18 @@ ON DUPLICATE KEY UPDATE
 		return { reply: \"Currently available playsounds: https://supinic.com/bot/playsound\"};
 	}
 
-	const data = (await sb.Query.getRecordset(rs => rs
+	const data = await sb.Query.getRecordset(rs => rs
 		.select(\"Filename\")
 		.from(\"data\", \"Playsound\")
 		.where(\"Name = %s\", playsound.toLowerCase())
 		.where(\"Access = %s\", \"Everyone\")
-	))[0];
+		.single()
+	);
 
 	if (!data) {
 		return {
 			reply: \"That playsound either doesn\'t exist or is not available!\",
-			meta: { skipCooldown: true }
+			cooldown: null
 		};
 	}
 
@@ -125,7 +127,7 @@ ON DUPLICATE KEY UPDATE
 	if (typeof result === \"number\") {
 		return {
 			reply: \"The playsound\'s cooldown has not passed yet! Try again in \" + sb.Utils.timeDelta(sb.Date.now() + result),
-			meta: { skipCooldown: true }
+			cooldown: null
 		};
 	}
 	else {
