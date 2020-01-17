@@ -60,7 +60,7 @@ VALUES
 	return {
 		reply: result.join(\" \"),
 		cooldown: {
-			length: (context.append.pipe) ? null : context.command.Cooldown
+			length: (context.append.pipe) ? null : this.Cooldown
 		}
 	};
 })',
@@ -90,7 +90,7 @@ ON DUPLICATE KEY UPDATE
 	return {
 		reply: result.join(\" \"),
 		cooldown: {
-			length: (context.append.pipe) ? null : context.command.Cooldown
+			length: (context.append.pipe) ? null : this.Cooldown
 		}
 	};
 })'
