@@ -76,7 +76,7 @@ VALUES
 
 			setTimeout(() => channel.Mode = \"Read\", 5000);
 			return {
-				reply: `Channel set to read-only mode in 5 seconds. Use \"${prefix}${context.command.Name}\" enable in a different channel to re-enable.`
+				reply: `Channel set to read-only mode in 5 seconds. Use \"${prefix}${this.Name}\" enable in a different channel to re-enable.`
 			};
 
 		case \"enable\":
@@ -139,7 +139,7 @@ ON DUPLICATE KEY UPDATE
 
 			setTimeout(() => channel.Mode = \"Read\", 5000);
 			return {
-				reply: `Channel set to read-only mode in 5 seconds. Use \"${prefix}${context.command.Name}\" enable in a different channel to re-enable.`
+				reply: `Channel set to read-only mode in 5 seconds. Use \"${prefix}${this.Name}\" enable in a different channel to re-enable.`
 			};
 
 		case \"enable\":
