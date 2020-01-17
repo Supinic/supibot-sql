@@ -73,13 +73,25 @@ VALUES
 		};
 	}
 
-	let success = false;
+	if (!sb.Config.get(\"TTS_MULTIPLE_ENABLED\")) {
+		if (this.data.pending) {
+			return {
+				reply: \"Someone else is using the TTS right now, and multiple TTS is not available right now!\",
+				cooldown: {
+					length: 1000
+				}
+			};
+		}
+
+		this.data.pending = true;
+	}
+
 	let messageTime = 0n;
 	const message = sb.Utils.wrapString(args.join(\" \"), 250);	
 
 	try {
 		messageTime = process.hrtime.bigint(),
-		success = await sb.LocalRequest.playTextToSpeech({
+		await sb.LocalRequest.playTextToSpeech({
 			text: message,
 			volume: sb.Config.get(\"TTS_VOLUME\"),
 			voice
@@ -91,10 +103,13 @@ VALUES
 		await sb.Config.set(\"TTS_ENABLED\", false);
 		return { reply: \"The desktop listener is not currently running, turning off text to speech!\" }
 	}
+	finally {
+		this.data.pending = false;
+	}
 
 	const duration = sb.Utils.round(Number(messageTime) / 1e6, 0);
 	const cooldown = (duration > 10000) 
-		? (context.command.Cooldown + (duration - 10000) * 5)
+		? (context.command.Cooldown + (duration - 10000) * 10)
 		: context.command.Cooldown
 
 	return {
@@ -143,13 +158,25 @@ ON DUPLICATE KEY UPDATE
 		};
 	}
 
-	let success = false;
+	if (!sb.Config.get(\"TTS_MULTIPLE_ENABLED\")) {
+		if (this.data.pending) {
+			return {
+				reply: \"Someone else is using the TTS right now, and multiple TTS is not available right now!\",
+				cooldown: {
+					length: 1000
+				}
+			};
+		}
+
+		this.data.pending = true;
+	}
+
 	let messageTime = 0n;
 	const message = sb.Utils.wrapString(args.join(\" \"), 250);	
 
 	try {
 		messageTime = process.hrtime.bigint(),
-		success = await sb.LocalRequest.playTextToSpeech({
+		await sb.LocalRequest.playTextToSpeech({
 			text: message,
 			volume: sb.Config.get(\"TTS_VOLUME\"),
 			voice
@@ -161,10 +188,13 @@ ON DUPLICATE KEY UPDATE
 		await sb.Config.set(\"TTS_ENABLED\", false);
 		return { reply: \"The desktop listener is not currently running, turning off text to speech!\" }
 	}
+	finally {
+		this.data.pending = false;
+	}
 
 	const duration = sb.Utils.round(Number(messageTime) / 1e6, 0);
 	const cooldown = (duration > 10000) 
-		? (context.command.Cooldown + (duration - 10000) * 5)
+		? (context.command.Cooldown + (duration - 10000) * 10)
 		: context.command.Cooldown
 
 	return {
