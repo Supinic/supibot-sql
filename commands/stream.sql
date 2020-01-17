@@ -89,6 +89,13 @@ VALUES
 			return { reply: \"Text to speech volume is now set to \" + volume };
 		}
 
+		case \"ttsmulti\":
+		case \"multitts\": {
+			const value = (rest.shift() === \"true\");
+			sb.Config.set(\"TTS_MULTIPLE_ENABLED\", value ? \"1\" : \"0\");
+			return { reply: \"Concurrent text to speech is now set to \" + value };
+		}
+
 		case \"ps\":
 		case \"playsounds\":
 		case \"playsound\": {
@@ -184,6 +191,13 @@ ON DUPLICATE KEY UPDATE
 
 			sb.Config.set(\"TTS_VOLUME\", volume);
 			return { reply: \"Text to speech volume is now set to \" + volume };
+		}
+
+		case \"ttsmulti\":
+		case \"multitts\": {
+			const value = (rest.shift() === \"true\");
+			sb.Config.set(\"TTS_MULTIPLE_ENABLED\", value ? \"1\" : \"0\");
+			return { reply: \"Concurrent text to speech is now set to \" + value };
 		}
 
 		case \"ps\":
