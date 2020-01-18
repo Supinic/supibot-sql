@@ -39,30 +39,55 @@ VALUES
 		1,
 		1,
 		0,
-		'(async function gachiCheck (context, link, ...comment) {
-	const originalLink = link;
-	if (!link) {
-		return { reply: \"No link provided!\" };
+		'(async function gachiCheck (context, ...args) {
+	if (args.length === 0) {
+		return {
+			reply: \"No input provided!\",
+			cooldown: { length: 2500 }
+		};
 	}
 
+	const links = [];
+	for (const word of args) {
+		if (sb.Utils.linkParser.autoRecognize(word)) {
+			links.push(sb.Utils.linkParser.parseLink(word));
+		}
+	}
+
+	if (links.length === 0) {
+		return {
+			reply: \"No valid links provided!\",
+			cooldown: { length: 2500 }
+		};
+	}
+	else if (links.length > 1) {
+		return {
+			reply: \"Multiple links detected, cannot proceed! Links: \" + links.join(\", \"),
+			cooldown: { length: 2500 }
+		};
+	}
+
+	const link = links[0];
+	const originalLink = link;
 	const trackToLink = (id) => (!context.channel || context.channel.Links_Allowed)
 		? `https://supinic.com/track/detail/${id}`
 		: `track list ID ${id}`;
 
-	const typeMap = Object.fromEntries(
-		(await sb.Query.getRecordset(rs => rs
+	if (!this.data.typeMap) {
+		const typeData = await sb.Query.getRecordset(rs => rs
 			.select(\"ID\", \"Parser_Name\")
 			.from(\"data\", \"Video_Type\")
 			.where(\"Parser_Name IS NOT NULL\")
-		)).map(i => [i.Parser_Name, i.ID])
-	);
+		);
+
+		this.data.typeMap = Object.fromEntries(typeData.map(i => [i.Parser_Name, i.ID]));
+	}
 
 	const type = sb.Utils.linkParser.autoRecognize(link);
 	if (!type) {
 		return { reply: \"Unrecognized link type!\" };
 	}
 
-	link = sb.Utils.linkParser.getParser(type).parseLink(link);
 	const check = (await sb.Query.getRecordset(rs => rs
 		.select(\"ID\")
 		.from(\"music\", \"Track\")
@@ -88,12 +113,12 @@ VALUES
 		const tag = { todo: 20 };
 		const videoData = await sb.Utils.linkParser.fetchData(originalLink);
 		const row = await sb.Query.getRow(\"music\", \"Track\");
-	
+
 		row.setValues({
 			Link: link,
 			Name: (videoData && videoData.name) || null,
 			Added_By: context.user.ID,
-			Video_Type: typeMap[type],
+			Video_Type: this.data.typeMap[type],
 			Available: Boolean(videoData),
 			Published: (videoData && videoData.published)
 				? new sb.Date(videoData.published)
@@ -102,7 +127,7 @@ VALUES
 			Track_Type: null,
 			Notes: videoData.description ?? null
 		});
-		
+
 		const {insertId: trackID} = await row.save();
 		const tagRow = await sb.Query.getRow(\"music\", \"Track_Tag\");
 		tagRow.setValues({
@@ -111,7 +136,7 @@ VALUES
 			Added_By: context.user.ID,
 			Notes: JSON.stringify(videoData)
 		});
-		
+
 		await tagRow.save();
 
 		if (videoData.author) {
@@ -163,30 +188,55 @@ $gc https://www.nicovideo.jp/watch/sm6140534 ',
 	)
 
 ON DUPLICATE KEY UPDATE
-	Code = '(async function gachiCheck (context, link, ...comment) {
-	const originalLink = link;
-	if (!link) {
-		return { reply: \"No link provided!\" };
+	Code = '(async function gachiCheck (context, ...args) {
+	if (args.length === 0) {
+		return {
+			reply: \"No input provided!\",
+			cooldown: { length: 2500 }
+		};
 	}
 
+	const links = [];
+	for (const word of args) {
+		if (sb.Utils.linkParser.autoRecognize(word)) {
+			links.push(sb.Utils.linkParser.parseLink(word));
+		}
+	}
+
+	if (links.length === 0) {
+		return {
+			reply: \"No valid links provided!\",
+			cooldown: { length: 2500 }
+		};
+	}
+	else if (links.length > 1) {
+		return {
+			reply: \"Multiple links detected, cannot proceed! Links: \" + links.join(\", \"),
+			cooldown: { length: 2500 }
+		};
+	}
+
+	const link = links[0];
+	const originalLink = link;
 	const trackToLink = (id) => (!context.channel || context.channel.Links_Allowed)
 		? `https://supinic.com/track/detail/${id}`
 		: `track list ID ${id}`;
 
-	const typeMap = Object.fromEntries(
-		(await sb.Query.getRecordset(rs => rs
+	if (!this.data.typeMap) {
+		const typeData = await sb.Query.getRecordset(rs => rs
 			.select(\"ID\", \"Parser_Name\")
 			.from(\"data\", \"Video_Type\")
 			.where(\"Parser_Name IS NOT NULL\")
-		)).map(i => [i.Parser_Name, i.ID])
-	);
+		);
+
+		this.data.typeMap = Object.fromEntries(typeData.map(i => [i.Parser_Name, i.ID]));
+	}
 
 	const type = sb.Utils.linkParser.autoRecognize(link);
 	if (!type) {
 		return { reply: \"Unrecognized link type!\" };
 	}
 
-	link = sb.Utils.linkParser.getParser(type).parseLink(link);
 	const check = (await sb.Query.getRecordset(rs => rs
 		.select(\"ID\")
 		.from(\"music\", \"Track\")
@@ -212,12 +262,12 @@ ON DUPLICATE KEY UPDATE
 		const tag = { todo: 20 };
 		const videoData = await sb.Utils.linkParser.fetchData(originalLink);
 		const row = await sb.Query.getRow(\"music\", \"Track\");
-	
+
 		row.setValues({
 			Link: link,
 			Name: (videoData && videoData.name) || null,
 			Added_By: context.user.ID,
-			Video_Type: typeMap[type],
+			Video_Type: this.data.typeMap[type],
 			Available: Boolean(videoData),
 			Published: (videoData && videoData.published)
 				? new sb.Date(videoData.published)
@@ -226,7 +276,7 @@ ON DUPLICATE KEY UPDATE
 			Track_Type: null,
 			Notes: videoData.description ?? null
 		});
-		
+
 		const {insertId: trackID} = await row.save();
 		const tagRow = await sb.Query.getRow(\"music\", \"Track_Tag\");
 		tagRow.setValues({
@@ -235,7 +285,7 @@ ON DUPLICATE KEY UPDATE
 			Added_By: context.user.ID,
 			Notes: JSON.stringify(videoData)
 		});
-		
+
 		await tagRow.save();
 
 		if (videoData.author) {
