@@ -120,12 +120,12 @@ VALUES
 			Added_By: context.user.ID,
 			Video_Type: this.data.typeMap[type],
 			Available: Boolean(videoData),
-			Published: (videoData && videoData.published)
-				? new sb.Date(videoData.published)
+			Published: (videoData?.created)
+				? new sb.Date(videoData.created)
 				: null,
 			Duration: (videoData && videoData.duration) || null,
 			Track_Type: null,
-			Notes: videoData.description ?? null
+			Notes: videoData.description || null
 		});
 
 		const {insertId: trackID} = await row.save();
@@ -269,12 +269,12 @@ ON DUPLICATE KEY UPDATE
 			Added_By: context.user.ID,
 			Video_Type: this.data.typeMap[type],
 			Available: Boolean(videoData),
-			Published: (videoData && videoData.published)
-				? new sb.Date(videoData.published)
+			Published: (videoData?.created)
+				? new sb.Date(videoData.created)
 				: null,
 			Duration: (videoData && videoData.duration) || null,
 			Track_Type: null,
-			Notes: videoData.description ?? null
+			Notes: videoData.description || null
 		});
 
 		const {insertId: trackID} = await row.save();
