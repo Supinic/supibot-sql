@@ -38,7 +38,7 @@ VALUES
 		0,
 		1,
 		1,
-		0,
+		1,
 		'(async function gachiCheckSongRequest (context, link) {
 	if (sb.Config.get(\"SONG_REQUESTS_STATE\") !== \"vlc\") {
 		return {
