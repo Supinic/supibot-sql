@@ -48,7 +48,27 @@ VALUES
 		return { reply: \"We are on Dubtrack, check ?song for the currently playing song :)\" };
 	}
 	else if (state === \"cytube\") {
-		return { reply: \"We are on Cytube, check the link out with $cytube :)\" };
+		const playing = sb.Master.clients.cytube[0].currentlyPlaying;
+		if (playing === null) {
+			return {
+				reply: \"Nothing is currently playing on Cytube.\"
+			};
+		}
+
+		const media = playing.media;
+		const prefix = (await sb.Query.getRecordset(rs => rs
+			.select(\"Link_Prefix\")
+			.from(\"data\", \"Video_Type\")
+			.where(\"Type = %s\", media.type)
+			.limit(1)
+			.single()
+		)).Link_Prefix;
+
+		const requester = playing.user ?? playing.queueby ?? \"(unknown)\";
+		const link = prefix.replace(\"$\", media.id);
+		return {
+			reply: `Currently playing on Cytube: ${media.title} ${link} (${media.duration}), queued by ${requester}`
+		}
 	}
 
 	const song = await sb.VideoLANConnector.currentlyPlaying();
@@ -92,15 +112,15 @@ VALUES
 		if (!userData) {
 			return { reply: \"No requester user data found\" };
 		}
-		
+
 		const data = song.category.meta;
 		if (!song.category.meta.title || !song.category.meta.url) {
-			return { 
+			return {
 				reply: `Currently playing: ${data.filename} (ID ${extraData.vlcID}) - current position: ${status.time}/${status.length}s - requested by ${userData.Name}`
 			};
 		}
 		else {
-			return { 
+			return {
 				reply: `Currently playing: ${data.title} (ID ${extraData.vlcID}) - ${extraData.link} - current position: ${status.time}/${status.length}s - requested by ${userData.Name}`
 			};
 		}
@@ -120,7 +140,27 @@ ON DUPLICATE KEY UPDATE
 		return { reply: \"We are on Dubtrack, check ?song for the currently playing song :)\" };
 	}
 	else if (state === \"cytube\") {
-		return { reply: \"We are on Cytube, check the link out with $cytube :)\" };
+		const playing = sb.Master.clients.cytube[0].currentlyPlaying;
+		if (playing === null) {
+			return {
+				reply: \"Nothing is currently playing on Cytube.\"
+			};
+		}
+
+		const media = playing.media;
+		const prefix = (await sb.Query.getRecordset(rs => rs
+			.select(\"Link_Prefix\")
+			.from(\"data\", \"Video_Type\")
+			.where(\"Type = %s\", media.type)
+			.limit(1)
+			.single()
+		)).Link_Prefix;
+
+		const requester = playing.user ?? playing.queueby ?? \"(unknown)\";
+		const link = prefix.replace(\"$\", media.id);
+		return {
+			reply: `Currently playing on Cytube: ${media.title} ${link} (${media.duration}), queued by ${requester}`
+		}
 	}
 
 	const song = await sb.VideoLANConnector.currentlyPlaying();
@@ -164,15 +204,15 @@ ON DUPLICATE KEY UPDATE
 		if (!userData) {
 			return { reply: \"No requester user data found\" };
 		}
-		
+
 		const data = song.category.meta;
 		if (!song.category.meta.title || !song.category.meta.url) {
-			return { 
+			return {
 				reply: `Currently playing: ${data.filename} (ID ${extraData.vlcID}) - current position: ${status.time}/${status.length}s - requested by ${userData.Name}`
 			};
 		}
 		else {
-			return { 
+			return {
 				reply: `Currently playing: ${data.title} (ID ${extraData.vlcID}) - ${extraData.link} - current position: ${status.time}/${status.length}s - requested by ${userData.Name}`
 			};
 		}
