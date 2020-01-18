@@ -108,7 +108,7 @@ VALUES
 	}
 
 	const duration = sb.Utils.round(Number(messageTime) / 1e6, 0);
-	const cooldown = (duration > 10000) 
+	const cooldown = (context.channel.sessionData.live && duration > 10000) 
 		? (context.command.Cooldown + (duration - 10000) * 10)
 		: context.command.Cooldown
 
@@ -193,7 +193,7 @@ ON DUPLICATE KEY UPDATE
 	}
 
 	const duration = sb.Utils.round(Number(messageTime) / 1e6, 0);
-	const cooldown = (duration > 10000) 
+	const cooldown = (context.channel.sessionData.live && duration > 10000) 
 		? (context.command.Cooldown + (duration - 10000) * 10)
 		: context.command.Cooldown
 
