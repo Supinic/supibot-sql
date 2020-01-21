@@ -43,6 +43,9 @@ VALUES
 	if (args.length === 0) {
 		return { reply: \"Not enough info provided!\", meta: { skipCooldown: true } };
 	}
+	else if (sb.User.bots.has(context.user.ID)) {
+		sb.Master.send(\"Deprecation notice :) Bots should be using Supibot reminder API\", context.channel);
+	}
 
 	const originalArgs = args.slice(0);
 	let targetUser = await sb.Utils.getDiscordUserDataFromMentions(args[0].toLowerCase(), context.append) || await sb.User.get(args[0], true);
@@ -181,6 +184,9 @@ ON DUPLICATE KEY UPDATE
 	Code = '(async function remind (context, ...args) {
 	if (args.length === 0) {
 		return { reply: \"Not enough info provided!\", meta: { skipCooldown: true } };
+	}
+	else if (sb.User.bots.has(context.user.ID)) {
+		sb.Master.send(\"Deprecation notice :) Bots should be using Supibot reminder API\", context.channel);
 	}
 
 	const originalArgs = args.slice(0);
