@@ -26,7 +26,7 @@ VALUES
 		77,
 		'randommeme',
 		'[\"rm\"]',
-		'Posts a random reddit meme. Powered by Meme API by @R3l3ntl3ss.',
+		'If no parameters are provided, posts a random reddit meme. If you provide a subreddit, a post will be chosen randomly. NSFW subreddits and posts are only available on NSFW Discord channels!',
 		10000,
 		0,
 		0,
