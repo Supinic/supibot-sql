@@ -99,14 +99,22 @@ VALUES
 		};
 	}
 
-	const posts = JSON.parse(await sb.Utils.request({
-		uri: `https://www.reddit.com/r/${subreddit}/hot.json`,	
-		headers: {
-			\"Cookie\": \"_options={%22pref_quarantine_optin%22:true};\"
-		}
-	}));
-
-//	console.log(posts);
+	let raw = null;
+	let posts = null;
+	try {
+		raw = await sb.Utils.request({
+			uri: `https://www.reddit.com/r/${subreddit}/hot.json`,	
+			headers: {
+				\"Cookie\": \"_options={%22pref_quarantine_optin%22:true};\"
+			}
+		});
+		
+		posts = JSON.parse(raw);
+	}
+	catch (e) {
+		console.error(\"random meme failed\", {raw, posts});
+		throw e;
+	}
 
 	const children = posts.data.children.filter(i => (!safeSpace || !i.over_18) && !i.selftext);	
 	const quarantine = (check.data.quarantine) ? \"⚠\" : \"\";
@@ -188,14 +196,22 @@ ON DUPLICATE KEY UPDATE
 		};
 	}
 
-	const posts = JSON.parse(await sb.Utils.request({
-		uri: `https://www.reddit.com/r/${subreddit}/hot.json`,	
-		headers: {
-			\"Cookie\": \"_options={%22pref_quarantine_optin%22:true};\"
-		}
-	}));
-
-//	console.log(posts);
+	let raw = null;
+	let posts = null;
+	try {
+		raw = await sb.Utils.request({
+			uri: `https://www.reddit.com/r/${subreddit}/hot.json`,	
+			headers: {
+				\"Cookie\": \"_options={%22pref_quarantine_optin%22:true};\"
+			}
+		});
+		
+		posts = JSON.parse(raw);
+	}
+	catch (e) {
+		console.error(\"random meme failed\", {raw, posts});
+		throw e;
+	}
 
 	const children = posts.data.children.filter(i => (!safeSpace || !i.over_18) && !i.selftext);	
 	const quarantine = (check.data.quarantine) ? \"⚠\" : \"\";
