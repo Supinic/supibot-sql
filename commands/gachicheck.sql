@@ -49,8 +49,12 @@ VALUES
 
 	const links = [];
 	for (const word of args) {
-		if (sb.Utils.linkParser.autoRecognize(word)) {
-			links.push(sb.Utils.linkParser.parseLink(word));
+		const type = sb.Utils.linkParser.autoRecognize(word);
+		if (type) {
+			links.push({
+				type,
+				link: sb.Utils.linkParser.parseLink(word)
+			});
 		}
 	}
 
@@ -67,7 +71,7 @@ VALUES
 		};
 	}
 
-	const link = links[0];
+	const { link, type } = links[0];
 	const originalLink = link;
 	const trackToLink = (id) => (!context.channel || context.channel.Links_Allowed)
 		? `https://supinic.com/track/detail/${id}`
@@ -81,11 +85,6 @@ VALUES
 		);
 
 		this.data.typeMap = Object.fromEntries(typeData.map(i => [i.Parser_Name, i.ID]));
-	}
-
-	const type = sb.Utils.linkParser.autoRecognize(link);
-	if (!type) {
-		return { reply: \"Unrecognized link type!\" };
 	}
 
 	const check = (await sb.Query.getRecordset(rs => rs
@@ -111,7 +110,7 @@ VALUES
 	}
 	else {
 		const tag = { todo: 20 };
-		const videoData = await sb.Utils.linkParser.fetchData(originalLink);
+		const videoData = await sb.Utils.linkParser.fetchData(originalLink, type);
 		const row = await sb.Query.getRow(\"music\", \"Track\");
 
 		row.setValues({
@@ -198,8 +197,12 @@ ON DUPLICATE KEY UPDATE
 
 	const links = [];
 	for (const word of args) {
-		if (sb.Utils.linkParser.autoRecognize(word)) {
-			links.push(sb.Utils.linkParser.parseLink(word));
+		const type = sb.Utils.linkParser.autoRecognize(word);
+		if (type) {
+			links.push({
+				type,
+				link: sb.Utils.linkParser.parseLink(word)
+			});
 		}
 	}
 
@@ -216,7 +219,7 @@ ON DUPLICATE KEY UPDATE
 		};
 	}
 
-	const link = links[0];
+	const { link, type } = links[0];
 	const originalLink = link;
 	const trackToLink = (id) => (!context.channel || context.channel.Links_Allowed)
 		? `https://supinic.com/track/detail/${id}`
@@ -230,11 +233,6 @@ ON DUPLICATE KEY UPDATE
 		);
 
 		this.data.typeMap = Object.fromEntries(typeData.map(i => [i.Parser_Name, i.ID]));
-	}
-
-	const type = sb.Utils.linkParser.autoRecognize(link);
-	if (!type) {
-		return { reply: \"Unrecognized link type!\" };
 	}
 
 	const check = (await sb.Query.getRecordset(rs => rs
@@ -260,7 +258,7 @@ ON DUPLICATE KEY UPDATE
 	}
 	else {
 		const tag = { todo: 20 };
-		const videoData = await sb.Utils.linkParser.fetchData(originalLink);
+		const videoData = await sb.Utils.linkParser.fetchData(originalLink, type);
 		const row = await sb.Query.getRow(\"music\", \"Track\");
 
 		row.setValues({
