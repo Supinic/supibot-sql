@@ -40,11 +40,12 @@ VALUES
 		1,
 		0,
 		'(async function remind (context, ...args) {
+	let deprecationNotice = \"\";
 	if (args.length === 0) {
 		return { reply: \"Not enough info provided!\", meta: { skipCooldown: true } };
 	}
 	else if (sb.User.bots.has(context.user.ID)) {
-		sb.Master.send(\"Deprecation notice :) Bots should be using Supibot reminder API\", context.channel);
+		deprecationNotice = \"Deprecation notice :) Bots should be using Supibot reminder API\";
 	}
 
 	const originalArgs = args.slice(0);
@@ -166,6 +167,7 @@ VALUES
 	}
 
 	const reply = [
+		deprecationNotice,
 		\"I will remind\",
 		(targetUser.ID === context.user.ID) ? \"you\" : targetUser.Name,
 		(timestamp)
@@ -182,11 +184,12 @@ VALUES
 
 ON DUPLICATE KEY UPDATE
 	Code = '(async function remind (context, ...args) {
+	let deprecationNotice = \"\";
 	if (args.length === 0) {
 		return { reply: \"Not enough info provided!\", meta: { skipCooldown: true } };
 	}
 	else if (sb.User.bots.has(context.user.ID)) {
-		sb.Master.send(\"Deprecation notice :) Bots should be using Supibot reminder API\", context.channel);
+		deprecationNotice = \"Deprecation notice :) Bots should be using Supibot reminder API\";
 	}
 
 	const originalArgs = args.slice(0);
@@ -308,6 +311,7 @@ ON DUPLICATE KEY UPDATE
 	}
 
 	const reply = [
+		deprecationNotice,
 		\"I will remind\",
 		(targetUser.ID === context.user.ID) ? \"you\" : targetUser.Name,
 		(timestamp)
