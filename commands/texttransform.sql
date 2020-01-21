@@ -186,18 +186,13 @@ VALUES
 			reply: \"No result has been created?!\"
 		};
 	}
-	else if (/^!/.test(result[0]) && context.channel && !context.channel.Ping) {
-		return {
-			reply: \"Potential abuse detected 🐝🍯. First character: \" + result[0]
-		};
-	}
 
 	return {
 		reply: result,
-		meta: {
-			skipCooldown: Boolean(context.append.pipe) // Only skip cooldown if used within a pipe.
+		cooldown: {
+			length: (context.append.pipe) ? null : this.Cooldown
 		}
-	}
+	};
 })',
 		NULL,
 		'async (prefix) => [
@@ -407,16 +402,11 @@ ON DUPLICATE KEY UPDATE
 			reply: \"No result has been created?!\"
 		};
 	}
-	else if (/^!/.test(result[0]) && context.channel && !context.channel.Ping) {
-		return {
-			reply: \"Potential abuse detected 🐝🍯. First character: \" + result[0]
-		};
-	}
 
 	return {
 		reply: result,
-		meta: {
-			skipCooldown: Boolean(context.append.pipe) // Only skip cooldown if used within a pipe.
+		cooldown: {
+			length: (context.append.pipe) ? null : this.Cooldown
 		}
-	}
+	};
 })'
