@@ -47,7 +47,7 @@ VALUES
 	const result = [];
 	while (message.length > 0) {
 		const randomIndex = sb.Utils.random(0, message.length - 1);
-		result.push(message[randomIndex]);
+		result.push(message[randomIndex].replace(/[\\[\\]{}()]/g, \"\"));
 		message.splice(randomIndex, 1);
 	}
 
@@ -72,7 +72,7 @@ ON DUPLICATE KEY UPDATE
 	const result = [];
 	while (message.length > 0) {
 		const randomIndex = sb.Utils.random(0, message.length - 1);
-		result.push(message[randomIndex]);
+		result.push(message[randomIndex].replace(/[\\[\\]{}()]/g, \"\"));
 		message.splice(randomIndex, 1);
 	}
 
