@@ -27,7 +27,7 @@ VALUES
 		'origin',
 		NULL,
 		'Fetches the origin of a given emote',
-		5000,
+		10000,
 		0,
 		0,
 		0,
@@ -74,7 +74,8 @@ VALUES
 	}
 	if (emoteData.length > 1 && customIndex === null) {
 		return {
-			reply: `Multiple emotes found for this name! Use \"index:0\" through \"index:${emoteData.length-1}\" to access each one.`
+			reply: `Multiple emotes found for this name! Use \"index:0\" through \"index:${emoteData.length-1}\" to access each one.`,
+			cooldown: { length: 2500 }
 		};
 	}
 
@@ -143,7 +144,8 @@ ON DUPLICATE KEY UPDATE
 	}
 	if (emoteData.length > 1 && customIndex === null) {
 		return {
-			reply: `Multiple emotes found for this name! Use \"index:0\" through \"index:${emoteData.length-1}\" to access each one.`
+			reply: `Multiple emotes found for this name! Use \"index:0\" through \"index:${emoteData.length-1}\" to access each one.`,
+			cooldown: { length: 2500 }
 		};
 	}
 
