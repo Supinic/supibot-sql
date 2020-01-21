@@ -38,7 +38,7 @@ VALUES
 		0,
 		1,
 		1,
-		0,
+		1,
 		'async () => {
 	const url = \"https://api.thecatapi.com/v1/images/search\";
 	const data = JSON.parse(await sb.Utils.request(url));

@@ -38,7 +38,7 @@ VALUES
 		0,
 		0,
 		1,
-		0,
+		1,
 		'(async function randomCatFact () {
 	const url = \"https://catfact.ninja/fact\";
 	const data = JSON.parse(await sb.Utils.request(url));

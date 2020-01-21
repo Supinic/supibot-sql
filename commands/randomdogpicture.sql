@@ -38,7 +38,7 @@ VALUES
 		0,
 		1,
 		1,
-		0,
+		1,
 		'async () => {
 	const url = \"https://dog.ceo/api/breeds/image/random\";
 	const data = JSON.parse(await sb.Utils.request(url));

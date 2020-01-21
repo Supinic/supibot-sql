@@ -39,80 +39,86 @@ VALUES
 		1,
 		1,
 		0,
-		'async (extra, type, user, link) => {
-	if (!type || !user || !link) {
-		return { reply: \"Some arguments are missing\" };
+		'(async function verify (context, type, user, ...rest) {
+	if (!type || !user || rest.length === 0) {
+		return {
+			reply: \"Some arguments are missing!\"
+		};
 	}
 
-	const allowedTypes = [\"dog\", \"cat\"];
+	const allowedTypes = [\"bird\", \"cat\", \"dog\", \"fox\"];
 	if (!allowedTypes.includes(type)) {
-		return { reply: \"Unknown type!\" };
+		return {
+			reply: \"Unknown animal type provided!\"
+		};
 	}
 
-	const userData = await sb.User.get(user, true);
+	const userData = await sb.User.get(user);
 	if (!userData) {
-		return { reply: \"Unknown user!\" };
+		return {
+			reply: \"Invalid user provided!\"
+		};
 	}
 
-	const commands = {
-		dog: [79, 82],
-		cat: [78, 83]
+	userData.Data.animals = userData.Data.animals ?? {};
+	if (userData.data.animals[type]) {
+		return {
+			reply: `That user is already verified for ${type}(s). If you want to add more pictures, do it manually please :)`
+		}
+	}
+
+	userData.Data.animals[type] = {
+		verified: true,
+		notes: rest.join(\" \")
 	};
 
-	for (const commandID of commands[type]) {
-		const row = await sb.Query.getRow(\"chat_data\", \"Filter\");
-		row.setValues({
-			User_Alias: userData.ID,
-			Type: \"Whitelist\",
-			Command: commandID,
-			Notes: link
-		});
+	await userData.saveProperty(\"Data\", userData.Data);
 
-		await row.save();
-	}
-
-	await sb.Command.get(\"reload\").execute(null, \"filters\");
-
-	return { reply: \"All went well :)\" };
-}',
+	return {
+		reply: `Okay, they are now verified to use ${type}-related commands :)`
+	};
+})',
 		NULL,
 		NULL
 	)
 
 ON DUPLICATE KEY UPDATE
-	Code = 'async (extra, type, user, link) => {
-	if (!type || !user || !link) {
-		return { reply: \"Some arguments are missing\" };
+	Code = '(async function verify (context, type, user, ...rest) {
+	if (!type || !user || rest.length === 0) {
+		return {
+			reply: \"Some arguments are missing!\"
+		};
 	}
 
-	const allowedTypes = [\"dog\", \"cat\"];
+	const allowedTypes = [\"bird\", \"cat\", \"dog\", \"fox\"];
 	if (!allowedTypes.includes(type)) {
-		return { reply: \"Unknown type!\" };
+		return {
+			reply: \"Unknown animal type provided!\"
+		};
 	}
 
-	const userData = await sb.User.get(user, true);
+	const userData = await sb.User.get(user);
 	if (!userData) {
-		return { reply: \"Unknown user!\" };
+		return {
+			reply: \"Invalid user provided!\"
+		};
 	}
 
-	const commands = {
-		dog: [79, 82],
-		cat: [78, 83]
+	userData.Data.animals = userData.Data.animals ?? {};
+	if (userData.data.animals[type]) {
+		return {
+			reply: `That user is already verified for ${type}(s). If you want to add more pictures, do it manually please :)`
+		}
+	}
+
+	userData.Data.animals[type] = {
+		verified: true,
+		notes: rest.join(\" \")
 	};
 
-	for (const commandID of commands[type]) {
-		const row = await sb.Query.getRow(\"chat_data\", \"Filter\");
-		row.setValues({
-			User_Alias: userData.ID,
-			Type: \"Whitelist\",
-			Command: commandID,
-			Notes: link
-		});
+	await userData.saveProperty(\"Data\", userData.Data);
 
-		await row.save();
-	}
-
-	await sb.Command.get(\"reload\").execute(null, \"filters\");
-
-	return { reply: \"All went well :)\" };
-}'
+	return {
+		reply: `Okay, they are now verified to use ${type}-related commands :)`
+	};
+})'
