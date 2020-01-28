@@ -59,6 +59,11 @@ VALUES
 			resultType = \"translate\";
 			map = sb.Config.get(\"TRANSLATION_DATA_COCKNEY\");
 			break;
+
+		case \"bubble\": 
+			resultType = \"map\";
+			map = sb.Config.get(\"CHARACTER_MAP_BUBBLE\");
+			break;
 			
 		case \"fancy\":
 			resultType = \"map\";
@@ -281,6 +286,11 @@ ON DUPLICATE KEY UPDATE
 		case \"3Head\":
 			resultType = \"translate\";
 			map = sb.Config.get(\"TRANSLATION_DATA_COCKNEY\");
+			break;
+
+		case \"bubble\": 
+			resultType = \"map\";
+			map = sb.Config.get(\"CHARACTER_MAP_BUBBLE\");
 			break;
 			
 		case \"fancy\":
