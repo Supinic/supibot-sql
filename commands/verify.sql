@@ -61,7 +61,7 @@ VALUES
 	}
 
 	userData.Data.animals = userData.Data.animals ?? {};
-	if (userData.data.animals[type]) {
+	if (userData.Data.animals[type]) {
 		return {
 			reply: `That user is already verified for ${type}(s). If you want to add more pictures, do it manually please :)`
 		}
@@ -105,7 +105,7 @@ ON DUPLICATE KEY UPDATE
 	}
 
 	userData.Data.animals = userData.Data.animals ?? {};
-	if (userData.data.animals[type]) {
+	if (userData.Data.animals[type]) {
 		return {
 			reply: `That user is already verified for ${type}(s). If you want to add more pictures, do it manually please :)`
 		}
