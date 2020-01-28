@@ -55,9 +55,11 @@ VALUES
 
 		fakeChannel = new sb.Channel(tempData);
 		fakeChannel.Ping = false;
-	}	
+	}
 
+	let cancerCheck = false;
 	let currentArgs = [];
+
 	for (const inv of invocations) {
 		let [cmd, ...cmdArgs] = inv.replace(/^\\$\\s*/, \"$\").split(\" \");
 		cmdArgs = cmdArgs.concat(currentArgs);
@@ -70,8 +72,17 @@ VALUES
 		}
 
 		const check = sb.Command.get(cmd.replace(sb.Config.get(\"COMMAND_PREFIX\"), \"\"));
-		if (check && !check.Pipeable) {
-			return { reply: \"Command \" + cmd + \" cannot be used in a pipe!\" };
+		if (check) {
+			if (!check.Pipeable) {
+				return { reply: \"Command \" + cmd + \" cannot be used in a pipe!\" };
+			}
+
+			if (check.Name === \"fill\") {
+				cancerCheck = true;
+			}
+			else if (cancerCheck && check.Name === \"texttospeech\") {
+				return { reply: \"Nice try ;)\" };
+			}
 		}
 
 		const result = await sb.Command.checkAndExecute(
@@ -140,9 +151,11 @@ ON DUPLICATE KEY UPDATE
 
 		fakeChannel = new sb.Channel(tempData);
 		fakeChannel.Ping = false;
-	}	
+	}
 
+	let cancerCheck = false;
 	let currentArgs = [];
+
 	for (const inv of invocations) {
 		let [cmd, ...cmdArgs] = inv.replace(/^\\$\\s*/, \"$\").split(\" \");
 		cmdArgs = cmdArgs.concat(currentArgs);
@@ -155,8 +168,17 @@ ON DUPLICATE KEY UPDATE
 		}
 
 		const check = sb.Command.get(cmd.replace(sb.Config.get(\"COMMAND_PREFIX\"), \"\"));
-		if (check && !check.Pipeable) {
-			return { reply: \"Command \" + cmd + \" cannot be used in a pipe!\" };
+		if (check) {
+			if (!check.Pipeable) {
+				return { reply: \"Command \" + cmd + \" cannot be used in a pipe!\" };
+			}
+
+			if (check.Name === \"fill\") {
+				cancerCheck = true;
+			}
+			else if (cancerCheck && check.Name === \"texttospeech\") {
+				return { reply: \"Nice try ;)\" };
+			}
 		}
 
 		const result = await sb.Command.checkAndExecute(
