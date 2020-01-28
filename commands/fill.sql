@@ -50,7 +50,11 @@ VALUES
 	const result = [];
 	const platform = context.platform.Name.toUpperCase();
 
-	const limit = (context.channel?.Message_Limit ?? sb.Config.get(\"DEFAULT_MSG_LIMIT_\" + platform)) - context.user.Name.length - 3;
+	let limit = (context.channel?.Message_Limit ?? sb.Config.get(\"DEFAULT_MSG_LIMIT_\" + platform)) - context.user.Name.length - 3;
+	if (context.channel.sessionData.live) {
+		limit = 150;
+	}
+
 	while (length < limit) {
 		const randomWord = sb.Utils.randArray(words);
 		result.push(randomWord);
@@ -84,7 +88,11 @@ ON DUPLICATE KEY UPDATE
 	const result = [];
 	const platform = context.platform.Name.toUpperCase();
 
-	const limit = (context.channel?.Message_Limit ?? sb.Config.get(\"DEFAULT_MSG_LIMIT_\" + platform)) - context.user.Name.length - 3;
+	let limit = (context.channel?.Message_Limit ?? sb.Config.get(\"DEFAULT_MSG_LIMIT_\" + platform)) - context.user.Name.length - 3;
+	if (context.channel.sessionData.live) {
+		limit = 150;
+	}
+
 	while (length < limit) {
 		const randomWord = sb.Utils.randArray(words);
 		result.push(randomWord);
