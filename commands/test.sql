@@ -40,9 +40,13 @@ VALUES
 		1,
 		0,
 		'async (extra) => {
+	await new Promise((resolve) => {
+		setTimeout(() => resolve(true), 5000);
+	});	
+
 	return {
-		reply: {}
-	}
+		reply: \"5 seconds passed 👌\"
+	};
 }',
 		NULL,
 		NULL
@@ -50,7 +54,11 @@ VALUES
 
 ON DUPLICATE KEY UPDATE
 	Code = 'async (extra) => {
+	await new Promise((resolve) => {
+		setTimeout(() => resolve(true), 5000);
+	});	
+
 	return {
-		reply: {}
-	}
+		reply: \"5 seconds passed 👌\"
+	};
 }'
