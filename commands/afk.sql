@@ -51,9 +51,9 @@ VALUES
 
 	switch (context.invocation) {
 		case \"afk\": [status, text] = [\"now AFK\", text || \"(no message)\"]; break;
-		case \"gn\": [status, text] = [\"now sleeping\", (text ? (text + \" 💤\") : \"🛏💤\")]; break;
+		case \"gn\": [status, text] = [\"now sleeping\", (text ? (text + \" 💤\") : \" 🛏💤\")]; break;
 		case \"brb\": [status, text] = [\"going to be right back\", text || \"ppHop\"]; break;
-		case \"shower\": [status, text] = [\"now taking a shower\", (text ? (text + \" 🚿\") : \"🚿\")]; break;
+		case \"shower\": [status, text] = [\"now taking a shower\", (text ? (text + \" 🚿\") : \" 🚿\")]; break;
 		
 		case \"💩\":			
 		case \"poop\": 
@@ -61,9 +61,9 @@ VALUES
 			[status, text] = [\"now pooping\", (text ?  (text + \" 🚽\") : \"💩\")]; 
 			break;
 
-		case \"work\": [status, text] = [\"working\", (text ?  (text + \" 💼\") : \"👷\")]; break;
+		case \"work\": [status, text] = [\"working\", (text ?  (text + \" 💼\") : \" 👷\")]; break;
 		case \"ppPoof\": [status, text] = [\"ppPoof poofing away...\", (text || \"\") + \" 💨\"]; break;
-		case \"study\": [status, text] = [\"now studying\", (text || \"🤓\") + \"📚\"]; break;
+		case \"study\": [status, text] = [\"now studying\", (text || \"🤓\") + \" 📚\"]; break;
 		case \"food\": {
 			let useAutoEmoji = true;
 			const eatingEmojis = sb.Config.get(\"FOOD_EMOJIS\");
@@ -134,9 +134,9 @@ ON DUPLICATE KEY UPDATE
 
 	switch (context.invocation) {
 		case \"afk\": [status, text] = [\"now AFK\", text || \"(no message)\"]; break;
-		case \"gn\": [status, text] = [\"now sleeping\", (text ? (text + \" 💤\") : \"🛏💤\")]; break;
+		case \"gn\": [status, text] = [\"now sleeping\", (text ? (text + \" 💤\") : \" 🛏💤\")]; break;
 		case \"brb\": [status, text] = [\"going to be right back\", text || \"ppHop\"]; break;
-		case \"shower\": [status, text] = [\"now taking a shower\", (text ? (text + \" 🚿\") : \"🚿\")]; break;
+		case \"shower\": [status, text] = [\"now taking a shower\", (text ? (text + \" 🚿\") : \" 🚿\")]; break;
 		
 		case \"💩\":			
 		case \"poop\": 
@@ -144,9 +144,9 @@ ON DUPLICATE KEY UPDATE
 			[status, text] = [\"now pooping\", (text ?  (text + \" 🚽\") : \"💩\")]; 
 			break;
 
-		case \"work\": [status, text] = [\"working\", (text ?  (text + \" 💼\") : \"👷\")]; break;
+		case \"work\": [status, text] = [\"working\", (text ?  (text + \" 💼\") : \" 👷\")]; break;
 		case \"ppPoof\": [status, text] = [\"ppPoof poofing away...\", (text || \"\") + \" 💨\"]; break;
-		case \"study\": [status, text] = [\"now studying\", (text || \"🤓\") + \"📚\"]; break;
+		case \"study\": [status, text] = [\"now studying\", (text || \"🤓\") + \" 📚\"]; break;
 		case \"food\": {
 			let useAutoEmoji = true;
 			const eatingEmojis = sb.Config.get(\"FOOD_EMOJIS\");
