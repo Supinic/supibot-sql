@@ -111,6 +111,11 @@ VALUES
 				string = (check.Cookie_Is_Gifted)
 					? pronoun + \" have already eaten the daily and gifted cookie today.\"
 					: pronoun + \" have already eaten/gifted the daily cookie today.\"
+
+				const date = new sb.Date().addDays(1);
+				date.setUTCHours(0, 0, 0, 0);				
+
+				string += ` The next cookie will be available in ${sb.Utils.timeDelta(date)}.`;
 			}
 			else {
 				string = (check.Cookie_Is_Gifted)
@@ -347,6 +352,11 @@ ON DUPLICATE KEY UPDATE
 				string = (check.Cookie_Is_Gifted)
 					? pronoun + \" have already eaten the daily and gifted cookie today.\"
 					: pronoun + \" have already eaten/gifted the daily cookie today.\"
+
+				const date = new sb.Date().addDays(1);
+				date.setUTCHours(0, 0, 0, 0);				
+
+				string += ` The next cookie will be available in ${sb.Utils.timeDelta(date)}.`;
 			}
 			else {
 				string = (check.Cookie_Is_Gifted)
