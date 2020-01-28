@@ -60,6 +60,7 @@ VALUES
 	const params = new sb.URLParams().set(\"term\", args.join(\" \"));
 	try {
 		data = JSON.parse(await sb.Utils.request({
+			rejectUnauthorized: false,
 			uri: `https://api.urbandictionary.com/v0/define?${params.toString()}`
 		}));
 	}
@@ -113,6 +114,7 @@ ON DUPLICATE KEY UPDATE
 	const params = new sb.URLParams().set(\"term\", args.join(\" \"));
 	try {
 		data = JSON.parse(await sb.Utils.request({
+			rejectUnauthorized: false,
 			uri: `https://api.urbandictionary.com/v0/define?${params.toString()}`
 		}));
 	}
