@@ -103,14 +103,14 @@ VALUES
 		await sb.Config.set(\"TTS_ENABLED\", false);
 		return { reply: \"The desktop listener is not currently running, turning off text to speech!\" }
 	}
-	finally {
+	finally { 
 		this.data.pending = false;
 	}
 
 	const duration = sb.Utils.round(Number(messageTime) / 1e6, 0);
-	const cooldown = (context.channel.sessionData.live && duration > 10000) 
+	const cooldown = (duration > 10000) 
 		? (context.command.Cooldown + (duration - 10000) * 10)
-		: context.command.Cooldown
+		: context.command.Cooldown;
 
 	return {
 		reply: `Your message has been succesfully played on TTS! It took ${duration / 1e3} seconds to read out, and your cooldown is ${cooldown / 1e3} seconds.`,
@@ -188,14 +188,14 @@ ON DUPLICATE KEY UPDATE
 		await sb.Config.set(\"TTS_ENABLED\", false);
 		return { reply: \"The desktop listener is not currently running, turning off text to speech!\" }
 	}
-	finally {
+	finally { 
 		this.data.pending = false;
 	}
 
 	const duration = sb.Utils.round(Number(messageTime) / 1e6, 0);
-	const cooldown = (context.channel.sessionData.live && duration > 10000) 
+	const cooldown = (duration > 10000) 
 		? (context.command.Cooldown + (duration - 10000) * 10)
-		: context.command.Cooldown
+		: context.command.Cooldown;
 
 	return {
 		reply: `Your message has been succesfully played on TTS! It took ${duration / 1e3} seconds to read out, and your cooldown is ${cooldown / 1e3} seconds.`,
