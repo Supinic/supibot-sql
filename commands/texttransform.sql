@@ -133,6 +133,13 @@ VALUES
 			message = message.toUpperCase();
 			break;
 
+		case \"ud\":
+		case \"upsidedown\":
+		case \"flipped\":
+			resultType = \"map\";
+			map = sb.Config.get(\"CHARACTER_MAP_FLIPPED\");
+			break;
+
 		case \"vw\":
 		case \"vapor\":
 		case \"vaporwave\":
@@ -347,6 +354,13 @@ ON DUPLICATE KEY UPDATE
 		case \"uppercase\":
 			resultType = \"replace\";
 			message = message.toUpperCase();
+			break;
+
+		case \"ud\":
+		case \"upsidedown\":
+		case \"flipped\":
+			resultType = \"map\";
+			map = sb.Config.get(\"CHARACTER_MAP_FLIPPED\");
 			break;
 
 		case \"vw\":
