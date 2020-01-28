@@ -63,7 +63,7 @@ VALUES
 	let result = null;
 	switch (type) {
 		case \"bird\":
-			result = JSON.parse(await sb.Utils.request(\"https://some-random-api.ml/img/bird\")).link;
+			result = JSON.parse(await sb.Utils.request(\"https://some-random-api.ml/img/birb\")).link;
 			break;
 
 		case \"cat\":
@@ -112,7 +112,7 @@ ON DUPLICATE KEY UPDATE
 	let result = null;
 	switch (type) {
 		case \"bird\":
-			result = JSON.parse(await sb.Utils.request(\"https://some-random-api.ml/img/bird\")).link;
+			result = JSON.parse(await sb.Utils.request(\"https://some-random-api.ml/img/birb\")).link;
 			break;
 
 		case \"cat\":
