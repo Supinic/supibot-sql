@@ -48,9 +48,9 @@ VALUES
 	}
 
 	let index = 0;
-	for (let i = 0; i < args.length; i++) {
+	for (let i = args.length - 1; i >= 0; i--) {
 		const token = args[i];
-		if (/index:\\n+/.test(token)) {
+		if (/index:\\d+/.test(token)) {
 			index = Number(token.split(\":\")[1]);
 			args.splice(i, 1);
 		}
@@ -70,7 +70,6 @@ VALUES
 	}
 
 	if (!data.list || data.result_type === \"no_results\") {
-		sb.SystemLogger.send(\"Command.Other\", JSON.stringify(data));
 		return { reply: \"No results found!\" };
 	}
 
@@ -102,9 +101,9 @@ ON DUPLICATE KEY UPDATE
 	}
 
 	let index = 0;
-	for (let i = 0; i < args.length; i++) {
+	for (let i = args.length - 1; i >= 0; i--) {
 		const token = args[i];
-		if (/index:\\n+/.test(token)) {
+		if (/index:\\d+/.test(token)) {
 			index = Number(token.split(\":\")[1]);
 			args.splice(i, 1);
 		}
@@ -124,7 +123,6 @@ ON DUPLICATE KEY UPDATE
 	}
 
 	if (!data.list || data.result_type === \"no_results\") {
-		sb.SystemLogger.send(\"Command.Other\", JSON.stringify(data));
 		return { reply: \"No results found!\" };
 	}
 
