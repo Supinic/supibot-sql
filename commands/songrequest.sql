@@ -65,7 +65,7 @@ VALUES
 		}
 		catch (e) {
 			console.error(e);
-			return { reply: \"I guess not eShrug\" };
+			return { reply: \"VLC is not responding (probably not running or sr\'s are off), no link has been added!\" };
 		}
 	}
 	else if (parsedURL.host === \"supinic.com\" && parsedURL.path.includes(\"/track/detail\")) {
@@ -180,7 +180,7 @@ ON DUPLICATE KEY UPDATE
 		}
 		catch (e) {
 			console.error(e);
-			return { reply: \"I guess not eShrug\" };
+			return { reply: \"VLC is not responding (probably not running or sr\'s are off), no link has been added!\" };
 		}
 	}
 	else if (parsedURL.host === \"supinic.com\" && parsedURL.path.includes(\"/track/detail\")) {
