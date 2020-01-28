@@ -32,8 +32,7 @@ VALUES
 		0,
 		0,
 		1,
-		' pepeL 
-Temporarily disabled because it\'s not fixed yet. Soon though.',
+		'Only available for people who know what they\'re doing Kappa',
 		0,
 		0,
 		0,
