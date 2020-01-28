@@ -39,7 +39,7 @@ VALUES
 		0,
 		1,
 		0,
-		'(async function reload (context, target) {
+		'(async function reload (context, target, ...rest) {
 	const modulePath = \"../../supinic-globals\";
 
 	switch (target) {
@@ -70,6 +70,7 @@ VALUES
 			await sb.Command.initialize();
 			break;
 		case \"commands\": await sb.Command.reloadData(); break;
+		case \"command\": await sb.Command.reloadSpecific(target, ...rest); break;
 
 		case \"Config\":
 		case \"config\": await sb.Config.reloadData(); break;
@@ -113,7 +114,7 @@ VALUES
 	)
 
 ON DUPLICATE KEY UPDATE
-	Code = '(async function reload (context, target) {
+	Code = '(async function reload (context, target, ...rest) {
 	const modulePath = \"../../supinic-globals\";
 
 	switch (target) {
@@ -144,6 +145,7 @@ ON DUPLICATE KEY UPDATE
 			await sb.Command.initialize();
 			break;
 		case \"commands\": await sb.Command.reloadData(); break;
+		case \"command\": await sb.Command.reloadSpecific(target, ...rest); break;
 
 		case \"Config\":
 		case \"config\": await sb.Config.reloadData(); break;
