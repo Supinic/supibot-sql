@@ -59,12 +59,20 @@ VALUES
 		check = context.command.data[subreddit];
 	}
 	else {
-		check = JSON.parse(await sb.Utils.request({
-			uri: `https://www.reddit.com/r/${subreddit}/about.json`,
-			headers: {
-				\"Cookie\": \"_options={%22pref_quarantine_optin%22:true};\"
-			}
-		}));
+		try {
+			check = JSON.parse(await sb.Utils.request({
+				uri: `https://www.reddit.com/r/${subreddit}/about.json`,
+				headers: {
+					\"Cookie\": \"_options={%22pref_quarantine_optin%22:true};\"
+				}
+			}));
+		}
+		catch (e) {
+			console.warn(e);
+			return {
+				reply: \"Reddit API timed out!\"
+			};
+		}
 	}
 
 	if (!check) {
@@ -112,8 +120,10 @@ VALUES
 		posts = JSON.parse(raw);
 	}
 	catch (e) {
-		console.error(\"random meme failed\", {raw, posts});
-		throw e;
+		console.error(e);
+		return {
+			reply: \"Reddit API timed out!\"
+		};
 	}
 
 	const children = posts.data.children.filter(i => (!safeSpace || !i.over_18) && !i.selftext);	
@@ -156,12 +166,20 @@ ON DUPLICATE KEY UPDATE
 		check = context.command.data[subreddit];
 	}
 	else {
-		check = JSON.parse(await sb.Utils.request({
-			uri: `https://www.reddit.com/r/${subreddit}/about.json`,
-			headers: {
-				\"Cookie\": \"_options={%22pref_quarantine_optin%22:true};\"
-			}
-		}));
+		try {
+			check = JSON.parse(await sb.Utils.request({
+				uri: `https://www.reddit.com/r/${subreddit}/about.json`,
+				headers: {
+					\"Cookie\": \"_options={%22pref_quarantine_optin%22:true};\"
+				}
+			}));
+		}
+		catch (e) {
+			console.warn(e);
+			return {
+				reply: \"Reddit API timed out!\"
+			};
+		}
 	}
 
 	if (!check) {
@@ -209,8 +227,10 @@ ON DUPLICATE KEY UPDATE
 		posts = JSON.parse(raw);
 	}
 	catch (e) {
-		console.error(\"random meme failed\", {raw, posts});
-		throw e;
+		console.error(e);
+		return {
+			reply: \"Reddit API timed out!\"
+		};
 	}
 
 	const children = posts.data.children.filter(i => (!safeSpace || !i.over_18) && !i.selftext);	
