@@ -53,7 +53,7 @@ VALUES
 	}
 
 	try {
-		const result = await script.runInNewContext({require, context, sb}, { timeout: 2500 });
+		const result = await script.runInNewContext({setTimeout, setInterval, require, context, sb}, { timeout: 2500 });
 		if (typeof result !== \"undefined\") {
 			return { reply: String(result) };
 		}
@@ -108,7 +108,7 @@ ON DUPLICATE KEY UPDATE
 	}
 
 	try {
-		const result = await script.runInNewContext({require, context, sb}, { timeout: 2500 });
+		const result = await script.runInNewContext({setTimeout, setInterval, require, context, sb}, { timeout: 2500 });
 		if (typeof result !== \"undefined\") {
 			return { reply: String(result) };
 		}
