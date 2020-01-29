@@ -48,7 +48,7 @@ VALUES
 	const resultsInPastebin = args[args.length - 1] === \"pastebin\";
 	let finalResult = null;
 	let fakeChannel = null;
-	
+
 	if (context.channel) {
 		const tempData = {...context.channel};
 		tempData.Data = JSON.stringify(tempData.Data);
@@ -89,17 +89,17 @@ VALUES
 			cmd,
 			cmdArgs,
 			fakeChannel,
-			context.user, 
+			context.user,
 			{
 				...context.append,
-				platform: context.platform, 
+				platform: context.platform,
 				pipe: true,
 				skipPending: true
 			}
 		);
 
 		console.debug(\"Pipe\", result);
-		
+
 		if (!result) { // Banphrase result: Do not reply
 			return { reply: null };
 		}
@@ -110,7 +110,21 @@ VALUES
 			return { reply: result.reply };
 		}
 		else if (result.success === false) { // Command result: Failed (cooldown, no command, ...)
-			return { reply: \"Command \" + cmd + \" failed: \" + result.reason };
+			let reply = \"\";
+			switch (result.reason) {
+				case \"no-command\": reply = \"Not a command!\"; break;
+				case \"pending\": reply = \"Another command still being executed!\"; break;
+				case \"cooldown\": reply = \"Still on cooldown!\"; break;
+				case \"filter\": reply = \"You can\'t use this command here!\"; break;
+				case \"block\": reply = \"That user has blocked you from this command!\"; break;
+				case \"opt-out\": reply = \"That user has opted out from this command!\"; break;
+
+				default: reply = `An unexpected pipe result (${result.reason}) has been encountered!`
+			}
+
+			return { 
+				reply: `Command ${cmd} failed: ${reply}`
+			};
 		}
 		else if (!result.reply) { // Command result: Failed (ban)
 			return { reply: \"The final result of pipe is banphrased.\" };
@@ -124,7 +138,7 @@ VALUES
 
 		finalResult = result;
 	}
-	
+
 	return {
 		replyWithPrivateMessage: Boolean(finalResult.replyWithPrivateMessage),
 		reply: currentArgs.join(\" \")
@@ -144,7 +158,7 @@ ON DUPLICATE KEY UPDATE
 	const resultsInPastebin = args[args.length - 1] === \"pastebin\";
 	let finalResult = null;
 	let fakeChannel = null;
-	
+
 	if (context.channel) {
 		const tempData = {...context.channel};
 		tempData.Data = JSON.stringify(tempData.Data);
@@ -185,17 +199,17 @@ ON DUPLICATE KEY UPDATE
 			cmd,
 			cmdArgs,
 			fakeChannel,
-			context.user, 
+			context.user,
 			{
 				...context.append,
-				platform: context.platform, 
+				platform: context.platform,
 				pipe: true,
 				skipPending: true
 			}
 		);
 
 		console.debug(\"Pipe\", result);
-		
+
 		if (!result) { // Banphrase result: Do not reply
 			return { reply: null };
 		}
@@ -206,7 +220,21 @@ ON DUPLICATE KEY UPDATE
 			return { reply: result.reply };
 		}
 		else if (result.success === false) { // Command result: Failed (cooldown, no command, ...)
-			return { reply: \"Command \" + cmd + \" failed: \" + result.reason };
+			let reply = \"\";
+			switch (result.reason) {
+				case \"no-command\": reply = \"Not a command!\"; break;
+				case \"pending\": reply = \"Another command still being executed!\"; break;
+				case \"cooldown\": reply = \"Still on cooldown!\"; break;
+				case \"filter\": reply = \"You can\'t use this command here!\"; break;
+				case \"block\": reply = \"That user has blocked you from this command!\"; break;
+				case \"opt-out\": reply = \"That user has opted out from this command!\"; break;
+
+				default: reply = `An unexpected pipe result (${result.reason}) has been encountered!`
+			}
+
+			return { 
+				reply: `Command ${cmd} failed: ${reply}`
+			};
 		}
 		else if (!result.reply) { // Command result: Failed (ban)
 			return { reply: \"The final result of pipe is banphrased.\" };
@@ -220,7 +248,7 @@ ON DUPLICATE KEY UPDATE
 
 		finalResult = result;
 	}
-	
+
 	return {
 		replyWithPrivateMessage: Boolean(finalResult.replyWithPrivateMessage),
 		reply: currentArgs.join(\" \")
