@@ -118,6 +118,8 @@ VALUES
 		});
 		
 		posts = JSON.parse(raw);
+
+		console.log({posts});
 	}
 	catch (e) {
 		console.error(e);
@@ -126,7 +128,7 @@ VALUES
 		};
 	}
 
-	const children = posts.data.children.filter(i => (!safeSpace || !i.over_18) && !i.selftext);	
+	const children = posts.data.children.filter(i => (!safeSpace || !i.data.over_18) && !i.data.selftext && !i.data.selftext_html);	
 	const quarantine = (check.data.quarantine) ? \"⚠\" : \"\";
 	const post = sb.Utils.randArray(children);
 	if (!post) {
@@ -225,6 +227,8 @@ ON DUPLICATE KEY UPDATE
 		});
 		
 		posts = JSON.parse(raw);
+
+		console.log({posts});
 	}
 	catch (e) {
 		console.error(e);
@@ -233,7 +237,7 @@ ON DUPLICATE KEY UPDATE
 		};
 	}
 
-	const children = posts.data.children.filter(i => (!safeSpace || !i.over_18) && !i.selftext);	
+	const children = posts.data.children.filter(i => (!safeSpace || !i.data.over_18) && !i.data.selftext && !i.data.selftext_html);	
 	const quarantine = (check.data.quarantine) ? \"⚠\" : \"\";
 	const post = sb.Utils.randArray(children);
 	if (!post) {
