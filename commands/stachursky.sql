@@ -26,7 +26,7 @@ VALUES
 		199,
 		'stachursky',
 		NULL,
-		'Posts a random excerpt from a Stachursky song .',
+		'Posts a random excerpt from a Stachursky song.',
 		10000,
 		0,
 		0,
