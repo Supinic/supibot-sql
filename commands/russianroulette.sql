@@ -71,7 +71,7 @@ VALUES
 	}
 	else if (timeoutLength > 600) {
 		return { 
-			reply: \"Maximum timeout length exceeded!\",
+			reply: \"Maximum timeout length (600 seconds) exceeded!\",
 			cooldown: 2500
 		};
 	}
@@ -126,7 +126,7 @@ ON DUPLICATE KEY UPDATE
 	}
 	else if (timeoutLength > 600) {
 		return { 
-			reply: \"Maximum timeout length exceeded!\",
+			reply: \"Maximum timeout length (600 seconds) exceeded!\",
 			cooldown: 2500
 		};
 	}
