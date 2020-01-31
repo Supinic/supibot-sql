@@ -78,7 +78,7 @@ VALUES
 			return {
 				reply: \"Someone else is using the TTS right now, and multiple TTS is not available right now!\",
 				cooldown: {
-					length: 1000
+					length: 2500
 				}
 			};
 		}
@@ -114,7 +114,8 @@ VALUES
 
 	if (result === null || result === false) {
 		return {
-			reply: `Your TTS was refused, because its length exceeded the limit of ${limit / 1000} seconds!`
+			reply: `Your TTS was refused, because its length exceeded the limit of ${limit / 1000} seconds!`,
+			cooldown: { length: 5000 }
 		};
 	}
 
@@ -174,7 +175,7 @@ ON DUPLICATE KEY UPDATE
 			return {
 				reply: \"Someone else is using the TTS right now, and multiple TTS is not available right now!\",
 				cooldown: {
-					length: 1000
+					length: 2500
 				}
 			};
 		}
@@ -210,7 +211,8 @@ ON DUPLICATE KEY UPDATE
 
 	if (result === null || result === false) {
 		return {
-			reply: `Your TTS was refused, because its length exceeded the limit of ${limit / 1000} seconds!`
+			reply: `Your TTS was refused, because its length exceeded the limit of ${limit / 1000} seconds!`,
+			cooldown: { length: 5000 }
 		};
 	}
 
