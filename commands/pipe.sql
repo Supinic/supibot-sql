@@ -57,7 +57,6 @@ VALUES
 		fakeChannel.Ping = false;
 	}
 
-	let cancerCheck = false;
 	let currentArgs = [];
 
 	for (const inv of invocations) {
@@ -75,13 +74,6 @@ VALUES
 		if (check) {
 			if (!check.Pipeable) {
 				return { reply: \"Command \" + cmd + \" cannot be used in a pipe!\" };
-			}
-
-			if (check.Name === \"fill\") {
-				cancerCheck = true;
-			}
-			else if (cancerCheck && check.Name === \"texttospeech\") {
-				return { reply: \"Nice try ;)\" };
 			}
 		}
 
@@ -167,7 +159,6 @@ ON DUPLICATE KEY UPDATE
 		fakeChannel.Ping = false;
 	}
 
-	let cancerCheck = false;
 	let currentArgs = [];
 
 	for (const inv of invocations) {
@@ -185,13 +176,6 @@ ON DUPLICATE KEY UPDATE
 		if (check) {
 			if (!check.Pipeable) {
 				return { reply: \"Command \" + cmd + \" cannot be used in a pipe!\" };
-			}
-
-			if (check.Name === \"fill\") {
-				cancerCheck = true;
-			}
-			else if (cancerCheck && check.Name === \"texttospeech\") {
-				return { reply: \"Nice try ;)\" };
 			}
 		}
 

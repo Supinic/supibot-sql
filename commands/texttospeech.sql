@@ -41,7 +41,7 @@ VALUES
 		0,
 		'(async function textToSpeech (context, ...args) {
 	if (!sb.Config.get(\"TTS_ENABLED\")) {
-		return { 
+		return {
 			reply: \"Text-to-speech is currently disabled!\"
 		};
 	}
@@ -54,6 +54,7 @@ VALUES
 		};
 	}
 
+	const limit = sb.Config.get(\"TTS_TIME_LIMIT\");
 	const availableVoices = Object.values(sb.Config.get(\"TTS_VOICE_DATA\")).map(i => i.name.toLowerCase());
 	let voice = \"Brian\";
 	for (let i = args.length - 1; i >= 0; i--) {
@@ -72,8 +73,7 @@ VALUES
 			}
 		};
 	}
-
-	if (!sb.Config.get(\"TTS_MULTIPLE_ENABLED\")) {
+	else if (!sb.Config.get(\"TTS_MULTIPLE_ENABLED\")) {
 		if (this.data.pending) {
 			return {
 				reply: \"Someone else is using the TTS right now, and multiple TTS is not available right now!\",
@@ -87,33 +87,44 @@ VALUES
 	}
 
 	let messageTime = 0n;
-	const message = sb.Utils.wrapString(args.join(\" \"), 250);	
-
+	let result = null;
+	const message = args.join(\" \").trim();
+	
 	try {
-		messageTime = process.hrtime.bigint(),
-		await sb.LocalRequest.playTextToSpeech({
+		messageTime = process.hrtime.bigint();
+		result = await sb.LocalRequest.playTextToSpeech({
 			text: message,
 			volume: sb.Config.get(\"TTS_VOLUME\"),
+			limit,
 			voice
 		});
-		
+
 		messageTime = process.hrtime.bigint() - messageTime;
 	}
 	catch (e) {
+		console.log(e);
 		await sb.Config.set(\"TTS_ENABLED\", false);
-		return { reply: \"The desktop listener is not currently running, turning off text to speech!\" }
+		return {
+			reply: \"The desktop listener is not currently running, turning off text to speech!\"
+		};
 	}
-	finally { 
+	finally {
 		this.data.pending = false;
 	}
 
-	const duration = sb.Utils.round(Number(messageTime) / 1e6, 0);
-	const cooldown = (duration > 10000) 
+	if (result === null || result === false) {
+		return {
+			reply: `Your TTS was refused, because its length exceeded the limit of ${limit / 1000} seconds!`
+		};
+	}
+
+	const duration = sb.Utils.round(Number(messageTime) / 1.0e6, 0);
+	const cooldown = (duration > 10000)
 		? (context.command.Cooldown + (duration - 10000) * 10)
 		: context.command.Cooldown;
 
 	return {
-		reply: `Your message has been succesfully played on TTS! It took ${duration / 1e3} seconds to read out, and your cooldown is ${cooldown / 1e3} seconds.`,
+		reply: `Your message has been succesfully played on TTS! It took ${duration / 1000} seconds to read out, and your cooldown is ${cooldown / 1000} seconds.`,
 		cooldown: {
 			length: cooldown
 		}
@@ -126,7 +137,7 @@ VALUES
 ON DUPLICATE KEY UPDATE
 	Code = '(async function textToSpeech (context, ...args) {
 	if (!sb.Config.get(\"TTS_ENABLED\")) {
-		return { 
+		return {
 			reply: \"Text-to-speech is currently disabled!\"
 		};
 	}
@@ -139,6 +150,7 @@ ON DUPLICATE KEY UPDATE
 		};
 	}
 
+	const limit = sb.Config.get(\"TTS_TIME_LIMIT\");
 	const availableVoices = Object.values(sb.Config.get(\"TTS_VOICE_DATA\")).map(i => i.name.toLowerCase());
 	let voice = \"Brian\";
 	for (let i = args.length - 1; i >= 0; i--) {
@@ -157,8 +169,7 @@ ON DUPLICATE KEY UPDATE
 			}
 		};
 	}
-
-	if (!sb.Config.get(\"TTS_MULTIPLE_ENABLED\")) {
+	else if (!sb.Config.get(\"TTS_MULTIPLE_ENABLED\")) {
 		if (this.data.pending) {
 			return {
 				reply: \"Someone else is using the TTS right now, and multiple TTS is not available right now!\",
@@ -172,33 +183,44 @@ ON DUPLICATE KEY UPDATE
 	}
 
 	let messageTime = 0n;
-	const message = sb.Utils.wrapString(args.join(\" \"), 250);	
-
+	let result = null;
+	const message = args.join(\" \").trim();
+	
 	try {
-		messageTime = process.hrtime.bigint(),
-		await sb.LocalRequest.playTextToSpeech({
+		messageTime = process.hrtime.bigint();
+		result = await sb.LocalRequest.playTextToSpeech({
 			text: message,
 			volume: sb.Config.get(\"TTS_VOLUME\"),
+			limit,
 			voice
 		});
-		
+
 		messageTime = process.hrtime.bigint() - messageTime;
 	}
 	catch (e) {
+		console.log(e);
 		await sb.Config.set(\"TTS_ENABLED\", false);
-		return { reply: \"The desktop listener is not currently running, turning off text to speech!\" }
+		return {
+			reply: \"The desktop listener is not currently running, turning off text to speech!\"
+		};
 	}
-	finally { 
+	finally {
 		this.data.pending = false;
 	}
 
-	const duration = sb.Utils.round(Number(messageTime) / 1e6, 0);
-	const cooldown = (duration > 10000) 
+	if (result === null || result === false) {
+		return {
+			reply: `Your TTS was refused, because its length exceeded the limit of ${limit / 1000} seconds!`
+		};
+	}
+
+	const duration = sb.Utils.round(Number(messageTime) / 1.0e6, 0);
+	const cooldown = (duration > 10000)
 		? (context.command.Cooldown + (duration - 10000) * 10)
 		: context.command.Cooldown;
 
 	return {
-		reply: `Your message has been succesfully played on TTS! It took ${duration / 1e3} seconds to read out, and your cooldown is ${cooldown / 1e3} seconds.`,
+		reply: `Your message has been succesfully played on TTS! It took ${duration / 1000} seconds to read out, and your cooldown is ${cooldown / 1000} seconds.`,
 		cooldown: {
 			length: cooldown
 		}

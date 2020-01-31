@@ -74,7 +74,19 @@ VALUES
 		case \"tts\": {
 			const value = (rest.shift() === \"true\");
 			sb.Config.set(\"TTS_ENABLED\", value ? \"1\" : \"0\");
-			return { reply: \"Text to speech is now set to \" + value };
+			return { reply: \"Text to speech is now set to \" + value + \".\" };
+		}
+
+		case \"ttslimit\": {
+			const limit = Number(rest.shift());
+			if (!Number.isFinite(limit) || limit < 0 || limit > 300.0e3) {
+				return {
+					reply: \"Invalid value provided! Must be in the range <0, 300000>.\"
+				};
+			}
+
+			sb.Config.set(\"TTS_TIME_LIMIT\", limit);
+			return { reply: \"Text to speech time limit is now set to \" + limit + \" milliseconds.\" };
 		}
 
 		case \"ttsvolume\": {
@@ -178,7 +190,19 @@ ON DUPLICATE KEY UPDATE
 		case \"tts\": {
 			const value = (rest.shift() === \"true\");
 			sb.Config.set(\"TTS_ENABLED\", value ? \"1\" : \"0\");
-			return { reply: \"Text to speech is now set to \" + value };
+			return { reply: \"Text to speech is now set to \" + value + \".\" };
+		}
+
+		case \"ttslimit\": {
+			const limit = Number(rest.shift());
+			if (!Number.isFinite(limit) || limit < 0 || limit > 300.0e3) {
+				return {
+					reply: \"Invalid value provided! Must be in the range <0, 300000>.\"
+				};
+			}
+
+			sb.Config.set(\"TTS_TIME_LIMIT\", limit);
+			return { reply: \"Text to speech time limit is now set to \" + limit + \" milliseconds.\" };
 		}
 
 		case \"ttsvolume\": {
