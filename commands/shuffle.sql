@@ -40,8 +40,8 @@ VALUES
 		1,
 		0,
 		'(async function shuffle (context, ...message) {
-	if (message.length < 2) {
-		return { reply: \"You must supply at least two words!\" };
+	if (message.length === 0) {
+		return { reply: \"No input provided!\" };
 	}
 
 	const result = [];
@@ -65,8 +65,8 @@ VALUES
 
 ON DUPLICATE KEY UPDATE
 	Code = '(async function shuffle (context, ...message) {
-	if (message.length < 2) {
-		return { reply: \"You must supply at least two words!\" };
+	if (message.length === 0) {
+		return { reply: \"No input provided!\" };
 	}
 
 	const result = [];
