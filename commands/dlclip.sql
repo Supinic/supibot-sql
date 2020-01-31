@@ -41,23 +41,21 @@ VALUES
 		0,
 		'async (extra, rawSlug) => {
 	if (!rawSlug) {
-		return { reply: \"Pepega\" };
+		return { reply: \"No clip slug provided!\" };
 	}
 
 	const slug = rawSlug.match(/[a-zA-z]+$/)[0];	
 	const data = JSON.parse(await sb.Utils.request({
-		url: `https://clips.twitch.tv/api/v1/clips/${slug}/status`,
-		headers: {
-			Accept: \"application/vnd.twitchtv.v5+json\",
-			\"Client-ID\":  sb.Config.get(\"TWITCH_CLIENT_ID\")
-		}
-	}));
+		url: `https://api.ivr.fi/twitch/clip/${slug}`
+	})).response;
 
 	if (!data) {
-		return { reply: \"Pepega\" };
+		return { 
+			reply: \"No data found for given slug!\" 
+		};
 	}
 
-	const source = Object.entries(data.quality_options).sort((a, b) => Number(a.quality) - Number(b.quality))[0][1].source;
+	const source = Object.entries(data.videoQualities).sort((a, b) => Number(a.quality) - Number(b.quality))[0][1].sourceURL;
 	return {
 		replyWithPrivateMessage: true,
 		reply: source
@@ -70,23 +68,21 @@ VALUES
 ON DUPLICATE KEY UPDATE
 	Code = 'async (extra, rawSlug) => {
 	if (!rawSlug) {
-		return { reply: \"Pepega\" };
+		return { reply: \"No clip slug provided!\" };
 	}
 
 	const slug = rawSlug.match(/[a-zA-z]+$/)[0];	
 	const data = JSON.parse(await sb.Utils.request({
-		url: `https://clips.twitch.tv/api/v1/clips/${slug}/status`,
-		headers: {
-			Accept: \"application/vnd.twitchtv.v5+json\",
-			\"Client-ID\":  sb.Config.get(\"TWITCH_CLIENT_ID\")
-		}
-	}));
+		url: `https://api.ivr.fi/twitch/clip/${slug}`
+	})).response;
 
 	if (!data) {
-		return { reply: \"Pepega\" };
+		return { 
+			reply: \"No data found for given slug!\" 
+		};
 	}
 
-	const source = Object.entries(data.quality_options).sort((a, b) => Number(a.quality) - Number(b.quality))[0][1].source;
+	const source = Object.entries(data.videoQualities).sort((a, b) => Number(a.quality) - Number(b.quality))[0][1].sourceURL;
 	return {
 		replyWithPrivateMessage: true,
 		reply: source
