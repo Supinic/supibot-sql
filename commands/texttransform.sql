@@ -54,6 +54,8 @@ VALUES
 	let resultType = null;
 	let map = null;
 	let message = args.join(\" \");
+	let additionalTransform = null;
+
 	switch (type) {
 		case \"3Head\":
 			resultType = \"translate\";
@@ -143,6 +145,7 @@ VALUES
 		case \"flipped\":
 			resultType = \"map\";
 			map = sb.Config.get(\"CHARACTER_MAP_FLIPPED\");
+			additionalTransform = (string) => string.split(\"\").reverse().join(\"\");
 			break;
 
 		case \"vw\":
@@ -191,6 +194,10 @@ VALUES
 	}
 	else if (resultType === \"replace\") {
 		result = message;
+	}
+
+	if (typeof additionalTransform === \"function\") {
+		result = additionalTransform(result);
 	}
 
 	if (!result) {
@@ -282,6 +289,8 @@ ON DUPLICATE KEY UPDATE
 	let resultType = null;
 	let map = null;
 	let message = args.join(\" \");
+	let additionalTransform = null;
+
 	switch (type) {
 		case \"3Head\":
 			resultType = \"translate\";
@@ -371,6 +380,7 @@ ON DUPLICATE KEY UPDATE
 		case \"flipped\":
 			resultType = \"map\";
 			map = sb.Config.get(\"CHARACTER_MAP_FLIPPED\");
+			additionalTransform = (string) => string.split(\"\").reverse().join(\"\");
 			break;
 
 		case \"vw\":
@@ -419,6 +429,10 @@ ON DUPLICATE KEY UPDATE
 	}
 	else if (resultType === \"replace\") {
 		result = message;
+	}
+
+	if (typeof additionalTransform === \"function\") {
+		result = additionalTransform(result);
 	}
 
 	if (!result) {
