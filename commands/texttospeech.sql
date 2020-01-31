@@ -55,16 +55,40 @@ VALUES
 	}
 
 	const limit = sb.Config.get(\"TTS_TIME_LIMIT\");
-	const availableVoices = Object.values(sb.Config.get(\"TTS_VOICE_DATA\")).map(i => i.name.toLowerCase());
+	const voiceData = sb.Config.get(\"TTS_VOICE_DATA\");
+
 	let voice = \"Brian\";
+	let language = null;
 	for (let i = args.length - 1; i >= 0; i--) {
 		const token = args[i];
 		if (/voice:\\w+/.test(token)) {
 			voice = sb.Utils.capitalize(token.split(\":\")[1]);
 			args.splice(i, 1);
 		}
+		else if (/lang:\\w+/.test(token)) {
+			voice = null;
+			language = token.split(\":\")[1].toLowerCase();
+			args.splice(i, 1);
+		}
 	}
 
+	if (language && voice) {
+		return {
+			reply: \"Can\'t specify both language and voice at the same time!\",
+		};
+	}
+	else if (language) {
+		const filtered = voiceData.filter(i => i.lang.toLowerCase().includes(language));
+		if (filtered.length === 0) {
+			return {
+				reply: \"No supported language provided!\",
+			};
+		}
+
+		voice = filtered[0].name;
+	}
+
+	const availableVoices = voiceData.map(i => i.name.toLowerCase());
 	if (!availableVoices.includes(voice.toLowerCase())) {
 		return {
 			reply: \"Provided voice does not exist!\",
@@ -89,7 +113,7 @@ VALUES
 	let messageTime = 0n;
 	let result = null;
 	const message = args.join(\" \").trim();
-	
+
 	try {
 		messageTime = process.hrtime.bigint();
 		result = await sb.LocalRequest.playTextToSpeech({
@@ -152,16 +176,40 @@ ON DUPLICATE KEY UPDATE
 	}
 
 	const limit = sb.Config.get(\"TTS_TIME_LIMIT\");
-	const availableVoices = Object.values(sb.Config.get(\"TTS_VOICE_DATA\")).map(i => i.name.toLowerCase());
+	const voiceData = sb.Config.get(\"TTS_VOICE_DATA\");
+
 	let voice = \"Brian\";
+	let language = null;
 	for (let i = args.length - 1; i >= 0; i--) {
 		const token = args[i];
 		if (/voice:\\w+/.test(token)) {
 			voice = sb.Utils.capitalize(token.split(\":\")[1]);
 			args.splice(i, 1);
 		}
+		else if (/lang:\\w+/.test(token)) {
+			voice = null;
+			language = token.split(\":\")[1].toLowerCase();
+			args.splice(i, 1);
+		}
 	}
 
+	if (language && voice) {
+		return {
+			reply: \"Can\'t specify both language and voice at the same time!\",
+		};
+	}
+	else if (language) {
+		const filtered = voiceData.filter(i => i.lang.toLowerCase().includes(language));
+		if (filtered.length === 0) {
+			return {
+				reply: \"No supported language provided!\",
+			};
+		}
+
+		voice = filtered[0].name;
+	}
+
+	const availableVoices = voiceData.map(i => i.name.toLowerCase());
 	if (!availableVoices.includes(voice.toLowerCase())) {
 		return {
 			reply: \"Provided voice does not exist!\",
@@ -186,7 +234,7 @@ ON DUPLICATE KEY UPDATE
 	let messageTime = 0n;
 	let result = null;
 	const message = args.join(\" \").trim();
-	
+
 	try {
 		messageTime = process.hrtime.bigint();
 		result = await sb.LocalRequest.playTextToSpeech({
