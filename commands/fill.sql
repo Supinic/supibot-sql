@@ -51,7 +51,7 @@ VALUES
 	const platform = context.platform.Name.toUpperCase();
 
 	let limit = (context.channel?.Message_Limit ?? sb.Config.get(\"DEFAULT_MSG_LIMIT_\" + platform)) - context.user.Name.length - 3;
-	if (context.channel.sessionData.live) {
+	if (context.channel && context.channel.sessionData.live) {
 		limit = 150;
 	}
 
@@ -61,15 +61,23 @@ VALUES
 		length += randomWord.length + 1;
 	}
 
-	return {
-		reply: result.slice(0, -1).join(\" \"),
-		cooldown: {
+	let cooldown = {};
+	if (context.channel === null) {
+		cooldown = { length: 10000 };
+	}
+	else {
+		cooldown = {
 			user: null,
 			channel: context.channel.ID,
-			length: (context.channel.sessionData.live && !context.append.pipe)
+			length: (context.channel.sessionData?.live && !context.append.pipe)
 				? 60.0e3 // 1 minute
 				: context.command.Cooldown
-		}
+		};
+	}
+
+	return {
+		reply: result.slice(0, -1).join(\" \"),
+		cooldown
 	};
 })',
 		NULL,
@@ -89,7 +97,7 @@ ON DUPLICATE KEY UPDATE
 	const platform = context.platform.Name.toUpperCase();
 
 	let limit = (context.channel?.Message_Limit ?? sb.Config.get(\"DEFAULT_MSG_LIMIT_\" + platform)) - context.user.Name.length - 3;
-	if (context.channel.sessionData.live) {
+	if (context.channel && context.channel.sessionData.live) {
 		limit = 150;
 	}
 
@@ -99,14 +107,22 @@ ON DUPLICATE KEY UPDATE
 		length += randomWord.length + 1;
 	}
 
-	return {
-		reply: result.slice(0, -1).join(\" \"),
-		cooldown: {
+	let cooldown = {};
+	if (context.channel === null) {
+		cooldown = { length: 10000 };
+	}
+	else {
+		cooldown = {
 			user: null,
 			channel: context.channel.ID,
-			length: (context.channel.sessionData.live && !context.append.pipe)
+			length: (context.channel.sessionData?.live && !context.append.pipe)
 				? 60.0e3 // 1 minute
 				: context.command.Cooldown
-		}
+		};
+	}
+
+	return {
+		reply: result.slice(0, -1).join(\" \"),
+		cooldown
 	};
 })'
