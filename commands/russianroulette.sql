@@ -66,13 +66,13 @@ VALUES
 	if (timeoutLength < 1 || !Number.isFinite(timeoutLength) || Math.round(timeoutLength) !== timeoutLength) {
 		return { 
 			reply: \"Invalid timeout length provided!\",
-			cooldown: 1000
+			cooldown: 2500
 		};
 	}
 	else if (timeoutLength > 600) {
 		return { 
 			reply: \"Maximum timeout length exceeded!\",
-			cooldown: 1000
+			cooldown: 2500
 		};
 	}
 
@@ -121,13 +121,13 @@ ON DUPLICATE KEY UPDATE
 	if (timeoutLength < 1 || !Number.isFinite(timeoutLength) || Math.round(timeoutLength) !== timeoutLength) {
 		return { 
 			reply: \"Invalid timeout length provided!\",
-			cooldown: 1000
+			cooldown: 2500
 		};
 	}
 	else if (timeoutLength > 600) {
 		return { 
 			reply: \"Maximum timeout length exceeded!\",
-			cooldown: 1000
+			cooldown: 2500
 		};
 	}
 
