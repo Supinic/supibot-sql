@@ -69,6 +69,11 @@ VALUES
 				reply: \"KKona KKomrade KKrikey KKurwa KKebab KKroissant KKozak KKhan KKarjala CCabron CChile GGyros BBrexit KKraut\"
 			};
 
+		case \"luv\":
+			return {
+				reply: \"LuvBlondeL LuvBlondeR LuvBlush LuvBrownL LuvBrownR LuvCool LuvGift LuvHearts LuvOops LuvPeekL LuvPeekR LuvSign LuvSnooze LuvUok\"
+			};
+
 		default: return { reply: \"No such emote set exists!\" };
 	}
 })',
@@ -105,6 +110,11 @@ ON DUPLICATE KEY UPDATE
 		case \"kk\":
 			return {
 				reply: \"KKona KKomrade KKrikey KKurwa KKebab KKroissant KKozak KKhan KKarjala CCabron CChile GGyros BBrexit KKraut\"
+			};
+
+		case \"luv\":
+			return {
+				reply: \"LuvBlondeL LuvBlondeR LuvBlush LuvBrownL LuvBrownR LuvCool LuvGift LuvHearts LuvOops LuvPeekL LuvPeekR LuvSign LuvSnooze LuvUok\"
 			};
 
 		default: return { reply: \"No such emote set exists!\" };
