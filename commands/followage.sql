@@ -87,8 +87,6 @@ VALUES
 		}
 	});
 
-		console.log(data);
-
 	if (/following.*for/.test(data)) {
 		const split = data.split(\" for \");
 		if (split.length < 2) {
@@ -158,8 +156,6 @@ ON DUPLICATE KEY UPDATE
 			\"User-Agent\": \"Supibot@https://twitch.tv/supibot\"
 		}
 	});
-
-		console.log(data);
 
 	if (/following.*for/.test(data)) {
 		const split = data.split(\" for \");
