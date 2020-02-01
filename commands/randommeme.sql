@@ -118,8 +118,6 @@ VALUES
 		});
 		
 		posts = JSON.parse(raw);
-
-		console.log({posts});
 	}
 	catch (e) {
 		console.error(e);
@@ -227,8 +225,6 @@ ON DUPLICATE KEY UPDATE
 		});
 		
 		posts = JSON.parse(raw);
-
-		console.log({posts});
 	}
 	catch (e) {
 		console.error(e);
