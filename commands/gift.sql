@@ -108,6 +108,8 @@ VALUES
 				\"WHERE User_Alias = \" + targetUser.ID
 			].join(\" \"));
 
+			sb.CooldownManager.unset(null, targetUser.ID, sb.Command.get(\"cookie\").ID);
+
 			return { reply: \"Successfully given your cookie for today to \" + targetUser.Name + \" :)\" };
 		}
 
@@ -189,6 +191,8 @@ ON DUPLICATE KEY UPDATE
 				\"SET Cookie_Today = 0, Cookie_Is_Gifted = 1, Cookie_Gifts_Received = Cookie_Gifts_Received + 1\",
 				\"WHERE User_Alias = \" + targetUser.ID
 			].join(\" \"));
+
+			sb.CooldownManager.unset(null, targetUser.ID, sb.Command.get(\"cookie\").ID);
 
 			return { reply: \"Successfully given your cookie for today to \" + targetUser.Name + \" :)\" };
 		}
