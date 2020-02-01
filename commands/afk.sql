@@ -61,6 +61,7 @@ VALUES
 			[status, text] = [\"now pooping\", (text ?  (text + \" 🚽\") : \"💩\")]; 
 			break;
 
+		case \"lurk\": [status, text] = [\"now lurking\", (text ?  (text + \" 👥\") : \" 👥\")]; break;
 		case \"work\": [status, text] = [\"working\", (text ?  (text + \" 💼\") : \" 👷\")]; break;
 		case \"ppPoof\": [status, text] = [\"ppPoof poofing away...\", (text || \"\") + \" 💨\"]; break;
 		case \"study\": [status, text] = [\"now studying\", (text || \"🤓\") + \" 📚\"]; break;
@@ -144,6 +145,7 @@ ON DUPLICATE KEY UPDATE
 			[status, text] = [\"now pooping\", (text ?  (text + \" 🚽\") : \"💩\")]; 
 			break;
 
+		case \"lurk\": [status, text] = [\"now lurking\", (text ?  (text + \" 👥\") : \" 👥\")]; break;
 		case \"work\": [status, text] = [\"working\", (text ?  (text + \" 💼\") : \" 👷\")]; break;
 		case \"ppPoof\": [status, text] = [\"ppPoof poofing away...\", (text || \"\") + \" 💨\"]; break;
 		case \"study\": [status, text] = [\"now studying\", (text || \"🤓\") + \" 📚\"]; break;
