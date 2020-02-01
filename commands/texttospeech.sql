@@ -39,18 +39,15 @@ VALUES
 		1,
 		1,
 		0,
-		'(async function textToSpeech (context, ...args) {
-	if (!sb.Config.get(\"TTS_ENABLED\")) {
+		'(async function textToSpeech (context, ...args) {	
+	if (args.length === 0) {
 		return {
-			reply: \"Text-to-speech is currently disabled!\"
+			reply: \"List of available voices: https://supinic.com/stream/tts\"
 		};
 	}
-	else if (args.length === 0) {
+	else if (!sb.Config.get(\"TTS_ENABLED\")) {
 		return {
-			reply: \"No message provided!\",
-			cooldown: {
-				length: 1000
-			}
+			reply: \"Text-to-speech is currently disabled!\"
 		};
 	}
 
@@ -160,18 +157,15 @@ VALUES
 	)
 
 ON DUPLICATE KEY UPDATE
-	Code = '(async function textToSpeech (context, ...args) {
-	if (!sb.Config.get(\"TTS_ENABLED\")) {
+	Code = '(async function textToSpeech (context, ...args) {	
+	if (args.length === 0) {
 		return {
-			reply: \"Text-to-speech is currently disabled!\"
+			reply: \"List of available voices: https://supinic.com/stream/tts\"
 		};
 	}
-	else if (args.length === 0) {
+	else if (!sb.Config.get(\"TTS_ENABLED\")) {
 		return {
-			reply: \"No message provided!\",
-			cooldown: {
-				length: 1000
-			}
+			reply: \"Text-to-speech is currently disabled!\"
 		};
 	}
 
