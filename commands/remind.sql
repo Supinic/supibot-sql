@@ -168,7 +168,7 @@ VALUES
 
 	const reply = [
 		deprecationNotice,
-		\"I will remind\",
+		\"I will\" + (isPrivate ? \" privately\" : \"\") + \" remind\",
 		(targetUser.ID === context.user.ID) ? \"you\" : targetUser.Name,
 		(timestamp)
 			? sb.Utils.timeDelta(new sb.Date().addMilliseconds(timestamp - now))
@@ -312,7 +312,7 @@ ON DUPLICATE KEY UPDATE
 
 	const reply = [
 		deprecationNotice,
-		\"I will remind\",
+		\"I will\" + (isPrivate ? \" privately\" : \"\") + \" remind\",
 		(targetUser.ID === context.user.ID) ? \"you\" : targetUser.Name,
 		(timestamp)
 			? sb.Utils.timeDelta(new sb.Date().addMilliseconds(timestamp - now))
