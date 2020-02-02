@@ -93,7 +93,7 @@ VALUES
 			targetUser.setValues({
 				Cookie_Today: false,
 				Cookie_Is_Gifted: true,
-				Cookie_Gifts_Received: sourceUser.values.Cookie_Gifts_Received + 1
+				Cookie_Gifts_Received: targetUser.values.Cookie_Gifts_Received + 1
 			});
 
 			await Promise.all([
@@ -103,7 +103,7 @@ VALUES
 
 			sb.CooldownManager.unset(null, targetUser.ID, sb.Command.get(\"cookie\").ID);
 
-			return { 
+			return {
 				reply: \"Successfully given your cookie for today to \" + targetUserData.Name + \" :)\"
 			};
 		}
@@ -172,7 +172,7 @@ ON DUPLICATE KEY UPDATE
 			targetUser.setValues({
 				Cookie_Today: false,
 				Cookie_Is_Gifted: true,
-				Cookie_Gifts_Received: sourceUser.values.Cookie_Gifts_Received + 1
+				Cookie_Gifts_Received: targetUser.values.Cookie_Gifts_Received + 1
 			});
 
 			await Promise.all([
@@ -182,7 +182,7 @@ ON DUPLICATE KEY UPDATE
 
 			sb.CooldownManager.unset(null, targetUser.ID, sb.Command.get(\"cookie\").ID);
 
-			return { 
+			return {
 				reply: \"Successfully given your cookie for today to \" + targetUserData.Name + \" :)\"
 			};
 		}
