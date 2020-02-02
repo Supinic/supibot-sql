@@ -26,7 +26,7 @@ VALUES
 		86,
 		'texttospeech',
 		'[\"tts\"]',
-		'Plays TTS on stream, if enabled. You can specify voice by using \"voice:<name>\" anywhere in your message. Available voices: https://supinic.com/stream/tts',
+		'Plays TTS on stream, if enabled. You can specify voice by using \"voice:<name>\" or \"lang:<language>\" anywhere in your message. Available voices: https://supinic.com/stream/tts',
 		10000,
 		0,
 		0,
