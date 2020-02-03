@@ -41,67 +41,80 @@ VALUES
 		0,
 		'(async function corona (context, ...args) {
 	if (!this.data.cache || sb.Date.now() > this.data.nextReload) {
-		const url = \"https://services1.arcgis.com/0MSEUqKaxRlEPj5g/arcgis/rest/services/ncov_cases/FeatureServer/2/query?\";
-		const params = new sb.URLParams()
-			.set(\"f\", \"json\")
-			.set(\"where\", \"1=1\")
-			.set(\"returnGeometry\", \"false\")
-			.set(\"outFields\", \"Confirmed,Deaths,Recovered,Country_Region,Last_Update\");
-
+		const url = `https://endpoint.ainize.ai/laeyoung/wuhan-coronavirus-api/jhu-edu/latest`;
 		const data = JSON.parse(await sb.Utils.request({
-			url: url + params.toString()
-		})).features.map(i => i.attributes);
+			url,
+			headers: {
+				\"User-Agent\": \"Project Supibot @ https://supinic.com\"
+			}
+		}));
 
-		let confirmed = 0;
-		let deaths = 0;
-		let recovered = 0;
-		let lastUpdate = -Infinity;
+		this.data.rawCache = data;
+		this.data.cache = [];
+		this.data.total = {confirmed: 0, deaths: 0, recovered: 0, update: -Infinity};
+		for (const record of data) {
+			let { countryregion: country, lastupdateutc: stringDate, confirmed, deaths, recovered } = record;
+			confirmed = Number(confirmed);
+			deaths = Number(deaths);
+			recovered = Number(recovered);
 
-		this.data.cache = data.map(i => {
-			if (i.Last_Update > lastUpdate) {
-				lastUpdate = i.Last_Update;
+			if (country === \"US\") {
+				country = \"USA\";
 			}
 
-			confirmed += i.Confirmed ?? 0;
-			deaths += i.Deaths ?? 0;
-			recovered += i.Recovered ?? 0;
+			const update = new sb.Date(stringDate).setTimezoneOffset(0);
+			const existing = this.data.cache.find(i => i.country === country);
 
-			if (i.Country_Region === \"US\") {
-				i.Country_Region = \"USA\";
+			if (existing) {
+				existing.confirmed += confirmed;
+				existing.deaths += deaths;
+				existing.recovered += recovered;
+
+				if (update > existing.update) {
+					existing.update = update;
+				}
+			}
+			else {
+				this.data.cache.push({
+					country,
+					confirmed,
+					deaths,
+					recovered,
+					update
+				})
 			}
 
-			return {
-				region: i.Country_Region.trim(),
-				confirmed: i.Confirmed,
-				deaths: i.Deaths,
-				recovered: i.Recovered,
-				lastUpdate: i.Last_Update
-			};
-		});
+			this.data.total.confirmed += confirmed;
+			this.data.total.deaths += deaths;
+			this.data.total.recovered += recovered;
 
-		this.data.cache.push({
-			region: \"Total\",
-			confirmed,
-			deaths,
-			recovered,
-			lastUpdate
-		});
+			if (update > this.data.total.update) {
+				this.data.total.update = update;
+			}
+		}
 
 		this.data.nextReload = new sb.Date().addHours(1).valueOf();
 	}
 
-	const data = this.data.cache;
-	const country = (args.length > 0)
-		? args.join(\" \").toLowerCase()
-		: \"total\";
+	if (args[0] === \"dump\") {
+		return {
+			reply: await sb.Pastebin.post(JSON.stringify(this.data, null, 4), {
+				format: \"json\"
+			})
+		}
+	}
 
-	const countryData = data.find(i => i.region.toLowerCase().includes(country));
-	if (countryData) {
-		const delta = sb.Utils.timeDelta(new sb.Date(countryData.lastUpdate));
-		const { confirmed, deaths, recovered, region } = countryData;
-		const prefix = (region === \"Total\")
-			? \"In total, there are \"
-			: `${region} has `;
+	const inputCountry = args.join(\" \").toLowerCase();
+	const targetData = (args.length > 0)
+		? this.data.cache.find(i => i.country.toLowerCase().includes(inputCountry))
+		: this.data.total;
+
+	if (targetData) {
+		const delta = sb.Utils.timeDelta(new sb.Date(targetData.update));
+		const { confirmed, deaths, recovered, country } = targetData;
+		const prefix = (args.length > 0)
+			? `${country} has`
+			: \"In total, there are\";
 
 		return {
 			reply: `${prefix} ${confirmed} confirmed case(s), ${deaths ?? \"no\"} death(s) and ${recovered ?? \"no\"} recovered case(s). Last update: ${delta}.`
@@ -120,67 +133,80 @@ VALUES
 ON DUPLICATE KEY UPDATE
 	Code = '(async function corona (context, ...args) {
 	if (!this.data.cache || sb.Date.now() > this.data.nextReload) {
-		const url = \"https://services1.arcgis.com/0MSEUqKaxRlEPj5g/arcgis/rest/services/ncov_cases/FeatureServer/2/query?\";
-		const params = new sb.URLParams()
-			.set(\"f\", \"json\")
-			.set(\"where\", \"1=1\")
-			.set(\"returnGeometry\", \"false\")
-			.set(\"outFields\", \"Confirmed,Deaths,Recovered,Country_Region,Last_Update\");
-
+		const url = `https://endpoint.ainize.ai/laeyoung/wuhan-coronavirus-api/jhu-edu/latest`;
 		const data = JSON.parse(await sb.Utils.request({
-			url: url + params.toString()
-		})).features.map(i => i.attributes);
+			url,
+			headers: {
+				\"User-Agent\": \"Project Supibot @ https://supinic.com\"
+			}
+		}));
 
-		let confirmed = 0;
-		let deaths = 0;
-		let recovered = 0;
-		let lastUpdate = -Infinity;
+		this.data.rawCache = data;
+		this.data.cache = [];
+		this.data.total = {confirmed: 0, deaths: 0, recovered: 0, update: -Infinity};
+		for (const record of data) {
+			let { countryregion: country, lastupdateutc: stringDate, confirmed, deaths, recovered } = record;
+			confirmed = Number(confirmed);
+			deaths = Number(deaths);
+			recovered = Number(recovered);
 
-		this.data.cache = data.map(i => {
-			if (i.Last_Update > lastUpdate) {
-				lastUpdate = i.Last_Update;
+			if (country === \"US\") {
+				country = \"USA\";
 			}
 
-			confirmed += i.Confirmed ?? 0;
-			deaths += i.Deaths ?? 0;
-			recovered += i.Recovered ?? 0;
+			const update = new sb.Date(stringDate).setTimezoneOffset(0);
+			const existing = this.data.cache.find(i => i.country === country);
 
-			if (i.Country_Region === \"US\") {
-				i.Country_Region = \"USA\";
+			if (existing) {
+				existing.confirmed += confirmed;
+				existing.deaths += deaths;
+				existing.recovered += recovered;
+
+				if (update > existing.update) {
+					existing.update = update;
+				}
+			}
+			else {
+				this.data.cache.push({
+					country,
+					confirmed,
+					deaths,
+					recovered,
+					update
+				})
 			}
 
-			return {
-				region: i.Country_Region.trim(),
-				confirmed: i.Confirmed,
-				deaths: i.Deaths,
-				recovered: i.Recovered,
-				lastUpdate: i.Last_Update
-			};
-		});
+			this.data.total.confirmed += confirmed;
+			this.data.total.deaths += deaths;
+			this.data.total.recovered += recovered;
 
-		this.data.cache.push({
-			region: \"Total\",
-			confirmed,
-			deaths,
-			recovered,
-			lastUpdate
-		});
+			if (update > this.data.total.update) {
+				this.data.total.update = update;
+			}
+		}
 
 		this.data.nextReload = new sb.Date().addHours(1).valueOf();
 	}
 
-	const data = this.data.cache;
-	const country = (args.length > 0)
-		? args.join(\" \").toLowerCase()
-		: \"total\";
+	if (args[0] === \"dump\") {
+		return {
+			reply: await sb.Pastebin.post(JSON.stringify(this.data, null, 4), {
+				format: \"json\"
+			})
+		}
+	}
 
-	const countryData = data.find(i => i.region.toLowerCase().includes(country));
-	if (countryData) {
-		const delta = sb.Utils.timeDelta(new sb.Date(countryData.lastUpdate));
-		const { confirmed, deaths, recovered, region } = countryData;
-		const prefix = (region === \"Total\")
-			? \"In total, there are \"
-			: `${region} has `;
+	const inputCountry = args.join(\" \").toLowerCase();
+	const targetData = (args.length > 0)
+		? this.data.cache.find(i => i.country.toLowerCase().includes(inputCountry))
+		: this.data.total;
+
+	if (targetData) {
+		const delta = sb.Utils.timeDelta(new sb.Date(targetData.update));
+		const { confirmed, deaths, recovered, country } = targetData;
+		const prefix = (args.length > 0)
+			? `${country} has`
+			: \"In total, there are\";
 
 		return {
 			reply: `${prefix} ${confirmed} confirmed case(s), ${deaths ?? \"no\"} death(s) and ${recovered ?? \"no\"} recovered case(s). Last update: ${delta}.`
