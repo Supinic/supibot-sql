@@ -61,11 +61,21 @@ VALUES
 			const [sourceUser, targetUser] = await Promise.all([
 				(async function getSourceRow () {
 					const row = await sb.Query.getRow(\"chat_data\", \"Extra_User_Data\");
-					return row.load(context.user.ID);
+					await row.load(context.user.ID, true);
+					if (!row.loaded) {
+						await row.save();
+					}
+
+					return row;
 				})(),
 				(async function getTargetRow () {
 					const row = await sb.Query.getRow(\"chat_data\", \"Extra_User_Data\");
-					return row.load(targetUserData.ID);
+					await row.load(targetUserData.ID, true);
+					if (!row.loaded) {
+						await row.save();
+					}
+
+					return row;
 				})()
 			]);
 
@@ -140,11 +150,21 @@ ON DUPLICATE KEY UPDATE
 			const [sourceUser, targetUser] = await Promise.all([
 				(async function getSourceRow () {
 					const row = await sb.Query.getRow(\"chat_data\", \"Extra_User_Data\");
-					return row.load(context.user.ID);
+					await row.load(context.user.ID, true);
+					if (!row.loaded) {
+						await row.save();
+					}
+
+					return row;
 				})(),
 				(async function getTargetRow () {
 					const row = await sb.Query.getRow(\"chat_data\", \"Extra_User_Data\");
-					return row.load(targetUserData.ID);
+					await row.load(targetUserData.ID, true);
+					if (!row.loaded) {
+						await row.save();
+					}
+
+					return row;
 				})()
 			]);
 
