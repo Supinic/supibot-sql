@@ -43,7 +43,9 @@ VALUES
 	if (args.length === 0) {
 		return {
 			reply: \"No term has been provided!\",
-			meta: { skipCooldown: true }
+			cooldown: {
+				length: 2500
+			}
 		};
 	}
 
@@ -96,7 +98,9 @@ ON DUPLICATE KEY UPDATE
 	if (args.length === 0) {
 		return {
 			reply: \"No term has been provided!\",
-			meta: { skipCooldown: true }
+			cooldown: {
+				length: 2500
+			}
 		};
 	}
 
