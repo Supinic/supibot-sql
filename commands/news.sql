@@ -42,7 +42,16 @@ VALUES
 		'(async function news (context, ...rest) {
 	const params = new sb.URLParams().set(\"language\", \"en\");
 	if (rest[0] && sb.ExtraNews.check(rest[0])) {
-		const { content = \"\", title, published } = await sb.ExtraNews.fetch(rest.shift());
+		const code = rest.shift();
+		const article = await sb.ExtraNews.fetch(code, rest.join(\" \") || null);
+
+		if (!article) {
+			return {
+				reply: \"No relevant articles found!\"
+			};
+		}
+
+		const { content = \"\", title, published } = article;
 		let delta = \"\";
 		if (published.valueOf()) {
 			delta = \"(published \" + sb.Utils.timeDelta(published) + \")\";
@@ -123,7 +132,16 @@ ON DUPLICATE KEY UPDATE
 	Code = '(async function news (context, ...rest) {
 	const params = new sb.URLParams().set(\"language\", \"en\");
 	if (rest[0] && sb.ExtraNews.check(rest[0])) {
-		const { content = \"\", title, published } = await sb.ExtraNews.fetch(rest.shift());
+		const code = rest.shift();
+		const article = await sb.ExtraNews.fetch(code, rest.join(\" \") || null);
+
+		if (!article) {
+			return {
+				reply: \"No relevant articles found!\"
+			};
+		}
+
+		const { content = \"\", title, published } = article;
 		let delta = \"\";
 		if (published.valueOf()) {
 			delta = \"(published \" + sb.Utils.timeDelta(published) + \")\";
