@@ -53,7 +53,7 @@ VALUES
 		this.data.cache = [];
 		this.data.total = {confirmed: 0, deaths: 0, recovered: 0, update: -Infinity};
 		for (const record of data) {
-			let { countryregion: country, lastupdateutc: stringDate, confirmed, deaths, recovered } = record;
+			let { countryregion: country, lastupdateutc: date1, lastupdate: date2, confirmed, deaths, recovered } = record;
 			confirmed = Number(confirmed);
 			deaths = Number(deaths);
 			recovered = Number(recovered);
@@ -62,7 +62,7 @@ VALUES
 				country = \"USA\";
 			}
 
-			const update = new sb.Date(stringDate).setTimezoneOffset(0);
+			const update = new sb.Date(date1 ?? date2).setTimezoneOffset(0);
 			const existing = this.data.cache.find(i => i.country === country);
 
 			if (existing) {
@@ -145,7 +145,7 @@ ON DUPLICATE KEY UPDATE
 		this.data.cache = [];
 		this.data.total = {confirmed: 0, deaths: 0, recovered: 0, update: -Infinity};
 		for (const record of data) {
-			let { countryregion: country, lastupdateutc: stringDate, confirmed, deaths, recovered } = record;
+			let { countryregion: country, lastupdateutc: date1, lastupdate: date2, confirmed, deaths, recovered } = record;
 			confirmed = Number(confirmed);
 			deaths = Number(deaths);
 			recovered = Number(recovered);
@@ -154,7 +154,7 @@ ON DUPLICATE KEY UPDATE
 				country = \"USA\";
 			}
 
-			const update = new sb.Date(stringDate).setTimezoneOffset(0);
+			const update = new sb.Date(date1 ?? date2).setTimezoneOffset(0);
 			const existing = this.data.cache.find(i => i.country === country);
 
 			if (existing) {
