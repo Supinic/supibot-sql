@@ -117,7 +117,7 @@ VALUES
 			: \"In total, there are\";
 
 		return {
-			reply: `${prefix} ${confirmed} confirmed case(s), ${deaths ?? \"no\"} death(s) and ${recovered ?? \"no\"} recovered case(s). Last update: ${delta}.`
+			reply: `${prefix} ${confirmed} confirmed case${(confirmed === 1) ? \"\" : \"s\"}, ${deaths ?? \"no\"} death${(deaths === 1) ? \"\" : \"s\"} and ${recovered ?? \"no\"} recovered case${(recovered === 1) ? \"\" : \"s\"}. Last update: ${delta}.`
 		};
 	}
 	else {
@@ -209,7 +209,7 @@ ON DUPLICATE KEY UPDATE
 			: \"In total, there are\";
 
 		return {
-			reply: `${prefix} ${confirmed} confirmed case(s), ${deaths ?? \"no\"} death(s) and ${recovered ?? \"no\"} recovered case(s). Last update: ${delta}.`
+			reply: `${prefix} ${confirmed} confirmed case${(confirmed === 1) ? \"\" : \"s\"}, ${deaths ?? \"no\"} death${(deaths === 1) ? \"\" : \"s\"} and ${recovered ?? \"no\"} recovered case${(recovered === 1) ? \"\" : \"s\"}. Last update: ${delta}.`
 		};
 	}
 	else {
