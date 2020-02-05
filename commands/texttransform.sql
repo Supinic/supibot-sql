@@ -265,6 +265,10 @@ VALUES
 	`<code>${prefix}tt owo/owoify There he is. The ogrelord. Shrek!</code>`,
 	`Thewe he is. The ogwewowd. Shwek ^w^`,
 	``,
+
+	`<code>${prefix}tt runes/runic Sample sentence</code>`,
+	`ᛋᚪᛗᛈᛚᛖ ᛋᛖᚾᛏᛖᚾᚳᛖ`,
+	``,
 	
 	`<code>${prefix}tt smol/super/superscript My dream is a chat full of smol spam</code>`,
 	`ᴹʸ ᵈʳᵉᵃᵐ ⁱˢ ᵃ ᶜʰᵃᵗ ᶠᵘˡˡ ᵒᶠ ˢᵐᵒˡ ˢᵖᵃᵐ`,
@@ -272,6 +276,10 @@ VALUES
 
 	`<code>${prefix}tt uc/upper/uppercase This is a test</code>`,
 	`THIS IS A TEST`,
+	``,
+
+	`<code>${prefix}tt ud/upsidedown/flipped Sample sentence.</code>`,
+	`.ǝɔuǝʇuǝs ǝlpɯɐS`,
 	``,
 	
 	`<code>${prefix}tt vw/vaporwave This is a test</code>`,
