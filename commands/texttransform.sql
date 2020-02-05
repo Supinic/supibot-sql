@@ -126,6 +126,13 @@ VALUES
 			break;
 		}
 
+		case \"runes\":
+		case \"runic\":
+			resultType = \"map\";
+			message = message.toLowerCase();
+			map = sb.Config.get(\"CHARACTER_MAP_RUNES\");
+			break;
+
 		case \"smol\":
 		case \"super\":
 		case \"superscript\":
@@ -360,6 +367,13 @@ ON DUPLICATE KEY UPDATE
 
 			break;
 		}
+
+		case \"runes\":
+		case \"runic\":
+			resultType = \"map\";
+			message = message.toLowerCase();
+			map = sb.Config.get(\"CHARACTER_MAP_RUNES\");
+			break;
 
 		case \"smol\":
 		case \"super\":
