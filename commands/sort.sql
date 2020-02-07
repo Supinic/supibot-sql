@@ -36,7 +36,7 @@ VALUES
 		0,
 		0,
 		0,
-		1,
+		0,
 		1,
 		0,
 		'(async function sort (context, ...args) {
