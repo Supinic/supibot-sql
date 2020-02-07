@@ -95,17 +95,8 @@ VALUES
 		}
 
 		const date = new sb.Date().setTimezoneOffset(timezone.Offset * 60).format(\"H:i (Y-m-d)\");
-
 		return {
-			reply: \"Timezone detected! \"
-				+ timezone.Abbreviation
-				+ \" is \"
-				+ timezone.Name
-				+ \", which is UTC\"
-				+ prettyOffset
-				+ \", and it is \"
-				+ date
-				+ \" there right now.\"
+			reply: `TIMEZONEDETECTED ${timezone.Abbreviation} is ${timezone.Name}, which is UTC ${prettyOffset}, and it is ${date} there right now.`
 		};
 	}
 
@@ -114,19 +105,17 @@ VALUES
 		return { reply: \"No place matching that query has been found!\" };
 	}
 
-	const timestamp = Math.trunc(sb.Date.now() / 1000);
-	const coordinates = geoData.geometry.location.lat + \",\" + geoData.geometry.location.lng;
+	const params = new sb.URLParams()
+		.set(\"key\", sb.Config.get(\"API_GOOGLE_TIMEZONE\"))
+		.set(\"timestamp\", Math.trunc(sb.Date.now() / 1000).toString())
+		.set(\"location\", geoData.geometry.location.lat + \",\" + geoData.geometry.location.lng)
 
-	const url = [
-		\"https://maps.googleapis.com/maps/api/timezone/json\",
-		\"?key=\" + sb.Config.get(\"API_GOOGLE_TIMEZONE\"),
-		\"&timestamp=\" + timestamp,
-		\"&location=\" + coordinates
-	].join(\"\");
-
-	const timeData = JSON.parse(await sb.Utils.request(url));
+	const timeData = JSON.parse(await sb.Utils.request({
+		url: \"https://maps.googleapis.com/maps/api/timezone/json?\" + params.toString()
+	}));
+	
 	if (timeData.status === \"ZERO_RESULTS\") {
-		return { reply: \"Target place is too ambiguous (it contains more than one timezone)!\" };
+		return { reply: \"Target place is ambiguous - it contains more than one timezone\\)!\" };
 	}
 
 	const totalOffset = (timeData.rawOffset + timeData.dstOffset);
@@ -136,13 +125,9 @@ VALUES
 	time.setTimezoneOffset(totalOffset / 60);
 
 	const replyPlace = (skipLocation) ? \"(location hidden)\" : place;
-	const reply = [
-		replyPlace + \" is currently observing \" + timeData.timeZoneName,
-		\"which is GMT\" + offset,
-		\"and it\'s \" + time.format(\"H:i (Y-m-d)\") + \" there right now.\"
-	];
-
-	return { reply: reply.join(\", \") };
+	return { 
+		reply: `${replyPlace} is currently observing ${timeData.timeZoneName}, which is GMT${offset}, and it\'s ${time.format(\"H:i (Y-m-d)\")} there right now.`
+	};
 })',
 		NULL,
 		NULL
@@ -205,17 +190,8 @@ ON DUPLICATE KEY UPDATE
 		}
 
 		const date = new sb.Date().setTimezoneOffset(timezone.Offset * 60).format(\"H:i (Y-m-d)\");
-
 		return {
-			reply: \"Timezone detected! \"
-				+ timezone.Abbreviation
-				+ \" is \"
-				+ timezone.Name
-				+ \", which is UTC\"
-				+ prettyOffset
-				+ \", and it is \"
-				+ date
-				+ \" there right now.\"
+			reply: `TIMEZONEDETECTED ${timezone.Abbreviation} is ${timezone.Name}, which is UTC ${prettyOffset}, and it is ${date} there right now.`
 		};
 	}
 
@@ -224,19 +200,17 @@ ON DUPLICATE KEY UPDATE
 		return { reply: \"No place matching that query has been found!\" };
 	}
 
-	const timestamp = Math.trunc(sb.Date.now() / 1000);
-	const coordinates = geoData.geometry.location.lat + \",\" + geoData.geometry.location.lng;
+	const params = new sb.URLParams()
+		.set(\"key\", sb.Config.get(\"API_GOOGLE_TIMEZONE\"))
+		.set(\"timestamp\", Math.trunc(sb.Date.now() / 1000).toString())
+		.set(\"location\", geoData.geometry.location.lat + \",\" + geoData.geometry.location.lng)
 
-	const url = [
-		\"https://maps.googleapis.com/maps/api/timezone/json\",
-		\"?key=\" + sb.Config.get(\"API_GOOGLE_TIMEZONE\"),
-		\"&timestamp=\" + timestamp,
-		\"&location=\" + coordinates
-	].join(\"\");
-
-	const timeData = JSON.parse(await sb.Utils.request(url));
+	const timeData = JSON.parse(await sb.Utils.request({
+		url: \"https://maps.googleapis.com/maps/api/timezone/json?\" + params.toString()
+	}));
+	
 	if (timeData.status === \"ZERO_RESULTS\") {
-		return { reply: \"Target place is too ambiguous (it contains more than one timezone)!\" };
+		return { reply: \"Target place is ambiguous - it contains more than one timezone\\)!\" };
 	}
 
 	const totalOffset = (timeData.rawOffset + timeData.dstOffset);
@@ -246,11 +220,7 @@ ON DUPLICATE KEY UPDATE
 	time.setTimezoneOffset(totalOffset / 60);
 
 	const replyPlace = (skipLocation) ? \"(location hidden)\" : place;
-	const reply = [
-		replyPlace + \" is currently observing \" + timeData.timeZoneName,
-		\"which is GMT\" + offset,
-		\"and it\'s \" + time.format(\"H:i (Y-m-d)\") + \" there right now.\"
-	];
-
-	return { reply: reply.join(\", \") };
+	return { 
+		reply: `${replyPlace} is currently observing ${timeData.timeZoneName}, which is GMT${offset}, and it\'s ${time.format(\"H:i (Y-m-d)\")} there right now.`
+	};
 })'
