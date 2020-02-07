@@ -83,7 +83,7 @@ VALUES
 				})
 			}
 		}
-		
+
 		const html = await sb.Utils.request({
 			url: `https://www.worldometers.info/coronavirus/`,
 			headers: {
@@ -116,13 +116,14 @@ VALUES
 
 	if (targetData) {
 		const delta = sb.Utils.timeDelta(new sb.Date(targetData.update));
-		const { confirmed, deaths, recovered, country } = targetData;
+		const { confirmed, deaths, recovered, country, critical } = targetData;
+		const crit = (critical) ? ` (out of which ${critical} are in critical state)` : \"\";
 		const prefix = (args.length > 0)
 			? `${country} has`
 			: \"In total, there are\";
 
 		return {
-			reply: `${prefix} ${confirmed} confirmed case${(confirmed === 1) ? \"\" : \"s\"}, ${deaths ?? \"no\"} death${(deaths === 1) ? \"\" : \"s\"} and ${recovered ?? \"no\"} recovered case${(recovered === 1) ? \"\" : \"s\"}. Last update: ${delta}`
+			reply: `${prefix} ${confirmed} confirmed case${(confirmed === 1) ? \"\" : \"s\"}${crit}, ${deaths ?? \"no\"} death${(deaths === 1) ? \"\" : \"s\"} and ${recovered ?? \"no\"} recovered case${(recovered === 1) ? \"\" : \"s\"}. Last update: ${delta}`
 		};
 	}
 	else {
@@ -180,7 +181,7 @@ ON DUPLICATE KEY UPDATE
 				})
 			}
 		}
-		
+
 		const html = await sb.Utils.request({
 			url: `https://www.worldometers.info/coronavirus/`,
 			headers: {
@@ -213,13 +214,14 @@ ON DUPLICATE KEY UPDATE
 
 	if (targetData) {
 		const delta = sb.Utils.timeDelta(new sb.Date(targetData.update));
-		const { confirmed, deaths, recovered, country } = targetData;
+		const { confirmed, deaths, recovered, country, critical } = targetData;
+		const crit = (critical) ? ` (out of which ${critical} are in critical state)` : \"\";
 		const prefix = (args.length > 0)
 			? `${country} has`
 			: \"In total, there are\";
 
 		return {
-			reply: `${prefix} ${confirmed} confirmed case${(confirmed === 1) ? \"\" : \"s\"}, ${deaths ?? \"no\"} death${(deaths === 1) ? \"\" : \"s\"} and ${recovered ?? \"no\"} recovered case${(recovered === 1) ? \"\" : \"s\"}. Last update: ${delta}`
+			reply: `${prefix} ${confirmed} confirmed case${(confirmed === 1) ? \"\" : \"s\"}${crit}, ${deaths ?? \"no\"} death${(deaths === 1) ? \"\" : \"s\"} and ${recovered ?? \"no\"} recovered case${(recovered === 1) ? \"\" : \"s\"}. Last update: ${delta}`
 		};
 	}
 	else {
