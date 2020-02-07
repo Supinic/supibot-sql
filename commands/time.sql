@@ -50,7 +50,7 @@ VALUES
 		else {
 			return {
 				reply: \"You must search for something first!\",
-				meta: { skipCooldown: true }
+				cooldown: { length: 2500 }
 			};
 		}
 	}
@@ -63,12 +63,14 @@ VALUES
 		const targetUser = await sb.User.get(args[0]);
 		if (!targetUser) {
 			return {
-				reply: \"That user does not exist!\"
+				reply: \"That user does not exist!\",
+				cooldown: { length: 2500 }
 			};
 		}
 		else if (!targetUser.Data.defaultLocation) {
 			return {
-				reply: \"That user has not set their default location!\"
+				reply: \"That user has not set their default location!\",
+				cooldown: { length: 2500 }
 			};
 		}
 		else {
@@ -158,7 +160,7 @@ ON DUPLICATE KEY UPDATE
 		else {
 			return {
 				reply: \"You must search for something first!\",
-				meta: { skipCooldown: true }
+				cooldown: { length: 2500 }
 			};
 		}
 	}
@@ -171,12 +173,14 @@ ON DUPLICATE KEY UPDATE
 		const targetUser = await sb.User.get(args[0]);
 		if (!targetUser) {
 			return {
-				reply: \"That user does not exist!\"
+				reply: \"That user does not exist!\",
+				cooldown: { length: 2500 }
 			};
 		}
 		else if (!targetUser.Data.defaultLocation) {
 			return {
-				reply: \"That user has not set their default location!\"
+				reply: \"That user has not set their default location!\",
+				cooldown: { length: 2500 }
 			};
 		}
 		else {
