@@ -51,7 +51,6 @@ VALUES
 
 		this.data.rawCache = data;
 		this.data.cache = [];
-		this.data.total = {confirmed: 0, deaths: 0, recovered: 0, update: -Infinity};
 		for (const record of data) {
 			let { countryregion: country, lastupdateutc: date1, lastupdate: date2, confirmed, deaths, recovered } = record;
 			confirmed = Number(confirmed);
@@ -83,15 +82,21 @@ VALUES
 					update
 				})
 			}
-
-			this.data.total.confirmed += confirmed;
-			this.data.total.deaths += deaths;
-			this.data.total.recovered += recovered;
-
-			if (update > this.data.total.update) {
-				this.data.total.update = update;
-			}
 		}
+		
+		const html = await sb.Utils.request({
+			url: `https://www.worldometers.info/coronavirus/`,
+			headers: {
+				\"User-Agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Safari/537.36 OPR/66.0.3515.44\"
+			}
+		});
+
+		const $ = sb.Utils.cheerio(html);
+		const [confirmed, deaths, recovered] = $(\".maincounter-number\").text().replace(/,/g, \"\").split(\" \").filter(Boolean).map(Number);
+		const critical = Number($(\"span[style*=\'red\']\").text().replace(/,/g, \"\"));
+
+		this.data.total = { confirmed, deaths, recovered, critical };
+		this.data.total.update = new sb.Date().valueOf();
 
 		this.data.nextReload = new sb.Date().addHours(1).valueOf();
 	}
@@ -117,7 +122,7 @@ VALUES
 			: \"In total, there are\";
 
 		return {
-			reply: `${prefix} ${confirmed} confirmed case${(confirmed === 1) ? \"\" : \"s\"}, ${deaths ?? \"no\"} death${(deaths === 1) ? \"\" : \"s\"} and ${recovered ?? \"no\"} recovered case${(recovered === 1) ? \"\" : \"s\"}. Last update: ${delta}.`
+			reply: `${prefix} ${confirmed} confirmed case${(confirmed === 1) ? \"\" : \"s\"}, ${deaths ?? \"no\"} death${(deaths === 1) ? \"\" : \"s\"} and ${recovered ?? \"no\"} recovered case${(recovered === 1) ? \"\" : \"s\"}. Last update: ${delta}`
 		};
 	}
 	else {
@@ -143,7 +148,6 @@ ON DUPLICATE KEY UPDATE
 
 		this.data.rawCache = data;
 		this.data.cache = [];
-		this.data.total = {confirmed: 0, deaths: 0, recovered: 0, update: -Infinity};
 		for (const record of data) {
 			let { countryregion: country, lastupdateutc: date1, lastupdate: date2, confirmed, deaths, recovered } = record;
 			confirmed = Number(confirmed);
@@ -175,15 +179,21 @@ ON DUPLICATE KEY UPDATE
 					update
 				})
 			}
-
-			this.data.total.confirmed += confirmed;
-			this.data.total.deaths += deaths;
-			this.data.total.recovered += recovered;
-
-			if (update > this.data.total.update) {
-				this.data.total.update = update;
-			}
 		}
+		
+		const html = await sb.Utils.request({
+			url: `https://www.worldometers.info/coronavirus/`,
+			headers: {
+				\"User-Agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Safari/537.36 OPR/66.0.3515.44\"
+			}
+		});
+
+		const $ = sb.Utils.cheerio(html);
+		const [confirmed, deaths, recovered] = $(\".maincounter-number\").text().replace(/,/g, \"\").split(\" \").filter(Boolean).map(Number);
+		const critical = Number($(\"span[style*=\'red\']\").text().replace(/,/g, \"\"));
+
+		this.data.total = { confirmed, deaths, recovered, critical };
+		this.data.total.update = new sb.Date().valueOf();
 
 		this.data.nextReload = new sb.Date().addHours(1).valueOf();
 	}
@@ -209,7 +219,7 @@ ON DUPLICATE KEY UPDATE
 			: \"In total, there are\";
 
 		return {
-			reply: `${prefix} ${confirmed} confirmed case${(confirmed === 1) ? \"\" : \"s\"}, ${deaths ?? \"no\"} death${(deaths === 1) ? \"\" : \"s\"} and ${recovered ?? \"no\"} recovered case${(recovered === 1) ? \"\" : \"s\"}. Last update: ${delta}.`
+			reply: `${prefix} ${confirmed} confirmed case${(confirmed === 1) ? \"\" : \"s\"}, ${deaths ?? \"no\"} death${(deaths === 1) ? \"\" : \"s\"} and ${recovered ?? \"no\"} recovered case${(recovered === 1) ? \"\" : \"s\"}. Last update: ${delta}`
 		};
 	}
 	else {
