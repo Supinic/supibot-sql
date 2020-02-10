@@ -41,27 +41,43 @@ VALUES
 		0,
 		'(async function corona (context, ...args) {
 	if (!this.data.cache || sb.Date.now() > this.data.nextReload) {
-		const url = `https://endpoint.ainize.ai/laeyoung/wuhan-coronavirus-api/jhu-edu/latest`;
-		const data = JSON.parse(await sb.Utils.request({
-			url,
+		const owner = \"CSSEGISandData\";
+		const repo = \"2019-nCoV\";
+		const directorySHA = \"2dad3404acaa7077df7418122ed21157fe0e11bc\";
+		const files = JSON.parse(await sb.Utils.request({
+			url: `https://api.github.com/repos/${owner}/${repo}/git/trees/${directorySHA}`,
 			headers: {
-				\"User-Agent\": \"Project Supibot @ https://supinic.com\"
+				\"User-Agent\": \"Supibot @ github.com/supinic/supibot\"
 			}
 		}));
 
-		this.data.rawCache = data;
+		const latestFile = files.tree.filter(i => i.path.includes(\".csv\")).pop();
+		const { content } = JSON.parse(await sb.Utils.request({
+			url: latestFile.url,
+			headers: {
+				\"User-Agent\": \"Supibot @ github.com/supinic/supibot\"
+			}
+		}));
+
+		const regex = /(\\s*\"[^\"]+\"\\s*|\\s*[^,]+|,)(?=,|$)/g;
+		const csv = Buffer.from(content, \"base64\").toString();
+
+		// slice(1, -1) gets rid of header and (empty line) footer
+		this.data.raw = csv.split(\"\\n\").slice(1, -1).map(i => [...i.matchAll(regex)].map(i => i[0]));
 		this.data.cache = [];
-		for (const record of data) {
-			let { countryregion: country, lastupdateutc: date1, lastupdate: date2, confirmed, deaths, recovered } = record;
+
+		for (const row of this.data.raw) {
+			let [province, country, date, confirmed, deaths, recovered] = row;
 			confirmed = Number(confirmed);
 			deaths = Number(deaths);
 			recovered = Number(recovered);
 
+			// Just brilliant...
 			if (country === \"US\") {
 				country = \"USA\";
 			}
 
-			const update = new sb.Date(date1 ?? date2).setTimezoneOffset(0);
+			const update = new sb.Date(date).setTimezoneOffset(0);
 			const existing = this.data.cache.find(i => i.country === country);
 
 			if (existing) {
@@ -80,10 +96,9 @@ VALUES
 					deaths,
 					recovered,
 					update
-				})
+				});
 			}
 		}
-
 		const html = await sb.Utils.request({
 			url: `https://www.worldometers.info/coronavirus/`,
 			headers: {
@@ -98,15 +113,18 @@ VALUES
 		this.data.total = { confirmed, deaths, recovered, critical };
 		this.data.total.update = new sb.Date().valueOf();
 
+		this.data.pastebinLink = null;
 		this.data.nextReload = new sb.Date().addHours(1).valueOf();
 	}
 
-	if (args[0] === \"dump\") {
-		return {
-			reply: await sb.Pastebin.post(JSON.stringify(this.data, null, 4), {
-				format: \"json\"
-			})
+	if (args[0] === \"dump\" || args[0] === \"json\") {
+		if (!this.data.pastebinLink) {
+			this.data.pastebinLink = await sb.Pastebin.post(JSON.stringify(this.data, null, 4), { format: \"json\" });
 		}
+
+		return {
+			reply: this.data.pastebinLink
+		};
 	}
 
 	const inputCountry = args.join(\" \").toLowerCase();
@@ -139,27 +157,43 @@ VALUES
 ON DUPLICATE KEY UPDATE
 	Code = '(async function corona (context, ...args) {
 	if (!this.data.cache || sb.Date.now() > this.data.nextReload) {
-		const url = `https://endpoint.ainize.ai/laeyoung/wuhan-coronavirus-api/jhu-edu/latest`;
-		const data = JSON.parse(await sb.Utils.request({
-			url,
+		const owner = \"CSSEGISandData\";
+		const repo = \"2019-nCoV\";
+		const directorySHA = \"2dad3404acaa7077df7418122ed21157fe0e11bc\";
+		const files = JSON.parse(await sb.Utils.request({
+			url: `https://api.github.com/repos/${owner}/${repo}/git/trees/${directorySHA}`,
 			headers: {
-				\"User-Agent\": \"Project Supibot @ https://supinic.com\"
+				\"User-Agent\": \"Supibot @ github.com/supinic/supibot\"
 			}
 		}));
 
-		this.data.rawCache = data;
+		const latestFile = files.tree.filter(i => i.path.includes(\".csv\")).pop();
+		const { content } = JSON.parse(await sb.Utils.request({
+			url: latestFile.url,
+			headers: {
+				\"User-Agent\": \"Supibot @ github.com/supinic/supibot\"
+			}
+		}));
+
+		const regex = /(\\s*\"[^\"]+\"\\s*|\\s*[^,]+|,)(?=,|$)/g;
+		const csv = Buffer.from(content, \"base64\").toString();
+
+		// slice(1, -1) gets rid of header and (empty line) footer
+		this.data.raw = csv.split(\"\\n\").slice(1, -1).map(i => [...i.matchAll(regex)].map(i => i[0]));
 		this.data.cache = [];
-		for (const record of data) {
-			let { countryregion: country, lastupdateutc: date1, lastupdate: date2, confirmed, deaths, recovered } = record;
+
+		for (const row of this.data.raw) {
+			let [province, country, date, confirmed, deaths, recovered] = row;
 			confirmed = Number(confirmed);
 			deaths = Number(deaths);
 			recovered = Number(recovered);
 
+			// Just brilliant...
 			if (country === \"US\") {
 				country = \"USA\";
 			}
 
-			const update = new sb.Date(date1 ?? date2).setTimezoneOffset(0);
+			const update = new sb.Date(date).setTimezoneOffset(0);
 			const existing = this.data.cache.find(i => i.country === country);
 
 			if (existing) {
@@ -178,10 +212,9 @@ ON DUPLICATE KEY UPDATE
 					deaths,
 					recovered,
 					update
-				})
+				});
 			}
 		}
-
 		const html = await sb.Utils.request({
 			url: `https://www.worldometers.info/coronavirus/`,
 			headers: {
@@ -196,15 +229,18 @@ ON DUPLICATE KEY UPDATE
 		this.data.total = { confirmed, deaths, recovered, critical };
 		this.data.total.update = new sb.Date().valueOf();
 
+		this.data.pastebinLink = null;
 		this.data.nextReload = new sb.Date().addHours(1).valueOf();
 	}
 
-	if (args[0] === \"dump\") {
-		return {
-			reply: await sb.Pastebin.post(JSON.stringify(this.data, null, 4), {
-				format: \"json\"
-			})
+	if (args[0] === \"dump\" || args[0] === \"json\") {
+		if (!this.data.pastebinLink) {
+			this.data.pastebinLink = await sb.Pastebin.post(JSON.stringify(this.data, null, 4), { format: \"json\" });
 		}
+
+		return {
+			reply: this.data.pastebinLink
+		};
 	}
 
 	const inputCountry = args.join(\" \").toLowerCase();
