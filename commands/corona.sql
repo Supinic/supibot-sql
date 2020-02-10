@@ -68,6 +68,10 @@ VALUES
 
 		for (const row of this.data.raw) {
 			let [province, country, date, confirmed, deaths, recovered] = row;
+			if (row.length === 5) {
+				[country, date, confirmed, deaths, recovered] = row;
+			}
+
 			confirmed = Number(confirmed);
 			deaths = Number(deaths);
 			recovered = Number(recovered);
@@ -108,9 +112,9 @@ VALUES
 
 		const $ = sb.Utils.cheerio(html);
 		const [confirmed, deaths, recovered] = $(\".maincounter-number\").text().replace(/,/g, \"\").split(\" \").filter(Boolean).map(Number);
-		const critical = Number($(\"span[style*=\'red\']\").text().replace(/,/g, \"\"));
+		const [mild, critical] = Array.from($(\".number-table\")).map(i => Number(i.firstChild.nodeValue.replace(/,/g, \"\")));
 
-		this.data.total = { confirmed, deaths, recovered, critical };
+		this.data.total = { confirmed, deaths, recovered, critical, mild };
 		this.data.total.update = new sb.Date().valueOf();
 
 		this.data.pastebinLink = null;
@@ -134,15 +138,18 @@ VALUES
 
 	if (targetData) {
 		const delta = sb.Utils.timeDelta(new sb.Date(targetData.update));
-		const { confirmed, deaths, recovered, country, critical } = targetData;
-		const crit = (critical) ? ` (out of which ${critical} are in critical state)` : \"\";
-		const prefix = (args.length > 0)
-			? `${country} has`
-			: \"In total, there are\";
+		const { confirmed, deaths, recovered, country, critical, mild } = targetData;
 
-		return {
-			reply: `${prefix} ${confirmed} confirmed case${(confirmed === 1) ? \"\" : \"s\"}${crit}, ${deaths ?? \"no\"} death${(deaths === 1) ? \"\" : \"s\"} and ${recovered ?? \"no\"} recovered case${(recovered === 1) ? \"\" : \"s\"}. Last update: ${delta}`
-		};
+		if (args.length > 0) {
+			return {
+				reply: `${country} has ${confirmed} confirmed case${(confirmed === 1) ? \"\" : \"s\"}, ${deaths ?? \"no\"} death${(deaths === 1) ? \"\" : \"s\"} and ${recovered ?? \"no\"} recovered case${(recovered === 1) ? \"\" : \"s\"}. Last update: ${delta}`
+			}
+		}
+		else {
+			return {
+				reply: `${confirmed} corona virus cases are tracked so far. ${mild} are in mild, and ${critical} in critical condition; ${recovered} have fully recovered, and there are ${deaths} deceased. Last check: ${delta}`
+			}
+		}
 	}
 	else {
 		return {
@@ -184,6 +191,10 @@ ON DUPLICATE KEY UPDATE
 
 		for (const row of this.data.raw) {
 			let [province, country, date, confirmed, deaths, recovered] = row;
+			if (row.length === 5) {
+				[country, date, confirmed, deaths, recovered] = row;
+			}
+
 			confirmed = Number(confirmed);
 			deaths = Number(deaths);
 			recovered = Number(recovered);
@@ -224,9 +235,9 @@ ON DUPLICATE KEY UPDATE
 
 		const $ = sb.Utils.cheerio(html);
 		const [confirmed, deaths, recovered] = $(\".maincounter-number\").text().replace(/,/g, \"\").split(\" \").filter(Boolean).map(Number);
-		const critical = Number($(\"span[style*=\'red\']\").text().replace(/,/g, \"\"));
+		const [mild, critical] = Array.from($(\".number-table\")).map(i => Number(i.firstChild.nodeValue.replace(/,/g, \"\")));
 
-		this.data.total = { confirmed, deaths, recovered, critical };
+		this.data.total = { confirmed, deaths, recovered, critical, mild };
 		this.data.total.update = new sb.Date().valueOf();
 
 		this.data.pastebinLink = null;
@@ -250,15 +261,18 @@ ON DUPLICATE KEY UPDATE
 
 	if (targetData) {
 		const delta = sb.Utils.timeDelta(new sb.Date(targetData.update));
-		const { confirmed, deaths, recovered, country, critical } = targetData;
-		const crit = (critical) ? ` (out of which ${critical} are in critical state)` : \"\";
-		const prefix = (args.length > 0)
-			? `${country} has`
-			: \"In total, there are\";
+		const { confirmed, deaths, recovered, country, critical, mild } = targetData;
 
-		return {
-			reply: `${prefix} ${confirmed} confirmed case${(confirmed === 1) ? \"\" : \"s\"}${crit}, ${deaths ?? \"no\"} death${(deaths === 1) ? \"\" : \"s\"} and ${recovered ?? \"no\"} recovered case${(recovered === 1) ? \"\" : \"s\"}. Last update: ${delta}`
-		};
+		if (args.length > 0) {
+			return {
+				reply: `${country} has ${confirmed} confirmed case${(confirmed === 1) ? \"\" : \"s\"}, ${deaths ?? \"no\"} death${(deaths === 1) ? \"\" : \"s\"} and ${recovered ?? \"no\"} recovered case${(recovered === 1) ? \"\" : \"s\"}. Last update: ${delta}`
+			}
+		}
+		else {
+			return {
+				reply: `${confirmed} corona virus cases are tracked so far. ${mild} are in mild, and ${critical} in critical condition; ${recovered} have fully recovered, and there are ${deaths} deceased. Last check: ${delta}`
+			}
+		}
 	}
 	else {
 		return {
