@@ -110,10 +110,10 @@ VALUES
 			else if (check.Cookie_Today) {
 				string = (check.Cookie_Is_Gifted)
 					? pronoun + \" have already eaten the daily and gifted cookie today.\"
-					: pronoun + \" have already eaten/gifted the daily cookie today.\"
+					: pronoun + \" have already eaten/gifted the daily cookie today.\";
 
 				const date = new sb.Date().addDays(1);
-				date.setUTCHours(0, 0, 0, 0);				
+				date.setUTCHours(0, 0, 0, 0);
 
 				string += ` The next cookie will be available in ${sb.Utils.timeDelta(date)}.`;
 			}
@@ -126,6 +126,55 @@ VALUES
 			return {
 				reply: string
 			};
+		}
+
+		case \"error\": {
+			if (!context.user.Data.inspectErrorStacks) {
+				return {
+					reply: \"Sorry, you can\'t inspect error stacks!\"
+				};
+			}
+
+			if (identifier && !Number(identifier)) {
+				return {
+					reply: \"Invalid ID provided!\"
+				};
+			}
+
+			const row = await sb.Query.getRow(\"chat_data\", \"Error\");
+			try {
+				await row.load(Number(identifier));
+			}
+			catch {
+				return {
+					reply: \"No such error exists!\"
+				};
+			}
+
+			const { ID, Stack: stack } = row.values;
+
+			if (!this.data.cache) {
+				this.data.cache = {};
+			}
+			if (!this.data.cache[ID] || this.data.cache[ID].expiration < sb.Date.now()) {
+				this.data.cache[ID] = {
+					createdAt: sb.Date.now(),
+					expiration: new sb.Date().addHours(1).valueOf(),
+					link: await sb.Pastebin.post(stack, {
+						name: \"Stack of Supibot error ID \" + ID,
+						expiration: \"1H\"
+					})
+				};
+			}
+
+			if (context.channel) {
+				sb.Master.send(\"The error stack Pastebin link was whispered to you 💻\", context.channel.ID);
+			}
+
+			return {
+				reply: this.data.cache[ID].link,
+				replyWithPrivateMessage: true
+			}
 		}
 
 		case \"notify\": case \"notification\":
@@ -351,10 +400,10 @@ ON DUPLICATE KEY UPDATE
 			else if (check.Cookie_Today) {
 				string = (check.Cookie_Is_Gifted)
 					? pronoun + \" have already eaten the daily and gifted cookie today.\"
-					: pronoun + \" have already eaten/gifted the daily cookie today.\"
+					: pronoun + \" have already eaten/gifted the daily cookie today.\";
 
 				const date = new sb.Date().addDays(1);
-				date.setUTCHours(0, 0, 0, 0);				
+				date.setUTCHours(0, 0, 0, 0);
 
 				string += ` The next cookie will be available in ${sb.Utils.timeDelta(date)}.`;
 			}
@@ -367,6 +416,55 @@ ON DUPLICATE KEY UPDATE
 			return {
 				reply: string
 			};
+		}
+
+		case \"error\": {
+			if (!context.user.Data.inspectErrorStacks) {
+				return {
+					reply: \"Sorry, you can\'t inspect error stacks!\"
+				};
+			}
+
+			if (identifier && !Number(identifier)) {
+				return {
+					reply: \"Invalid ID provided!\"
+				};
+			}
+
+			const row = await sb.Query.getRow(\"chat_data\", \"Error\");
+			try {
+				await row.load(Number(identifier));
+			}
+			catch {
+				return {
+					reply: \"No such error exists!\"
+				};
+			}
+
+			const { ID, Stack: stack } = row.values;
+
+			if (!this.data.cache) {
+				this.data.cache = {};
+			}
+			if (!this.data.cache[ID] || this.data.cache[ID].expiration < sb.Date.now()) {
+				this.data.cache[ID] = {
+					createdAt: sb.Date.now(),
+					expiration: new sb.Date().addHours(1).valueOf(),
+					link: await sb.Pastebin.post(stack, {
+						name: \"Stack of Supibot error ID \" + ID,
+						expiration: \"1H\"
+					})
+				};
+			}
+
+			if (context.channel) {
+				sb.Master.send(\"The error stack Pastebin link was whispered to you 💻\", context.channel.ID);
+			}
+
+			return {
+				reply: this.data.cache[ID].link,
+				replyWithPrivateMessage: true
+			}
 		}
 
 		case \"notify\": case \"notification\":
