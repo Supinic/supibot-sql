@@ -62,16 +62,22 @@ VALUES
 			map = sb.Config.get(\"TRANSLATION_DATA_COCKNEY\");
 			break;
 
-		case \"bubble\": 
+		case \"bubble\":
 			resultType = \"map\";
 			map = sb.Config.get(\"CHARACTER_MAP_BUBBLE\");
 			break;
-			
+
+		case \"cap\":
+		case \"capitalize\":
+			resultType = \"replace\";
+			message = message.split(\" \").map(i => sb.Utils.capitalize(i)).join(\" \");
+			break;
+
 		case \"fancy\":
 			resultType = \"map\";
 			map = sb.Config.get(\"CHARACTER_MAP_FANCY\");
 			break;
-			
+
 		case \"KKona\":
 			resultType = \"translate\";
 			map = sb.Config.get(\"TRANSLATION_DATA_COWBOY\");
@@ -81,7 +87,7 @@ VALUES
 			resultType = \"translate\";
 			map = sb.Config.get(\"TRANSLATION_DATA_STRAYA\");
 			break;
-			
+
 		case \"lc\":
 		case \"lower\":
 		case \"lowercase\":
@@ -171,7 +177,7 @@ VALUES
 	if (resultType === \"map\") {
 		result = message.split(\"\").map(i => map[i] || i).join(\"\");
 	}
-	else if (resultType === \"translate\") {
+	else if (map && resultType === \"translate\") {
 		result = message;
 		for (const [from, to] of map.phrasesWords) {
 			const r = new RegExp(\"\\\\b\" + from + \"\\\\b\", \"gi\");
@@ -197,7 +203,7 @@ VALUES
 
 		if (map.endings && /[).?!]$/.test(result)) {
 			result += \" \" + sb.Utils.randArray(map.endings);
-		}		
+		}
 	}
 	else if (resultType === \"replace\") {
 		result = message;
@@ -228,6 +234,10 @@ VALUES
 
 	`<code>${prefix}tt 3Head This is a sample message.</code>`,
 	`dis is a sample message.`,
+	``,
+
+	`<code>${prefix}tt cap/capitalize This is a sample message.</code>`,
+	`This Is A Sample Message.`,
 	``,
 
 	`<code>${prefix}tt fancy This is a test</code>`,
@@ -312,16 +322,22 @@ ON DUPLICATE KEY UPDATE
 			map = sb.Config.get(\"TRANSLATION_DATA_COCKNEY\");
 			break;
 
-		case \"bubble\": 
+		case \"bubble\":
 			resultType = \"map\";
 			map = sb.Config.get(\"CHARACTER_MAP_BUBBLE\");
 			break;
-			
+
+		case \"cap\":
+		case \"capitalize\":
+			resultType = \"replace\";
+			message = message.split(\" \").map(i => sb.Utils.capitalize(i)).join(\" \");
+			break;
+
 		case \"fancy\":
 			resultType = \"map\";
 			map = sb.Config.get(\"CHARACTER_MAP_FANCY\");
 			break;
-			
+
 		case \"KKona\":
 			resultType = \"translate\";
 			map = sb.Config.get(\"TRANSLATION_DATA_COWBOY\");
@@ -331,7 +347,7 @@ ON DUPLICATE KEY UPDATE
 			resultType = \"translate\";
 			map = sb.Config.get(\"TRANSLATION_DATA_STRAYA\");
 			break;
-			
+
 		case \"lc\":
 		case \"lower\":
 		case \"lowercase\":
@@ -421,7 +437,7 @@ ON DUPLICATE KEY UPDATE
 	if (resultType === \"map\") {
 		result = message.split(\"\").map(i => map[i] || i).join(\"\");
 	}
-	else if (resultType === \"translate\") {
+	else if (map && resultType === \"translate\") {
 		result = message;
 		for (const [from, to] of map.phrasesWords) {
 			const r = new RegExp(\"\\\\b\" + from + \"\\\\b\", \"gi\");
@@ -447,7 +463,7 @@ ON DUPLICATE KEY UPDATE
 
 		if (map.endings && /[).?!]$/.test(result)) {
 			result += \" \" + sb.Utils.randArray(map.endings);
-		}		
+		}
 	}
 	else if (resultType === \"replace\") {
 		result = message;
