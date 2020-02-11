@@ -32,7 +32,7 @@ VALUES
 		0,
 		0,
 		1,
-		NULL,
+		'Only available in supinic\'s channel.',
 		0,
 		0,
 		0,
