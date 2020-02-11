@@ -135,7 +135,7 @@ VALUES
 				};
 			}
 
-			if (identifier && !Number(identifier)) {
+			if (!Number(identifier)) {
 				return {
 					reply: \"Invalid ID provided!\"
 				};
@@ -425,7 +425,7 @@ ON DUPLICATE KEY UPDATE
 				};
 			}
 
-			if (identifier && !Number(identifier)) {
+			if (!Number(identifier)) {
 				return {
 					reply: \"Invalid ID provided!\"
 				};
