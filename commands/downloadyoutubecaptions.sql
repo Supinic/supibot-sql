@@ -31,14 +31,14 @@ VALUES
 		0,
 		0,
 		0,
-		0,
-		NULL,
+		1,
+		'Temporarily disabled',
 		0,
 		0,
 		0,
 		1,
 		1,
-		0,
+		1,
 		'(async function downloadYoutubeCaptions (context, video) {
 	if (!video || !video.includes(\"youtu\")) { // @todo - put link parser verification here
 		return {
