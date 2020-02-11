@@ -124,7 +124,7 @@ VALUES
 				: null,
 			Duration: (videoData && videoData.duration) || null,
 			Track_Type: null,
-			Notes: videoData.description || null
+			Notes: videoData?.description ?? null
 		});
 
 		const {insertId: trackID} = await row.save();
@@ -138,7 +138,7 @@ VALUES
 
 		await tagRow.save();
 
-		if (videoData.author) {
+		if (videoData?.author) {
 			let authorID = null;
 			const normal = videoData.author.toLowerCase().replace(/\\s+/g, \"_\");
 			const authorExists = await sb.Query.getRecordset(rs => rs
@@ -272,7 +272,7 @@ ON DUPLICATE KEY UPDATE
 				: null,
 			Duration: (videoData && videoData.duration) || null,
 			Track_Type: null,
-			Notes: videoData.description || null
+			Notes: videoData?.description ?? null
 		});
 
 		const {insertId: trackID} = await row.save();
@@ -286,7 +286,7 @@ ON DUPLICATE KEY UPDATE
 
 		await tagRow.save();
 
-		if (videoData.author) {
+		if (videoData?.author) {
 			let authorID = null;
 			const normal = videoData.author.toLowerCase().replace(/\\s+/g, \"_\");
 			const authorExists = await sb.Query.getRecordset(rs => rs
