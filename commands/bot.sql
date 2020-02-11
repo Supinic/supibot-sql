@@ -42,7 +42,7 @@ VALUES
 		'(async function bot (context, command, user) {
 	if (!command) {
 		return {
-			reply: \"No command provided!\"
+			reply: \"No command provided! Use enable/disable, or read the extended help!\"
 		};
 	}
 
@@ -98,14 +98,28 @@ VALUES
 })
 ',
 		NULL,
-		NULL
+		'async (prefix) => {
+
+	return [
+		\"Currently, you can enable or disable the bot in your channel.\",
+		\"After disabling, you can enable it again in a different channel. I recommend @supibot - that one is always active.\",
+		\"\",
+
+		`<code>${prefix}bot disable</code>`,
+		\"Disables the bot in your channel indefinitely\",
+		\"\",
+
+		`<code>${prefix}bot enable supinic</code>`,
+		\"Re-enables the bot in channel <u>supinic</u>\",
+	];
+}'
 	)
 
 ON DUPLICATE KEY UPDATE
 	Code = '(async function bot (context, command, user) {
 	if (!command) {
 		return {
-			reply: \"No command provided!\"
+			reply: \"No command provided! Use enable/disable, or read the extended help!\"
 		};
 	}
 

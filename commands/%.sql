@@ -46,7 +46,13 @@ VALUES
 		'No arguments.
 
 $%',
-		NULL
+		'async (prefix) => [
+	\"Rolls a random percentage number between 0 and 100.\",
+	\"\",
+
+	`<code>${prefix}%</code>`,
+	(sb.Utils.random(0, 10000) / 100) + \"%\"
+]	'
 	)
 
 ON DUPLICATE KEY UPDATE

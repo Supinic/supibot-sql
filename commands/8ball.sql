@@ -45,7 +45,13 @@ VALUES
 	};
 })',
 		NULL,
-		NULL
+		'async (prefix) => [
+	\"Consult the 8-ball for your question!\",
+	\"\",
+
+	`<code>${prefix}8ball Is this command cool?</code>`,
+	sb.Utils.randArray(sb.Config.get(\"8_BALL_RESPONSES\"))
+]	'
 	)
 
 ON DUPLICATE KEY UPDATE
