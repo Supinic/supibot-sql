@@ -85,6 +85,11 @@ VALUES
 		voice = filtered[0].name;
 	}
 
+	
+	if (voice === \"Random\") {
+		voice = sb.Utils.randArray(voiceData).name;
+	}
+
 	const availableVoices = voiceData.map(i => i.name.toLowerCase());
 	if (!availableVoices.includes(voice.toLowerCase())) {
 		return {
@@ -201,6 +206,11 @@ ON DUPLICATE KEY UPDATE
 		}
 
 		voice = filtered[0].name;
+	}
+
+	
+	if (voice === \"Random\") {
+		voice = sb.Utils.randArray(voiceData).name;
 	}
 
 	const availableVoices = voiceData.map(i => i.name.toLowerCase());
