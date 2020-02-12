@@ -103,7 +103,10 @@ VALUES
 				reaction += \" and a glutton 😠🍔\";
 			}
 		}
-		else if (percentage < 25) {
+		else if (percentage < 15) {
+			reaction = \"🤔 a little frugal 😑\";
+		}
+		else if (percentage < 40) {
 			reaction = \"🙂 a fair person 👍\";
 		}
 		else if (percentage < 75) {
@@ -212,7 +215,10 @@ ON DUPLICATE KEY UPDATE
 				reaction += \" and a glutton 😠🍔\";
 			}
 		}
-		else if (percentage < 25) {
+		else if (percentage < 15) {
+			reaction = \"🤔 a little frugal 😑\";
+		}
+		else if (percentage < 40) {
 			reaction = \"🙂 a fair person 👍\";
 		}
 		else if (percentage < 75) {
