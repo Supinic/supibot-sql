@@ -25,7 +25,7 @@ VALUES
 	(
 		199,
 		'stachursky',
-		NULL,
+		'[\"FeelsStachurskyMan\"]',
 		'Posts a random excerpt from a Stachursky song.',
 		10000,
 		0,
