@@ -168,7 +168,7 @@ VALUES
 			}
 
 			if (context.channel) {
-				sb.Master.send(\"The error stack Pastebin link was whispered to you 💻\", context.channel.ID);
+				sb.Master.send(\"The error stack Pastebin link has been whispered to you 💻\", context.channel.ID);
 			}
 
 			return {
@@ -458,7 +458,7 @@ ON DUPLICATE KEY UPDATE
 			}
 
 			if (context.channel) {
-				sb.Master.send(\"The error stack Pastebin link was whispered to you 💻\", context.channel.ID);
+				sb.Master.send(\"The error stack Pastebin link has been whispered to you 💻\", context.channel.ID);
 			}
 
 			return {
