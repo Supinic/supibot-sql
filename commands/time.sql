@@ -90,13 +90,20 @@ VALUES
 	if (timezone) {
 		const extraOffset = (Math.trunc(timezone.Offset) - timezone.Offset) * 60;
 		let prettyOffset = (\"00\" + String(Math.trunc(timezone.Offset))).slice(-2) + \":\" + (\"00\" + extraOffset).slice(-2);
+		let extra = \"\";
+
 		if (prettyOffset[0] !== \"-\") {
 			prettyOffset = \"+\" + prettyOffset;
 		}
 
+		if (timezone.Abbreviation === \"UTC\") {
+			extra = \"JUST 4Head\"
+			prettyOffset = \"\";
+		}
+
 		const date = new sb.Date().setTimezoneOffset(timezone.Offset * 60).format(\"H:i (Y-m-d)\");
 		return {
-			reply: `TIMEZONEDETECTED ${timezone.Abbreviation} is ${timezone.Name}, which is UTC ${prettyOffset}, and it is ${date} there right now.`
+			reply: `TIMEZONEDETECTED ${timezone.Abbreviation} is ${timezone.Name}, which is ${extra} UTC${prettyOffset} and it is ${date} there right now.`
 		};
 	}
 
@@ -126,7 +133,7 @@ VALUES
 
 	const replyPlace = (skipLocation) ? \"(location hidden)\" : place;
 	return { 
-		reply: `${replyPlace} is currently observing ${timeData.timeZoneName}, which is GMT${offset}, and it\'s ${time.format(\"H:i (Y-m-d)\")} there right now.`
+		reply: `${replyPlace} is currently observing ${timeData.timeZoneName}, which is UTC${offset}, and it\'s ${time.format(\"H:i (Y-m-d)\")} there right now.`
 	};
 })',
 		NULL,
@@ -185,13 +192,20 @@ ON DUPLICATE KEY UPDATE
 	if (timezone) {
 		const extraOffset = (Math.trunc(timezone.Offset) - timezone.Offset) * 60;
 		let prettyOffset = (\"00\" + String(Math.trunc(timezone.Offset))).slice(-2) + \":\" + (\"00\" + extraOffset).slice(-2);
+		let extra = \"\";
+
 		if (prettyOffset[0] !== \"-\") {
 			prettyOffset = \"+\" + prettyOffset;
 		}
 
+		if (timezone.Abbreviation === \"UTC\") {
+			extra = \"JUST 4Head\"
+			prettyOffset = \"\";
+		}
+
 		const date = new sb.Date().setTimezoneOffset(timezone.Offset * 60).format(\"H:i (Y-m-d)\");
 		return {
-			reply: `TIMEZONEDETECTED ${timezone.Abbreviation} is ${timezone.Name}, which is UTC ${prettyOffset}, and it is ${date} there right now.`
+			reply: `TIMEZONEDETECTED ${timezone.Abbreviation} is ${timezone.Name}, which is ${extra} UTC${prettyOffset} and it is ${date} there right now.`
 		};
 	}
 
@@ -221,6 +235,6 @@ ON DUPLICATE KEY UPDATE
 
 	const replyPlace = (skipLocation) ? \"(location hidden)\" : place;
 	return { 
-		reply: `${replyPlace} is currently observing ${timeData.timeZoneName}, which is GMT${offset}, and it\'s ${time.format(\"H:i (Y-m-d)\")} there right now.`
+		reply: `${replyPlace} is currently observing ${timeData.timeZoneName}, which is UTC${offset}, and it\'s ${time.format(\"H:i (Y-m-d)\")} there right now.`
 	};
 })'
