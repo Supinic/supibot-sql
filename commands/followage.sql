@@ -87,9 +87,11 @@ VALUES
 		}
 	});
 
-	if (/following.*for/.test(data)) {
+	if (/\\bfollowing.*for\\b/.test(data)) {
 		const split = data.split(\" for \");
 		if (split.length < 2) {
+			console.log({data, split});
+
 			const errorID = await sb.SystemLogger.sendError(\"Other\", new Error(\"Logging stack for followage\"), {user, channel});						return { 
 				reply: \"Twitch API responded in an unexpcted way! Please contact @supinic to fix with error ID: \" + errorID
 			};
@@ -157,9 +159,11 @@ ON DUPLICATE KEY UPDATE
 		}
 	});
 
-	if (/following.*for/.test(data)) {
+	if (/\\bfollowing.*for\\b/.test(data)) {
 		const split = data.split(\" for \");
 		if (split.length < 2) {
+			console.log({data, split});
+
 			const errorID = await sb.SystemLogger.sendError(\"Other\", new Error(\"Logging stack for followage\"), {user, channel});						return { 
 				reply: \"Twitch API responded in an unexpcted way! Please contact @supinic to fix with error ID: \" + errorID
 			};
