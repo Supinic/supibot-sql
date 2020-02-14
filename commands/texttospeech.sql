@@ -39,7 +39,7 @@ VALUES
 		1,
 		1,
 		0,
-		'(async function textToSpeech (context, ...args) {	
+		'(async function textToSpeech (context, ...args) {
 	if (args.length === 0) {
 		return {
 			reply: \"List of available voices: https://supinic.com/stream/tts\"
@@ -50,88 +50,108 @@ VALUES
 			reply: \"Text-to-speech is currently disabled!\"
 		};
 	}
-
-	const limit = sb.Config.get(\"TTS_TIME_LIMIT\");
-	const voiceData = sb.Config.get(\"TTS_VOICE_DATA\");
-
-	let voice = \"Brian\";
-	let language = null;
-	for (let i = args.length - 1; i >= 0; i--) {
-		const token = args[i];
-		if (/voice:\\w+/.test(token)) {
-			voice = sb.Utils.capitalize(token.split(\":\")[1]);
-			args.splice(i, 1);
-		}
-		else if (/lang:\\w+/.test(token)) {
-			voice = null;
-			language = token.split(\":\")[1].toLowerCase();
-			args.splice(i, 1);
-		}
-	}
-
-	if (language && voice) {
-		return {
-			reply: \"Can\'t specify both language and voice at the same time!\",
-		};
-	}
-	else if (language) {
-		const filtered = voiceData.filter(i => i.lang.toLowerCase().includes(language));
-		if (filtered.length === 0) {
-			return {
-				reply: \"No supported language provided!\",
-			};
-		}
-
-		voice = filtered[0].name;
-	}
-
-	
-	if (voice === \"Random\") {
-		voice = sb.Utils.randArray(voiceData).name;
-	}
-
-	const availableVoices = voiceData.map(i => i.name.toLowerCase());
-	if (!availableVoices.includes(voice.toLowerCase())) {
-		return {
-			reply: \"Provided voice does not exist!\",
-			cooldown: {
-				length: 2500
-			}
-		};
-	}
 	else if (!sb.Config.get(\"TTS_MULTIPLE_ENABLED\")) {
 		if (this.data.pending) {
 			return {
 				reply: \"Someone else is using the TTS right now, and multiple TTS is not available right now!\",
-				cooldown: {
-					length: 2500
-				}
+				cooldown: { length: 2500 }
 			};
 		}
 
 		this.data.pending = true;
 	}
 
+	const partCheck = (string) => string.match(/^(voice|lang):\\w+$/);
+	const limit = sb.Config.get(\"TTS_TIME_LIMIT\");
+	const voiceData = sb.Config.get(\"TTS_VOICE_DATA\");
+	const availableVoices = voiceData.map(i => i.name.toLowerCase());
+	const ttsData = [];
+	let currentVoice = \"Brian\";
+	let currentText = [];
+
+	for (const token of args) {
+		if (partCheck(token)) {
+			let newVoice = null;
+			let [type, param] = token.split(\":\");
+			if (!type || !param) {
+				return {
+					reply: `Incorrect format provided! Use (voice|lang):(name) instead.`
+				};
+			}
+			
+			param = param.toLowerCase();
+
+			if (type === \"lang\") {
+				const filtered = voiceData.filter(i => i.lang.toLowerCase().includes(param));
+				if (filtered.length === 0) {
+					return {
+						reply: `Language not found: ${param}`
+					};
+				}
+
+				console.log(filtered);
+				newVoice = filtered[0].name;
+			}
+			else if (type === \"voice\") {
+				if (param === \"random\") {
+					param = sb.Utils.randArray(availableVoices);
+				}
+				
+				if (!availableVoices.includes(param)) {
+					return {
+						reply: `Voice not found: ${param}`,
+						cooldown: { length: 2500 }
+					};
+				}
+
+				newVoice = sb.Utils.capitalize(param);
+			}
+
+			if (newVoice !== currentVoice)  {
+				if (currentText.length > 0) {
+					ttsData.push({
+						voice: currentVoice,
+						text: currentText.join(\" \")
+					});
+				}
+
+				currentVoice = newVoice;
+				currentText = [];
+			}
+		}
+		else {
+			currentText.push(token);
+		}
+	}
+
+	ttsData.push({
+		voice: currentVoice,
+		text: currentText.join(\" \")
+	});
+
+	if (ttsData.length > 3) {
+		return {
+			reply: `Your TTS was refused! You used too many voices - ${ttsData.length}, but the maximum is 3.`,
+			cooldown: { length: 5000 }
+		};
+	}
+
 	let messageTime = 0n;
 	let result = null;
-	const message = args.join(\" \").trim();
-
 	try {
 		messageTime = process.hrtime.bigint();
 		result = await sb.LocalRequest.playTextToSpeech({
-			text: message,
+			tts: ttsData,
 			volume: sb.Config.get(\"TTS_VOLUME\"),
-			limit,
-			voice
+			limit: sb.Config.get(\"TTS_TIME_LIMIT\")
 		});
-
 		messageTime = process.hrtime.bigint() - messageTime;
 	}
 	catch (e) {
 		console.log(e);
 		await sb.Config.set(\"TTS_ENABLED\", false);
 		return {
-			reply: \"The desktop listener is not currently running, turning off text to speech!\"
+			reply: \"TTS Listener encountered an error or is turned on. Turning off text to speech!\"
 		};
 	}
 	finally {
@@ -146,8 +166,8 @@ VALUES
 	}
 
 	const duration = sb.Utils.round(Number(messageTime) / 1.0e6, 0);
-	const cooldown = (duration > 10000)
-		? (context.command.Cooldown + (duration - 10000) * 10)
+	let cooldown = (duration > 10000)
+		? (context.command.Cooldown + (duration - 10000) * 10) * (ttsData.length)
 		: context.command.Cooldown;
 
 	return {
@@ -162,7 +182,7 @@ VALUES
 	)
 
 ON DUPLICATE KEY UPDATE
-	Code = '(async function textToSpeech (context, ...args) {	
+	Code = '(async function textToSpeech (context, ...args) {
 	if (args.length === 0) {
 		return {
 			reply: \"List of available voices: https://supinic.com/stream/tts\"
@@ -173,88 +193,108 @@ ON DUPLICATE KEY UPDATE
 			reply: \"Text-to-speech is currently disabled!\"
 		};
 	}
-
-	const limit = sb.Config.get(\"TTS_TIME_LIMIT\");
-	const voiceData = sb.Config.get(\"TTS_VOICE_DATA\");
-
-	let voice = \"Brian\";
-	let language = null;
-	for (let i = args.length - 1; i >= 0; i--) {
-		const token = args[i];
-		if (/voice:\\w+/.test(token)) {
-			voice = sb.Utils.capitalize(token.split(\":\")[1]);
-			args.splice(i, 1);
-		}
-		else if (/lang:\\w+/.test(token)) {
-			voice = null;
-			language = token.split(\":\")[1].toLowerCase();
-			args.splice(i, 1);
-		}
-	}
-
-	if (language && voice) {
-		return {
-			reply: \"Can\'t specify both language and voice at the same time!\",
-		};
-	}
-	else if (language) {
-		const filtered = voiceData.filter(i => i.lang.toLowerCase().includes(language));
-		if (filtered.length === 0) {
-			return {
-				reply: \"No supported language provided!\",
-			};
-		}
-
-		voice = filtered[0].name;
-	}
-
-	
-	if (voice === \"Random\") {
-		voice = sb.Utils.randArray(voiceData).name;
-	}
-
-	const availableVoices = voiceData.map(i => i.name.toLowerCase());
-	if (!availableVoices.includes(voice.toLowerCase())) {
-		return {
-			reply: \"Provided voice does not exist!\",
-			cooldown: {
-				length: 2500
-			}
-		};
-	}
 	else if (!sb.Config.get(\"TTS_MULTIPLE_ENABLED\")) {
 		if (this.data.pending) {
 			return {
 				reply: \"Someone else is using the TTS right now, and multiple TTS is not available right now!\",
-				cooldown: {
-					length: 2500
-				}
+				cooldown: { length: 2500 }
 			};
 		}
 
 		this.data.pending = true;
 	}
 
+	const partCheck = (string) => string.match(/^(voice|lang):\\w+$/);
+	const limit = sb.Config.get(\"TTS_TIME_LIMIT\");
+	const voiceData = sb.Config.get(\"TTS_VOICE_DATA\");
+	const availableVoices = voiceData.map(i => i.name.toLowerCase());
+	const ttsData = [];
+	let currentVoice = \"Brian\";
+	let currentText = [];
+
+	for (const token of args) {
+		if (partCheck(token)) {
+			let newVoice = null;
+			let [type, param] = token.split(\":\");
+			if (!type || !param) {
+				return {
+					reply: `Incorrect format provided! Use (voice|lang):(name) instead.`
+				};
+			}
+			
+			param = param.toLowerCase();
+
+			if (type === \"lang\") {
+				const filtered = voiceData.filter(i => i.lang.toLowerCase().includes(param));
+				if (filtered.length === 0) {
+					return {
+						reply: `Language not found: ${param}`
+					};
+				}
+
+				console.log(filtered);
+				newVoice = filtered[0].name;
+			}
+			else if (type === \"voice\") {
+				if (param === \"random\") {
+					param = sb.Utils.randArray(availableVoices);
+				}
+				
+				if (!availableVoices.includes(param)) {
+					return {
+						reply: `Voice not found: ${param}`,
+						cooldown: { length: 2500 }
+					};
+				}
+
+				newVoice = sb.Utils.capitalize(param);
+			}
+
+			if (newVoice !== currentVoice)  {
+				if (currentText.length > 0) {
+					ttsData.push({
+						voice: currentVoice,
+						text: currentText.join(\" \")
+					});
+				}
+
+				currentVoice = newVoice;
+				currentText = [];
+			}
+		}
+		else {
+			currentText.push(token);
+		}
+	}
+
+	ttsData.push({
+		voice: currentVoice,
+		text: currentText.join(\" \")
+	});
+
+	if (ttsData.length > 3) {
+		return {
+			reply: `Your TTS was refused! You used too many voices - ${ttsData.length}, but the maximum is 3.`,
+			cooldown: { length: 5000 }
+		};
+	}
+
 	let messageTime = 0n;
 	let result = null;
-	const message = args.join(\" \").trim();
-
 	try {
 		messageTime = process.hrtime.bigint();
 		result = await sb.LocalRequest.playTextToSpeech({
-			text: message,
+			tts: ttsData,
 			volume: sb.Config.get(\"TTS_VOLUME\"),
-			limit,
-			voice
+			limit: sb.Config.get(\"TTS_TIME_LIMIT\")
 		});
-
 		messageTime = process.hrtime.bigint() - messageTime;
 	}
 	catch (e) {
 		console.log(e);
 		await sb.Config.set(\"TTS_ENABLED\", false);
 		return {
-			reply: \"The desktop listener is not currently running, turning off text to speech!\"
+			reply: \"TTS Listener encountered an error or is turned on. Turning off text to speech!\"
 		};
 	}
 	finally {
@@ -269,8 +309,8 @@ ON DUPLICATE KEY UPDATE
 	}
 
 	const duration = sb.Utils.round(Number(messageTime) / 1.0e6, 0);
-	const cooldown = (duration > 10000)
-		? (context.command.Cooldown + (duration - 10000) * 10)
+	let cooldown = (duration > 10000)
+		? (context.command.Cooldown + (duration - 10000) * 10) * (ttsData.length)
 		: context.command.Cooldown;
 
 	return {
