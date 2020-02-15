@@ -45,12 +45,24 @@ VALUES
 	}
 
 	const userData = await sb.User.get(target);
+	if (!userData)  {
+		return { 
+			reply: `That user was not found in the database!`
+		};
+	}	
+
 	const data = (await sb.Query.getRecordset(rs => rs
 		.select(\"SUM(Message_Count) AS Total\")
 		.from(\"chat_data\", \"Message_Meta_User_Alias\")
 		.where(\"User_Alias = %n\", userData.ID)
 		.single()
 	));
+	
+	if (data.Total === null) {
+		return { 
+			reply: `That user is being tracked, but they have not said any lines in the channels I watch.`
+		};
+	}
 
 	const who = (context.user.ID === userData.ID) ? \"You have\" : \"That user has\";
 	return { 
@@ -68,12 +80,24 @@ ON DUPLICATE KEY UPDATE
 	}
 
 	const userData = await sb.User.get(target);
+	if (!userData)  {
+		return { 
+			reply: `That user was not found in the database!`
+		};
+	}	
+
 	const data = (await sb.Query.getRecordset(rs => rs
 		.select(\"SUM(Message_Count) AS Total\")
 		.from(\"chat_data\", \"Message_Meta_User_Alias\")
 		.where(\"User_Alias = %n\", userData.ID)
 		.single()
 	));
+	
+	if (data.Total === null) {
+		return { 
+			reply: `That user is being tracked, but they have not said any lines in the channels I watch.`
+		};
+	}
 
 	const who = (context.user.ID === userData.ID) ? \"You have\" : \"That user has\";
 	return { 
