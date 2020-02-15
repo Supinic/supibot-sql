@@ -115,7 +115,7 @@ $afk I\'ll be back.',
 		``,
 
 		`<code>${prefix}brb (status)</code>`,
-		`You are now pooping.`,
+		`You will be right back.`,
 		``,
 
 		`and more - check the aliases`
