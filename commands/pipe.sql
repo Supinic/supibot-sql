@@ -41,7 +41,7 @@ VALUES
 		0,
 		'(async function pipe (context, ...args) {
 	const invocations = args.join(\" \").split(\"|\").map(i => i.trim());
-	if (invocations.length < 2) {
+	if (!context.externalPipe && invocations.length < 2) {
 		return { reply: \"At least two commands must be piped together!\" };
 	}
 
@@ -143,7 +143,7 @@ VALUES
 ON DUPLICATE KEY UPDATE
 	Code = '(async function pipe (context, ...args) {
 	const invocations = args.join(\" \").split(\"|\").map(i => i.trim());
-	if (invocations.length < 2) {
+	if (!context.externalPipe && invocations.length < 2) {
 		return { reply: \"At least two commands must be piped together!\" };
 	}
 
