@@ -53,9 +53,8 @@ VALUES
 	else if (context.platform.Name === \"discord\") {
 		targetUser = await sb.Utils.getDiscordUserDataFromMentions(user, context.append);
 	}
-	else {
-		targetUser = await sb.User.get(user, true);
-	}
+
+	targetUser = await sb.User.get(targetUser || user, true);
 
 	if (!targetUser) {
 		return { reply: \"User not found in the database!\" };
@@ -156,9 +155,8 @@ ON DUPLICATE KEY UPDATE
 	else if (context.platform.Name === \"discord\") {
 		targetUser = await sb.Utils.getDiscordUserDataFromMentions(user, context.append);
 	}
-	else {
-		targetUser = await sb.User.get(user, true);
-	}
+
+	targetUser = await sb.User.get(targetUser || user, true);
 
 	if (!targetUser) {
 		return { reply: \"User not found in the database!\" };
