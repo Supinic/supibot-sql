@@ -52,7 +52,7 @@ VALUES
 
 	let limit = (context.channel?.Message_Limit ?? sb.Config.get(\"DEFAULT_MSG_LIMIT_\" + platform)) - context.user.Name.length - 3;
 	if (context.channel && context.channel.sessionData.live) {
-		limit = 150;
+		// limit = 150;
 	}
 
 	while (length < limit) {
@@ -98,7 +98,7 @@ ON DUPLICATE KEY UPDATE
 
 	let limit = (context.channel?.Message_Limit ?? sb.Config.get(\"DEFAULT_MSG_LIMIT_\" + platform)) - context.user.Name.length - 3;
 	if (context.channel && context.channel.sessionData.live) {
-		limit = 150;
+		// limit = 150;
 	}
 
 	while (length < limit) {
