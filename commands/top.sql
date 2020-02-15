@@ -39,7 +39,7 @@ VALUES
 		1,
 		1,
 		0,
-		'async (extra, limit) => {
+		'(async function top (extra, limit) {
 	if (!Number.isFinite(Number(limit))) {
 		limit = 10;
 	}
@@ -52,25 +52,26 @@ VALUES
 		: [extra.channel.ID]
 
 	const top = (await sb.Query.getRecordset(rs => rs
-		.select(\"Message_Count AS Total\")
+		.select(\"SUM(Message_Count) AS Total\")
 		.select(\"User_Alias.Name AS Name\")
 		.from(\"chat_data\", \"Message_Meta_User_Alias\")
 		.join(\"chat_data\", \"User_Alias\")
 		.where(\"Channel IN %n+\", channels)
-		.orderBy(\"Message_Count DESC\")
-		.limit(limit)
+		.groupBy(\"User_Alias\")
+		.orderBy(\"SUM(Message_Count) DESC\")
+		.limit(10)
 	));
 
 	return {
 		reply: \"Top \" + limit + \" chatters: \" + top.map((i, ind) => \"(#\" + (ind + 1) + \") \" + i.Name + \" - \" + i.Total).join(\", \")
 	};
-}',
+})',
 		NULL,
 		NULL
 	)
 
 ON DUPLICATE KEY UPDATE
-	Code = 'async (extra, limit) => {
+	Code = '(async function top (extra, limit) {
 	if (!Number.isFinite(Number(limit))) {
 		limit = 10;
 	}
@@ -83,16 +84,17 @@ ON DUPLICATE KEY UPDATE
 		: [extra.channel.ID]
 
 	const top = (await sb.Query.getRecordset(rs => rs
-		.select(\"Message_Count AS Total\")
+		.select(\"SUM(Message_Count) AS Total\")
 		.select(\"User_Alias.Name AS Name\")
 		.from(\"chat_data\", \"Message_Meta_User_Alias\")
 		.join(\"chat_data\", \"User_Alias\")
 		.where(\"Channel IN %n+\", channels)
-		.orderBy(\"Message_Count DESC\")
-		.limit(limit)
+		.groupBy(\"User_Alias\")
+		.orderBy(\"SUM(Message_Count) DESC\")
+		.limit(10)
 	));
 
 	return {
 		reply: \"Top \" + limit + \" chatters: \" + top.map((i, ind) => \"(#\" + (ind + 1) + \") \" + i.Name + \" - \" + i.Total).join(\", \")
 	};
-}'
+})'
