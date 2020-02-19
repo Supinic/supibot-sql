@@ -86,7 +86,8 @@ VALUES
 				...context.append,
 				platform: context.platform,
 				pipe: true,
-				skipPending: true
+				skipPending: true,
+				skipBanphrases: true
 			}
 		);
 
@@ -191,7 +192,8 @@ ON DUPLICATE KEY UPDATE
 				...context.append,
 				platform: context.platform,
 				pipe: true,
-				skipPending: true
+				skipPending: true,
+				skipBanphrases: true
 			}
 		);
 
