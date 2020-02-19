@@ -108,8 +108,9 @@ VALUES
 		};
 	}
 
+	const selfRegex = new RegExp(\"^@?\" + sb.Config.get(\"SELF\") + \",?\", \"i\");
 	return {
-		reply: resultMessage
+		reply: resultMessage.replace(selfRegex, \"\")
 	};
 })',
 		NULL,
@@ -186,7 +187,8 @@ ON DUPLICATE KEY UPDATE
 		};
 	}
 
+	const selfRegex = new RegExp(\"^@?\" + sb.Config.get(\"SELF\") + \",?\", \"i\");
 	return {
-		reply: resultMessage
+		reply: resultMessage.replace(selfRegex, \"\")
 	};
 })'
