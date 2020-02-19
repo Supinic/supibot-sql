@@ -71,6 +71,7 @@ VALUES
 
 	if (!botData) {
 		return {
+			reason: \"bad_invocation\",
 			reply: \"No bot with that prefix has been found!\"
 		};
 	}
@@ -102,9 +103,9 @@ VALUES
 	const resultMessage = await promise;
 	if (resultMessage === null) {
 		return {
-			error: true,
+			reason: \"bad_invocation\",
 			reply: \"No response from external bot after 5 seconds!\"
-		}
+		};
 	}
 
 	return {
@@ -148,6 +149,7 @@ ON DUPLICATE KEY UPDATE
 
 	if (!botData) {
 		return {
+			reason: \"bad_invocation\",
 			reply: \"No bot with that prefix has been found!\"
 		};
 	}
@@ -179,9 +181,9 @@ ON DUPLICATE KEY UPDATE
 	const resultMessage = await promise;
 	if (resultMessage === null) {
 		return {
-			error: true,
+			reason: \"bad_invocation\",
 			reply: \"No response from external bot after 5 seconds!\"
-		}
+		};
 	}
 
 	return {
