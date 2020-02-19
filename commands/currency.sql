@@ -69,8 +69,6 @@ VALUES
 
 	amount = amount.replace(/[kmbt]/gi, \"\").replace(/,/g, \".\");
 	if (!Number(amount)) {
-		console.log(amount);
-
 		return {
 			reply: \"The amount must be a finite number!\",
 			meta: { skipCooldown: true }
@@ -82,31 +80,35 @@ VALUES
 		return { reply: \"Both currencies must be represented by exactly 3 letters!\" };
 	}
 
-	const params = new sb.URLParams()
-		.set(\"compact\", \"ultra\")
-		.set(\"q\", currencySymbol)
-		.set(\"apiKey\", sb.Config.get(\"API_FREE_CURRENCY_CONVERTER\"));
-
-	let rawData = null;
-	let ratio = null;
-	try {
-		rawData = await sb.Utils.request({
-			uri: \"https://free.currencyconverterapi.com/api/v6/convert?\" + params.toString()
-		});
-
-		ratio = JSON.parse(rawData)[currencySymbol];
+	if (!this.data.cache) {
+		this.data.cache = {};
 	}
-	catch (e) {
-		if (e.error) {
-			return {
-				reply: \"API returned error: \" + sb.Utils.removeHTML(e.error).replace(/\\s+/g, \" \")
+
+	if (!this.data.cache[currencySymbol] || sb.Date.now() > this.data.cache[currencySymbol].expiry) {
+		const params = new sb.URLParams()
+			.set(\"compact\", \"ultra\")
+			.set(\"q\", currencySymbol)
+			.set(\"apiKey\", sb.Config.get(\"API_FREE_CURRENCY_CONVERTER\"));
+
+		const data = JSON.parse(await sb.Utils.request({
+			uri: \"https://free.currencyconverterapi.com/api/v6/convert?\" + params.toString()
+		}));
+
+		if (typeof data[currencySymbol] === \"number\") {
+			this.data.cache[currencySymbol] = {
+				ratio: data[currencySymbol],
+				expiry: new sb.Date().addDays(1).valueOf()
 			};
 		}
 		else {
-			return { reply: \"API site returned error: \" + sb.Utils.removeHTML(rawData).replace(/\\s+/g, \" \") };
+			this.data.cache[currencySymbol] = {
+				ratio: null,
+				expiry: Infinity
+			};
 		}
 	}
-
+	
+	const { ratio } = this.data.cache[currencySymbol];
 	if (typeof ratio === \"number\") {
 		return {
 			reply: `${amount * multiplier} ${first} = ${sb.Utils.round(amount * multiplier * ratio, 3)} ${second}`
@@ -157,8 +159,6 @@ ON DUPLICATE KEY UPDATE
 
 	amount = amount.replace(/[kmbt]/gi, \"\").replace(/,/g, \".\");
 	if (!Number(amount)) {
-		console.log(amount);
-
 		return {
 			reply: \"The amount must be a finite number!\",
 			meta: { skipCooldown: true }
@@ -170,31 +170,35 @@ ON DUPLICATE KEY UPDATE
 		return { reply: \"Both currencies must be represented by exactly 3 letters!\" };
 	}
 
-	const params = new sb.URLParams()
-		.set(\"compact\", \"ultra\")
-		.set(\"q\", currencySymbol)
-		.set(\"apiKey\", sb.Config.get(\"API_FREE_CURRENCY_CONVERTER\"));
-
-	let rawData = null;
-	let ratio = null;
-	try {
-		rawData = await sb.Utils.request({
-			uri: \"https://free.currencyconverterapi.com/api/v6/convert?\" + params.toString()
-		});
-
-		ratio = JSON.parse(rawData)[currencySymbol];
+	if (!this.data.cache) {
+		this.data.cache = {};
 	}
-	catch (e) {
-		if (e.error) {
-			return {
-				reply: \"API returned error: \" + sb.Utils.removeHTML(e.error).replace(/\\s+/g, \" \")
+
+	if (!this.data.cache[currencySymbol] || sb.Date.now() > this.data.cache[currencySymbol].expiry) {
+		const params = new sb.URLParams()
+			.set(\"compact\", \"ultra\")
+			.set(\"q\", currencySymbol)
+			.set(\"apiKey\", sb.Config.get(\"API_FREE_CURRENCY_CONVERTER\"));
+
+		const data = JSON.parse(await sb.Utils.request({
+			uri: \"https://free.currencyconverterapi.com/api/v6/convert?\" + params.toString()
+		}));
+
+		if (typeof data[currencySymbol] === \"number\") {
+			this.data.cache[currencySymbol] = {
+				ratio: data[currencySymbol],
+				expiry: new sb.Date().addDays(1).valueOf()
 			};
 		}
 		else {
-			return { reply: \"API site returned error: \" + sb.Utils.removeHTML(rawData).replace(/\\s+/g, \" \") };
+			this.data.cache[currencySymbol] = {
+				ratio: null,
+				expiry: Infinity
+			};
 		}
 	}
-
+	
+	const { ratio } = this.data.cache[currencySymbol];
 	if (typeof ratio === \"number\") {
 		return {
 			reply: `${amount * multiplier} ${first} = ${sb.Utils.round(amount * multiplier * ratio, 3)} ${second}`
