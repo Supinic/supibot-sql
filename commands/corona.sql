@@ -43,7 +43,7 @@ VALUES
 	if (!this.data.cache || sb.Date.now() > this.data.nextReload) {
 		const owner = \"CSSEGISandData\";
 		const repo = \"2019-nCoV\";
-		const directorySHA = \"2dad3404acaa7077df7418122ed21157fe0e11bc\";
+		const directorySHA = \"e34fb4e716a2ac37b62d965b84d297ac3f3cd5f7\";
 		const files = JSON.parse(await sb.Utils.request({
 			url: `https://api.github.com/repos/${owner}/${repo}/git/trees/${directorySHA}`,
 			headers: {
@@ -166,7 +166,7 @@ ON DUPLICATE KEY UPDATE
 	if (!this.data.cache || sb.Date.now() > this.data.nextReload) {
 		const owner = \"CSSEGISandData\";
 		const repo = \"2019-nCoV\";
-		const directorySHA = \"2dad3404acaa7077df7418122ed21157fe0e11bc\";
+		const directorySHA = \"e34fb4e716a2ac37b62d965b84d297ac3f3cd5f7\";
 		const files = JSON.parse(await sb.Utils.request({
 			url: `https://api.github.com/repos/${owner}/${repo}/git/trees/${directorySHA}`,
 			headers: {
