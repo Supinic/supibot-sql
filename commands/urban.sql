@@ -49,7 +49,7 @@ VALUES
 		};
 	}
 
-	let index = 0;
+	let index = null;
 	for (let i = args.length - 1; i >= 0; i--) {
 		const token = args[i];
 		if (/index:\\d+/.test(token)) {
@@ -75,18 +75,24 @@ VALUES
 		return { reply: \"No results found!\" };
 	}
 
-	const item = data.list.filter(i => i.word.toLowerCase() === args.join(\" \").toLowerCase())[index];
-	if (!item) {
+	const items = data.list.filter(i => i.word.toLowerCase() === args.join(\" \").toLowerCase());
+	if (items.length === 0) {
 		return { reply: \"There is no definition with that index!\" };
 	}
 
+	let extra = \"\";
+	if (items.length > 1 && index === null) {
+		extra = `(Multiple definitions: use \"index:0\" to \"index:${items.length-1}\" to access each one)`
+	}
+
+	const item = items[index ?? 0];
 	const thumbs = \"(+\" + item.thumbs_up + \"/-\" + item.thumbs_down + \")\";
 	const example = (item.example)
 		? (\" - Example: \" + item.example)
 		: \"\";
 
 	return {
-		reply: thumbs + \" \" + (item.definition + example).replace(/[\\][]/g, \"\")
+		reply: extra + \" \" + thumbs + \" \" + (item.definition + example).replace(/[\\][]/g, \"\")
 	};
 })',
 		NULL,
@@ -104,7 +110,7 @@ ON DUPLICATE KEY UPDATE
 		};
 	}
 
-	let index = 0;
+	let index = null;
 	for (let i = args.length - 1; i >= 0; i--) {
 		const token = args[i];
 		if (/index:\\d+/.test(token)) {
@@ -130,17 +136,23 @@ ON DUPLICATE KEY UPDATE
 		return { reply: \"No results found!\" };
 	}
 
-	const item = data.list.filter(i => i.word.toLowerCase() === args.join(\" \").toLowerCase())[index];
-	if (!item) {
+	const items = data.list.filter(i => i.word.toLowerCase() === args.join(\" \").toLowerCase());
+	if (items.length === 0) {
 		return { reply: \"There is no definition with that index!\" };
 	}
 
+	let extra = \"\";
+	if (items.length > 1 && index === null) {
+		extra = `(Multiple definitions: use \"index:0\" to \"index:${items.length-1}\" to access each one)`
+	}
+
+	const item = items[index ?? 0];
 	const thumbs = \"(+\" + item.thumbs_up + \"/-\" + item.thumbs_down + \")\";
 	const example = (item.example)
 		? (\" - Example: \" + item.example)
 		: \"\";
 
 	return {
-		reply: thumbs + \" \" + (item.definition + example).replace(/[\\][]/g, \"\")
+		reply: extra + \" \" + thumbs + \" \" + (item.definition + example).replace(/[\\][]/g, \"\")
 	};
 })'
