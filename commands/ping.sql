@@ -39,26 +39,36 @@ VALUES
 		0,
 		1,
 		0,
-		'async (extra) => {
-	const exec = require(\"child_process\").execSync;
+		'(async function ping (context) {
+	const promisify = require(\"util\").promisify;
+	const readFile = require(\"fs\").promises.readFile;
+	const exec = promisify(require(\"child_process\").exec);
 	const chars = {a: \"e\", e: \"i\", i: \"o\", o: \"u\", u: \"y\", y: \"a\"};
-	
+
 	const startLatency = process.hrtime();
 	await sb.Master.clients.twitch.client.ping();
 	const endLatency = process.hrtime(startLatency);
-	const pong = \"P\" + chars[extra.invocation[1]] + \"ng!\";
 
+	const [temperature, memory] = await Promise.all([
+		exec(\"/opt/vc/bin/vcgencmd measure_temp\"),
+		readFile(\"/proc/meminfo\")
+	]);
+
+	const memoryData = String(memory).split(\"\\n\").map(i => i.split(/:\\s+/)[1]);
+
+	const pong = \"P\" + chars[context.invocation[1]] + \"ng!\";
 	const data = {
 		Uptime: sb.Utils.timeDelta(sb.Master.started).replace(\"ago\", \"\").trim(),
-		Temperature: exec(\"/opt/vc/bin/vcgencmd measure_temp\").toString().match(/([\\d\\.]+)/)[1] + \"°C\",
+		Temperature: temperature.stdout.match(/([\\d\\.]+)/)[1] + \"°C\",
+		Memory: memoryData[2] + \"/\" + memoryData[0],
 		\"Latency to TMI\": (endLatency[0] * 1e3 + endLatency[1] / 1e6) + \" ms\",
-		\"Commands used\": sb.Runtime.commandsUsed		
+		\"Commands used\": sb.Runtime.commandsUsed
 	};
 
 	return {
 		reply: pong + \" \" + Object.entries(data).map(([name, value]) => name + \": \" + value).join(\"; \")
 	};
-}',
+})',
 		NULL,
 		'async (prefix) => {
 	return [
@@ -74,23 +84,33 @@ VALUES
 	)
 
 ON DUPLICATE KEY UPDATE
-	Code = 'async (extra) => {
-	const exec = require(\"child_process\").execSync;
+	Code = '(async function ping (context) {
+	const promisify = require(\"util\").promisify;
+	const readFile = require(\"fs\").promises.readFile;
+	const exec = promisify(require(\"child_process\").exec);
 	const chars = {a: \"e\", e: \"i\", i: \"o\", o: \"u\", u: \"y\", y: \"a\"};
-	
+
 	const startLatency = process.hrtime();
 	await sb.Master.clients.twitch.client.ping();
 	const endLatency = process.hrtime(startLatency);
-	const pong = \"P\" + chars[extra.invocation[1]] + \"ng!\";
 
+	const [temperature, memory] = await Promise.all([
+		exec(\"/opt/vc/bin/vcgencmd measure_temp\"),
+		readFile(\"/proc/meminfo\")
+	]);
+
+	const memoryData = String(memory).split(\"\\n\").map(i => i.split(/:\\s+/)[1]);
+
+	const pong = \"P\" + chars[context.invocation[1]] + \"ng!\";
 	const data = {
 		Uptime: sb.Utils.timeDelta(sb.Master.started).replace(\"ago\", \"\").trim(),
-		Temperature: exec(\"/opt/vc/bin/vcgencmd measure_temp\").toString().match(/([\\d\\.]+)/)[1] + \"°C\",
+		Temperature: temperature.stdout.match(/([\\d\\.]+)/)[1] + \"°C\",
+		Memory: memoryData[2] + \"/\" + memoryData[0],
 		\"Latency to TMI\": (endLatency[0] * 1e3 + endLatency[1] / 1e6) + \" ms\",
-		\"Commands used\": sb.Runtime.commandsUsed		
+		\"Commands used\": sb.Runtime.commandsUsed
 	};
 
 	return {
 		reply: pong + \" \" + Object.entries(data).map(([name, value]) => name + \": \" + value).join(\"; \")
 	};
-}'
+})'
