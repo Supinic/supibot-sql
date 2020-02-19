@@ -98,6 +98,9 @@ VALUES
 		else if (typeof result !== \"object\") { // Banphrase result: Reply with message
 			return { reply: result };
 		}
+		else if (result.reason === \"bad_invocation\" && result.reply) {
+			return { reply: `Command \"${cmd}\" failed: ${result.reply}` };
+		}
 		else if (result.reason === \"error\" && result.reply) {
 			return { reply: result.reply };
 		}
@@ -199,6 +202,9 @@ ON DUPLICATE KEY UPDATE
 		}
 		else if (typeof result !== \"object\") { // Banphrase result: Reply with message
 			return { reply: result };
+		}
+		else if (result.reason === \"bad_invocation\" && result.reply) {
+			return { reply: `Command \"${cmd}\" failed: ${result.reply}` };
 		}
 		else if (result.reason === \"error\" && result.reply) {
 			return { reply: result.reply };
