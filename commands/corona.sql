@@ -43,15 +43,15 @@ VALUES
 	if (!this.data.cache || sb.Date.now() > this.data.nextReload) {
 		const owner = \"CSSEGISandData\";
 		const repo = \"2019-nCoV\";
-		const directorySHA = \"e34fb4e716a2ac37b62d965b84d297ac3f3cd5f7\";
+		const path = \"csse_covid_19_data/csse_covid_19_daily_reports\";
 		const files = JSON.parse(await sb.Utils.request({
-			url: `https://api.github.com/repos/${owner}/${repo}/git/trees/${directorySHA}`,
+			url: `https://api.github.com/repos/${owner}/${repo}/contents/${path}`,
 			headers: {
 				\"User-Agent\": \"Supibot @ github.com/supinic/supibot\"
 			}
 		}));
 
-		const latestFile = files.tree.filter(i => i.path.includes(\".csv\")).pop();
+		const latestFile = files.filter(i => i.path.includes(\".csv\")).pop();
 		const { content } = JSON.parse(await sb.Utils.request({
 			url: latestFile.url,
 			headers: {
@@ -166,15 +166,15 @@ ON DUPLICATE KEY UPDATE
 	if (!this.data.cache || sb.Date.now() > this.data.nextReload) {
 		const owner = \"CSSEGISandData\";
 		const repo = \"2019-nCoV\";
-		const directorySHA = \"e34fb4e716a2ac37b62d965b84d297ac3f3cd5f7\";
+		const path = \"csse_covid_19_data/csse_covid_19_daily_reports\";
 		const files = JSON.parse(await sb.Utils.request({
-			url: `https://api.github.com/repos/${owner}/${repo}/git/trees/${directorySHA}`,
+			url: `https://api.github.com/repos/${owner}/${repo}/contents/${path}`,
 			headers: {
 				\"User-Agent\": \"Supibot @ github.com/supinic/supibot\"
 			}
 		}));
 
-		const latestFile = files.tree.filter(i => i.path.includes(\".csv\")).pop();
+		const latestFile = files.filter(i => i.path.includes(\".csv\")).pop();
 		const { content } = JSON.parse(await sb.Utils.request({
 			url: latestFile.url,
 			headers: {
