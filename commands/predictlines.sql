@@ -39,7 +39,7 @@ VALUES
 		1,
 		1,
 		0,
-		'async (context, user, ...args) => {
+		'(async function predictLines (context, user, ...args) {
 	if (!user) {
 		return { reply: \"No user provided!\", meta: { skipCooldown: true } };
 	}
@@ -52,7 +52,7 @@ VALUES
 		return { reply: \"Provided user does not exist!\" };
 	}
 
-	const offset = sb.Utils.parseDuration(args.join(\" \"));
+	const offset = sb.Utils.parseDuration(args.join(\" \"), { returnData: false });
 	if (!offset || offset < 0) {
 		return { reply: \"Provided time must be valid and it must refer to future!\" };
 	}
@@ -66,7 +66,7 @@ VALUES
 
 	const ratio = total / (sb.Date.now() - userData.Started_Using);
 	const messages = sb.Utils.round(offset * ratio, 0);
-		
+
 	if (messages > Number.MAX_SAFE_INTEGER) {
 		return { reply: \"There\'s too many lines to be precise! Try a smaller time interval.\" };
 	}
@@ -79,13 +79,13 @@ VALUES
 	return {
 		reply: \"I predict that there will be \" + messages + \" extra lines \" + whenString
 	};
-}',
+})',
 		NULL,
 		NULL
 	)
 
 ON DUPLICATE KEY UPDATE
-	Code = 'async (context, user, ...args) => {
+	Code = '(async function predictLines (context, user, ...args) {
 	if (!user) {
 		return { reply: \"No user provided!\", meta: { skipCooldown: true } };
 	}
@@ -98,7 +98,7 @@ ON DUPLICATE KEY UPDATE
 		return { reply: \"Provided user does not exist!\" };
 	}
 
-	const offset = sb.Utils.parseDuration(args.join(\" \"));
+	const offset = sb.Utils.parseDuration(args.join(\" \"), { returnData: false });
 	if (!offset || offset < 0) {
 		return { reply: \"Provided time must be valid and it must refer to future!\" };
 	}
@@ -112,7 +112,7 @@ ON DUPLICATE KEY UPDATE
 
 	const ratio = total / (sb.Date.now() - userData.Started_Using);
 	const messages = sb.Utils.round(offset * ratio, 0);
-		
+
 	if (messages > Number.MAX_SAFE_INTEGER) {
 		return { reply: \"There\'s too many lines to be precise! Try a smaller time interval.\" };
 	}
@@ -125,4 +125,4 @@ ON DUPLICATE KEY UPDATE
 	return {
 		reply: \"I predict that there will be \" + messages + \" extra lines \" + whenString
 	};
-}'
+})'
