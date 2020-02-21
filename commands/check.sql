@@ -269,6 +269,23 @@ VALUES
 			}
 		}
 
+		case \"reset\": {
+			const last = await sb.Query.getRecordset(rs => rs
+				.select(\"Timestamp\")
+				.from(\"data\", \"Reset\")
+				.where(\"User_Alias = %n\", context.user.ID)
+				.orderBy(\"ID DESC\")
+				.limit(1)
+				.single()
+			);
+
+			return {
+				reply: (last) 
+					? `Your last \"reset\" was ${sb.Utils.timeDelta(last.Timestamp)}.`
+					: `You have never noted down a \"reset\" before.`
+			}
+		}
+
 		case \"suggest\":
 		case \"suggestion\":
 		case \"suggestions\": {
@@ -556,6 +573,23 @@ ON DUPLICATE KEY UPDATE
 			const [yes, no] = sb.Utils.splitByCondition(votes, i => i.Vote === \"Yes\");
 			return {
 				reply: `Poll ${poll.ID} (${poll.Status}) - ${poll.Text} - Votes: ${yes.length}:${no.length}`
+			}
+		}
+
+		case \"reset\": {
+			const last = await sb.Query.getRecordset(rs => rs
+				.select(\"Timestamp\")
+				.from(\"data\", \"Reset\")
+				.where(\"User_Alias = %n\", context.user.ID)
+				.orderBy(\"ID DESC\")
+				.limit(1)
+				.single()
+			);
+
+			return {
+				reply: (last) 
+					? `Your last \"reset\" was ${sb.Utils.timeDelta(last.Timestamp)}.`
+					: `You have never noted down a \"reset\" before.`
 			}
 		}
 
