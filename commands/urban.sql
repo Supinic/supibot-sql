@@ -82,7 +82,7 @@ VALUES
 
 	let extra = \"\";
 	if (items.length > 1 && index === null) {
-		extra = `(Multiple definitions: use \"index:0\" to \"index:${items.length-1}\" to access each one)`
+		extra = `(${items.length - 1} extra definitons)`
 	}
 
 	const item = items[index ?? 0];
@@ -143,7 +143,7 @@ ON DUPLICATE KEY UPDATE
 
 	let extra = \"\";
 	if (items.length > 1 && index === null) {
-		extra = `(Multiple definitions: use \"index:0\" to \"index:${items.length-1}\" to access each one)`
+		extra = `(${items.length - 1} extra definitons)`
 	}
 
 	const item = items[index ?? 0];
