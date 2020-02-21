@@ -89,15 +89,7 @@ VALUES
 
 	if (/\\bfollowing.*for\\b/.test(data)) {
 		const split = data.split(\" for \");
-		if (split.length < 2) {
-			console.log({data, split});
-
-			const errorID = await sb.SystemLogger.sendError(\"Other\", new Error(\"Logging stack for followage\"), {user, channel});						return { 
-				reply: \"Twitch API responded in an unexpcted way! Please contact @supinic to fix with error ID: \" + errorID
-			};
-		}
-
-		const delta = sb.Utils.timeDelta(sb.Date.now() - sb.Utils.parseDuration(split[1].trim(), \"ms\"));
+		const delta = sb.Utils.timeDelta(sb.Date.now() - sb.Utils.parseDuration(split[1].trim(), { returnData: false }));
 		data = split[0] + \" for \" + delta.replace(/\\s*ago\\s*/, \"\") + \".\";
 	}
 	else if (data.includes(\"not following\")) {
@@ -161,15 +153,7 @@ ON DUPLICATE KEY UPDATE
 
 	if (/\\bfollowing.*for\\b/.test(data)) {
 		const split = data.split(\" for \");
-		if (split.length < 2) {
-			console.log({data, split});
-
-			const errorID = await sb.SystemLogger.sendError(\"Other\", new Error(\"Logging stack for followage\"), {user, channel});						return { 
-				reply: \"Twitch API responded in an unexpcted way! Please contact @supinic to fix with error ID: \" + errorID
-			};
-		}
-
-		const delta = sb.Utils.timeDelta(sb.Date.now() - sb.Utils.parseDuration(split[1].trim(), \"ms\"));
+		const delta = sb.Utils.timeDelta(sb.Date.now() - sb.Utils.parseDuration(split[1].trim(), { returnData: false }));
 		data = split[0] + \" for \" + delta.replace(/\\s*ago\\s*/, \"\") + \".\";
 	}
 	else if (data.includes(\"not following\")) {
