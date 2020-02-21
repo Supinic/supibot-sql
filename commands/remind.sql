@@ -45,10 +45,9 @@ VALUES
 		return { reply: \"Not enough info provided!\", meta: { skipCooldown: true } };
 	}
 	else if (sb.User.bots.has(context.user.ID)) {
-		deprecationNotice = \"Deprecation notice :) Bots should be using Supibot reminder API\";
+		deprecationNotice = \"Deprecation notice :) Bots should be using Supibot reminder API!\";
 	}
 
-	const originalArgs = args.slice(0);
 	let targetUser = await sb.Utils.getDiscordUserDataFromMentions(args[0].toLowerCase(), context.append) || await sb.User.get(args[0], true);
 	if (context.invocation.includes(\"me\") || args[0] === \"me\" || (targetUser && targetUser.ID === context.user.ID)) {
 		targetUser = context.user;
@@ -90,73 +89,76 @@ VALUES
 		};
 	}
 
-	let timestamp = null;
+	let delta = 0;
+	let reminderText = args.join(\" \");
 	const now = new sb.Date();
-	const timeIndex = args.lastIndexOf(\"in\");
-	if (timeIndex !== -1 && args[timeIndex + 1] && /^-?\\d+/.test(args[timeIndex + 1])) {
-		const timeString = args.splice(timeIndex).join(\" \");
-		let delta = null;
+	const timeData = sb.Utils.parseDuration(reminderText, { returnData: true });
 
-		try {
-			delta = sb.Utils.parseDuration(timeString, \"ms\");
-			timestamp = new sb.Date(sb.Date.now() + delta);
-		}
-		catch (e) {
-			return { reply: e.message };
-		}
+	let lastRange = 0;
+	for (const {start, string, end, time} of timeData.ranges) {
+		const prefix = reminderText.slice(start - 3, start);
+		console.log({string, start, end, time, delta, lastRange})
 
-		if (now > timestamp) {
-			return { reply: \"Timed reminders in the past are only available for people that posess a time machine!\" };
-		}
-		// Special case, if the keyword \"in\" is found, but not in a time context, treat the reminder as a non-timed one
-		else if (delta === 0) {
-			if (targetUser === context.user) {
-				return {
-					reply: \"Invalid time description provided!\"
-				};
-			}
+		if (prefix === \"in \" || ((start - lastRange) === 1)) {
+			lastRange = end;
+			delta += time;
 
-			timestamp = null;
-			args = originalArgs;
+			const shift = (prefix === \"in \") ? 3 : 0;
+			reminderText = reminderText.slice(0, start - shift) + \" \".repeat(end - start + shift) + reminderText.slice(end);
 		}
-		else if (Math.abs(now - timestamp) < 30.0e3) {
-			return { reply: \"You cannot set a timed reminder in less than 30 seconds!\", meta: { skipCooldown: true } };
-		}
-		else if (timestamp.valueOf() > sb.Config.get(\"SQL_DATETIME_LIMIT\")) {
+	}
+
+	if (reminderText) {
+		reminderText = reminderText.replace(/\\s{2,}/g, \" \").replace(/^ /, \"\");
+	}
+
+	const comparison = new sb.Date(now.valueOf() + delta);
+
+	if (delta === 0) {
+		if (targetUser === context.user) {
 			return {
-				reply: \"Unfortunately, only dates within the SQL DATETIME range are supported - up to Dec 31st 9999\",
-				meta: { skipCooldown: true }
+				reply: \"If you want to remind yourself, you must use a timed reminder!\"
 			};
 		}
-		else if (!timestamp.valueOf()) {
-			return { reply: \"Invalid time description!\", meta: { skipCooldown: true } };
-		}
 	}
-	else if (targetUser === context.user) {
-		return { reply: \"If you want to remind yourself, you must use a timed reminder!\" };
+	else if (now > comparison) {
+		return { reply: \"Timed reminders in the past are only available for people that posess a time machine!\" };
+	}
+	else if (Math.abs(now - comparison) < 30.0e3) {
+		return { reply: \"You cannot set a timed reminder in less than 30 seconds!\", meta: { skipCooldown: true } };
+	}
+	else if (comparison > sb.Config.get(\"SQL_DATETIME_LIMIT\")) {
+		return {
+			reply: \"Unfortunately, only dates within the SQL DATETIME range are supported - up to Dec 31st 9999\",
+			meta: { skipCooldown: true }
+		};
+	}
+	else if (!Number.isFinite(comparison.valueOf())) {
+		return { reply: \"Invalid time description!\", meta: { skipCooldown: true } };
 	}
 
-	if (context.privateMessage && timestamp !== null) {
+	// If it is a timed reminder via PMs, only allow it if it a self reminder.
+	// Scheduled reminders for users via PMs violate the philosophy of reminders.
+	if (context.privateMessage && delta !== 0) {
 		if (targetUser === context.user) {
 			isPrivate = true;
 		}
 		else {
-			return { 
+			return {
 				reply: \"You cannot set a timed reminder for someone else via private messages!\"
 			};
 		}
 	}
 
-	const text = args.join(\" \") || null;
 	let resultID = null;
-
+	const timestamp = (delta === 0) ? null : new sb.Date(now.valueOf() + delta);
 	try {
 		resultID = await sb.Reminder.create({
 			Channel: context?.channel?.ID ?? null,
 			Platform: context.platform.ID,
 			User_From: context.user.ID,
 			User_To: targetUser.ID,
-			Text: text || \"(no message)\",
+			Text: reminderText || \"(no message)\",
 			Schedule: timestamp,
 			Created: new sb.Date(),
 			Private_Message: isPrivate
@@ -171,7 +173,7 @@ VALUES
 		\"I will\" + (isPrivate ? \" privately\" : \"\") + \" remind\",
 		(targetUser.ID === context.user.ID) ? \"you\" : targetUser.Name,
 		(timestamp)
-			? sb.Utils.timeDelta(new sb.Date().addMilliseconds(timestamp - now))
+			? sb.Utils.timeDelta(timestamp)
 			: \"when they next type in chat\",
 		\"(ID \" + resultID + \")\"
 	].join(\" \");
@@ -189,10 +191,9 @@ ON DUPLICATE KEY UPDATE
 		return { reply: \"Not enough info provided!\", meta: { skipCooldown: true } };
 	}
 	else if (sb.User.bots.has(context.user.ID)) {
-		deprecationNotice = \"Deprecation notice :) Bots should be using Supibot reminder API\";
+		deprecationNotice = \"Deprecation notice :) Bots should be using Supibot reminder API!\";
 	}
 
-	const originalArgs = args.slice(0);
 	let targetUser = await sb.Utils.getDiscordUserDataFromMentions(args[0].toLowerCase(), context.append) || await sb.User.get(args[0], true);
 	if (context.invocation.includes(\"me\") || args[0] === \"me\" || (targetUser && targetUser.ID === context.user.ID)) {
 		targetUser = context.user;
@@ -234,73 +235,76 @@ ON DUPLICATE KEY UPDATE
 		};
 	}
 
-	let timestamp = null;
+	let delta = 0;
+	let reminderText = args.join(\" \");
 	const now = new sb.Date();
-	const timeIndex = args.lastIndexOf(\"in\");
-	if (timeIndex !== -1 && args[timeIndex + 1] && /^-?\\d+/.test(args[timeIndex + 1])) {
-		const timeString = args.splice(timeIndex).join(\" \");
-		let delta = null;
+	const timeData = sb.Utils.parseDuration(reminderText, { returnData: true });
 
-		try {
-			delta = sb.Utils.parseDuration(timeString, \"ms\");
-			timestamp = new sb.Date(sb.Date.now() + delta);
-		}
-		catch (e) {
-			return { reply: e.message };
-		}
+	let lastRange = 0;
+	for (const {start, string, end, time} of timeData.ranges) {
+		const prefix = reminderText.slice(start - 3, start);
+		console.log({string, start, end, time, delta, lastRange})
 
-		if (now > timestamp) {
-			return { reply: \"Timed reminders in the past are only available for people that posess a time machine!\" };
-		}
-		// Special case, if the keyword \"in\" is found, but not in a time context, treat the reminder as a non-timed one
-		else if (delta === 0) {
-			if (targetUser === context.user) {
-				return {
-					reply: \"Invalid time description provided!\"
-				};
-			}
+		if (prefix === \"in \" || ((start - lastRange) === 1)) {
+			lastRange = end;
+			delta += time;
 
-			timestamp = null;
-			args = originalArgs;
+			const shift = (prefix === \"in \") ? 3 : 0;
+			reminderText = reminderText.slice(0, start - shift) + \" \".repeat(end - start + shift) + reminderText.slice(end);
 		}
-		else if (Math.abs(now - timestamp) < 30.0e3) {
-			return { reply: \"You cannot set a timed reminder in less than 30 seconds!\", meta: { skipCooldown: true } };
-		}
-		else if (timestamp.valueOf() > sb.Config.get(\"SQL_DATETIME_LIMIT\")) {
+	}
+
+	if (reminderText) {
+		reminderText = reminderText.replace(/\\s{2,}/g, \" \").replace(/^ /, \"\");
+	}
+
+	const comparison = new sb.Date(now.valueOf() + delta);
+
+	if (delta === 0) {
+		if (targetUser === context.user) {
 			return {
-				reply: \"Unfortunately, only dates within the SQL DATETIME range are supported - up to Dec 31st 9999\",
-				meta: { skipCooldown: true }
+				reply: \"If you want to remind yourself, you must use a timed reminder!\"
 			};
 		}
-		else if (!timestamp.valueOf()) {
-			return { reply: \"Invalid time description!\", meta: { skipCooldown: true } };
-		}
 	}
-	else if (targetUser === context.user) {
-		return { reply: \"If you want to remind yourself, you must use a timed reminder!\" };
+	else if (now > comparison) {
+		return { reply: \"Timed reminders in the past are only available for people that posess a time machine!\" };
+	}
+	else if (Math.abs(now - comparison) < 30.0e3) {
+		return { reply: \"You cannot set a timed reminder in less than 30 seconds!\", meta: { skipCooldown: true } };
+	}
+	else if (comparison > sb.Config.get(\"SQL_DATETIME_LIMIT\")) {
+		return {
+			reply: \"Unfortunately, only dates within the SQL DATETIME range are supported - up to Dec 31st 9999\",
+			meta: { skipCooldown: true }
+		};
+	}
+	else if (!Number.isFinite(comparison.valueOf())) {
+		return { reply: \"Invalid time description!\", meta: { skipCooldown: true } };
 	}
 
-	if (context.privateMessage && timestamp !== null) {
+	// If it is a timed reminder via PMs, only allow it if it a self reminder.
+	// Scheduled reminders for users via PMs violate the philosophy of reminders.
+	if (context.privateMessage && delta !== 0) {
 		if (targetUser === context.user) {
 			isPrivate = true;
 		}
 		else {
-			return { 
+			return {
 				reply: \"You cannot set a timed reminder for someone else via private messages!\"
 			};
 		}
 	}
 
-	const text = args.join(\" \") || null;
 	let resultID = null;
-
+	const timestamp = (delta === 0) ? null : new sb.Date(now.valueOf() + delta);
 	try {
 		resultID = await sb.Reminder.create({
 			Channel: context?.channel?.ID ?? null,
 			Platform: context.platform.ID,
 			User_From: context.user.ID,
 			User_To: targetUser.ID,
-			Text: text || \"(no message)\",
+			Text: reminderText || \"(no message)\",
 			Schedule: timestamp,
 			Created: new sb.Date(),
 			Private_Message: isPrivate
@@ -315,7 +319,7 @@ ON DUPLICATE KEY UPDATE
 		\"I will\" + (isPrivate ? \" privately\" : \"\") + \" remind\",
 		(targetUser.ID === context.user.ID) ? \"you\" : targetUser.Name,
 		(timestamp)
-			? sb.Utils.timeDelta(new sb.Date().addMilliseconds(timestamp - now))
+			? sb.Utils.timeDelta(timestamp)
 			: \"when they next type in chat\",
 		\"(ID \" + resultID + \")\"
 	].join(\" \");
