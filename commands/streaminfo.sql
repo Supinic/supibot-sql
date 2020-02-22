@@ -25,7 +25,7 @@ VALUES
 	(
 		154,
 		'streaminfo',
-		'[\"si\"]',
+		'[\"si\", \"uptime\"]',
 		'Posts stream info about a Twitch channel.',
 		10000,
 		0,
@@ -49,32 +49,14 @@ VALUES
 		}
 	}
 
-	const target = args.join(\"_\");
-	if (!target) {
-		return { reply: \"No channel provided!\" };
-	}
-
+	const target = args.join(\"_\") || context.channel.Name;
 	if (platform === \"twitch\") {
-		let channelID = null;
 		const targetData = await sb.User.get(target);
-		if (targetData && targetData.Twitch_ID) {
-			channelID = targetData.Twitch_ID;
-		}
-		else {
-			const channelInfo = JSON.parse(await sb.Utils.request({
-				method: \"GET\",
-				url: \"https://api.twitch.tv/kraken/users?login=\" + target,
-				headers: {
-					\"Client-ID\": sb.Config.get(\"TWITCH_CLIENT_ID\"),
-					Accept: \"application/vnd.twitchtv.v5+json\"
-				}
-			}));
-
-			if (channelInfo._total === 0) {
-				return { reply: \"Channel does not exist!\" };
-			}
-
-			channelID = channelInfo.users[0]._id;
+		const channelID = targetData?.Twitch_ID ?? await sb.Utils.getTwitchID(target);
+		if (!channelID) {
+			return {
+				reply: \"That channel does not exist!\"
+			};
 		}
 
 		const data = JSON.parse(await sb.Utils.request({
@@ -87,23 +69,48 @@ VALUES
 		}));
 
 		if (data === null || data.stream === null) {
-			return { reply: \"Channel is offline.\" };
+			const { data } = JSON.parse(await sb.Utils.request({
+				method: \"GET\",
+				url: \"https://api.twitch.tv/helix/videos?user_id=\" + channelID,
+				headers: {
+					\"Client-ID\": sb.Config.get(\"TWITCH_CLIENT_ID\")
+				}
+			}));
+
+			if (data.length === 0) {
+				return {
+					reply: `Channel is offline.`
+				};
+			}
+
+			let mult = 1000;
+			const { created_at: created, duration } = data[0];
+			const vodDuration = duration.split(/\\D/).filter(Boolean).map(Number).reverse().reduce((acc, cur) => {
+				acc += cur * mult;
+				mult *= 60;
+				return acc;
+			}, 0);
+
+			const delta = sb.Utils.timeDelta(new sb.Date(created).valueOf() + vodDuration, true);
+			return {
+				reply: `Channel has been offline for ${delta}.`
+			};
 		}
 
 		const stream = data.stream;
-		const started = sb.Utils.timeDelta(new sb.Date(stream.created_at));
-		return {
-			reply: `${target} is playing ${stream.game} since ${started} for ${stream.viewers} viewers at ${stream.video_height}p. Title: ${stream.channel.status} https://twitch.tv/${target.toLowerCase()}`
-		};
-	}
+			const started = sb.Utils.timeDelta(new sb.Date(stream.created_at));
+			return {
+				reply: `${target} is playing ${stream.game} since ${started} for ${stream.viewers} viewers at ${stream.video_height}p. Title: ${stream.channel.status} https://twitch.tv/${target.toLowerCase()}`
+			};
+		}
 	else if (platform === \"mixer\") {
 		const data = JSON.parse(await sb.Utils.request({
 			url: \"https://mixer.com/api/v1/channels/\" + target
 		}));
-		
+
 		if (data.error) {
 			return { reply: data.statusCode + \": \" + data.message };
-		}		
+		}
 		else if (data.online) {
 			const delta = sb.Utils.timeDelta(new sb.Date(data.updatedAt));
 			return {
@@ -130,32 +137,14 @@ ON DUPLICATE KEY UPDATE
 		}
 	}
 
-	const target = args.join(\"_\");
-	if (!target) {
-		return { reply: \"No channel provided!\" };
-	}
-
+	const target = args.join(\"_\") || context.channel.Name;
 	if (platform === \"twitch\") {
-		let channelID = null;
 		const targetData = await sb.User.get(target);
-		if (targetData && targetData.Twitch_ID) {
-			channelID = targetData.Twitch_ID;
-		}
-		else {
-			const channelInfo = JSON.parse(await sb.Utils.request({
-				method: \"GET\",
-				url: \"https://api.twitch.tv/kraken/users?login=\" + target,
-				headers: {
-					\"Client-ID\": sb.Config.get(\"TWITCH_CLIENT_ID\"),
-					Accept: \"application/vnd.twitchtv.v5+json\"
-				}
-			}));
-
-			if (channelInfo._total === 0) {
-				return { reply: \"Channel does not exist!\" };
-			}
-
-			channelID = channelInfo.users[0]._id;
+		const channelID = targetData?.Twitch_ID ?? await sb.Utils.getTwitchID(target);
+		if (!channelID) {
+			return {
+				reply: \"That channel does not exist!\"
+			};
 		}
 
 		const data = JSON.parse(await sb.Utils.request({
@@ -168,23 +157,48 @@ ON DUPLICATE KEY UPDATE
 		}));
 
 		if (data === null || data.stream === null) {
-			return { reply: \"Channel is offline.\" };
+			const { data } = JSON.parse(await sb.Utils.request({
+				method: \"GET\",
+				url: \"https://api.twitch.tv/helix/videos?user_id=\" + channelID,
+				headers: {
+					\"Client-ID\": sb.Config.get(\"TWITCH_CLIENT_ID\")
+				}
+			}));
+
+			if (data.length === 0) {
+				return {
+					reply: `Channel is offline.`
+				};
+			}
+
+			let mult = 1000;
+			const { created_at: created, duration } = data[0];
+			const vodDuration = duration.split(/\\D/).filter(Boolean).map(Number).reverse().reduce((acc, cur) => {
+				acc += cur * mult;
+				mult *= 60;
+				return acc;
+			}, 0);
+
+			const delta = sb.Utils.timeDelta(new sb.Date(created).valueOf() + vodDuration, true);
+			return {
+				reply: `Channel has been offline for ${delta}.`
+			};
 		}
 
 		const stream = data.stream;
-		const started = sb.Utils.timeDelta(new sb.Date(stream.created_at));
-		return {
-			reply: `${target} is playing ${stream.game} since ${started} for ${stream.viewers} viewers at ${stream.video_height}p. Title: ${stream.channel.status} https://twitch.tv/${target.toLowerCase()}`
-		};
-	}
+			const started = sb.Utils.timeDelta(new sb.Date(stream.created_at));
+			return {
+				reply: `${target} is playing ${stream.game} since ${started} for ${stream.viewers} viewers at ${stream.video_height}p. Title: ${stream.channel.status} https://twitch.tv/${target.toLowerCase()}`
+			};
+		}
 	else if (platform === \"mixer\") {
 		const data = JSON.parse(await sb.Utils.request({
 			url: \"https://mixer.com/api/v1/channels/\" + target
 		}));
-		
+
 		if (data.error) {
 			return { reply: data.statusCode + \": \" + data.message };
-		}		
+		}
 		else if (data.online) {
 			const delta = sb.Utils.timeDelta(new sb.Date(data.updatedAt));
 			return {

@@ -38,12 +38,13 @@ VALUES
 		0,
 		1,
 		1,
-		0,
+		1,
 		'(async function uptime (extra, channel) {
 	if (!channel) {
 		channel = extra.channel.Name;
 	}
 
+/*
 	const data = JSON.parse(await sb.Utils.request({
 		url: \"https://api.twitch.tv/helix/streams?user_login=\" + channel,
 		headers: {
@@ -51,6 +52,18 @@ VALUES
 			\"Client-ID\": sb.Config.get(\"TWITCH_CLIENT_ID\")
 		}
 	})).data[0];
+*/
+
+	const twitchID = await sb.Utils.getTwitchID(channel);
+	const vod = JSON.parse(await sb.Utils.request({
+		method: \"GET\",
+		url: \"https://api.twitch.tv/helix/videos?user_id=\" + twitchID,
+		headers: {
+			\"Client-ID\": sb.Config.get(\"TWITCH_CLIENT_ID\")
+		}
+	}));
+
+	
 
 	if (!data) {
 		return {
@@ -73,6 +86,7 @@ ON DUPLICATE KEY UPDATE
 		channel = extra.channel.Name;
 	}
 
+/*
 	const data = JSON.parse(await sb.Utils.request({
 		url: \"https://api.twitch.tv/helix/streams?user_login=\" + channel,
 		headers: {
@@ -80,6 +94,18 @@ ON DUPLICATE KEY UPDATE
 			\"Client-ID\": sb.Config.get(\"TWITCH_CLIENT_ID\")
 		}
 	})).data[0];
+*/
+
+	const twitchID = await sb.Utils.getTwitchID(channel);
+	const vod = JSON.parse(await sb.Utils.request({
+		method: \"GET\",
+		url: \"https://api.twitch.tv/helix/videos?user_id=\" + twitchID,
+		headers: {
+			\"Client-ID\": sb.Config.get(\"TWITCH_CLIENT_ID\")
+		}
+	}));
+
+	
 
 	if (!data) {
 		return {
