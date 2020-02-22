@@ -144,7 +144,11 @@ VALUES
 			};
 		}
 
-		const when = (await sb.Command.get(\"when\").execute(context)).reply.match(/in \\d+.*\\.$/);
+		const whenResult = (await sb.Command.get(\"when\").execute(context)).reply.match(/in \\d+.*\\.$/);
+		const when = (whenResult)
+			? whenResult[0]
+			: \"momentarily.\";
+
 		return {
 			reply: `Video \"${data.name}\" by ${data.author} successfully added to queue with ID ${id}! It is playing ${when[0]}`
 		};
@@ -260,7 +264,11 @@ ON DUPLICATE KEY UPDATE
 			};
 		}
 
-		const when = (await sb.Command.get(\"when\").execute(context)).reply.match(/in \\d+.*\\.$/);
+		const whenResult = (await sb.Command.get(\"when\").execute(context)).reply.match(/in \\d+.*\\.$/);
+		const when = (whenResult)
+			? whenResult[0]
+			: \"momentarily.\";
+
 		return {
 			reply: `Video \"${data.name}\" by ${data.author} successfully added to queue with ID ${id}! It is playing ${when[0]}`
 		};

@@ -42,7 +42,7 @@ VALUES
 		'(async function when (context) {
 	const list = sb.VideoLANConnector.videoQueue;
 	const current = await sb.VideoLANConnector.currentlyPlayingData();
-	if (current === null) {
+	if (!current) {
 		return {
 			reply: \"Nothing is currently playing!\"
 		};
@@ -101,7 +101,7 @@ ON DUPLICATE KEY UPDATE
 	Code = '(async function when (context) {
 	const list = sb.VideoLANConnector.videoQueue;
 	const current = await sb.VideoLANConnector.currentlyPlayingData();
-	if (current === null) {
+	if (!current) {
 		return {
 			reply: \"Nothing is currently playing!\"
 		};
