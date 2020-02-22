@@ -144,8 +144,9 @@ VALUES
 			};
 		}
 
+		const when = (await sb.Command.get(\"when\").execute(context)).reply.match(/in \\d+.*\\.$/);
 		return {
-			reply: `Video \"${data.name}\" by ${data.author} successfully added to queue with ID ${id}!`
+			reply: `Video \"${data.name}\" by ${data.author} successfully added to queue with ID ${id}! It is playing ${when[0]}`
 		};
 	}
 })',
@@ -259,8 +260,9 @@ ON DUPLICATE KEY UPDATE
 			};
 		}
 
+		const when = (await sb.Command.get(\"when\").execute(context)).reply.match(/in \\d+.*\\.$/);
 		return {
-			reply: `Video \"${data.name}\" by ${data.author} successfully added to queue with ID ${id}!`
+			reply: `Video \"${data.name}\" by ${data.author} successfully added to queue with ID ${id}! It is playing ${when[0]}`
 		};
 	}
 })'
