@@ -40,48 +40,23 @@ VALUES
 		1,
 		0,
 		'(async function findRaidStreams () {
-	const excludedChannels = sb.Config.get(\"TWITCH_RAID_EXCLUDED_CHANNELS\");
-	const eligibleChannels = sb.Channel.data.filter(i => (
-		(i.Platform.Name === \"twitch\")
-		&& (i.Mode !== \"Read\" && i.Mode !== \"Inactive\")
-		&& (i.Specific_ID !== null)
-		&& (!excludedChannels.includes(i.ID))
-	)).map(i => \"user_login=\" + i.Name);
+	const raidable = sb.Channel.data.filter(i => i.sessionData?.live).map(channel => {
+		const { stream } = channel.sessionData;
+		return {
+			name: channel.Name,
+			game: stream.game,
+			status: stream.status,
+			viewers: stream.viewers,
+			online: sb.Utils.timeDelta(stream.since, true)
+		};
+	}).sort((a, b) => b.viewers - a.viewers);
 
-	const data = JSON.parse(await sb.Utils.request({
-		type: \"GET\",
-		url: \"https://api.twitch.tv/helix/streams/?\" + eligibleChannels.join(\"&\"),
-		headers: {
-			\"Client-ID\": sb.Config.get(\"TWITCH_CLIENT_ID\"),
-		}
-	})).data;
-	
-	const results = [];
-	if (data.length === 0) {
-		results.push(\"No raidable streams are currently live.\");
-	}
-	else {
-		const gameIDs = data.map(i => \"id=\" + i.game_id);
-		const gameData = JSON.parse(await sb.Utils.request({
-			type: \"GET\",
-			url: \"https://api.twitch.tv/helix/games/?\" + gameIDs.join(\"&\"),
-			headers: {
-				\"Client-ID\": sb.Config.get(\"TWITCH_CLIENT_ID\"),
-			}
-		})).data;		
-		
-		for (const stream of data) {
-			results.push({
-				name: stream.user_name,
-				title: stream.title,
-				// game: gameData.find(i => i.id === stream.game_id).name,
-				online: sb.Utils.timeDelta(new sb.Date(stream.started_at)),
-				viewers: stream.viewer_count
-			});
-		}
-	}
-	
-	return { reply: await sb.Pastebin.post(JSON.stringify(results, null, 4)) };
+	return {
+		reply: await sb.Pastebin.post(JSON.stringify(raidable, null, 4), {
+			name: \"Raid targets \" + new sb.Date().format(\"Y-m-d H:i:s\"),
+			format: \"json\"
+		})
+	};
 })',
 		NULL,
 		NULL
@@ -89,46 +64,21 @@ VALUES
 
 ON DUPLICATE KEY UPDATE
 	Code = '(async function findRaidStreams () {
-	const excludedChannels = sb.Config.get(\"TWITCH_RAID_EXCLUDED_CHANNELS\");
-	const eligibleChannels = sb.Channel.data.filter(i => (
-		(i.Platform.Name === \"twitch\")
-		&& (i.Mode !== \"Read\" && i.Mode !== \"Inactive\")
-		&& (i.Specific_ID !== null)
-		&& (!excludedChannels.includes(i.ID))
-	)).map(i => \"user_login=\" + i.Name);
+	const raidable = sb.Channel.data.filter(i => i.sessionData?.live).map(channel => {
+		const { stream } = channel.sessionData;
+		return {
+			name: channel.Name,
+			game: stream.game,
+			status: stream.status,
+			viewers: stream.viewers,
+			online: sb.Utils.timeDelta(stream.since, true)
+		};
+	}).sort((a, b) => b.viewers - a.viewers);
 
-	const data = JSON.parse(await sb.Utils.request({
-		type: \"GET\",
-		url: \"https://api.twitch.tv/helix/streams/?\" + eligibleChannels.join(\"&\"),
-		headers: {
-			\"Client-ID\": sb.Config.get(\"TWITCH_CLIENT_ID\"),
-		}
-	})).data;
-	
-	const results = [];
-	if (data.length === 0) {
-		results.push(\"No raidable streams are currently live.\");
-	}
-	else {
-		const gameIDs = data.map(i => \"id=\" + i.game_id);
-		const gameData = JSON.parse(await sb.Utils.request({
-			type: \"GET\",
-			url: \"https://api.twitch.tv/helix/games/?\" + gameIDs.join(\"&\"),
-			headers: {
-				\"Client-ID\": sb.Config.get(\"TWITCH_CLIENT_ID\"),
-			}
-		})).data;		
-		
-		for (const stream of data) {
-			results.push({
-				name: stream.user_name,
-				title: stream.title,
-				// game: gameData.find(i => i.id === stream.game_id).name,
-				online: sb.Utils.timeDelta(new sb.Date(stream.started_at)),
-				viewers: stream.viewer_count
-			});
-		}
-	}
-	
-	return { reply: await sb.Pastebin.post(JSON.stringify(results, null, 4)) };
+	return {
+		reply: await sb.Pastebin.post(JSON.stringify(raidable, null, 4), {
+			name: \"Raid targets \" + new sb.Date().format(\"Y-m-d H:i:s\"),
+			format: \"json\"
+		})
+	};
 })'

@@ -39,30 +39,30 @@ VALUES
 		1,
 		1,
 		0,
-		'async () => {
-	const pastaRegex = /quote_display_content_0\">(.+?)<\\/span>/;
-	const data = await sb.Utils.request(\"https://www.twitchquotes.com/random\");
-	const copypasta = (data.match(pastaRegex) || [])[1];
-	
+		'(async function copypasta () {
+	const html = await sb.Got(\"https://www.twitchquotes.com/random\").text();
+	const $ = sb.Utils.cheerio(html);
+	const copypasta = $(\"#quote_display_content_0\").text();
+
 	return {
 		reply: (copypasta)
 			? sb.Utils.removeHTML(copypasta).trim()
 			: \"No copypasta found.\"
 	};
-}',
+})',
 		'No arguments.',
 		NULL
 	)
 
 ON DUPLICATE KEY UPDATE
-	Code = 'async () => {
-	const pastaRegex = /quote_display_content_0\">(.+?)<\\/span>/;
-	const data = await sb.Utils.request(\"https://www.twitchquotes.com/random\");
-	const copypasta = (data.match(pastaRegex) || [])[1];
-	
+	Code = '(async function copypasta () {
+	const html = await sb.Got(\"https://www.twitchquotes.com/random\").text();
+	const $ = sb.Utils.cheerio(html);
+	const copypasta = $(\"#quote_display_content_0\").text();
+
 	return {
 		reply: (copypasta)
 			? sb.Utils.removeHTML(copypasta).trim()
 			: \"No copypasta found.\"
 	};
-}'
+})'

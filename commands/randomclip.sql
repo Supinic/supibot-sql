@@ -62,19 +62,15 @@ VALUES
 	}
 
 	try {
-		const params = new sb.URLParams()
-			.set(\"period\", period)
-			.set(\"channel\", channel || context.channel.Name)
-			.set(\"limit\", \"100\");
-
-		const data = JSON.parse(await sb.Utils.request({
-			url: `https://api.twitch.tv/kraken/clips/top?${params.toString()}`,
-			headers: {
-				Accept: \"application/vnd.twitchtv.v5+json\",
-				\"Client-ID\":  sb.Config.get(\"TWITCH_CLIENT_ID\")
-			}
-		}));
-
+		const data = await sb.Got.instances.Twitch.Kraken({
+			url: \"clips/top\",
+			searchParams: new sb.URLParams()
+				.set(\"period\", period)
+				.set(\"channel\", channel || context.channel.Name)
+				.set(\"limit\", \"100\")
+				.toString()
+		}).json();
+		
 		if (data.clips.length === 0) {
 			return { reply: \"No clips found!\" };
 		}
@@ -124,19 +120,15 @@ ON DUPLICATE KEY UPDATE
 	}
 
 	try {
-		const params = new sb.URLParams()
-			.set(\"period\", period)
-			.set(\"channel\", channel || context.channel.Name)
-			.set(\"limit\", \"100\");
-
-		const data = JSON.parse(await sb.Utils.request({
-			url: `https://api.twitch.tv/kraken/clips/top?${params.toString()}`,
-			headers: {
-				Accept: \"application/vnd.twitchtv.v5+json\",
-				\"Client-ID\":  sb.Config.get(\"TWITCH_CLIENT_ID\")
-			}
-		}));
-
+		const data = await sb.Got.instances.Twitch.Kraken({
+			url: \"clips/top\",
+			searchParams: new sb.URLParams()
+				.set(\"period\", period)
+				.set(\"channel\", channel || context.channel.Name)
+				.set(\"limit\", \"100\")
+				.toString()
+		}).json();
+		
 		if (data.clips.length === 0) {
 			return { reply: \"No clips found!\" };
 		}

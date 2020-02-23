@@ -39,26 +39,28 @@ VALUES
 		1,
 		1,
 		0,
-		'async (extra, symbol = \"BTC\") => {
+		'(async function crypto (context, symbol = \"BTC\") {
 	symbol = symbol.toUpperCase();
 
-	const apiKey = sb.Config.get(\"API_CRYPTO_COMPARE\");
-	const url = `https://min-api.cryptocompare.com/data/price?fsym=${symbol}&tsyms=USD,EUR`;
-
-	const data = JSON.parse(await sb.Utils.request({
-		url: url,
+	const data = await sb.Got({
+		url: \"https://min-api.cryptocompare.com/data/price\",
+		searchParams: new sb.URLParams().set(\"fsym\", symbol).set(\"tsyms\", \"USD,EUR\").toString(),
 		headers: {
 			Authorization: \"Apikey \" + sb.Config.get(\"API_CRYPTO_COMPARE\")
 		}
-	}));
-	
+	}).json();
+
 	if (data.Response === \"Error\") {
-		return { reply: data.Message };
+		return {
+			reply: data.Message
+		};
 	}
 	else {
-		return { reply: \"Current price of \" + symbol + \": $\" + data.USD + \", €\" + data.EUR };
+		return {
+			reply: `Current price of ${symbol}: $${data.USD}, €${data.EUR}`
+		};
 	}
-}',
+})',
 		'$crypto => Posts Bitcoin\'s current price.
 $crypto <cryptocurrency code> => Posts that currency\' current price.
 
@@ -67,23 +69,25 @@ $crypto DOGE',
 	)
 
 ON DUPLICATE KEY UPDATE
-	Code = 'async (extra, symbol = \"BTC\") => {
+	Code = '(async function crypto (context, symbol = \"BTC\") {
 	symbol = symbol.toUpperCase();
 
-	const apiKey = sb.Config.get(\"API_CRYPTO_COMPARE\");
-	const url = `https://min-api.cryptocompare.com/data/price?fsym=${symbol}&tsyms=USD,EUR`;
-
-	const data = JSON.parse(await sb.Utils.request({
-		url: url,
+	const data = await sb.Got({
+		url: \"https://min-api.cryptocompare.com/data/price\",
+		searchParams: new sb.URLParams().set(\"fsym\", symbol).set(\"tsyms\", \"USD,EUR\").toString(),
 		headers: {
 			Authorization: \"Apikey \" + sb.Config.get(\"API_CRYPTO_COMPARE\")
 		}
-	}));
-	
+	}).json();
+
 	if (data.Response === \"Error\") {
-		return { reply: data.Message };
+		return {
+			reply: data.Message
+		};
 	}
 	else {
-		return { reply: \"Current price of \" + symbol + \": $\" + data.USD + \", €\" + data.EUR };
+		return {
+			reply: `Current price of ${symbol}: $${data.USD}, €${data.EUR}`
+		};
 	}
-}'
+})'

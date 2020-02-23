@@ -39,20 +39,16 @@ VALUES
 		1,
 		1,
 		0,
-		'async (context, ...args) => {
+		'(async function topStreams (context, ...args) {
 	const params = new sb.URLParams(\"%20\").set(\"limit\", 10);
 	if (args.length > 0) {
 		params.set(\"game\", args.join(\" \"));
 	}
-
-	const data = JSON.parse(await sb.Utils.request({
-		method: \"GET\",
-		url: \"https://api.twitch.tv/kraken/streams?\" + params.toString(),
-		headers: {
-			Accept: \"application/vnd.twitchtv.v5+json\",
-			\"Client-ID\": sb.Config.get(\"TWITCH_CLIENT_ID\")
-		}
-	}));
+	
+	const data = await sb.Got.instances.Twitch.Kraken({
+		url: \"streams\",
+		searchParams: params.toString() 
+	}).json();
 
 	if (data._total === 0) {
 		return { reply: \"Nobody is playing that game right now!\" };
@@ -63,36 +59,31 @@ VALUES
 			: \"are live: \";
 
 		const streamers = data.streams.map(stream => {
-			const playing = (gameString) 
+			const playing = (gameString)
 				? \"\"
 				: `${stream.game}`;
 
-			return stream.channel.display_name + \" \" + playing + \" (\" + stream.viewers +  \" viewers)\";
+			return stream.channel.display_name + \" \" + playing + \" (\" + stream.viewers + \")\";
 		});
-				
 
 		return { reply: \"These streamers \" + gameString + streamers.join(\"; \") };
 	}
-}',
+})',
 		NULL,
 		NULL
 	)
 
 ON DUPLICATE KEY UPDATE
-	Code = 'async (context, ...args) => {
+	Code = '(async function topStreams (context, ...args) {
 	const params = new sb.URLParams(\"%20\").set(\"limit\", 10);
 	if (args.length > 0) {
 		params.set(\"game\", args.join(\" \"));
 	}
-
-	const data = JSON.parse(await sb.Utils.request({
-		method: \"GET\",
-		url: \"https://api.twitch.tv/kraken/streams?\" + params.toString(),
-		headers: {
-			Accept: \"application/vnd.twitchtv.v5+json\",
-			\"Client-ID\": sb.Config.get(\"TWITCH_CLIENT_ID\")
-		}
-	}));
+	
+	const data = await sb.Got.instances.Twitch.Kraken({
+		url: \"streams\",
+		searchParams: params.toString() 
+	}).json();
 
 	if (data._total === 0) {
 		return { reply: \"Nobody is playing that game right now!\" };
@@ -103,14 +94,13 @@ ON DUPLICATE KEY UPDATE
 			: \"are live: \";
 
 		const streamers = data.streams.map(stream => {
-			const playing = (gameString) 
+			const playing = (gameString)
 				? \"\"
 				: `${stream.game}`;
 
-			return stream.channel.display_name + \" \" + playing + \" (\" + stream.viewers +  \" viewers)\";
+			return stream.channel.display_name + \" \" + playing + \" (\" + stream.viewers + \")\";
 		});
-				
 
 		return { reply: \"These streamers \" + gameString + streamers.join(\"; \") };
 	}
-}'
+})'

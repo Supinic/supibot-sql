@@ -40,6 +40,7 @@ VALUES
 		1,
 		0,
 		'(async function randomAnimalFact (context, type) {
+	const types = [\"cat\", \"dog\", \"bird\", \"fox\"];
 	switch (context.invocation) {
 		case \"rcf\": type = \"cat\"; break;
 		case \"rdf\": type = \"dog\"; break;
@@ -54,28 +55,33 @@ VALUES
 			reply: \"No type provided!\"
 		};
 	}
+	else if (!types.includes(type)) {
+		return {
+			reply: \"That type is not supported!\"
+		};
+	}
 	else if (!context.user.Data.animals?.[type]) {
 		return {
 			reply: `Only people who have verified that they have a ${type} can use this command! Verify by $suggest-ing a picture of your ${type}(s).`
 		};
 	}
-	
+
 	let result = null;
 	switch (type) {
 		case \"bird\":
-			result = JSON.parse(await sb.Utils.request(\"https://some-random-api.ml/facts/bird\")).fact;
+			result = (await sb.Got.instances.SRA(\"facts/bird\").json()).fact;
 			break;
 
 		case \"cat\":
-			result = JSON.parse(await sb.Utils.request(\"https://catfact.ninja/fact\")).fact;
+			result = (await sb.Got(\"https://catfact.ninja/fact\").json()).fact;
 			break;
 
 		case \"dog\":
-			result = JSON.parse(await sb.Utils.request(\"https://dog-api.kinduff.com/api/facts\")).facts[0];
+			result = (await sb.Got(\"https://dog-api.kinduff.com/api/facts\").json()).facts[0];
 			break;
 
 		case \"fox\":
-			result = JSON.parse(await sb.Utils.request(\"https://some-random-api.ml/facts/fox\")).fact;
+			result = (await sb.Got.instances.SRA(\"facts/fox\").json()).fact;
 			break;
 	}
 
@@ -89,6 +95,7 @@ VALUES
 
 ON DUPLICATE KEY UPDATE
 	Code = '(async function randomAnimalFact (context, type) {
+	const types = [\"cat\", \"dog\", \"bird\", \"fox\"];
 	switch (context.invocation) {
 		case \"rcf\": type = \"cat\"; break;
 		case \"rdf\": type = \"dog\"; break;
@@ -103,28 +110,33 @@ ON DUPLICATE KEY UPDATE
 			reply: \"No type provided!\"
 		};
 	}
+	else if (!types.includes(type)) {
+		return {
+			reply: \"That type is not supported!\"
+		};
+	}
 	else if (!context.user.Data.animals?.[type]) {
 		return {
 			reply: `Only people who have verified that they have a ${type} can use this command! Verify by $suggest-ing a picture of your ${type}(s).`
 		};
 	}
-	
+
 	let result = null;
 	switch (type) {
 		case \"bird\":
-			result = JSON.parse(await sb.Utils.request(\"https://some-random-api.ml/facts/bird\")).fact;
+			result = (await sb.Got.instances.SRA(\"facts/bird\").json()).fact;
 			break;
 
 		case \"cat\":
-			result = JSON.parse(await sb.Utils.request(\"https://catfact.ninja/fact\")).fact;
+			result = (await sb.Got(\"https://catfact.ninja/fact\").json()).fact;
 			break;
 
 		case \"dog\":
-			result = JSON.parse(await sb.Utils.request(\"https://dog-api.kinduff.com/api/facts\")).facts[0];
+			result = (await sb.Got(\"https://dog-api.kinduff.com/api/facts\").json()).facts[0];
 			break;
 
 		case \"fox\":
-			result = JSON.parse(await sb.Utils.request(\"https://some-random-api.ml/facts/fox\")).fact;
+			result = (await sb.Got.instances.SRA(\"facts/fox\").json()).fact;
 			break;
 	}
 

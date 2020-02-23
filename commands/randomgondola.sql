@@ -40,15 +40,10 @@ VALUES
 		1,
 		0,
 		'(async function randomGondola () {
-	const response = await sb.Utils.request({
-		url: \"https://gondola.stravers.net/random\",
-		useFullResponse: true
-	});
-
-	const url = response.request.uri.href;	
+	const { url } = await sb.Got(\"https://gondola.stravers.net/random\");
 	return {
 		reply: `nymnH ${url} nymnH`
-	}
+	};
 })',
 		NULL,
 		NULL
@@ -56,13 +51,8 @@ VALUES
 
 ON DUPLICATE KEY UPDATE
 	Code = '(async function randomGondola () {
-	const response = await sb.Utils.request({
-		url: \"https://gondola.stravers.net/random\",
-		useFullResponse: true
-	});
-
-	const url = response.request.uri.href;	
+	const { url } = await sb.Got(\"https://gondola.stravers.net/random\");
 	return {
 		reply: `nymnH ${url} nymnH`
-	}
+	};
 })'

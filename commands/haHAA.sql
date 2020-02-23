@@ -39,11 +39,11 @@ VALUES
 		1,
 		1,
 		0,
-		'async (extra) => ({
-	reply: JSON.parse(await sb.Utils.request({
-		headers: { Accept: \"application/json\" },
-		url: \"https://icanhazdadjoke.com/\"
-	})).joke + \" \" + extra.invocation
+		'(async function _4head (context) {
+	const data = await sb.Got(\"https://icanhazdadjoke.com/\").json();
+	return {
+		reply: data.joke + \" \" + context.invocation
+	};
 })',
 		NULL,
 		'async (prefix) => {
@@ -59,9 +59,9 @@ VALUES
 	)
 
 ON DUPLICATE KEY UPDATE
-	Code = 'async (extra) => ({
-	reply: JSON.parse(await sb.Utils.request({
-		headers: { Accept: \"application/json\" },
-		url: \"https://icanhazdadjoke.com/\"
-	})).joke + \" \" + extra.invocation
+	Code = '(async function _4head (context) {
+	const data = await sb.Got(\"https://icanhazdadjoke.com/\").json();
+	return {
+		reply: data.joke + \" \" + context.invocation
+	};
 })'

@@ -44,15 +44,9 @@ VALUES
 		user = context.user.Name;
 	}
 
-	const url = `https://api.twitch.tv/v5/users?login=${user}`;
 	try {
-		const rawData = JSON.parse(await sb.Utils.request({
-			url:  url,
-			headers: {
-				Accept: \"application/vnd.twitchtv.v5+json\",
-				\"Client-ID\": sb.Config.get(\"TWITCH_CLIENT_ID\")
-			}
-		}));
+		const searchParams = new sb.URLParams().set(\"login\", user).toString();
+		const rawData = await sb.Got.instances.Twitch.V5(\"users\", { searchParams });
 
 		const data = rawData.users[0];
 		const delta = sb.Utils.timeDelta(new sb.Date(data.created_at));
@@ -62,7 +56,8 @@ VALUES
 
 		return { reply: `${pronoun} Twitch account was created ${delta}.` };
 	}
-	catch {
+	catch (e) {
+		console.log(e, e.response);
 		return { reply: `That Twitch account has no data associated with them.` };
 	}
 })',
@@ -80,15 +75,9 @@ ON DUPLICATE KEY UPDATE
 		user = context.user.Name;
 	}
 
-	const url = `https://api.twitch.tv/v5/users?login=${user}`;
 	try {
-		const rawData = JSON.parse(await sb.Utils.request({
-			url:  url,
-			headers: {
-				Accept: \"application/vnd.twitchtv.v5+json\",
-				\"Client-ID\": sb.Config.get(\"TWITCH_CLIENT_ID\")
-			}
-		}));
+		const searchParams = new sb.URLParams().set(\"login\", user).toString();
+		const rawData = await sb.Got.instances.Twitch.V5(\"users\", { searchParams });
 
 		const data = rawData.users[0];
 		const delta = sb.Utils.timeDelta(new sb.Date(data.created_at));
@@ -98,7 +87,8 @@ ON DUPLICATE KEY UPDATE
 
 		return { reply: `${pronoun} Twitch account was created ${delta}.` };
 	}
-	catch {
+	catch (e) {
+		console.log(e, e.response);
 		return { reply: `That Twitch account has no data associated with them.` };
 	}
 })'

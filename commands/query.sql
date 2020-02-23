@@ -41,32 +41,25 @@ VALUES
 		0,
 		'(async function query (context, ...args) {
 	if (args.length === 0) {
-		return { reply: \"No query provided!\", meta: { skipCooldown: true } };
+		return {
+			reply: \"No query provided!\",
+			cooldown: { length: 2500 }
+		};
 	}
 
-	const url = \"http://api.wolframalpha.com/v1/result?\";
-	const query = new sb.URLParams()
-		.set(\"appid\", sb.Config.get(\"API_WOLFRAM_ALPHA_APPID\"))
-		.set(\"i\", args.join(\" \"));
+	const rawData = await sb.Got({
+		throwHttpErrors: false,
+		url: \"http://api.wolframalpha.com/v1/result\",
+		searchParams: new sb.URLParams()
+			.set(\"appid\", sb.Config.get(\"API_WOLFRAM_ALPHA_APPID\"))
+			.set(\"i\", args.join(\" \"))
+			.toString()
+	}).text();
 
-	try {
-		let data = await sb.Utils.request(url + query.toString());
-		data = sb.Config.get(\"WOLFRAM_QUERY_CENSOR_FN\")(data);	
-
-		if (data.toLowerCase().includes(\"<html>\")) {
-			return { reply: \"Seems like the API is down eShrug\" };
-		}
-		
-		return { reply: data };
-	}
-	catch (e) {
-		if (e.statusCode === 501) {
-			return { reply: e.error + \" FeelsBadMan\" };
-		}
-
-		console.error(e);
-		return { reply: \"Probably ran out of WolframAlpha requests for this month.\" };
-	}
+	const data = sb.Config.get(\"WOLFRAM_QUERY_CENSOR_FN\")(rawData);
+	return { 
+		reply: data
+	};
 })',
 		NULL,
 		NULL
@@ -75,30 +68,23 @@ VALUES
 ON DUPLICATE KEY UPDATE
 	Code = '(async function query (context, ...args) {
 	if (args.length === 0) {
-		return { reply: \"No query provided!\", meta: { skipCooldown: true } };
+		return {
+			reply: \"No query provided!\",
+			cooldown: { length: 2500 }
+		};
 	}
 
-	const url = \"http://api.wolframalpha.com/v1/result?\";
-	const query = new sb.URLParams()
-		.set(\"appid\", sb.Config.get(\"API_WOLFRAM_ALPHA_APPID\"))
-		.set(\"i\", args.join(\" \"));
+	const rawData = await sb.Got({
+		throwHttpErrors: false,
+		url: \"http://api.wolframalpha.com/v1/result\",
+		searchParams: new sb.URLParams()
+			.set(\"appid\", sb.Config.get(\"API_WOLFRAM_ALPHA_APPID\"))
+			.set(\"i\", args.join(\" \"))
+			.toString()
+	}).text();
 
-	try {
-		let data = await sb.Utils.request(url + query.toString());
-		data = sb.Config.get(\"WOLFRAM_QUERY_CENSOR_FN\")(data);	
-
-		if (data.toLowerCase().includes(\"<html>\")) {
-			return { reply: \"Seems like the API is down eShrug\" };
-		}
-		
-		return { reply: data };
-	}
-	catch (e) {
-		if (e.statusCode === 501) {
-			return { reply: e.error + \" FeelsBadMan\" };
-		}
-
-		console.error(e);
-		return { reply: \"Probably ran out of WolframAlpha requests for this month.\" };
-	}
+	const data = sb.Config.get(\"WOLFRAM_QUERY_CENSOR_FN\")(rawData);
+	return { 
+		reply: data
+	};
 })'

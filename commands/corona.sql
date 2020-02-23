@@ -44,20 +44,10 @@ VALUES
 		const owner = \"CSSEGISandData\";
 		const repo = \"2019-nCoV\";
 		const path = \"csse_covid_19_data/csse_covid_19_daily_reports\";
-		const files = JSON.parse(await sb.Utils.request({
-			url: `https://api.github.com/repos/${owner}/${repo}/contents/${path}`,
-			headers: {
-				\"User-Agent\": \"Supibot @ github.com/supinic/supibot\"
-			}
-		}));
+		const files = await sb.Got.instances.GitHub(`repos/${owner}/${repo}/contents/${path}`).json();
 
-		const latestFile = files.filter(i => i.path.includes(\".csv\")).pop();
-		const { content } = JSON.parse(await sb.Utils.request({
-			url: latestFile.url,
-			headers: {
-				\"User-Agent\": \"Supibot @ github.com/supinic/supibot\"
-			}
-		}));
+		const { name } = files.filter(i => i.path.includes(\".csv\")).pop();
+		const { content } = await sb.Got.instances.GitHub(`repos/${owner}/${repo}/contents/${path}/${name}`).json();
 
 		const regex = /(\\s*\"[^\"]+\"\\s*|\\s*[^,]+|,)(?=,|$)/g;
 		const csv = Buffer.from(content, \"base64\").toString();
@@ -103,13 +93,8 @@ VALUES
 				});
 			}
 		}
-		const html = await sb.Utils.request({
-			url: `https://www.worldometers.info/coronavirus/`,
-			headers: {
-				\"User-Agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Safari/537.36 OPR/66.0.3515.44\"
-			}
-		});
 
+		const html = await sb.Got.instances.FakeAgent(\"https://www.worldometers.info/coronavirus/\").text();
 		const $ = sb.Utils.cheerio(html);
 		const [confirmed, deaths, recovered] = $(\".maincounter-number\").text().replace(/,/g, \"\").split(\" \").filter(Boolean).map(Number);
 		const [mild, critical] = Array.from($(\".number-table\")).map(i => Number(i.firstChild.nodeValue.replace(/,/g, \"\")));
@@ -167,20 +152,10 @@ ON DUPLICATE KEY UPDATE
 		const owner = \"CSSEGISandData\";
 		const repo = \"2019-nCoV\";
 		const path = \"csse_covid_19_data/csse_covid_19_daily_reports\";
-		const files = JSON.parse(await sb.Utils.request({
-			url: `https://api.github.com/repos/${owner}/${repo}/contents/${path}`,
-			headers: {
-				\"User-Agent\": \"Supibot @ github.com/supinic/supibot\"
-			}
-		}));
+		const files = await sb.Got.instances.GitHub(`repos/${owner}/${repo}/contents/${path}`).json();
 
-		const latestFile = files.filter(i => i.path.includes(\".csv\")).pop();
-		const { content } = JSON.parse(await sb.Utils.request({
-			url: latestFile.url,
-			headers: {
-				\"User-Agent\": \"Supibot @ github.com/supinic/supibot\"
-			}
-		}));
+		const { name } = files.filter(i => i.path.includes(\".csv\")).pop();
+		const { content } = await sb.Got.instances.GitHub(`repos/${owner}/${repo}/contents/${path}/${name}`).json();
 
 		const regex = /(\\s*\"[^\"]+\"\\s*|\\s*[^,]+|,)(?=,|$)/g;
 		const csv = Buffer.from(content, \"base64\").toString();
@@ -226,13 +201,8 @@ ON DUPLICATE KEY UPDATE
 				});
 			}
 		}
-		const html = await sb.Utils.request({
-			url: `https://www.worldometers.info/coronavirus/`,
-			headers: {
-				\"User-Agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Safari/537.36 OPR/66.0.3515.44\"
-			}
-		});
 
+		const html = await sb.Got.instances.FakeAgent(\"https://www.worldometers.info/coronavirus/\").text();
 		const $ = sb.Utils.cheerio(html);
 		const [confirmed, deaths, recovered] = $(\".maincounter-number\").text().replace(/,/g, \"\").split(\" \").filter(Boolean).map(Number);
 		const [mild, critical] = Array.from($(\".number-table\")).map(i => Number(i.firstChild.nodeValue.replace(/,/g, \"\")));

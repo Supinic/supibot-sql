@@ -40,27 +40,14 @@ VALUES
 		1,
 		0,
 		'(async function uname () {
-	const latest = await sb.Query.getRecordset(rs => rs
-		.select(\"Version\", \"Subversion\", \"Build\", \"Summary\", \"Timestamp\")
-		.from(\"data\", \"Patch_Notes\")
-		.orderBy(\"ID DESC\")
-		.limit(1)
-		.single()
-	);
+	const data = await sb.Got.instances.GitHub(\"repos/supinic/supibot/commits\").json();
+	const commits = data.sort((a, b) => new sb.Date(b.commit.author.date) - new sb.Date(a.commit.author.date));
 
-	const githubData = JSON.parse(await sb.Utils.request({
-		url: \"https://api.github.com/repos/supinic/supibot/commits\",
-		headers: {
-			\"User-Agent\": \"supibot @twitch.tv/supibot\"
-		}
-	})).sort((a, b) => new sb.Date(b.commit.author.date) - new sb.Date(a.commit.author.date));
-
-	const {sha, commit} = githubData[0];
+	const {sha, commit} = commits[0];
 	const message = commit.message.split(\"\\n\")[0];
-
 	return {
-		reply: `Running version ${latest.Version}.${latest.Subversion}.${latest.Build}+${sha.slice(0, 7)} - ${message}`
-	};	
+		reply: `Last commit: ${sha.slice(0, 7)} - ${message}`
+	};
 })',
 		NULL,
 		NULL
@@ -68,25 +55,12 @@ VALUES
 
 ON DUPLICATE KEY UPDATE
 	Code = '(async function uname () {
-	const latest = await sb.Query.getRecordset(rs => rs
-		.select(\"Version\", \"Subversion\", \"Build\", \"Summary\", \"Timestamp\")
-		.from(\"data\", \"Patch_Notes\")
-		.orderBy(\"ID DESC\")
-		.limit(1)
-		.single()
-	);
+	const data = await sb.Got.instances.GitHub(\"repos/supinic/supibot/commits\").json();
+	const commits = data.sort((a, b) => new sb.Date(b.commit.author.date) - new sb.Date(a.commit.author.date));
 
-	const githubData = JSON.parse(await sb.Utils.request({
-		url: \"https://api.github.com/repos/supinic/supibot/commits\",
-		headers: {
-			\"User-Agent\": \"supibot @twitch.tv/supibot\"
-		}
-	})).sort((a, b) => new sb.Date(b.commit.author.date) - new sb.Date(a.commit.author.date));
-
-	const {sha, commit} = githubData[0];
+	const {sha, commit} = commits[0];
 	const message = commit.message.split(\"\\n\")[0];
-
 	return {
-		reply: `Running version ${latest.Version}.${latest.Subversion}.${latest.Build}+${sha.slice(0, 7)} - ${message}`
-	};	
+		reply: `Last commit: ${sha.slice(0, 7)} - ${message}`
+	};
 })'

@@ -39,22 +39,20 @@ VALUES
 		1,
 		1,
 		0,
-		'async (extra) => {
-	if (!extra.channel.Links_Allowed) {
-		return { reply: \"Command not available in channels with links disabled!\" };
-	}
-
-	return { reply: await sb.Utils.request(\"https://inspirobot.me/api?generate=true\") };
-}',
+		'(async function inspireMe () {
+	const link = await sb.Got(\"https://inspirobot.me/api?generate=true\").text();
+	return {
+		reply: link
+	};
+})',
 		NULL,
 		NULL
 	)
 
 ON DUPLICATE KEY UPDATE
-	Code = 'async (extra) => {
-	if (!extra.channel.Links_Allowed) {
-		return { reply: \"Command not available in channels with links disabled!\" };
-	}
-
-	return { reply: await sb.Utils.request(\"https://inspirobot.me/api?generate=true\") };
-}'
+	Code = '(async function inspireMe () {
+	const link = await sb.Got(\"https://inspirobot.me/api?generate=true\").text();
+	return {
+		reply: link
+	};
+})'

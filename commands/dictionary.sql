@@ -49,17 +49,17 @@ VALUES
 		}
 	}
 
-	let data = null;
 	const term = args[0];
-	const url = `https://owlbot.info/api/v2/dictionary/${term}?format=json`;
+	const { body, statusCode } = await sb.Got({
+		url: `https://owlbot.info/api/v2/dictionary/${term}`,
+		searchParams: \"format=json\",
+		throwHttpErrors: false
+	});
 
-	try {
-		data = JSON.parse(await sb.Utils.request(url));
-	}
-	catch (e) {
-		const data = JSON.parse(e.error);
+	const data = JSON.parse(body);
+	if (statusCode !== 200) {
 		return {
-			reply: e.response.statusCode + \" - \" + data[0].message
+			reply: `Dictionary API returned ${statusCode}: ${data[0].message}`
 		};
 	}
 
@@ -114,17 +114,17 @@ ON DUPLICATE KEY UPDATE
 		}
 	}
 
-	let data = null;
 	const term = args[0];
-	const url = `https://owlbot.info/api/v2/dictionary/${term}?format=json`;
+	const { body, statusCode } = await sb.Got({
+		url: `https://owlbot.info/api/v2/dictionary/${term}`,
+		searchParams: \"format=json\",
+		throwHttpErrors: false
+	});
 
-	try {
-		data = JSON.parse(await sb.Utils.request(url));
-	}
-	catch (e) {
-		const data = JSON.parse(e.error);
+	const data = JSON.parse(body);
+	if (statusCode !== 200) {
 		return {
-			reply: e.response.statusCode + \" - \" + data[0].message
+			reply: `Dictionary API returned ${statusCode}: ${data[0].message}`
 		};
 	}
 

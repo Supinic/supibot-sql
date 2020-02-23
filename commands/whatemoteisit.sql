@@ -39,15 +39,9 @@ VALUES
 		1,
 		1,
 		0,
-		'async (extra, emote) => {
-	const url = \"https://api.ivr.fi/twitch/emotes/\" + emote;
-	
-	const {error, channel, channelid, emoteid, emotecode, tier} = JSON.parse(await sb.Utils.request(url, {
-		headers: {
-			\"User-Agent\": sb.Config.get(\"SUPIBOT_USER_AGENT\")
-		}
-	}));
-
+		'(async function whatEmoteIsIt (context, emote) {
+	const data = await sb.Got.instances.Leppunen(\"twitch/emotes/\" + emote).json();
+	const {error, channel, channelid, emoteid, emotecode, tier} = data;
 	if (error) {
 		return { reply: error + \"!\" };
 	}
@@ -55,22 +49,16 @@ VALUES
 	const channelLink = \"https://twitchemotes.com/channels/\" + channelid;
 	return {
 		reply: `${emotecode} (ID ${emoteid}) - ${channelLink} (ID ${channelid}) tier ${tier} sub emote`
-	}	
-}',
+	}
+})',
 		NULL,
 		NULL
 	)
 
 ON DUPLICATE KEY UPDATE
-	Code = 'async (extra, emote) => {
-	const url = \"https://api.ivr.fi/twitch/emotes/\" + emote;
-	
-	const {error, channel, channelid, emoteid, emotecode, tier} = JSON.parse(await sb.Utils.request(url, {
-		headers: {
-			\"User-Agent\": sb.Config.get(\"SUPIBOT_USER_AGENT\")
-		}
-	}));
-
+	Code = '(async function whatEmoteIsIt (context, emote) {
+	const data = await sb.Got.instances.Leppunen(\"twitch/emotes/\" + emote).json();
+	const {error, channel, channelid, emoteid, emotecode, tier} = data;
 	if (error) {
 		return { reply: error + \"!\" };
 	}
@@ -78,5 +66,5 @@ ON DUPLICATE KEY UPDATE
 	const channelLink = \"https://twitchemotes.com/channels/\" + channelid;
 	return {
 		reply: `${emotecode} (ID ${emoteid}) - ${channelLink} (ID ${channelid}) tier ${tier} sub emote`
-	}	
-}'
+	}
+})'

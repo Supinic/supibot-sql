@@ -39,28 +39,23 @@ VALUES
 		1,
 		1,
 		0,
-		'async (context, ...args) => {
+		'(async function stackOverflowSearch (context, ...args) {
 	const message = args.join(\" \");
 	if (!message) {
 		return { reply: \"No search text provided!\" };
 	}
 
-	const params = new sb.URLParams()
-		.set(\"order\", \"desc\")
-		.set(\"sort\", \"relevance\")
-		.set(\"site\", \"stackoverflow\")
-		.set(\"q\", message);
-
-	const rawData = await sb.Utils.request({
-		method: \"GET\",
-		url: `https://api.stackexchange.com/2.2/search/advanced?${params.toString()}`,
+	const data = await sb.Got({
+		url: \"https://api.stackexchange.com/2.2/search/advanced\",
 		gzip: true,
-		headers: {
-			\"User-Agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36 OPR/62.0.3331.116\"
-		}
-	});
-
-	const data = JSON.parse(rawData);
+		searchParams: new sb.URLParams()
+			.set(\"order\", \"desc\")
+			.set(\"sort\", \"relevance\")
+			.set(\"site\", \"stackoverflow\")
+			.set(\"q\", message)
+			.toString()
+	}).json();
+	
 	if (data.quota_remaining === 0) {
 		return { reply: \"Daily quota exceeded! :(\" };
 	}
@@ -69,7 +64,7 @@ VALUES
 	}
 
 	const item = data.items[0];
-	return { 
+	return {
 		reply: [
 			item.title,
 			\"(score: \" + item.score + \", answers: \" + item.answer_count + \")\",
@@ -80,34 +75,29 @@ VALUES
 			\"https://stackoverflow.com/questions/\" + item.question_id
 		].join(\" \")
 	};
-}',
+})',
 		NULL,
 		NULL
 	)
 
 ON DUPLICATE KEY UPDATE
-	Code = 'async (context, ...args) => {
+	Code = '(async function stackOverflowSearch (context, ...args) {
 	const message = args.join(\" \");
 	if (!message) {
 		return { reply: \"No search text provided!\" };
 	}
 
-	const params = new sb.URLParams()
-		.set(\"order\", \"desc\")
-		.set(\"sort\", \"relevance\")
-		.set(\"site\", \"stackoverflow\")
-		.set(\"q\", message);
-
-	const rawData = await sb.Utils.request({
-		method: \"GET\",
-		url: `https://api.stackexchange.com/2.2/search/advanced?${params.toString()}`,
+	const data = await sb.Got({
+		url: \"https://api.stackexchange.com/2.2/search/advanced\",
 		gzip: true,
-		headers: {
-			\"User-Agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36 OPR/62.0.3331.116\"
-		}
-	});
-
-	const data = JSON.parse(rawData);
+		searchParams: new sb.URLParams()
+			.set(\"order\", \"desc\")
+			.set(\"sort\", \"relevance\")
+			.set(\"site\", \"stackoverflow\")
+			.set(\"q\", message)
+			.toString()
+	}).json();
+	
 	if (data.quota_remaining === 0) {
 		return { reply: \"Daily quota exceeded! :(\" };
 	}
@@ -116,7 +106,7 @@ ON DUPLICATE KEY UPDATE
 	}
 
 	const item = data.items[0];
-	return { 
+	return {
 		reply: [
 			item.title,
 			\"(score: \" + item.score + \", answers: \" + item.answer_count + \")\",
@@ -127,4 +117,4 @@ ON DUPLICATE KEY UPDATE
 			\"https://stackoverflow.com/questions/\" + item.question_id
 		].join(\" \")
 	};
-}'
+})'

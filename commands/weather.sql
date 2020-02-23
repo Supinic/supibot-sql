@@ -60,8 +60,8 @@ VALUES
 		const exec = require(\"child_process\").execSync;
 		const temperature = exec(\"/opt/vc/bin/vcgencmd measure_temp\").toString().match(/([\\d\\.]+)/)[1] + \"°C\";
 
-		return { 
-			reply: \"Supibot, Supinic\'s table, Raspberry Pi 3B: \" + temperature + \". No wind detected. No precipitation expected.\" 
+		return {
+			reply: \"Supibot, Supinic\'s table, Raspberry Pi 3B: \" + temperature + \". No wind detected. No precipitation expected.\"
 		};
 	}
 	else if (args[0].startsWith(\"@\")) {
@@ -169,14 +169,14 @@ VALUES
 		}
 	}
 
-	const params = new sb.URLParams();
-	params.set(\"key\", sb.Config.get(\"API_GOOGLE_GEOCODING\"))
-		.set(\"address\", args.join(\" \"));
-
-	const geoData = JSON.parse(await sb.Utils.request({
-		url: \"https://maps.googleapis.com/maps/api/geocode/json?\" + params.toString()
-	}));
-
+	const geoData = await sb.Got({
+		url: \"https://maps.googleapis.com/maps/api/geocode/json\",
+		searchParams: new sb.URLParams()
+			.set(\"key\", sb.Config.get(\"API_GOOGLE_GEOCODING\"))
+			.set(\"address\", args.join(\" \"))
+			.toString()
+	}).json();
+	
 	if (!geoData.results[0]) {
 		return {
 			reply: \"That place was not found FeelsBadMan\"
@@ -185,20 +185,18 @@ VALUES
 
 	const coords = geoData.results[0].geometry.location;
 	const excluded = [\"currently\", \"minutely\", \"hourly\", \"daily\", \"alerts\"].filter(i => i !== type);
-	const weatherURL = [
-		\"https://api.darksky.net/forecast/\",
-		sb.Config.get(\"API_DARKSKY\") + \"/\",
-		coords.lat + \",\" + coords.lng + \"?\",
-		new sb.URLParams()
+	const key = sb.Config.get(\"API_DARKSKY\");	
+
+	const topData = await sb.Got({
+		url: `https://api.darksky.net/forecast/${key}/${coords.lat},${coords.lng}`,
+		searchParams: new sb.URLParams()
 			.set(\"units\", \"si\")
 			.set(\"exclude\", excluded.join(\",\"))
 			.toString()
-	].join(\"\");
+	}).json();
 
 	let data = null;
 	let message = null;
-	const topData = JSON.parse(await sb.Utils.request(weatherURL));
-
 	if (number === null && type !== \"currently\") {
 		message = topData[type].summary;
 	}
@@ -250,7 +248,7 @@ VALUES
 	const place = (skipLocation)
 		? \"(location hidden)\"
 		: geoData.results[0].formatted_address;
-	
+
 	return {
 		reply: `${place} ${plusTime}: ${message}`
 	};
@@ -291,8 +289,8 @@ ON DUPLICATE KEY UPDATE
 		const exec = require(\"child_process\").execSync;
 		const temperature = exec(\"/opt/vc/bin/vcgencmd measure_temp\").toString().match(/([\\d\\.]+)/)[1] + \"°C\";
 
-		return { 
-			reply: \"Supibot, Supinic\'s table, Raspberry Pi 3B: \" + temperature + \". No wind detected. No precipitation expected.\" 
+		return {
+			reply: \"Supibot, Supinic\'s table, Raspberry Pi 3B: \" + temperature + \". No wind detected. No precipitation expected.\"
 		};
 	}
 	else if (args[0].startsWith(\"@\")) {
@@ -400,14 +398,14 @@ ON DUPLICATE KEY UPDATE
 		}
 	}
 
-	const params = new sb.URLParams();
-	params.set(\"key\", sb.Config.get(\"API_GOOGLE_GEOCODING\"))
-		.set(\"address\", args.join(\" \"));
-
-	const geoData = JSON.parse(await sb.Utils.request({
-		url: \"https://maps.googleapis.com/maps/api/geocode/json?\" + params.toString()
-	}));
-
+	const geoData = await sb.Got({
+		url: \"https://maps.googleapis.com/maps/api/geocode/json\",
+		searchParams: new sb.URLParams()
+			.set(\"key\", sb.Config.get(\"API_GOOGLE_GEOCODING\"))
+			.set(\"address\", args.join(\" \"))
+			.toString()
+	}).json();
+	
 	if (!geoData.results[0]) {
 		return {
 			reply: \"That place was not found FeelsBadMan\"
@@ -416,20 +414,18 @@ ON DUPLICATE KEY UPDATE
 
 	const coords = geoData.results[0].geometry.location;
 	const excluded = [\"currently\", \"minutely\", \"hourly\", \"daily\", \"alerts\"].filter(i => i !== type);
-	const weatherURL = [
-		\"https://api.darksky.net/forecast/\",
-		sb.Config.get(\"API_DARKSKY\") + \"/\",
-		coords.lat + \",\" + coords.lng + \"?\",
-		new sb.URLParams()
+	const key = sb.Config.get(\"API_DARKSKY\");	
+
+	const topData = await sb.Got({
+		url: `https://api.darksky.net/forecast/${key}/${coords.lat},${coords.lng}`,
+		searchParams: new sb.URLParams()
 			.set(\"units\", \"si\")
 			.set(\"exclude\", excluded.join(\",\"))
 			.toString()
-	].join(\"\");
+	}).json();
 
 	let data = null;
 	let message = null;
-	const topData = JSON.parse(await sb.Utils.request(weatherURL));
-
 	if (number === null && type !== \"currently\") {
 		message = topData[type].summary;
 	}
@@ -481,7 +477,7 @@ ON DUPLICATE KEY UPDATE
 	const place = (skipLocation)
 		? \"(location hidden)\"
 		: geoData.results[0].formatted_address;
-	
+
 	return {
 		reply: `${place} ${plusTime}: ${message}`
 	};

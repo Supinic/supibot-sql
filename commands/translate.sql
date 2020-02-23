@@ -79,26 +79,19 @@ VALUES
 		return { reply: `Language \"${fail.from || fail.to}\" was not recognized!` };
 	}
 
-	const url = \"https://translate.googleapis.com/translate_a/single?\";
-	const params = new sb.URLParams()
-		.set(\"client\", \"gtx\")
-		.set(\"dt\", \"t\")
-		.set(\"sl\", options.from)
-		.set(\"tl\", options.to)
-		.set(\"ie\", \"UTF-8\")
-		.set(\"oe\", \"UTF-8\")
-		.set(\"q\", args.join(\" \"));
-
-	let response = null;
-	let raw = null;
-	try {	
-		raw = await sb.Utils.request(url + params.toString());
-		response = JSON.parse(raw);
-	}
-	catch (e) {
-		console.warn(raw, response, e);
-		return { reply: e.statusCode + \" \" + e.name };
-	}
+	const response = await sb.Got({
+		url: \"https://translate.googleapis.com/translate_a/single\",
+		throwHttpErrors: false,
+		searchParams: new sb.URLParams()
+			.set(\"client\", \"gtx\")
+			.set(\"dt\", \"t\")
+			.set(\"sl\", options.from)
+			.set(\"tl\", options.to)
+			.set(\"ie\", \"UTF-8\")
+			.set(\"oe\", \"UTF-8\")
+			.set(\"q\", args.join(\" \"))
+			.toString()
+	}).json();
 
 	let reply = response[0].map(i => i[0]).join(\" \");
 	if (options.direction) {
@@ -160,26 +153,19 @@ ON DUPLICATE KEY UPDATE
 		return { reply: `Language \"${fail.from || fail.to}\" was not recognized!` };
 	}
 
-	const url = \"https://translate.googleapis.com/translate_a/single?\";
-	const params = new sb.URLParams()
-		.set(\"client\", \"gtx\")
-		.set(\"dt\", \"t\")
-		.set(\"sl\", options.from)
-		.set(\"tl\", options.to)
-		.set(\"ie\", \"UTF-8\")
-		.set(\"oe\", \"UTF-8\")
-		.set(\"q\", args.join(\" \"));
-
-	let response = null;
-	let raw = null;
-	try {	
-		raw = await sb.Utils.request(url + params.toString());
-		response = JSON.parse(raw);
-	}
-	catch (e) {
-		console.warn(raw, response, e);
-		return { reply: e.statusCode + \" \" + e.name };
-	}
+	const response = await sb.Got({
+		url: \"https://translate.googleapis.com/translate_a/single\",
+		throwHttpErrors: false,
+		searchParams: new sb.URLParams()
+			.set(\"client\", \"gtx\")
+			.set(\"dt\", \"t\")
+			.set(\"sl\", options.from)
+			.set(\"tl\", options.to)
+			.set(\"ie\", \"UTF-8\")
+			.set(\"oe\", \"UTF-8\")
+			.set(\"q\", args.join(\" \"))
+			.toString()
+	}).json();
 
 	let reply = response[0].map(i => i[0]).join(\" \");
 	if (options.direction) {

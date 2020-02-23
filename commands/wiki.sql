@@ -39,7 +39,7 @@ VALUES
 		1,
 		1,
 		0,
-		'(async function wiki (extra, ...args) {
+		'(async function wiki (context, ...args) {
 	if (args.length === 0) {
 		return {
 			reply: \"No article specified!\",
@@ -60,36 +60,36 @@ VALUES
 			}
 
 			language = language.toLowerCase();
-			args.splice(i, 1);		
+			args.splice(i, 1);
 		}
 	}
 
-	// const searchURL = \"https://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts&exintro=&explaintext=&redirects=1&titles=\";
-	const url = `https://${language}.wikipedia.org/w/api.php?`;
-	let params = new sb.URLParams()
-		.set(\"format\", \"json\")
-		.set(\"action\", \"query\")
-		.set(\"prop\", \"extracts\")
-		.set(\"redirects\", \"1\")
-		.set(\"titles\", args.join(\" \"));
+	const rawData = await sb.Got({
+		url: `https://${language}.wikipedia.org/w/api.php`,
+		searchParams: new sb.URLParams()
+			.set(\"format\", \"json\")
+			.set(\"action\", \"query\")
+			.set(\"prop\", \"extracts\")
+			.set(\"redirects\", \"1\")
+			.set(\"titles\", args.join(\" \"))
+			.toString()
+	}).json();
 
-	const rawData = JSON.parse(await sb.Utils.request(url + params));
 	const data = rawData.query.pages;
 	const key = Object.keys(data)[0];
-	
 	if (key === \"-1\") {
 		return { reply: \"No results found!\" };
 	}
 	else {
 		let link = \"\";
-		if (!extra.channel || extra.channel.Links_Allowed === true) {
+		if (!context.channel || context.channel.Links_Allowed === true) {
 			link = \"https://en.wikipedia.org/?curid=\" + key;
-		};
+		}
 
-		return { 
+		return {
 			reply: link + \" \" + data[key].title + \": \" + sb.Utils.removeHTML(data[key].extract)
 		};
-	}		
+	}
 })',
 		NULL,
 		'async (prefix) => {
@@ -104,7 +104,7 @@ VALUES
 	)
 
 ON DUPLICATE KEY UPDATE
-	Code = '(async function wiki (extra, ...args) {
+	Code = '(async function wiki (context, ...args) {
 	if (args.length === 0) {
 		return {
 			reply: \"No article specified!\",
@@ -125,34 +125,34 @@ ON DUPLICATE KEY UPDATE
 			}
 
 			language = language.toLowerCase();
-			args.splice(i, 1);		
+			args.splice(i, 1);
 		}
 	}
 
-	// const searchURL = \"https://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts&exintro=&explaintext=&redirects=1&titles=\";
-	const url = `https://${language}.wikipedia.org/w/api.php?`;
-	let params = new sb.URLParams()
-		.set(\"format\", \"json\")
-		.set(\"action\", \"query\")
-		.set(\"prop\", \"extracts\")
-		.set(\"redirects\", \"1\")
-		.set(\"titles\", args.join(\" \"));
+	const rawData = await sb.Got({
+		url: `https://${language}.wikipedia.org/w/api.php`,
+		searchParams: new sb.URLParams()
+			.set(\"format\", \"json\")
+			.set(\"action\", \"query\")
+			.set(\"prop\", \"extracts\")
+			.set(\"redirects\", \"1\")
+			.set(\"titles\", args.join(\" \"))
+			.toString()
+	}).json();
 
-	const rawData = JSON.parse(await sb.Utils.request(url + params));
 	const data = rawData.query.pages;
 	const key = Object.keys(data)[0];
-	
 	if (key === \"-1\") {
 		return { reply: \"No results found!\" };
 	}
 	else {
 		let link = \"\";
-		if (!extra.channel || extra.channel.Links_Allowed === true) {
+		if (!context.channel || context.channel.Links_Allowed === true) {
 			link = \"https://en.wikipedia.org/?curid=\" + key;
-		};
+		}
 
-		return { 
+		return {
 			reply: link + \" \" + data[key].title + \": \" + sb.Utils.removeHTML(data[key].extract)
 		};
-	}		
+	}
 })'

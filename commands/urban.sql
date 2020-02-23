@@ -58,19 +58,13 @@ VALUES
 		}
 	}
 
-	let data = null;
-	const params = new sb.URLParams().set(\"term\", args.join(\" \"));
-	try {
-		data = JSON.parse(await sb.Utils.request({
-			rejectUnauthorized: false,
-			uri: `https://api.urbandictionary.com/v0/define?${params.toString()}`
-		}));
-	}
-	catch (e) {
-		console.warn(\"Urban is down\", e);
-		return { reply: \"Urban API returned an error :(\" };
-	}
-
+	const data = await sb.Got({
+		url: \"https://api.urbandictionary.com/v0/define\",
+		searchParams: new sb.URLParams()
+			.set(\"term\", args.join(\" \"))
+			.toString()
+	}).json();
+	
 	if (!data.list || data.result_type === \"no_results\") {
 		return { reply: \"No results found!\" };
 	}
@@ -119,19 +113,13 @@ ON DUPLICATE KEY UPDATE
 		}
 	}
 
-	let data = null;
-	const params = new sb.URLParams().set(\"term\", args.join(\" \"));
-	try {
-		data = JSON.parse(await sb.Utils.request({
-			rejectUnauthorized: false,
-			uri: `https://api.urbandictionary.com/v0/define?${params.toString()}`
-		}));
-	}
-	catch (e) {
-		console.warn(\"Urban is down\", e);
-		return { reply: \"Urban API returned an error :(\" };
-	}
-
+	const data = await sb.Got({
+		url: \"https://api.urbandictionary.com/v0/define\",
+		searchParams: new sb.URLParams()
+			.set(\"term\", args.join(\" \"))
+			.toString()
+	}).json();
+	
 	if (!data.list || data.result_type === \"no_results\") {
 		return { reply: \"No results found!\" };
 	}

@@ -39,8 +39,9 @@ VALUES
 		1,
 		1,
 		0,
-		'async (extra, existingID, reuploadLink) => {
+		'(async function trackReload (extra, existingID, reuploadLink) {
 	existingID = Number(existingID);
+	
 	if (!sb.Utils.isValidInteger(existingID)) {
 		return { reply: \"First argument must be positive finite integer!\" };
 	}
@@ -58,32 +59,35 @@ VALUES
 			.where(\"Track.ID = %n\", reuploadCheck)
 			.single()
 		);
+		
 		if (!row) {
 			return { reply: \"Given reupload ID does not exist!\" };
 		}
 
 		reuploadLink = row.Link_Prefix.replace(sb.Config.get(\"VIDEO_TYPE_REPLACE_PREFIX\"), row.Link);
 	}
-		
-	const params = new sb.URLParams()
-		.set(\"reuploadLink\", reuploadLink)
-		.set(\"existingID\", existingID);
 
-	const url = `https://supinic.com/api/track/reupload?${params.toString()}`;
-	const result = JSON.parse(await sb.Utils.request({
+	const result = await sb.Got.instances.Supinic({
 		method: \"POST\",
-		url: url		
-	}));
-
-	return { reply: \"Result: \" + result.data.message + \".\" };		
-}',
+		url: \"track/reupload\",
+		searchParams: new sb.URLParams()
+			.set(\"reuploadLink\", reuploadLink)
+			.set(\"existingID\", existingID)
+			.toString()
+	}).json();
+	
+	return { 
+		reply: \"Result: \" + result.data.message + \".\"
+	};
+})',
 		NULL,
 		NULL
 	)
 
 ON DUPLICATE KEY UPDATE
-	Code = 'async (extra, existingID, reuploadLink) => {
+	Code = '(async function trackReload (extra, existingID, reuploadLink) {
 	existingID = Number(existingID);
+	
 	if (!sb.Utils.isValidInteger(existingID)) {
 		return { reply: \"First argument must be positive finite integer!\" };
 	}
@@ -101,22 +105,24 @@ ON DUPLICATE KEY UPDATE
 			.where(\"Track.ID = %n\", reuploadCheck)
 			.single()
 		);
+		
 		if (!row) {
 			return { reply: \"Given reupload ID does not exist!\" };
 		}
 
 		reuploadLink = row.Link_Prefix.replace(sb.Config.get(\"VIDEO_TYPE_REPLACE_PREFIX\"), row.Link);
 	}
-		
-	const params = new sb.URLParams()
-		.set(\"reuploadLink\", reuploadLink)
-		.set(\"existingID\", existingID);
 
-	const url = `https://supinic.com/api/track/reupload?${params.toString()}`;
-	const result = JSON.parse(await sb.Utils.request({
+	const result = await sb.Got.instances.Supinic({
 		method: \"POST\",
-		url: url		
-	}));
-
-	return { reply: \"Result: \" + result.data.message + \".\" };		
-}'
+		url: \"track/reupload\",
+		searchParams: new sb.URLParams()
+			.set(\"reuploadLink\", reuploadLink)
+			.set(\"existingID\", existingID)
+			.toString()
+	}).json();
+	
+	return { 
+		reply: \"Result: \" + result.data.message + \".\"
+	};
+})'

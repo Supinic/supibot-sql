@@ -40,21 +40,24 @@ VALUES
 		1,
 		0,
 		'(async function getVideoData (context, link) {
-	const data = JSON.parse(await sb.Utils.request(\"https://supinic.com/api/trackData/fetch?url=\" + link));
-	if (data.statusCode === 500) {
+	let data = null;
+	try {
+		data = await sb.Utils.linkParser.fetchData(link);
+	}
+	catch (e) {
 		return { reply: \"Unable to parse link.\" };
 	}
-	else if (data.statusCode === 200) {
-		if (data.data) {
-			const link = await sb.Pastebin.post(JSON.stringify(data.data, null, 4), {
-				name: data.data.name + \", requested by \" + context.user.Name,
-				format: \"json\"
-			});
-			return { reply: link };
-		}
-		else {
-			return { reply: \"Link has been deleted or is otherwise not available.\" };
-		}
+
+	if (!data) {
+		return { reply: \"Link has been deleted or is otherwise not available.\" };
+	}
+	else {
+		const link = await sb.Pastebin.post(JSON.stringify(data, null, 4), {
+			name: data.name + \", requested by \" + context.user.Name,
+			format: \"json\"
+		});
+
+		return { reply: link };
 	}
 })',
 		NULL,
@@ -63,20 +66,23 @@ VALUES
 
 ON DUPLICATE KEY UPDATE
 	Code = '(async function getVideoData (context, link) {
-	const data = JSON.parse(await sb.Utils.request(\"https://supinic.com/api/trackData/fetch?url=\" + link));
-	if (data.statusCode === 500) {
+	let data = null;
+	try {
+		data = await sb.Utils.linkParser.fetchData(link);
+	}
+	catch (e) {
 		return { reply: \"Unable to parse link.\" };
 	}
-	else if (data.statusCode === 200) {
-		if (data.data) {
-			const link = await sb.Pastebin.post(JSON.stringify(data.data, null, 4), {
-				name: data.data.name + \", requested by \" + context.user.Name,
-				format: \"json\"
-			});
-			return { reply: link };
-		}
-		else {
-			return { reply: \"Link has been deleted or is otherwise not available.\" };
-		}
+
+	if (!data) {
+		return { reply: \"Link has been deleted or is otherwise not available.\" };
+	}
+	else {
+		const link = await sb.Pastebin.post(JSON.stringify(data, null, 4), {
+			name: data.name + \", requested by \" + context.user.Name,
+			format: \"json\"
+		});
+
+		return { reply: link };
 	}
 })'

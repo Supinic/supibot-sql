@@ -39,62 +39,70 @@ VALUES
 		1,
 		1,
 		0,
-		'async (extra, symbol) => {
+		'(async function stock (context, symbol) {
 	if (!symbol) {
-		return { reply: \"A symbol must be provided!\" };
+		return { reply: \"A stock symbol must be provided!\" };
 	}
-	
-	const params = new sb.URLParams()
-		.set(\"function\", \"GLOBAL_QUOTE\")
-		.set(\"symbol\", symbol)
-		.set(\"apikey\", sb.Config.get(\"API_ALPHA_AVANTAGE\"));
-	
-	const url = `https://www.alphavantage.co/query?${params.toString()}`;
-	try {
-		const data = (JSON.parse(await sb.Utils.request(url)))[\"Global Quote\"];
-		const symbol = (Number(data[\"10. change percent\"].replace(\"%\", \"\")) >= 0) ? \"+\" : \"\";
+
+	const { \"Global Quote\": data } = await sb.Got({
+		retry: 0,
+		throwHttpErrors: false,
+		url: \"https://www.alphavantage.co/query\",
+		searchParams: new sb.URLParams()
+			.set(\"function\", \"GLOBAL_QUOTE\")
+			.set(\"symbol\", symbol)
+			.set(\"apikey\", sb.Config.get(\"API_ALPHA_AVANTAGE\"))
+			.toString()
+	}).json();
+
+	if (!data) {
 		return { 
-			reply: [
-				\"Latest price for \" + data[\"01. symbol\"] + \":\",
-				\"$\" + data[\"05. price\"] + \", \",
-				\"change: \" + symbol + data[\"10. change percent\"]
-			].join(\" \")
+			reply: \"Stock symbol could not be found!\"
 		};
-	}	
-	catch (e) {
-		console.error(e);
-		return { reply: \"Well, shit\" };
 	}
-}',
+
+	const identifier = (Number(data[\"10. change percent\"].replace(\"%\", \"\")) >= 0) ? \"+\" : \"\";
+	return {
+		reply: [
+			\"Latest price for \" + data[\"01. symbol\"] + \":\",
+			\"$\" + data[\"05. price\"] + \", \",
+			\"change: \" + identifier + data[\"10. change percent\"]
+		].join(\" \")
+	};
+})',
 		NULL,
 		NULL
 	)
 
 ON DUPLICATE KEY UPDATE
-	Code = 'async (extra, symbol) => {
+	Code = '(async function stock (context, symbol) {
 	if (!symbol) {
-		return { reply: \"A symbol must be provided!\" };
+		return { reply: \"A stock symbol must be provided!\" };
 	}
-	
-	const params = new sb.URLParams()
-		.set(\"function\", \"GLOBAL_QUOTE\")
-		.set(\"symbol\", symbol)
-		.set(\"apikey\", sb.Config.get(\"API_ALPHA_AVANTAGE\"));
-	
-	const url = `https://www.alphavantage.co/query?${params.toString()}`;
-	try {
-		const data = (JSON.parse(await sb.Utils.request(url)))[\"Global Quote\"];
-		const symbol = (Number(data[\"10. change percent\"].replace(\"%\", \"\")) >= 0) ? \"+\" : \"\";
+
+	const { \"Global Quote\": data } = await sb.Got({
+		retry: 0,
+		throwHttpErrors: false,
+		url: \"https://www.alphavantage.co/query\",
+		searchParams: new sb.URLParams()
+			.set(\"function\", \"GLOBAL_QUOTE\")
+			.set(\"symbol\", symbol)
+			.set(\"apikey\", sb.Config.get(\"API_ALPHA_AVANTAGE\"))
+			.toString()
+	}).json();
+
+	if (!data) {
 		return { 
-			reply: [
-				\"Latest price for \" + data[\"01. symbol\"] + \":\",
-				\"$\" + data[\"05. price\"] + \", \",
-				\"change: \" + symbol + data[\"10. change percent\"]
-			].join(\" \")
+			reply: \"Stock symbol could not be found!\"
 		};
-	}	
-	catch (e) {
-		console.error(e);
-		return { reply: \"Well, shit\" };
 	}
-}'
+
+	const identifier = (Number(data[\"10. change percent\"].replace(\"%\", \"\")) >= 0) ? \"+\" : \"\";
+	return {
+		reply: [
+			\"Latest price for \" + data[\"01. symbol\"] + \":\",
+			\"$\" + data[\"05. price\"] + \", \",
+			\"change: \" + identifier + data[\"10. change percent\"]
+		].join(\" \")
+	};
+})'

@@ -40,9 +40,10 @@ VALUES
 		1,
 		0,
 		'(async function randomKanyeWestQuote () {
+	const { quote } = await sb.Got(\"https://api.kanye.rest\").json();
 	return {
-		reply: JSON.parse(await sb.Utils.request(\"https://api.kanye.rest/\")).quote
-	}
+		reply: quote
+	};
 })',
 		NULL,
 		NULL
@@ -50,7 +51,8 @@ VALUES
 
 ON DUPLICATE KEY UPDATE
 	Code = '(async function randomKanyeWestQuote () {
+	const { quote } = await sb.Got(\"https://api.kanye.rest\").json();
 	return {
-		reply: JSON.parse(await sb.Utils.request(\"https://api.kanye.rest/\")).quote
-	}
+		reply: quote
+	};
 })'

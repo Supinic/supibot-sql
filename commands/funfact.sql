@@ -39,38 +39,30 @@ VALUES
 		1,
 		1,
 		0,
-		'async () => {
-	const url = \"https://uselessfacts.jsph.pl/random.json?language=en\";
-	try {
-		const data = await sb.Utils.request(url);
-		return {
-			reply: JSON.parse(data).text
-		};
-	}
-	catch (e) {
-		console.warn(e);
-		return {
-			reply: \"The API went down FeelsBadMan Want permanent uptime on $funfact? Help us out by posting your own fun facts via the $suggest command!\"
-		};
-	}
-}',
+		'(async function funFact () {
+	const data = await sb.Got({
+		prefixUrl: \"https://uselessfacts.jsph.pl/\",
+		url: \"random.json\",
+		searchParams: \"language=en\"
+	}).json();
+
+	return {
+		reply: data.text
+	};
+})',
 		'No arguments.',
 		NULL
 	)
 
 ON DUPLICATE KEY UPDATE
-	Code = 'async () => {
-	const url = \"https://uselessfacts.jsph.pl/random.json?language=en\";
-	try {
-		const data = await sb.Utils.request(url);
-		return {
-			reply: JSON.parse(data).text
-		};
-	}
-	catch (e) {
-		console.warn(e);
-		return {
-			reply: \"The API went down FeelsBadMan Want permanent uptime on $funfact? Help us out by posting your own fun facts via the $suggest command!\"
-		};
-	}
-}'
+	Code = '(async function funFact () {
+	const data = await sb.Got({
+		prefixUrl: \"https://uselessfacts.jsph.pl/\",
+		url: \"random.json\",
+		searchParams: \"language=en\"
+	}).json();
+
+	return {
+		reply: data.text
+	};
+})'

@@ -58,14 +58,11 @@ VALUES
 		};
 	}
 
-	const vod = JSON.parse(await sb.Utils.request({
-		method: \"GET\",
-		url: \"https://api.twitch.tv/helix/videos?user_id=\" + channelID,
-		headers: {
-			\"Client-ID\": sb.Config.get(\"TWITCH_CLIENT_ID\")
-		}
-	}));
-	
+	const vod = await sb.Got.instances.Twitch.Helix({
+		url: \"videos\",
+		searchParams: \"user_id=\" + channelID
+	}).json();
+
 	if (vod.data.length === 0) {
 		return {
 			reply: \"Target channel has no VODs saved!\"
@@ -108,14 +105,11 @@ ON DUPLICATE KEY UPDATE
 		};
 	}
 
-	const vod = JSON.parse(await sb.Utils.request({
-		method: \"GET\",
-		url: \"https://api.twitch.tv/helix/videos?user_id=\" + channelID,
-		headers: {
-			\"Client-ID\": sb.Config.get(\"TWITCH_CLIENT_ID\")
-		}
-	}));
-	
+	const vod = await sb.Got.instances.Twitch.Helix({
+		url: \"videos\",
+		searchParams: \"user_id=\" + channelID
+	}).json();
+
 	if (vod.data.length === 0) {
 		return {
 			reply: \"Target channel has no VODs saved!\"

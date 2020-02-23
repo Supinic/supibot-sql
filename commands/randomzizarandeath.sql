@@ -56,14 +56,12 @@ VALUES
 			if (pageToken) {
 				params.set(\"pageToken\", pageToken);
 			}
-
-			const playlistData = JSON.parse(await sb.Utils.request({
-				url: \"https://www.googleapis.com/youtube/v3/playlistItems?\" + params.toString(),
-				headers: {
-					Accept: \"application/json\"
-				}
-			}));
-
+			
+			const playlistData = await sb.Got({
+				url: \"https://www.googleapis.com/youtube/v3/playlistItems\",
+				searchParams: params.toString()
+			}).json();
+			
 			pageToken = playlistData.nextPageToken;
 			videos.push(...playlistData.items.map(i => i.snippet.resourceId.videoId));
 
@@ -99,14 +97,12 @@ ON DUPLICATE KEY UPDATE
 			if (pageToken) {
 				params.set(\"pageToken\", pageToken);
 			}
-
-			const playlistData = JSON.parse(await sb.Utils.request({
-				url: \"https://www.googleapis.com/youtube/v3/playlistItems?\" + params.toString(),
-				headers: {
-					Accept: \"application/json\"
-				}
-			}));
-
+			
+			const playlistData = await sb.Got({
+				url: \"https://www.googleapis.com/youtube/v3/playlistItems\",
+				searchParams: params.toString()
+			}).json();
+			
 			pageToken = playlistData.nextPageToken;
 			videos.push(...playlistData.items.map(i => i.snippet.resourceId.videoId));
 

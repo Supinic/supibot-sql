@@ -49,10 +49,15 @@ VALUES
 		index = 0;
 	}
 
-	const url = `https://twitch-tools.rootonline.de/username_changelogs_search.php?format=json&q=${user}`;
-	const topData = JSON.parse(await sb.Utils.request(url));
-	const data = topData[index];
+	const topData = await sb.Got.instances.CommanderRoot({
+		url: \"username_changelogs_search.php\",
+		searchParams: new sb.URLParams()
+			.set(\"format\", \"json\")
+			.set(\"q\", user)
+			.toString()
+	}).json();
 
+	const data = topData[index];
 	if (!data) {
 		const specificReply = (context.user.Name === user)
 			? \"No namechange found for you.\"
@@ -64,10 +69,11 @@ VALUES
 				: \"Specified index is out of bounds.\"
 		};
 	}
-	
+
 	const addendum = (index === 0 && topData.length !== 1)
 		? (topData.length - 1) + \" more change(s) found.\"
 		: \"\";
+	
 	return {
 		reply:`Last name change for user ${data.userid}: ${data.username_old} -> ${data.username_new}. This was ${sb.Utils.timeDelta(new sb.Date(data.found_at))}. ${addendum}`
 	};
@@ -87,10 +93,15 @@ ON DUPLICATE KEY UPDATE
 		index = 0;
 	}
 
-	const url = `https://twitch-tools.rootonline.de/username_changelogs_search.php?format=json&q=${user}`;
-	const topData = JSON.parse(await sb.Utils.request(url));
-	const data = topData[index];
+	const topData = await sb.Got.instances.CommanderRoot({
+		url: \"username_changelogs_search.php\",
+		searchParams: new sb.URLParams()
+			.set(\"format\", \"json\")
+			.set(\"q\", user)
+			.toString()
+	}).json();
 
+	const data = topData[index];
 	if (!data) {
 		const specificReply = (context.user.Name === user)
 			? \"No namechange found for you.\"
@@ -102,10 +113,11 @@ ON DUPLICATE KEY UPDATE
 				: \"Specified index is out of bounds.\"
 		};
 	}
-	
+
 	const addendum = (index === 0 && topData.length !== 1)
 		? (topData.length - 1) + \" more change(s) found.\"
 		: \"\";
+	
 	return {
 		reply:`Last name change for user ${data.userid}: ${data.username_old} -> ${data.username_new}. This was ${sb.Utils.timeDelta(new sb.Date(data.found_at))}. ${addendum}`
 	};

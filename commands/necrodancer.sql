@@ -61,7 +61,7 @@ VALUES
 	const url = `${sb.Config.get(\"LOCAL_IP\")}:${sb.Config.get(\"LOCAL_PLAY_SOUNDS_PORT\")}?necrodancer=${data.link}&name=${name}`;
 	
 	sb.Master.send(\"Downloading has started! Please wait...\", context.channel);
-	await sb.Utils.request(url);
+	await sb.Got(url);
 
 	return { reply: \"Downloaded successfully :)\" };
 })',
@@ -92,7 +92,7 @@ ON DUPLICATE KEY UPDATE
 	const url = `${sb.Config.get(\"LOCAL_IP\")}:${sb.Config.get(\"LOCAL_PLAY_SOUNDS_PORT\")}?necrodancer=${data.link}&name=${name}`;
 	
 	sb.Master.send(\"Downloading has started! Please wait...\", context.channel);
-	await sb.Utils.request(url);
+	await sb.Got(url);
 
 	return { reply: \"Downloaded successfully :)\" };
 })'

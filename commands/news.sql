@@ -72,12 +72,13 @@ VALUES
 		params.set(\"country\", \"US\");
 	}
 
-	const data = JSON.parse(await sb.Utils.request({
-		url: \"https://newsapi.org/v2/top-headlines?\" + params.toString(),
+	const data = await sb.Got({
+		url: \"https://newsapi.org/v2/top-headlines\",
+		searchParams: params.toString(),
 		headers: {
 			Authorization: \"Bearer \" + sb.Config.get(\"API_NEWSAPI_ORG\")
 		}
-	}));
+	}).json();
 
 	if (!data.articles) {
 		return {
@@ -91,7 +92,7 @@ VALUES
 	}
 
 	const { description, publishedAt, title } = sb.Utils.randArray(data.articles);
-	const delta = (publishedAt) 
+	const delta = (publishedAt)
 		? \"(published \" + sb.Utils.timeDelta(new sb.Date(publishedAt)) + \")\"
 		: \"\";
 
@@ -162,12 +163,13 @@ ON DUPLICATE KEY UPDATE
 		params.set(\"country\", \"US\");
 	}
 
-	const data = JSON.parse(await sb.Utils.request({
-		url: \"https://newsapi.org/v2/top-headlines?\" + params.toString(),
+	const data = await sb.Got({
+		url: \"https://newsapi.org/v2/top-headlines\",
+		searchParams: params.toString(),
 		headers: {
 			Authorization: \"Bearer \" + sb.Config.get(\"API_NEWSAPI_ORG\")
 		}
-	}));
+	}).json();
 
 	if (!data.articles) {
 		return {
@@ -181,7 +183,7 @@ ON DUPLICATE KEY UPDATE
 	}
 
 	const { description, publishedAt, title } = sb.Utils.randArray(data.articles);
-	const delta = (publishedAt) 
+	const delta = (publishedAt)
 		? \"(published \" + sb.Utils.timeDelta(new sb.Date(publishedAt)) + \")\"
 		: \"\";
 

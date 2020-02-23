@@ -40,22 +40,13 @@ VALUES
 		1,
 		0,
 		'(async function speedrun () {
-/*
-	// const url = \"https://taskinoz.com/gdq/api/\";
-	const url = \"https://api.ivr.fi/gdq\";
-	const data = JSON.parse(await sb.Utils.request(url, {
-		headers: {
-			\"User-Agent\": sb.Config.get(\"SUPIBOT_USER_AGENT\")
-		}
-	}));
-
+	const { comment } = await sb.Got.instances.Leppunen(\"gdq\").json();
 	return {
-		reply: data.response
+		reply: comment
 	};
-*/
 
-	const model = await sb.MarkovChain.get(\"gdq-final\");
-	return { reply: model.sentences(2) };
+	// const model = await sb.MarkovChain.get(\"gdq-final\");
+	// return { reply: model.sentences(2) };
 })',
 		NULL,
 		NULL
@@ -63,20 +54,11 @@ VALUES
 
 ON DUPLICATE KEY UPDATE
 	Code = '(async function speedrun () {
-/*
-	// const url = \"https://taskinoz.com/gdq/api/\";
-	const url = \"https://api.ivr.fi/gdq\";
-	const data = JSON.parse(await sb.Utils.request(url, {
-		headers: {
-			\"User-Agent\": sb.Config.get(\"SUPIBOT_USER_AGENT\")
-		}
-	}));
-
+	const { comment } = await sb.Got.instances.Leppunen(\"gdq\").json();
 	return {
-		reply: data.response
+		reply: comment
 	};
-*/
 
-	const model = await sb.MarkovChain.get(\"gdq-final\");
-	return { reply: model.sentences(2) };
+	// const model = await sb.MarkovChain.get(\"gdq-final\");
+	// return { reply: model.sentences(2) };
 })'

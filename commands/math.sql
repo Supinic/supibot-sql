@@ -39,55 +39,20 @@ VALUES
 		1,
 		1,
 		0,
-		'async (extra, ...expression) => {
-	const url = \"https://api.ivr.fi/math/?\";
-	const params = new sb.URLParams().set(\"expr\", expression.join(\" \"));
-
-	let result = null;
-	try {
-		result = JSON.parse(await sb.Utils.request(url + String(params), {
-			headers: {
-				\"User-Agent\": sb.Config.get(\"SUPIBOT_USER_AGENT\")
-			}
-		}));
-	}
-	catch (e) {
-		const data = JSON.parse(e.response.body);
-		result = {
-			status: data.status,
-			response: data.response
-		};
-	}
-
+		'(async function math (context, ...args) {
+	const data = await sb.Got.instances.Leppunen({
+		url: \"math\",
+		searchParams: new sb.URLParams()
+			.set(\"expr\", args.join(\" \"))
+			.toString()
+	}).json();
+	
 	return {
-		reply: (result.status === 200 || result.status === 503) 
-			? result.response.replace(/\\bNaN\\b/g, \"NaM\").replace(/\\btrue\\b/g, \"TRUE LULW\")
+		reply: (data.status === 200 || data.status === 503)
+			? data.response.replace(/\\bNaN\\b/g, \"NaM\").replace(/\\btrue\\b/g, \"TRUE LULW\")
 			: \"Oh shit @Leppunen pajaS\"
 	};
-/*
-	return;
-	try {
-		let result = await sb.MathWorker.evaluate(expression.join(\" \"));
-		if (result === \"true\") {
-			result = \"TRUE LULW\";
-		}
-
-		return {
-			reply: result
-		};
-	}
-	catch (e) {
-		if (e.name === \"TimeoutError\") {
-			return {
-				 reply: \"Math evaluation timed out (\" + (sb.Config.get(\"MATH_TIMEOUT\") / 1000) + \" seconds)\"
-			};
-		}
-		else {
-			return { reply: e.toString() };
-		}
-	}
-*/
-}',
+})',
 		NULL,
 		'async (prefix) => {
 	return [
@@ -103,52 +68,17 @@ VALUES
 	)
 
 ON DUPLICATE KEY UPDATE
-	Code = 'async (extra, ...expression) => {
-	const url = \"https://api.ivr.fi/math/?\";
-	const params = new sb.URLParams().set(\"expr\", expression.join(\" \"));
-
-	let result = null;
-	try {
-		result = JSON.parse(await sb.Utils.request(url + String(params), {
-			headers: {
-				\"User-Agent\": sb.Config.get(\"SUPIBOT_USER_AGENT\")
-			}
-		}));
-	}
-	catch (e) {
-		const data = JSON.parse(e.response.body);
-		result = {
-			status: data.status,
-			response: data.response
-		};
-	}
-
+	Code = '(async function math (context, ...args) {
+	const data = await sb.Got.instances.Leppunen({
+		url: \"math\",
+		searchParams: new sb.URLParams()
+			.set(\"expr\", args.join(\" \"))
+			.toString()
+	}).json();
+	
 	return {
-		reply: (result.status === 200 || result.status === 503) 
-			? result.response.replace(/\\bNaN\\b/g, \"NaM\").replace(/\\btrue\\b/g, \"TRUE LULW\")
+		reply: (data.status === 200 || data.status === 503)
+			? data.response.replace(/\\bNaN\\b/g, \"NaM\").replace(/\\btrue\\b/g, \"TRUE LULW\")
 			: \"Oh shit @Leppunen pajaS\"
 	};
-/*
-	return;
-	try {
-		let result = await sb.MathWorker.evaluate(expression.join(\" \"));
-		if (result === \"true\") {
-			result = \"TRUE LULW\";
-		}
-
-		return {
-			reply: result
-		};
-	}
-	catch (e) {
-		if (e.name === \"TimeoutError\") {
-			return {
-				 reply: \"Math evaluation timed out (\" + (sb.Config.get(\"MATH_TIMEOUT\") / 1000) + \" seconds)\"
-			};
-		}
-		else {
-			return { reply: e.toString() };
-		}
-	}
-*/
-}'
+})'

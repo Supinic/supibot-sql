@@ -39,14 +39,19 @@ VALUES
 		1,
 		1,
 		0,
-		'async (extra, user, index) => {
+		'(async function levelChange (extra, user, index) {
 	user = user || extra.user.Name;
 	index = Number(index) || 0;
 
-	const url = `https://twitch-tools.rootonline.de/user_type_changelogs_search.php?format=json&q=${user}`;
-	const topData = JSON.parse(await sb.Utils.request(url));
-	const data = topData[index];
+	const topData = await sb.Got.instances.CommanderRoot({
+		url: \"user_type_changelogs_search.php\",
+		searchParams: new sb.URLParams()
+			.set(\"format\", \"json\")
+			.set(\"q\", user)
+			.toString()
+	}).json();
 	
+	const data = topData[index];
 	if (!data) {
 		return {
 			reply: (index === 0)
@@ -54,27 +59,33 @@ VALUES
 				: \"Specified index is out of bounds.\"
 		};
 	}
-	
+
 	const addendum = (index === 0 && topData.length !== 1)
 		? (topData.length - 1) + \" more change(s) found.\"
 		: \"\";
+	
 	return {
 		reply: `Level change (index ${index}) for user ${data.username}: ${data.type_old} -> ${data.type_new}. This was ${sb.Utils.timeDelta(new sb.Date(data.found_at))}. ${addendum}`
 	};
-}',
+})',
 		NULL,
 		NULL
 	)
 
 ON DUPLICATE KEY UPDATE
-	Code = 'async (extra, user, index) => {
+	Code = '(async function levelChange (extra, user, index) {
 	user = user || extra.user.Name;
 	index = Number(index) || 0;
 
-	const url = `https://twitch-tools.rootonline.de/user_type_changelogs_search.php?format=json&q=${user}`;
-	const topData = JSON.parse(await sb.Utils.request(url));
-	const data = topData[index];
+	const topData = await sb.Got.instances.CommanderRoot({
+		url: \"user_type_changelogs_search.php\",
+		searchParams: new sb.URLParams()
+			.set(\"format\", \"json\")
+			.set(\"q\", user)
+			.toString()
+	}).json();
 	
+	const data = topData[index];
 	if (!data) {
 		return {
 			reply: (index === 0)
@@ -82,11 +93,12 @@ ON DUPLICATE KEY UPDATE
 				: \"Specified index is out of bounds.\"
 		};
 	}
-	
+
 	const addendum = (index === 0 && topData.length !== 1)
 		? (topData.length - 1) + \" more change(s) found.\"
 		: \"\";
+	
 	return {
 		reply: `Level change (index ${index}) for user ${data.username}: ${data.type_old} -> ${data.type_new}. This was ${sb.Utils.timeDelta(new sb.Date(data.found_at))}. ${addendum}`
 	};
-}'
+})'

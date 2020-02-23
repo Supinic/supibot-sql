@@ -40,6 +40,7 @@ VALUES
 		1,
 		0,
 		'(async function randomAnimalPicture (context, type) {
+	const types = [\"cat\", \"dog\", \"bird\", \"fox\"];
 	switch (context.invocation) {
 		case \"rcp\": type = \"cat\"; break;
 		case \"rdp\": type = \"dog\"; break;
@@ -54,28 +55,33 @@ VALUES
 			reply: \"No type provided!\"
 		};
 	}
+	else if (!types.includes(type)) {
+		return {
+			reply: \"That type is not supported!\"
+		};
+	}
 	else if (!context.user.Data.animals?.[type]) {
 		return {
 			reply: `Only people who have verified that they have a ${type} can use this command! Verify by $suggest-ing a picture of your ${type}(s).`
 		};
 	}
-	
+
 	let result = null;
 	switch (type) {
 		case \"bird\":
-			result = JSON.parse(await sb.Utils.request(\"https://some-random-api.ml/img/birb\")).link;
+			result = (await sb.Got.instances.SRA(\"img/bird\").json()).link;
 			break;
 
 		case \"cat\":
-			result = JSON.parse(await sb.Utils.request(\"https://api.thecatapi.com/v1/images/search\"))[0].url;
+			result = (await sb.Got(\"https://api.thecatapi.com/v1/images/search\").json())[0].url;
 			break;
 
 		case \"dog\":
-			result = JSON.parse(await sb.Utils.request(\"https://dog.ceo/api/breeds/image/random\")).message;
+			result = (await sb.Got(\"https://dog.ceo/api/breeds/image/random\").json()).message;
 			break;
 
 		case \"fox\":
-			result = JSON.parse(await sb.Utils.request(\"https://some-random-api.ml/img/fox\")).message;
+			result = (await sb.Got.instances.SRA(\"img/fox\").json()).link;
 			break;
 	}
 
@@ -89,6 +95,7 @@ VALUES
 
 ON DUPLICATE KEY UPDATE
 	Code = '(async function randomAnimalPicture (context, type) {
+	const types = [\"cat\", \"dog\", \"bird\", \"fox\"];
 	switch (context.invocation) {
 		case \"rcp\": type = \"cat\"; break;
 		case \"rdp\": type = \"dog\"; break;
@@ -103,28 +110,33 @@ ON DUPLICATE KEY UPDATE
 			reply: \"No type provided!\"
 		};
 	}
+	else if (!types.includes(type)) {
+		return {
+			reply: \"That type is not supported!\"
+		};
+	}
 	else if (!context.user.Data.animals?.[type]) {
 		return {
 			reply: `Only people who have verified that they have a ${type} can use this command! Verify by $suggest-ing a picture of your ${type}(s).`
 		};
 	}
-	
+
 	let result = null;
 	switch (type) {
 		case \"bird\":
-			result = JSON.parse(await sb.Utils.request(\"https://some-random-api.ml/img/birb\")).link;
+			result = (await sb.Got.instances.SRA(\"img/bird\").json()).link;
 			break;
 
 		case \"cat\":
-			result = JSON.parse(await sb.Utils.request(\"https://api.thecatapi.com/v1/images/search\"))[0].url;
+			result = (await sb.Got(\"https://api.thecatapi.com/v1/images/search\").json())[0].url;
 			break;
 
 		case \"dog\":
-			result = JSON.parse(await sb.Utils.request(\"https://dog.ceo/api/breeds/image/random\")).message;
+			result = (await sb.Got(\"https://dog.ceo/api/breeds/image/random\").json()).message;
 			break;
 
 		case \"fox\":
-			result = JSON.parse(await sb.Utils.request(\"https://some-random-api.ml/img/fox\")).message;
+			result = (await sb.Got.instances.SRA(\"img/fox\").json()).link;
 			break;
 	}
 

@@ -46,32 +46,26 @@ VALUES
 		};
 	}
 
-	const fakeAgent = \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36\";
-	const baseURL = \"https://knowyourmeme.com/\";
+	const searchHTML = await sb.Got.instances.FakeAgent({
+		url: \"https://knowyourmeme.com/search\",
+		searchParams: new sb.URLParams().set(\"q\", args.join(\" \")).toString()
+	}).text();
 
-	const params = new sb.URLParams().set(\"q\", args.join(\" \"));
-	const $s = sb.Utils.cheerio(await sb.Utils.request({
-		uri: `${baseURL}/search?${params.toString()}`,
-		headers: {
-			\"User-Agent\": fakeAgent
-		}
-	}));
-
-	const firstLink = $s(\".entry_list a\").first().attr(\"href\");	
+	const $search = sb.Utils.cheerio(searchHTML);	
+	const firstLink = $search(\".entry_list a\").first().attr(\"href\");
 	if (!firstLink) {
 		return {
 			reply: \"No result found for given search term!\"
 		};
 	}
+	
+	const detailHTML = await sb.Got.instances.FakeAgent({
+		prefixUrl: \"https://knowyourmeme.com\",
+		url: firstLink,
+	}).text();
 
-	const $m = sb.Utils.cheerio(await sb.Utils.request({
-		uri: `${baseURL}${firstLink}`,
-		headers: {
-			\"User-Agent\": fakeAgent
-		}
-	}));	
-
-	const summary = $m(\"#entry_body h2#about\").first().next().text();
+	const $detail = sb.Utils.cheerio(detailHTML);
+	const summary = $detail(\"#entry_body h2#about\").first().next().text();
 	if (!summary) {
 		return {
 			reply: \"No summary found for given meme!\"
@@ -94,32 +88,26 @@ ON DUPLICATE KEY UPDATE
 		};
 	}
 
-	const fakeAgent = \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36\";
-	const baseURL = \"https://knowyourmeme.com/\";
+	const searchHTML = await sb.Got.instances.FakeAgent({
+		url: \"https://knowyourmeme.com/search\",
+		searchParams: new sb.URLParams().set(\"q\", args.join(\" \")).toString()
+	}).text();
 
-	const params = new sb.URLParams().set(\"q\", args.join(\" \"));
-	const $s = sb.Utils.cheerio(await sb.Utils.request({
-		uri: `${baseURL}/search?${params.toString()}`,
-		headers: {
-			\"User-Agent\": fakeAgent
-		}
-	}));
-
-	const firstLink = $s(\".entry_list a\").first().attr(\"href\");	
+	const $search = sb.Utils.cheerio(searchHTML);	
+	const firstLink = $search(\".entry_list a\").first().attr(\"href\");
 	if (!firstLink) {
 		return {
 			reply: \"No result found for given search term!\"
 		};
 	}
+	
+	const detailHTML = await sb.Got.instances.FakeAgent({
+		prefixUrl: \"https://knowyourmeme.com\",
+		url: firstLink,
+	}).text();
 
-	const $m = sb.Utils.cheerio(await sb.Utils.request({
-		uri: `${baseURL}${firstLink}`,
-		headers: {
-			\"User-Agent\": fakeAgent
-		}
-	}));	
-
-	const summary = $m(\"#entry_body h2#about\").first().next().text();
+	const $detail = sb.Utils.cheerio(detailHTML);
+	const summary = $detail(\"#entry_body h2#about\").first().next().text();
 	if (!summary) {
 		return {
 			reply: \"No summary found for given meme!\"

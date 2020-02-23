@@ -70,8 +70,10 @@ VALUES
 	amount = amount.replace(/[kmbt]/gi, \"\").replace(/,/g, \".\");
 	if (!Number(amount)) {
 		return {
-			reply: \"The amount must be a finite number!\",
-			meta: { skipCooldown: true }
+			reply: \"The amount must be a proper finite number!\",
+			cooldown: {
+				length: 2500
+			}
 		};
 	}
 
@@ -85,14 +87,15 @@ VALUES
 	}
 
 	if (!this.data.cache[currencySymbol] || sb.Date.now() > this.data.cache[currencySymbol].expiry) {
-		const params = new sb.URLParams()
-			.set(\"compact\", \"ultra\")
-			.set(\"q\", currencySymbol)
-			.set(\"apiKey\", sb.Config.get(\"API_FREE_CURRENCY_CONVERTER\"));
-
-		const data = JSON.parse(await sb.Utils.request({
-			uri: \"https://free.currencyconverterapi.com/api/v6/convert?\" + params.toString()
-		}));
+		const data = await sb.Got({
+			prefixUrl: \"https://free.currencyconverterapi.com/api\",
+			url: \"v6/convert\",
+			searchParams: new sb.URLParams()
+				.set(\"compact\", \"ultra\")
+				.set(\"q\", currencySymbol)
+				.set(\"apiKey\", sb.Config.get(\"API_FREE_CURRENCY_CONVERTER\"))
+				.toString()
+		}).json();
 
 		if (typeof data[currencySymbol] === \"number\") {
 			this.data.cache[currencySymbol] = {
@@ -107,7 +110,7 @@ VALUES
 			};
 		}
 	}
-	
+
 	const { ratio } = this.data.cache[currencySymbol];
 	if (typeof ratio === \"number\") {
 		return {
@@ -160,8 +163,10 @@ ON DUPLICATE KEY UPDATE
 	amount = amount.replace(/[kmbt]/gi, \"\").replace(/,/g, \".\");
 	if (!Number(amount)) {
 		return {
-			reply: \"The amount must be a finite number!\",
-			meta: { skipCooldown: true }
+			reply: \"The amount must be a proper finite number!\",
+			cooldown: {
+				length: 2500
+			}
 		};
 	}
 
@@ -175,14 +180,15 @@ ON DUPLICATE KEY UPDATE
 	}
 
 	if (!this.data.cache[currencySymbol] || sb.Date.now() > this.data.cache[currencySymbol].expiry) {
-		const params = new sb.URLParams()
-			.set(\"compact\", \"ultra\")
-			.set(\"q\", currencySymbol)
-			.set(\"apiKey\", sb.Config.get(\"API_FREE_CURRENCY_CONVERTER\"));
-
-		const data = JSON.parse(await sb.Utils.request({
-			uri: \"https://free.currencyconverterapi.com/api/v6/convert?\" + params.toString()
-		}));
+		const data = await sb.Got({
+			prefixUrl: \"https://free.currencyconverterapi.com/api\",
+			url: \"v6/convert\",
+			searchParams: new sb.URLParams()
+				.set(\"compact\", \"ultra\")
+				.set(\"q\", currencySymbol)
+				.set(\"apiKey\", sb.Config.get(\"API_FREE_CURRENCY_CONVERTER\"))
+				.toString()
+		}).json();
 
 		if (typeof data[currencySymbol] === \"number\") {
 			this.data.cache[currencySymbol] = {
@@ -197,7 +203,7 @@ ON DUPLICATE KEY UPDATE
 			};
 		}
 	}
-	
+
 	const { ratio } = this.data.cache[currencySymbol];
 	if (typeof ratio === \"number\") {
 		return {

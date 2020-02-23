@@ -39,22 +39,24 @@ VALUES
 		1,
 		1,
 		0,
-		'async (context, ...args) => {
+		'(async function nutrients (context, ...args) {
 	if (args.length === 0) {
 		return { reply: \"No food provided!\" };
 	}
 
-	const url = \"https://trackapi.nutritionix.com/v2/natural/nutrients\";
-	const data = JSON.parse(await sb.Utils.request({
+	const data = await sb.Got({
 		method: \"POST\",
-		url: url,
+		url: \"https://trackapi.nutritionix.com/v2/natural/nutrients\",
 		headers: {
 			\"x-app-id\": sb.Config.get(\"API_NUTRITIONIX_APP_ID\"),
 			\"x-app-key\": sb.Config.get(\"API_NUTRITIONIX\"),
 			\"x-remote-user-id\": 0
 		},
-		body: JSON.stringify({ query: args.join(\" \") })
-	}));
+		json: {
+			query: args.join(\" \")
+		},
+		throwHttpErrors: false
+	}).json();
 
 	if (data.message) {
 		return { reply: data.message };
@@ -77,28 +79,30 @@ VALUES
 			food.nf_protein + \"g protein\"
 		].join(\" \")
 	};
-}',
+})',
 		NULL,
 		NULL
 	)
 
 ON DUPLICATE KEY UPDATE
-	Code = 'async (context, ...args) => {
+	Code = '(async function nutrients (context, ...args) {
 	if (args.length === 0) {
 		return { reply: \"No food provided!\" };
 	}
 
-	const url = \"https://trackapi.nutritionix.com/v2/natural/nutrients\";
-	const data = JSON.parse(await sb.Utils.request({
+	const data = await sb.Got({
 		method: \"POST\",
-		url: url,
+		url: \"https://trackapi.nutritionix.com/v2/natural/nutrients\",
 		headers: {
 			\"x-app-id\": sb.Config.get(\"API_NUTRITIONIX_APP_ID\"),
 			\"x-app-key\": sb.Config.get(\"API_NUTRITIONIX\"),
 			\"x-remote-user-id\": 0
 		},
-		body: JSON.stringify({ query: args.join(\" \") })
-	}));
+		json: {
+			query: args.join(\" \")
+		},
+		throwHttpErrors: false
+	}).json();
 
 	if (data.message) {
 		return { reply: data.message };
@@ -121,4 +125,4 @@ ON DUPLICATE KEY UPDATE
 			food.nf_protein + \"g protein\"
 		].join(\" \")
 	};
-}'
+})'

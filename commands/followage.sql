@@ -48,55 +48,63 @@ VALUES
 		}
 
 		if (context.platform.Name === \"twitch\") {
-			channel = context.channel.Name;	
+			channel = context.channel.Name;
 		}
+		// If used in a mirrored channel outside of Twitch, use the mirror target channel instead.
 		else if (context.channel.Mirror) {
 			const mirrorChannel = sb.Channel.get(context.channel.Mirror);
 			if (mirrorChannel.Platform.Name === \"twitch\") {
 				channel = mirrorChannel.Name;
 			}
 		}
-		
+
 		if (!channel) {
 			return {
 				reply: \"Could not find any associated Twitch channels! Please specify one.\"
 			};
 		}
 	}
-	
+
 	if (!user) {
 		user = context.user.Name;
 	}
-
-	user = user.toLowerCase();
 
 	if (user === channel.toLowerCase()) {
 		if (user === context.user.Name) {
 			return { reply: \"Good luck following yourself! PepeLaugh\" };
 		}
 		else {
-			return { reply: \"Good luck to them following themselves! PepeLaugh\" };
+			return { reply: \"You can\'t follow yourself!\" };
 		}
 	}
 
-	const url = `https://api.2g.be/twitch/followage/${channel}/${user}?format=mwdhms`;
-	let data = await sb.Utils.request({
-		url: url,
-		headers: {
-			\"User-Agent\": \"Supibot@https://twitch.tv/supibot\"
-		}
+	const [userID, channelID] = await Promise.all([
+		sb.Utils.getTwitchID(user),
+		sb.Utils.getTwitchID(channel)
+	]);
+
+	if (!userID || !channelID) {
+		return {
+			reply: \"One or both users were not found!\"
+		};
+	}
+
+	const data = await sb.Got.instances.Twitch.Kraken({
+		url: `users/${userID}/follows/channels/${channelID}`,
+		throwHttpErrors: false
 	});
 
-	if (/\\bfollowing.*for\\b/.test(data)) {
-		const split = data.split(\" for \");
-		const delta = sb.Utils.timeDelta(sb.Date.now() - sb.Utils.parseDuration(split[1].trim(), { returnData: false }));
-		data = split[0] + \" for \" + delta.replace(/\\s*ago\\s*/, \"\") + \".\";
+	if (data.error && data.status === 404) {
+		return {
+			reply: `${user} is not following ${channel}.`
+		};
 	}
-	else if (data.includes(\"not following\")) {
-		data += \".\";
+	else {
+		const delta = sb.Utils.timeDelta(new sb.Date(data.created_at), true);
+		return {
+			reply: `${user} has been following ${channel} for ${delta}.`
+		};
 	}
-
-	return { reply: data };
 })',
 		NULL,
 		NULL
@@ -112,53 +120,61 @@ ON DUPLICATE KEY UPDATE
 		}
 
 		if (context.platform.Name === \"twitch\") {
-			channel = context.channel.Name;	
+			channel = context.channel.Name;
 		}
+		// If used in a mirrored channel outside of Twitch, use the mirror target channel instead.
 		else if (context.channel.Mirror) {
 			const mirrorChannel = sb.Channel.get(context.channel.Mirror);
 			if (mirrorChannel.Platform.Name === \"twitch\") {
 				channel = mirrorChannel.Name;
 			}
 		}
-		
+
 		if (!channel) {
 			return {
 				reply: \"Could not find any associated Twitch channels! Please specify one.\"
 			};
 		}
 	}
-	
+
 	if (!user) {
 		user = context.user.Name;
 	}
-
-	user = user.toLowerCase();
 
 	if (user === channel.toLowerCase()) {
 		if (user === context.user.Name) {
 			return { reply: \"Good luck following yourself! PepeLaugh\" };
 		}
 		else {
-			return { reply: \"Good luck to them following themselves! PepeLaugh\" };
+			return { reply: \"You can\'t follow yourself!\" };
 		}
 	}
 
-	const url = `https://api.2g.be/twitch/followage/${channel}/${user}?format=mwdhms`;
-	let data = await sb.Utils.request({
-		url: url,
-		headers: {
-			\"User-Agent\": \"Supibot@https://twitch.tv/supibot\"
-		}
+	const [userID, channelID] = await Promise.all([
+		sb.Utils.getTwitchID(user),
+		sb.Utils.getTwitchID(channel)
+	]);
+
+	if (!userID || !channelID) {
+		return {
+			reply: \"One or both users were not found!\"
+		};
+	}
+
+	const data = await sb.Got.instances.Twitch.Kraken({
+		url: `users/${userID}/follows/channels/${channelID}`,
+		throwHttpErrors: false
 	});
 
-	if (/\\bfollowing.*for\\b/.test(data)) {
-		const split = data.split(\" for \");
-		const delta = sb.Utils.timeDelta(sb.Date.now() - sb.Utils.parseDuration(split[1].trim(), { returnData: false }));
-		data = split[0] + \" for \" + delta.replace(/\\s*ago\\s*/, \"\") + \".\";
+	if (data.error && data.status === 404) {
+		return {
+			reply: `${user} is not following ${channel}.`
+		};
 	}
-	else if (data.includes(\"not following\")) {
-		data += \".\";
+	else {
+		const delta = sb.Utils.timeDelta(new sb.Date(data.created_at), true);
+		return {
+			reply: `${user} has been following ${channel} for ${delta}.`
+		};
 	}
-
-	return { reply: data };
 })'

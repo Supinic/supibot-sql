@@ -45,11 +45,13 @@ VALUES
 		return { reply: \"Pepega\" };
 	}
 
-	const params = new sb.URLParams();
-	params.set(\"name\", query);
-	params.set(\"includeTags\", \"6\");
-
-	const data = JSON.parse(await sb.Utils.request(\"https://supinic.com/api/track/search?\" + params.toString())).data;
+	const { data } = await sb.Got.instances.Supinic({
+		url: \"track/search\",
+		searchParams: new sb.URLParams()
+			.set(\"name\", \"christian\")
+			.set(\"includeTags\", \"6\")
+			.toString()
+	}).json();
 	
 	if (!data || data.length === 0) {
 		return {
@@ -76,11 +78,13 @@ ON DUPLICATE KEY UPDATE
 		return { reply: \"Pepega\" };
 	}
 
-	const params = new sb.URLParams();
-	params.set(\"name\", query);
-	params.set(\"includeTags\", \"6\");
-
-	const data = JSON.parse(await sb.Utils.request(\"https://supinic.com/api/track/search?\" + params.toString())).data;
+	const { data } = await sb.Got.instances.Supinic({
+		url: \"track/search\",
+		searchParams: new sb.URLParams()
+			.set(\"name\", \"christian\")
+			.set(\"includeTags\", \"6\")
+			.toString()
+	}).json();
 	
 	if (!data || data.length === 0) {
 		return {

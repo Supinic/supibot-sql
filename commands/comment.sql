@@ -39,30 +39,15 @@ VALUES
 		1,
 		1,
 		0,
-		'async () => {
-	const extractRegex = /.*<span.*?>(.*?)<\\/span>/;
-	const data = await sb.Utils.request({
-		url: \"http://www.randomyoutubecomment.com/\",
-		headers: {
-			\"User-Agent\": \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36\"
-		},
-		agentOptions: {
-			rejectUnauthorized: false
-		}
-	});
+		'(async function comment () {
+	const html = await sb.Got(\"http://www.randomyoutubecomment.com\").text();
+	const $ = sb.Utils.cheerio(html);
+	const comment = $(\"#comment\").text();
 
-	const match = data.match(extractRegex);
-	if (match === null) {
-		return {
-			reply: \"No comment was available to fetch\"
-		};
-	}
-	else {
-		return {
-			reply: sb.Utils.removeHTML(match[1])
-		};
-	}
-}',
+	return {
+		reply: comment ?? \"No comment was available to fetch\"
+	};
+})',
 		'No arguments.
 
 $comment',
@@ -70,27 +55,12 @@ $comment',
 	)
 
 ON DUPLICATE KEY UPDATE
-	Code = 'async () => {
-	const extractRegex = /.*<span.*?>(.*?)<\\/span>/;
-	const data = await sb.Utils.request({
-		url: \"http://www.randomyoutubecomment.com/\",
-		headers: {
-			\"User-Agent\": \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36\"
-		},
-		agentOptions: {
-			rejectUnauthorized: false
-		}
-	});
+	Code = '(async function comment () {
+	const html = await sb.Got(\"http://www.randomyoutubecomment.com\").text();
+	const $ = sb.Utils.cheerio(html);
+	const comment = $(\"#comment\").text();
 
-	const match = data.match(extractRegex);
-	if (match === null) {
-		return {
-			reply: \"No comment was available to fetch\"
-		};
-	}
-	else {
-		return {
-			reply: sb.Utils.removeHTML(match[1])
-		};
-	}
-}'
+	return {
+		reply: comment ?? \"No comment was available to fetch\"
+	};
+})'

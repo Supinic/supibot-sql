@@ -59,23 +59,12 @@ VALUES
 			};
 		}
 
-		const data = JSON.parse(await sb.Utils.request({
-			method: \"GET\",
-			url: \"https://api.twitch.tv/kraken/streams/\" + channelID,
-			headers: {
-				\"Client-ID\": sb.Config.get(\"TWITCH_CLIENT_ID\"),
-				Accept: \"application/vnd.twitchtv.v5+json\"
-			}
-		}));
-
+		const data = await sb.Got.instances.Twitch.Kraken(\"streams/\" + channelID).json();
 		if (data === null || data.stream === null) {
-			const { data } = JSON.parse(await sb.Utils.request({
-				method: \"GET\",
-				url: \"https://api.twitch.tv/helix/videos?user_id=\" + channelID,
-				headers: {
-					\"Client-ID\": sb.Config.get(\"TWITCH_CLIENT_ID\")
-				}
-			}));
+			const { data } = await sb.Got.instances.Twitch.Helix({
+				url: \"videos\",
+				searchParams: \"user_id=\" + channelID
+			}).json();
 
 			if (data.length === 0) {
 				return {
@@ -98,15 +87,13 @@ VALUES
 		}
 
 		const stream = data.stream;
-			const started = sb.Utils.timeDelta(new sb.Date(stream.created_at));
-			return {
-				reply: `${target} is playing ${stream.game} since ${started} for ${stream.viewers} viewers at ${stream.video_height}p. Title: ${stream.channel.status} https://twitch.tv/${target.toLowerCase()}`
-			};
-		}
+		const started = sb.Utils.timeDelta(new sb.Date(stream.created_at));
+		return {
+			reply: `${target} is playing ${stream.game} since ${started} for ${stream.viewers} viewers at ${stream.video_height}p. Title: ${stream.channel.status} https://twitch.tv/${target.toLowerCase()}`
+		};
+	}
 	else if (platform === \"mixer\") {
-		const data = JSON.parse(await sb.Utils.request({
-			url: \"https://mixer.com/api/v1/channels/\" + target
-		}));
+		const data = await sb.Got.instances.Mixer(\"channels/\" + target).json();
 
 		if (data.error) {
 			return { reply: data.statusCode + \": \" + data.message };
@@ -147,23 +134,12 @@ ON DUPLICATE KEY UPDATE
 			};
 		}
 
-		const data = JSON.parse(await sb.Utils.request({
-			method: \"GET\",
-			url: \"https://api.twitch.tv/kraken/streams/\" + channelID,
-			headers: {
-				\"Client-ID\": sb.Config.get(\"TWITCH_CLIENT_ID\"),
-				Accept: \"application/vnd.twitchtv.v5+json\"
-			}
-		}));
-
+		const data = await sb.Got.instances.Twitch.Kraken(\"streams/\" + channelID).json();
 		if (data === null || data.stream === null) {
-			const { data } = JSON.parse(await sb.Utils.request({
-				method: \"GET\",
-				url: \"https://api.twitch.tv/helix/videos?user_id=\" + channelID,
-				headers: {
-					\"Client-ID\": sb.Config.get(\"TWITCH_CLIENT_ID\")
-				}
-			}));
+			const { data } = await sb.Got.instances.Twitch.Helix({
+				url: \"videos\",
+				searchParams: \"user_id=\" + channelID
+			}).json();
 
 			if (data.length === 0) {
 				return {
@@ -186,15 +162,13 @@ ON DUPLICATE KEY UPDATE
 		}
 
 		const stream = data.stream;
-			const started = sb.Utils.timeDelta(new sb.Date(stream.created_at));
-			return {
-				reply: `${target} is playing ${stream.game} since ${started} for ${stream.viewers} viewers at ${stream.video_height}p. Title: ${stream.channel.status} https://twitch.tv/${target.toLowerCase()}`
-			};
-		}
+		const started = sb.Utils.timeDelta(new sb.Date(stream.created_at));
+		return {
+			reply: `${target} is playing ${stream.game} since ${started} for ${stream.viewers} viewers at ${stream.video_height}p. Title: ${stream.channel.status} https://twitch.tv/${target.toLowerCase()}`
+		};
+	}
 	else if (platform === \"mixer\") {
-		const data = JSON.parse(await sb.Utils.request({
-			url: \"https://mixer.com/api/v1/channels/\" + target
-		}));
+		const data = await sb.Got.instances.Mixer(\"channels/\" + target).json();
 
 		if (data.error) {
 			return { reply: data.statusCode + \": \" + data.message };
