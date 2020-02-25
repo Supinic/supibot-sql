@@ -46,10 +46,12 @@ VALUES
 		searchParams: \"id=\" + sampleEmotes.join(\",\")
 	}).json();
 
-	const subbedChannels = channelData.map(i => i.channel_name).filter(Boolean).sort().join(\", \");
-	const emotes = sampleEmotes.map(i => i.code).join(\" \");
+	const channelList = channelData.filter(i => i.channel_name).sort((a, b) => a.channel_name.localeCompare(b.channel_name));
+	const channels = channelList.map(i => i.channel_name).join(\", \");
+	const emotes = channelList.map(i => i.code).join(\" \");
+
 	return {
-		reply: \"Supibot is currently subbed to: \" + subbedChannels + \" \" + emotes
+		reply: \"Supibot is currently subbed to: \" + channels + \" \" + emotes
 	};
 })',
 		NULL,
@@ -64,9 +66,11 @@ ON DUPLICATE KEY UPDATE
 		searchParams: \"id=\" + sampleEmotes.join(\",\")
 	}).json();
 
-	const subbedChannels = channelData.map(i => i.channel_name).filter(Boolean).sort().join(\", \");
-	const emotes = sampleEmotes.map(i => i.code).join(\" \");
+	const channelList = channelData.filter(i => i.channel_name).sort((a, b) => a.channel_name.localeCompare(b.channel_name));
+	const channels = channelList.map(i => i.channel_name).join(\", \");
+	const emotes = channelList.map(i => i.code).join(\" \");
+
 	return {
-		reply: \"Supibot is currently subbed to: \" + subbedChannels + \" \" + emotes
+		reply: \"Supibot is currently subbed to: \" + channels + \" \" + emotes
 	};
 })'
