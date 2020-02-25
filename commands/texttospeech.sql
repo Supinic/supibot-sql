@@ -74,6 +74,7 @@ VALUES
 			let newVoice = null;
 			let [type, param] = token.split(\":\");
 			if (!type || !param) {
+				this.data.pending = false;
 				return {
 					reply: `Incorrect format provided! Use (voice|lang):(name) instead.`
 				};
@@ -84,6 +85,7 @@ VALUES
 			if (type === \"lang\") {
 				const filtered = voiceData.filter(i => i.lang.toLowerCase().includes(param));
 				if (filtered.length === 0) {
+					this.data.pending = false;
 					return {
 						reply: `Language not found: ${param}`
 					};
@@ -97,7 +99,8 @@ VALUES
 					param = sb.Utils.randArray(availableVoices);
 				}
 				
-				if (!availableVoices.includes(param)) {
+				if (!availableVoices.includes(param)) {					
+					this.data.pending = false;
 					return {
 						reply: `Voice not found: ${param}`,
 						cooldown: { length: 2500 }
@@ -129,7 +132,8 @@ VALUES
 		text: currentText.join(\" \")
 	});
 
-	if (ttsData.length > 3) {
+	if (ttsData.length > 3) {	
+		this.data.pending = false;
 		return {
 			reply: `Your TTS was refused! You used too many voices - ${ttsData.length}, but the maximum is 3.`,
 			cooldown: { length: 5000 }
@@ -217,6 +221,7 @@ ON DUPLICATE KEY UPDATE
 			let newVoice = null;
 			let [type, param] = token.split(\":\");
 			if (!type || !param) {
+				this.data.pending = false;
 				return {
 					reply: `Incorrect format provided! Use (voice|lang):(name) instead.`
 				};
@@ -227,6 +232,7 @@ ON DUPLICATE KEY UPDATE
 			if (type === \"lang\") {
 				const filtered = voiceData.filter(i => i.lang.toLowerCase().includes(param));
 				if (filtered.length === 0) {
+					this.data.pending = false;
 					return {
 						reply: `Language not found: ${param}`
 					};
@@ -240,7 +246,8 @@ ON DUPLICATE KEY UPDATE
 					param = sb.Utils.randArray(availableVoices);
 				}
 				
-				if (!availableVoices.includes(param)) {
+				if (!availableVoices.includes(param)) {					
+					this.data.pending = false;
 					return {
 						reply: `Voice not found: ${param}`,
 						cooldown: { length: 2500 }
@@ -272,7 +279,8 @@ ON DUPLICATE KEY UPDATE
 		text: currentText.join(\" \")
 	});
 
-	if (ttsData.length > 3) {
+	if (ttsData.length > 3) {	
+		this.data.pending = false;
 		return {
 			reply: `Your TTS was refused! You used too many voices - ${ttsData.length}, but the maximum is 3.`,
 			cooldown: { length: 5000 }
