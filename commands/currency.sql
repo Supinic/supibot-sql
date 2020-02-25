@@ -87,15 +87,24 @@ VALUES
 	}
 
 	if (!this.data.cache[currencySymbol] || sb.Date.now() > this.data.cache[currencySymbol].expiry) {
-		const data = await sb.Got({
+		const { statusCode, body: data } = await sb.Got({
 			prefixUrl: \"https://free.currencyconverterapi.com/api\",
 			url: \"v6/convert\",
+			retry: 0,
+			throwHttpErrors: false,
+			responseType: \"json\",
 			searchParams: new sb.URLParams()
 				.set(\"compact\", \"ultra\")
 				.set(\"q\", currencySymbol)
 				.set(\"apiKey\", sb.Config.get(\"API_FREE_CURRENCY_CONVERTER\"))
 				.toString()
-		}).json();
+		});
+
+		if (statusCode !== 200) {
+			return {
+				reply: \"API is down eShrug\"
+			};
+		}
 
 		if (typeof data[currencySymbol] === \"number\") {
 			this.data.cache[currencySymbol] = {
@@ -180,15 +189,24 @@ ON DUPLICATE KEY UPDATE
 	}
 
 	if (!this.data.cache[currencySymbol] || sb.Date.now() > this.data.cache[currencySymbol].expiry) {
-		const data = await sb.Got({
+		const { statusCode, body: data } = await sb.Got({
 			prefixUrl: \"https://free.currencyconverterapi.com/api\",
 			url: \"v6/convert\",
+			retry: 0,
+			throwHttpErrors: false,
+			responseType: \"json\",
 			searchParams: new sb.URLParams()
 				.set(\"compact\", \"ultra\")
 				.set(\"q\", currencySymbol)
 				.set(\"apiKey\", sb.Config.get(\"API_FREE_CURRENCY_CONVERTER\"))
 				.toString()
-		}).json();
+		});
+
+		if (statusCode !== 200) {
+			return {
+				reply: \"API is down eShrug\"
+			};
+		}
 
 		if (typeof data[currencySymbol] === \"number\") {
 			this.data.cache[currencySymbol] = {
