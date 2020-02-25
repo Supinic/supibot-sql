@@ -86,6 +86,8 @@ VALUES
 
 		case \"extranews\": await sb.ExtraNews.reloadData(); break;
 
+		case \"got\": await sb.Got.reloadData(); break;
+
 		case \"MarkovChain\":
 			sb.MarkovChain = null;
 			delete require.cache[require.resolve(modulePath + \"/classes/markov-chain.js\")];
@@ -160,6 +162,8 @@ ON DUPLICATE KEY UPDATE
 			break;
 
 		case \"extranews\": await sb.ExtraNews.reloadData(); break;
+
+		case \"got\": await sb.Got.reloadData(); break;
 
 		case \"MarkovChain\":
 			sb.MarkovChain = null;
