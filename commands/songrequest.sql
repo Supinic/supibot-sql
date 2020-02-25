@@ -93,7 +93,7 @@ VALUES
 				length: songData.Duration,
 				name: songData.Name
 			});
-			
+
 			return {
 				reply: `Video \"${songData.Name}\" from supinic.com successfully added to queue with ID ${id}!`
 			};
@@ -102,18 +102,21 @@ VALUES
 
 	const params = new sb.URLParams().set(\"url\", url);
 	const limit = sb.Config.get(\"MAX_SONG_REQUEST_LENGTH\");
-	const raw = await sb.Utils.request({
-		uri: \"https://supinic.com/api/trackData/fetch?\" + params.toString(),
-		useFullResponse: true
+
+	const { body, statusCode } = await sb.Got.instances.Supinic({
+		url: \"trackData/fetch\",
+		searchParams: new sb.URLParams()
+			.set(\"url\", url)
+			.toString()
 	});
 
-	if (raw.statusCode === 502 || raw.statusCode === 504) {
+	if (statusCode === 502 || statusCode === 503) {
 		return {
 			reply: \"The supinic.com API is restarting or down! Please try again later.\"
 		};
 	}
 
-	let data = JSON.parse(raw.body).data;
+	let data = body.data;
 	if (!data) {
 		data = await sb.Utils.fetchYoutubeVideo(args.join(\" \").replace(/-/g, \"\"), sb.Config.get(\"API_GOOGLE_YOUTUBE\"));
 		if (!data) {
@@ -137,20 +140,20 @@ VALUES
 		try {
 			id = await sb.VideoLANConnector.add(data.link, context.user.ID, data);
 		}
-		catch (e) {
+		catch {
 			await sb.Config.set(\"SONG_REQUESTS_STATE\", \"off\");
 			return {
 				reply: `The desktop listener is currently turned off. Turning song requests off.`
 			};
 		}
 
-		const whenResult = (await sb.Command.get(\"when\").execute(context)).reply.match(/in \\d+.*\\.$/);
+		const whenResult = (await sb.Command.get(\"when\").execute(context)).reply.match(/(in \\d+.*\\.)$/);
 		const when = (whenResult)
 			? whenResult[0]
 			: \"momentarily.\";
 
 		return {
-			reply: `Video \"${data.name}\" by ${data.author} successfully added to queue with ID ${id}! It is playing ${when[0]}`
+			reply: `Video \"${data.name}\" by ${data.author} successfully added to queue with ID ${id}! It is playing ${when}`
 		};
 	}
 })',
@@ -213,7 +216,7 @@ ON DUPLICATE KEY UPDATE
 				length: songData.Duration,
 				name: songData.Name
 			});
-			
+
 			return {
 				reply: `Video \"${songData.Name}\" from supinic.com successfully added to queue with ID ${id}!`
 			};
@@ -222,18 +225,21 @@ ON DUPLICATE KEY UPDATE
 
 	const params = new sb.URLParams().set(\"url\", url);
 	const limit = sb.Config.get(\"MAX_SONG_REQUEST_LENGTH\");
-	const raw = await sb.Utils.request({
-		uri: \"https://supinic.com/api/trackData/fetch?\" + params.toString(),
-		useFullResponse: true
+
+	const { body, statusCode } = await sb.Got.instances.Supinic({
+		url: \"trackData/fetch\",
+		searchParams: new sb.URLParams()
+			.set(\"url\", url)
+			.toString()
 	});
 
-	if (raw.statusCode === 502 || raw.statusCode === 504) {
+	if (statusCode === 502 || statusCode === 503) {
 		return {
 			reply: \"The supinic.com API is restarting or down! Please try again later.\"
 		};
 	}
 
-	let data = JSON.parse(raw.body).data;
+	let data = body.data;
 	if (!data) {
 		data = await sb.Utils.fetchYoutubeVideo(args.join(\" \").replace(/-/g, \"\"), sb.Config.get(\"API_GOOGLE_YOUTUBE\"));
 		if (!data) {
@@ -257,20 +263,20 @@ ON DUPLICATE KEY UPDATE
 		try {
 			id = await sb.VideoLANConnector.add(data.link, context.user.ID, data);
 		}
-		catch (e) {
+		catch {
 			await sb.Config.set(\"SONG_REQUESTS_STATE\", \"off\");
 			return {
 				reply: `The desktop listener is currently turned off. Turning song requests off.`
 			};
 		}
 
-		const whenResult = (await sb.Command.get(\"when\").execute(context)).reply.match(/in \\d+.*\\.$/);
+		const whenResult = (await sb.Command.get(\"when\").execute(context)).reply.match(/(in \\d+.*\\.)$/);
 		const when = (whenResult)
 			? whenResult[0]
 			: \"momentarily.\";
 
 		return {
-			reply: `Video \"${data.name}\" by ${data.author} successfully added to queue with ID ${id}! It is playing ${when[0]}`
+			reply: `Video \"${data.name}\" by ${data.author} successfully added to queue with ID ${id}! It is playing ${when}`
 		};
 	}
 })'
