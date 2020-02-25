@@ -54,27 +54,11 @@ VALUES
 		};
 	}
 
-	let check = null;
-	if (context.command.data[subreddit]) {
-		check = context.command.data[subreddit];
-	}
-	else {
-		try {
-			check = JSON.parse(await sb.Utils.request({
-				uri: `https://www.reddit.com/r/${subreddit}/about.json`,
-				headers: {
-					\"Cookie\": \"_options={%22pref_quarantine_optin%22:true};\"
-				}
-			}));
-		}
-		catch (e) {
-			console.warn(e);
-			return {
-				reply: \"Reddit API timed out!\"
-			};
-		}
+	if (!this.data[subreddit]) {
+		this.data[subreddit] = await sb.Got.instances.Reddit(subreddit + \"/about.json\").json();
 	}
 
+	const check = this.data[subreddit];
 	if (!check) {
 		return {
 			reply: \"No data obtained...\"
@@ -95,38 +79,12 @@ VALUES
 			reply: \"That subreddit is flagged as 18+, and thus not safe to post here!\"
 		};
 	}
+	
+	const { data } = await sb.Got.instances.Reddit(subreddit + \"/hot.json\").json();
+	const children = data.children.filter(i => (
+		(!safeSpace || !i.data.over_18) && !i.data.selftext && !i.data.selftext_html)
+	);
 
-	if (!context.command.data[subreddit]) {
-		context.command.data[subreddit] = {
-			error: check.error ?? null,
-			data: {
-				over18: check.data?.over18,
-				children: check.data?.children,
-				quarantine: check.data?.quarantine
-			}
-		};
-	}
-
-	let raw = null;
-	let posts = null;
-	try {
-		raw = await sb.Utils.request({
-			uri: `https://www.reddit.com/r/${subreddit}/hot.json`,	
-			headers: {
-				\"Cookie\": \"_options={%22pref_quarantine_optin%22:true};\"
-			}
-		});
-		
-		posts = JSON.parse(raw);
-	}
-	catch (e) {
-		console.error(e);
-		return {
-			reply: \"Reddit API timed out!\"
-		};
-	}
-
-	const children = posts.data.children.filter(i => (!safeSpace || !i.data.over_18) && !i.data.selftext && !i.data.selftext_html);	
 	const quarantine = (check.data.quarantine) ? \"⚠\" : \"\";
 	const post = sb.Utils.randArray(children);
 	if (!post) {
@@ -161,27 +119,11 @@ ON DUPLICATE KEY UPDATE
 		};
 	}
 
-	let check = null;
-	if (context.command.data[subreddit]) {
-		check = context.command.data[subreddit];
-	}
-	else {
-		try {
-			check = JSON.parse(await sb.Utils.request({
-				uri: `https://www.reddit.com/r/${subreddit}/about.json`,
-				headers: {
-					\"Cookie\": \"_options={%22pref_quarantine_optin%22:true};\"
-				}
-			}));
-		}
-		catch (e) {
-			console.warn(e);
-			return {
-				reply: \"Reddit API timed out!\"
-			};
-		}
+	if (!this.data[subreddit]) {
+		this.data[subreddit] = await sb.Got.instances.Reddit(subreddit + \"/about.json\").json();
 	}
 
+	const check = this.data[subreddit];
 	if (!check) {
 		return {
 			reply: \"No data obtained...\"
@@ -202,38 +144,12 @@ ON DUPLICATE KEY UPDATE
 			reply: \"That subreddit is flagged as 18+, and thus not safe to post here!\"
 		};
 	}
+	
+	const { data } = await sb.Got.instances.Reddit(subreddit + \"/hot.json\").json();
+	const children = data.children.filter(i => (
+		(!safeSpace || !i.data.over_18) && !i.data.selftext && !i.data.selftext_html)
+	);
 
-	if (!context.command.data[subreddit]) {
-		context.command.data[subreddit] = {
-			error: check.error ?? null,
-			data: {
-				over18: check.data?.over18,
-				children: check.data?.children,
-				quarantine: check.data?.quarantine
-			}
-		};
-	}
-
-	let raw = null;
-	let posts = null;
-	try {
-		raw = await sb.Utils.request({
-			uri: `https://www.reddit.com/r/${subreddit}/hot.json`,	
-			headers: {
-				\"Cookie\": \"_options={%22pref_quarantine_optin%22:true};\"
-			}
-		});
-		
-		posts = JSON.parse(raw);
-	}
-	catch (e) {
-		console.error(e);
-		return {
-			reply: \"Reddit API timed out!\"
-		};
-	}
-
-	const children = posts.data.children.filter(i => (!safeSpace || !i.data.over_18) && !i.data.selftext && !i.data.selftext_html);	
 	const quarantine = (check.data.quarantine) ? \"⚠\" : \"\";
 	const post = sb.Utils.randArray(children);
 	if (!post) {
