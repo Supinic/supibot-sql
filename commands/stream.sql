@@ -44,32 +44,59 @@ VALUES
 		return { reply: \"Pick a command first.\" };
 	}
 
-	const cmd = type.toLowerCase();
-	const url = {
-		updateChannel: \"https://api.twitch.tv/kraken/channels/\" + sb.Config.get(\"TWITCH_CHANNEL_ID\") + \"?api_version=5\",
-		knownBot: \"https://api.twitch.tv/kraken/users/68136884/chat?api_version=5&client_id=\" + sb.Config.get(\"TWITCH_CLIENT_ID\")
-	};
-
-	let targetURL = null;
-	let data = null;
-	let method = null;
-	let success = null;
-
-	switch (cmd) {
+	switch (type.toLowerCase()) {
 		case \"game\":
-			targetURL= url.updateChannel;
-			method = \"PUT\";
-			data = { channel: { game: rest.join(\" \") }};
-			success = \"Game set successfully.\";
-			break;
+			try {
+				await sb.Got.instances.Twitch.Kraken({
+					method: \"PUT\",
+					url: \"channels/\" + (await sb.Utils.getTwitchID(\"supinic\")),
+					headers: {
+						\"Authorization\": \"OAuth \" + sb.Config.get(\"TWITCH_OAUTH_EDITOR\")
+					},
+					json: {
+						channel: {
+							game: rest.join(\" \")
+						}
+					}
+				});
+			}
+			catch (e) {
+				console.error(e);
+				return {
+					reply: \"Twitch API threw an error!\"
+				}
+			}
+
+			return {
+				reply: \"Game set successfully.\"
+			};
 
 		case \"status\":
 		case \"title\":
-			targetURL = url.updateChannel;
-			method = \"PUT\";
-			data = { channel: { status: rest.join(\" \") }};
-			success = \"Status set successfully.\";
-			break;
+			try {
+				await sb.Got.instances.Twitch.Kraken({
+					method: \"PUT\",
+					url: \"channels/\" + (await sb.Utils.getTwitchID(\"supinic\")),
+					headers: {
+						\"Authorization\": \"OAuth \" + sb.Config.get(\"TWITCH_OAUTH_EDITOR\")
+					},
+					json: {
+						channel: {
+							status: rest.join(\" \")
+						}
+					}
+				});
+			}
+			catch (e) {
+				console.error(e);
+				return {
+					reply: \"Twitch API threw an error!\"
+				}
+			}
+
+			return {
+				reply: \"Title set successfully.\"
+			};
 
 		case \"tts\": {
 			const value = (rest.shift() === \"true\");
@@ -127,27 +154,6 @@ VALUES
 		}
 
 		default: return { reply: \"Unrecognized command.\" };
-	}
-
-	try {
-		await sb.Utils.request({
-			url: targetURL,
-			method: method,
-			headers: {
-				\"Content-Type\": \"application/json\",
-				\"Client-ID\": sb.Config.get(\"TWITCH_CLIENT_ID\"),
-				\"Authorization\": \"OAuth \" + sb.Config.get(\"TWITCH_OAUTH_EDITOR\"),
-				\"Accept\": \"application/vnd.twitchtv.v5+json\"
-			},
-			body: JSON.stringify(data)
-		});
-
-		return { reply: success };
-	}
-	catch (e) {
-		console.log(e);
-		sb.SystemLogger.send(\"Command.Error\", e.toString());
-		return { reply: \"Something went wrong.\" };
 	}
 })',
 		NULL,
@@ -160,32 +166,59 @@ ON DUPLICATE KEY UPDATE
 		return { reply: \"Pick a command first.\" };
 	}
 
-	const cmd = type.toLowerCase();
-	const url = {
-		updateChannel: \"https://api.twitch.tv/kraken/channels/\" + sb.Config.get(\"TWITCH_CHANNEL_ID\") + \"?api_version=5\",
-		knownBot: \"https://api.twitch.tv/kraken/users/68136884/chat?api_version=5&client_id=\" + sb.Config.get(\"TWITCH_CLIENT_ID\")
-	};
-
-	let targetURL = null;
-	let data = null;
-	let method = null;
-	let success = null;
-
-	switch (cmd) {
+	switch (type.toLowerCase()) {
 		case \"game\":
-			targetURL= url.updateChannel;
-			method = \"PUT\";
-			data = { channel: { game: rest.join(\" \") }};
-			success = \"Game set successfully.\";
-			break;
+			try {
+				await sb.Got.instances.Twitch.Kraken({
+					method: \"PUT\",
+					url: \"channels/\" + (await sb.Utils.getTwitchID(\"supinic\")),
+					headers: {
+						\"Authorization\": \"OAuth \" + sb.Config.get(\"TWITCH_OAUTH_EDITOR\")
+					},
+					json: {
+						channel: {
+							game: rest.join(\" \")
+						}
+					}
+				});
+			}
+			catch (e) {
+				console.error(e);
+				return {
+					reply: \"Twitch API threw an error!\"
+				}
+			}
+
+			return {
+				reply: \"Game set successfully.\"
+			};
 
 		case \"status\":
 		case \"title\":
-			targetURL = url.updateChannel;
-			method = \"PUT\";
-			data = { channel: { status: rest.join(\" \") }};
-			success = \"Status set successfully.\";
-			break;
+			try {
+				await sb.Got.instances.Twitch.Kraken({
+					method: \"PUT\",
+					url: \"channels/\" + (await sb.Utils.getTwitchID(\"supinic\")),
+					headers: {
+						\"Authorization\": \"OAuth \" + sb.Config.get(\"TWITCH_OAUTH_EDITOR\")
+					},
+					json: {
+						channel: {
+							status: rest.join(\" \")
+						}
+					}
+				});
+			}
+			catch (e) {
+				console.error(e);
+				return {
+					reply: \"Twitch API threw an error!\"
+				}
+			}
+
+			return {
+				reply: \"Title set successfully.\"
+			};
 
 		case \"tts\": {
 			const value = (rest.shift() === \"true\");
@@ -243,26 +276,5 @@ ON DUPLICATE KEY UPDATE
 		}
 
 		default: return { reply: \"Unrecognized command.\" };
-	}
-
-	try {
-		await sb.Utils.request({
-			url: targetURL,
-			method: method,
-			headers: {
-				\"Content-Type\": \"application/json\",
-				\"Client-ID\": sb.Config.get(\"TWITCH_CLIENT_ID\"),
-				\"Authorization\": \"OAuth \" + sb.Config.get(\"TWITCH_OAUTH_EDITOR\"),
-				\"Accept\": \"application/vnd.twitchtv.v5+json\"
-			},
-			body: JSON.stringify(data)
-		});
-
-		return { reply: success };
-	}
-	catch (e) {
-		console.log(e);
-		sb.SystemLogger.send(\"Command.Error\", e.toString());
-		return { reply: \"Something went wrong.\" };
 	}
 })'
