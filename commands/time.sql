@@ -97,7 +97,7 @@ VALUES
 		}
 
 		if (timezone.Abbreviation === \"UTC\") {
-			extra = \"JUST 4Head\"
+			extra = \"JUST 4Head\";
 			prettyOffset = \"\";
 		}
 
@@ -107,20 +107,27 @@ VALUES
 		};
 	}
 
-	const geoData = (await sb.Utils.fetchGeoLocationData(place, sb.Config.get(\"API_GOOGLE_GEOCODING\"))).results[0];
+	const { results: [geoData] } = await sb.Got.instances.Google({
+		url: \"geocode/json\",
+		searchParams: new sb.URLParams()
+			.set(\"address\", place)
+			.set(\"key\", sb.Config.get(\"API_GOOGLE_GEOCODING\"))
+			.toString()
+	}).json();
+
 	if (!geoData) {
 		return { reply: \"No place matching that query has been found!\" };
 	}
 
-	const params = new sb.URLParams()
-		.set(\"key\", sb.Config.get(\"API_GOOGLE_TIMEZONE\"))
-		.set(\"timestamp\", Math.trunc(sb.Date.now() / 1000).toString())
-		.set(\"location\", geoData.geometry.location.lat + \",\" + geoData.geometry.location.lng)
+	const timeData = await sb.Got.instances.Google({
+		url: \"timezone/json\",
+		searchParams: new sb.URLParams()
+			.set(\"timestamp\", Math.trunc(sb.Date.now() / 1000).toString())
+			.set(\"location\", geoData.geometry.location.lat + \",\" + geoData.geometry.location.lng)
+			.set(\"key\", sb.Config.get(\"API_GOOGLE_TIMEZONE\"))
+			.toString()
+	}).json();
 
-	const timeData = JSON.parse(await sb.Utils.request({
-		url: \"https://maps.googleapis.com/maps/api/timezone/json?\" + params.toString()
-	}));
-	
 	if (timeData.status === \"ZERO_RESULTS\") {
 		return { reply: \"Target place is ambiguous - it contains more than one timezone\\)!\" };
 	}
@@ -132,7 +139,7 @@ VALUES
 	time.setTimezoneOffset(totalOffset / 60);
 
 	const replyPlace = (skipLocation) ? \"(location hidden)\" : place;
-	return { 
+	return {
 		reply: `${replyPlace} is currently observing ${timeData.timeZoneName}, which is UTC${offset}, and it\'s ${time.format(\"H:i (Y-m-d)\")} there right now.`
 	};
 })',
@@ -199,7 +206,7 @@ ON DUPLICATE KEY UPDATE
 		}
 
 		if (timezone.Abbreviation === \"UTC\") {
-			extra = \"JUST 4Head\"
+			extra = \"JUST 4Head\";
 			prettyOffset = \"\";
 		}
 
@@ -209,20 +216,27 @@ ON DUPLICATE KEY UPDATE
 		};
 	}
 
-	const geoData = (await sb.Utils.fetchGeoLocationData(place, sb.Config.get(\"API_GOOGLE_GEOCODING\"))).results[0];
+	const { results: [geoData] } = await sb.Got.instances.Google({
+		url: \"geocode/json\",
+		searchParams: new sb.URLParams()
+			.set(\"address\", place)
+			.set(\"key\", sb.Config.get(\"API_GOOGLE_GEOCODING\"))
+			.toString()
+	}).json();
+
 	if (!geoData) {
 		return { reply: \"No place matching that query has been found!\" };
 	}
 
-	const params = new sb.URLParams()
-		.set(\"key\", sb.Config.get(\"API_GOOGLE_TIMEZONE\"))
-		.set(\"timestamp\", Math.trunc(sb.Date.now() / 1000).toString())
-		.set(\"location\", geoData.geometry.location.lat + \",\" + geoData.geometry.location.lng)
+	const timeData = await sb.Got.instances.Google({
+		url: \"timezone/json\",
+		searchParams: new sb.URLParams()
+			.set(\"timestamp\", Math.trunc(sb.Date.now() / 1000).toString())
+			.set(\"location\", geoData.geometry.location.lat + \",\" + geoData.geometry.location.lng)
+			.set(\"key\", sb.Config.get(\"API_GOOGLE_TIMEZONE\"))
+			.toString()
+	}).json();
 
-	const timeData = JSON.parse(await sb.Utils.request({
-		url: \"https://maps.googleapis.com/maps/api/timezone/json?\" + params.toString()
-	}));
-	
 	if (timeData.status === \"ZERO_RESULTS\") {
 		return { reply: \"Target place is ambiguous - it contains more than one timezone\\)!\" };
 	}
@@ -234,7 +248,7 @@ ON DUPLICATE KEY UPDATE
 	time.setTimezoneOffset(totalOffset / 60);
 
 	const replyPlace = (skipLocation) ? \"(location hidden)\" : place;
-	return { 
+	return {
 		reply: `${replyPlace} is currently observing ${timeData.timeZoneName}, which is UTC${offset}, and it\'s ${time.format(\"H:i (Y-m-d)\")} there right now.`
 	};
 })'
