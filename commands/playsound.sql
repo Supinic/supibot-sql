@@ -45,7 +45,7 @@ VALUES
 	}
 
 	else if (!playsound || playsound === \"list\") {
-		return { reply: \"Currently available playsounds: https://supinic.com/bot/playsound\"};
+		return { reply: \"Currently available playsounds: https://supinic.com/stream/playsound/list\"};
 	}
 
 	const data = await sb.Query.getRecordset(rs => rs
@@ -96,7 +96,7 @@ ON DUPLICATE KEY UPDATE
 	}
 
 	else if (!playsound || playsound === \"list\") {
-		return { reply: \"Currently available playsounds: https://supinic.com/bot/playsound\"};
+		return { reply: \"Currently available playsounds: https://supinic.com/stream/playsound/list\"};
 	}
 
 	const data = await sb.Query.getRecordset(rs => rs
