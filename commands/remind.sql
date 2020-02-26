@@ -97,8 +97,6 @@ VALUES
 	let lastRange = 0;
 	for (const {start, string, end, time} of timeData.ranges) {
 		const prefix = reminderText.slice(start - 3, start);
-		console.log({string, start, end, time, delta, lastRange})
-
 		if (prefix === \"in \" || ((start - lastRange) === 1)) {
 			lastRange = end;
 			delta += time;
@@ -245,8 +243,6 @@ ON DUPLICATE KEY UPDATE
 	let lastRange = 0;
 	for (const {start, string, end, time} of timeData.ranges) {
 		const prefix = reminderText.slice(start - 3, start);
-		console.log({string, start, end, time, delta, lastRange})
-
 		if (prefix === \"in \" || ((start - lastRange) === 1)) {
 			lastRange = end;
 			delta += time;
