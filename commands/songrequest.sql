@@ -100,9 +100,7 @@ VALUES
 		}
 	}
 
-	const params = new sb.URLParams().set(\"url\", url);
 	const limit = sb.Config.get(\"MAX_SONG_REQUEST_LENGTH\");
-
 	const { body, statusCode } = await sb.Got.instances.Supinic({
 		url: \"trackData/fetch\",
 		searchParams: new sb.URLParams()
@@ -147,10 +145,18 @@ VALUES
 			};
 		}
 
-		const whenResult = (await sb.Command.get(\"when\").execute(context)).reply.match(/(in \\d+.*\\.)$/);
-		const when = (whenResult)
-			? whenResult[0]
-			: \"momentarily.\";
+		let when = \"right now!\";
+		const status = await sb.VideoLANConnector.status();
+
+		console.log({status, id});
+		
+		if (status.currentplid !== -1 && status.currentplid !== id && status.time !== 0) {
+			const { time, length } = status;
+			const inQueue = sb.VideoLANConnector.videoQueue.filter(i => i.vlcID > id);
+			const totalTimeRemaining = (length - time) + inQueue.reduce((acc, cur) => acc += cur.length, 0);
+
+			when = sb.Utils.timeDelta(new sb.Date().addSeconds(totalTimeRemaining));
+		}
 
 		return {
 			reply: `Video \"${data.name}\" by ${data.author} successfully added to queue with ID ${id}! It is playing ${when}`
@@ -223,9 +229,7 @@ ON DUPLICATE KEY UPDATE
 		}
 	}
 
-	const params = new sb.URLParams().set(\"url\", url);
 	const limit = sb.Config.get(\"MAX_SONG_REQUEST_LENGTH\");
-
 	const { body, statusCode } = await sb.Got.instances.Supinic({
 		url: \"trackData/fetch\",
 		searchParams: new sb.URLParams()
@@ -270,10 +274,18 @@ ON DUPLICATE KEY UPDATE
 			};
 		}
 
-		const whenResult = (await sb.Command.get(\"when\").execute(context)).reply.match(/(in \\d+.*\\.)$/);
-		const when = (whenResult)
-			? whenResult[0]
-			: \"momentarily.\";
+		let when = \"right now!\";
+		const status = await sb.VideoLANConnector.status();
+
+		console.log({status, id});
+		
+		if (status.currentplid !== -1 && status.currentplid !== id && status.time !== 0) {
+			const { time, length } = status;
+			const inQueue = sb.VideoLANConnector.videoQueue.filter(i => i.vlcID > id);
+			const totalTimeRemaining = (length - time) + inQueue.reduce((acc, cur) => acc += cur.length, 0);
+
+			when = sb.Utils.timeDelta(new sb.Date().addSeconds(totalTimeRemaining));
+		}
 
 		return {
 			reply: `Video \"${data.name}\" by ${data.author} successfully added to queue with ID ${id}! It is playing ${when}`
