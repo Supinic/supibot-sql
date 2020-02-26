@@ -187,7 +187,7 @@ VALUES
 			}
 
 			const reminder = await sb.Query.getRecordset(rs => rs
-				.select(\"ID\", \"User_From\", \"User_To\", \"Text\", \"Active\")
+				.select(\"ID\", \"User_From\", \"User_To\", \"Text\", \"Active\", \"Schedule\")
 				.from(\"chat_data\", \"Reminder\")
 				.where(\"ID = %n\", ID)
 				.single()
@@ -282,7 +282,7 @@ VALUES
 			);
 
 			return {
-				reply: (last) 
+				reply: (last)
 					? `Your last \"reset\" was ${sb.Utils.timeDelta(last.Timestamp)}.`
 					: `You have never noted down a \"reset\" before.`
 			}
@@ -496,7 +496,7 @@ ON DUPLICATE KEY UPDATE
 			}
 
 			const reminder = await sb.Query.getRecordset(rs => rs
-				.select(\"ID\", \"User_From\", \"User_To\", \"Text\", \"Active\")
+				.select(\"ID\", \"User_From\", \"User_To\", \"Text\", \"Active\", \"Schedule\")
 				.from(\"chat_data\", \"Reminder\")
 				.where(\"ID = %n\", ID)
 				.single()
@@ -591,7 +591,7 @@ ON DUPLICATE KEY UPDATE
 			);
 
 			return {
-				reply: (last) 
+				reply: (last)
 					? `Your last \"reset\" was ${sb.Utils.timeDelta(last.Timestamp)}.`
 					: `You have never noted down a \"reset\" before.`
 			}
