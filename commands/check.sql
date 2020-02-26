@@ -208,11 +208,13 @@ VALUES
 			const reminderUser = (context.user.ID === reminder.User_From)
 				? await sb.User.get(reminder.User_To, true)
 				: await sb.User.get(reminder.User_From, true);
+
 			const [owner, target] = (context.user.ID === reminder.User_From)
 				? [\"Your reminder\", \"to \" + reminderUser.Name]
 				: [\"Reminder\", \"by \" + reminderUser.Name + \" to you\"];
+
 			const delta = (reminder.Schedule)
-				? (\" (\" + sb.Utils.timeDelta(reminder.Schedule) + \")\")
+				? ` (${sb.Utils.timeDelta(reminder.Schedule)})`
 				: \"\";
 
 			return {
@@ -515,11 +517,13 @@ ON DUPLICATE KEY UPDATE
 			const reminderUser = (context.user.ID === reminder.User_From)
 				? await sb.User.get(reminder.User_To, true)
 				: await sb.User.get(reminder.User_From, true);
+
 			const [owner, target] = (context.user.ID === reminder.User_From)
 				? [\"Your reminder\", \"to \" + reminderUser.Name]
 				: [\"Reminder\", \"by \" + reminderUser.Name + \" to you\"];
+
 			const delta = (reminder.Schedule)
-				? (\" (\" + sb.Utils.timeDelta(reminder.Schedule) + \")\")
+				? ` (${sb.Utils.timeDelta(reminder.Schedule)})`
 				: \"\";
 
 			return {
