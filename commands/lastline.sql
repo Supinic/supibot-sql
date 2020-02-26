@@ -43,8 +43,11 @@ VALUES
 	if (!user) {
 		return { reply: \"No user provided!\" };
 	}
+	else if (!context.channel) {
+		return { reply: \"This command is not available in PMs!\" };
+	}
 
-	const targetUser = await sb.Utils.getDiscordUserDataFromMentions(user, context.append) || (await sb.User.get(user, true))
+	const targetUser = await sb.Utils.getDiscordUserDataFromMentions(user, context.append) || (await sb.User.get(user, true));
 	if (!targetUser) {		
 		return { reply: \"User not found in the database!\" };
 	}
@@ -104,8 +107,11 @@ ON DUPLICATE KEY UPDATE
 	if (!user) {
 		return { reply: \"No user provided!\" };
 	}
+	else if (!context.channel) {
+		return { reply: \"This command is not available in PMs!\" };
+	}
 
-	const targetUser = await sb.Utils.getDiscordUserDataFromMentions(user, context.append) || (await sb.User.get(user, true))
+	const targetUser = await sb.Utils.getDiscordUserDataFromMentions(user, context.append) || (await sb.User.get(user, true));
 	if (!targetUser) {		
 		return { reply: \"User not found in the database!\" };
 	}
