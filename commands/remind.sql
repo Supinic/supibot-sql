@@ -152,6 +152,10 @@ VALUES
 
 	let resultID = null;
 	const timestamp = (delta === 0) ? null : new sb.Date(now.valueOf() + delta);
+	const stringDelta = (timestamp)
+		? sb.Utils.timeDelta(timestamp)
+		: \"when they next type in chat\";
+
 	try {
 		resultID = await sb.Reminder.create({
 			Channel: context?.channel?.ID ?? null,
@@ -172,10 +176,8 @@ VALUES
 		deprecationNotice,
 		\"I will\" + (isPrivate ? \" privately\" : \"\") + \" remind\",
 		(targetUser.ID === context.user.ID) ? \"you\" : targetUser.Name,
-		(timestamp)
-			? sb.Utils.timeDelta(timestamp)
-			: \"when they next type in chat\",
-		\"(ID \" + resultID + \")\"
+		stringDelta,
+		`(ID ${resultID})`
 	].join(\" \");
 
 	return { reply: reply };
@@ -298,6 +300,10 @@ ON DUPLICATE KEY UPDATE
 
 	let resultID = null;
 	const timestamp = (delta === 0) ? null : new sb.Date(now.valueOf() + delta);
+	const stringDelta = (timestamp)
+		? sb.Utils.timeDelta(timestamp)
+		: \"when they next type in chat\";
+
 	try {
 		resultID = await sb.Reminder.create({
 			Channel: context?.channel?.ID ?? null,
@@ -318,10 +324,8 @@ ON DUPLICATE KEY UPDATE
 		deprecationNotice,
 		\"I will\" + (isPrivate ? \" privately\" : \"\") + \" remind\",
 		(targetUser.ID === context.user.ID) ? \"you\" : targetUser.Name,
-		(timestamp)
-			? sb.Utils.timeDelta(timestamp)
-			: \"when they next type in chat\",
-		\"(ID \" + resultID + \")\"
+		stringDelta,
+		`(ID ${resultID})`
 	].join(\" \");
 
 	return { reply: reply };
