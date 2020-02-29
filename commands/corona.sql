@@ -41,69 +41,43 @@ VALUES
 		0,
 		'(async function corona (context, ...args) {
 	if (!this.data.cache || sb.Date.now() > this.data.nextReload) {
-		const owner = \"CSSEGISandData\";
-		const repo = \"2019-nCoV\";
-		const path = \"csse_covid_19_data/csse_covid_19_daily_reports\";
-		const files = await sb.Got.instances.GitHub(`repos/${owner}/${repo}/contents/${path}`).json();
-
-		const { name } = files.filter(i => i.path.includes(\".csv\")).pop();
-		const { content } = await sb.Got.instances.GitHub(`repos/${owner}/${repo}/contents/${path}/${name}`).json();
-
-		const regex = /(\\s*\"[^\"]+\"\\s*|\\s*[^,]+|,)(?=,|$)/g;
-		const csv = Buffer.from(content, \"base64\").toString();
-
-		// slice(1, -1) gets rid of header and (empty line) footer
-		this.data.raw = csv.split(\"\\n\").slice(1, -1).map(i => [...i.matchAll(regex)].map(i => i[0]));
-		this.data.cache = [];
-
-		for (const row of this.data.raw) {
-			let [province, country, date, confirmed, deaths, recovered] = row;
-			if (row.length === 5) {
-				[country, date, confirmed, deaths, recovered] = row;
-			}
-
-			confirmed = Number(confirmed);
-			deaths = Number(deaths);
-			recovered = Number(recovered);
-
-			// Just brilliant...
-			if (country === \"US\") {
-				country = \"USA\";
-			}
-
-			const update = new sb.Date(date).setTimezoneOffset(0);
-			const existing = this.data.cache.find(i => i.country === country);
-
-			if (existing) {
-				existing.confirmed += confirmed;
-				existing.deaths += deaths;
-				existing.recovered += recovered;
-
-				if (update > existing.update) {
-					existing.update = update;
-				}
-			}
-			else {
-				this.data.cache.push({
-					country,
-					confirmed,
-					deaths,
-					recovered,
-					update
-				});
-			}
-		}
-
 		const html = await sb.Got.instances.FakeAgent(\"https://www.worldometers.info/coronavirus/\").text();
 		const $ = sb.Utils.cheerio(html);
+		const rows = Array.from($(\"#main_table_countries tbody tr\"));
+
+		this.data.cache = [];
+		for (const row of rows) {
+			let [country, confirmed, newCases, deaths, newDeaths, active, recovered, critical] = Array.from($(row).children()).map((i, ind) => {
+				let value = $(i).text();
+				if (ind !== 0) {
+					value = Number(value.replace(/,/g, \"\")) || 0;
+				}
+
+				return value;
+			});
+
+			country = country.trim();
+
+			// Fixing special cases
+			if (country === \"S. Korea\") {
+				country = \"South Korea\";
+			}
+			// Fixing \"U.A.E.\" and \"U.K.\"
+			country = country.replace(/\\./g, \"\");
+
+			this.data.cache.push({
+				country, confirmed, newCases, deaths, newDeaths, recovered, critical, active
+			});
+		}
+
 		const [confirmed, deaths, recovered] = $(\".maincounter-number\").text().replace(/,/g, \"\").split(\" \").filter(Boolean).map(Number);
 		const [mild, critical] = Array.from($(\".number-table\")).map(i => Number(i.firstChild.nodeValue.replace(/,/g, \"\")));
 
 		this.data.total = { confirmed, deaths, recovered, critical, mild };
-		this.data.total.update = new sb.Date().valueOf();
 
+		this.data.update = new sb.Date().valueOf();
 		this.data.pastebinLink = null;
-		this.data.nextReload = new sb.Date().addHours(1).valueOf();
+		this.data.nextReload = new sb.Date().addMinutes(30).valueOf();
 	}
 
 	if (args[0] === \"dump\" || args[0] === \"json\") {
@@ -122,12 +96,15 @@ VALUES
 		: this.data.total;
 
 	if (targetData) {
-		const delta = sb.Utils.timeDelta(new sb.Date(targetData.update));
-		const { confirmed, deaths, recovered, country, critical, mild } = targetData;
+		const delta = sb.Utils.timeDelta(new sb.Date(this.data.update));
+		const { confirmed, deaths, newCases, newDeaths, recovered, country, critical, mild } = targetData;
 
 		if (args.length > 0) {
+			const plusCases = (newCases > 0) ? ` (+${newCases})` : \"\";
+			const plusDeaths = (newDeaths > 0) ? ` (+${newDeaths})` : \"\";
+
 			return {
-				reply: `${country} has ${confirmed} confirmed case${(confirmed === 1) ? \"\" : \"s\"}, ${deaths ?? \"no\"} death${(deaths === 1) ? \"\" : \"s\"} and ${recovered ?? \"no\"} recovered case${(recovered === 1) ? \"\" : \"s\"}. Last update: ${delta}`
+				reply: `${country} has ${confirmed} confirmed case${(confirmed === 1) ? \"\" : \"s\"}${plusCases}, ${deaths ?? \"no\"} death${(deaths === 1) ? \"\" : \"s\"}${plusDeaths} and ${recovered ?? \"no\"} recovered case${(recovered === 1) ? \"\" : \"s\"}. Last update: ${delta}`
 			}
 		}
 		else {
@@ -149,69 +126,43 @@ VALUES
 ON DUPLICATE KEY UPDATE
 	Code = '(async function corona (context, ...args) {
 	if (!this.data.cache || sb.Date.now() > this.data.nextReload) {
-		const owner = \"CSSEGISandData\";
-		const repo = \"2019-nCoV\";
-		const path = \"csse_covid_19_data/csse_covid_19_daily_reports\";
-		const files = await sb.Got.instances.GitHub(`repos/${owner}/${repo}/contents/${path}`).json();
-
-		const { name } = files.filter(i => i.path.includes(\".csv\")).pop();
-		const { content } = await sb.Got.instances.GitHub(`repos/${owner}/${repo}/contents/${path}/${name}`).json();
-
-		const regex = /(\\s*\"[^\"]+\"\\s*|\\s*[^,]+|,)(?=,|$)/g;
-		const csv = Buffer.from(content, \"base64\").toString();
-
-		// slice(1, -1) gets rid of header and (empty line) footer
-		this.data.raw = csv.split(\"\\n\").slice(1, -1).map(i => [...i.matchAll(regex)].map(i => i[0]));
-		this.data.cache = [];
-
-		for (const row of this.data.raw) {
-			let [province, country, date, confirmed, deaths, recovered] = row;
-			if (row.length === 5) {
-				[country, date, confirmed, deaths, recovered] = row;
-			}
-
-			confirmed = Number(confirmed);
-			deaths = Number(deaths);
-			recovered = Number(recovered);
-
-			// Just brilliant...
-			if (country === \"US\") {
-				country = \"USA\";
-			}
-
-			const update = new sb.Date(date).setTimezoneOffset(0);
-			const existing = this.data.cache.find(i => i.country === country);
-
-			if (existing) {
-				existing.confirmed += confirmed;
-				existing.deaths += deaths;
-				existing.recovered += recovered;
-
-				if (update > existing.update) {
-					existing.update = update;
-				}
-			}
-			else {
-				this.data.cache.push({
-					country,
-					confirmed,
-					deaths,
-					recovered,
-					update
-				});
-			}
-		}
-
 		const html = await sb.Got.instances.FakeAgent(\"https://www.worldometers.info/coronavirus/\").text();
 		const $ = sb.Utils.cheerio(html);
+		const rows = Array.from($(\"#main_table_countries tbody tr\"));
+
+		this.data.cache = [];
+		for (const row of rows) {
+			let [country, confirmed, newCases, deaths, newDeaths, active, recovered, critical] = Array.from($(row).children()).map((i, ind) => {
+				let value = $(i).text();
+				if (ind !== 0) {
+					value = Number(value.replace(/,/g, \"\")) || 0;
+				}
+
+				return value;
+			});
+
+			country = country.trim();
+
+			// Fixing special cases
+			if (country === \"S. Korea\") {
+				country = \"South Korea\";
+			}
+			// Fixing \"U.A.E.\" and \"U.K.\"
+			country = country.replace(/\\./g, \"\");
+
+			this.data.cache.push({
+				country, confirmed, newCases, deaths, newDeaths, recovered, critical, active
+			});
+		}
+
 		const [confirmed, deaths, recovered] = $(\".maincounter-number\").text().replace(/,/g, \"\").split(\" \").filter(Boolean).map(Number);
 		const [mild, critical] = Array.from($(\".number-table\")).map(i => Number(i.firstChild.nodeValue.replace(/,/g, \"\")));
 
 		this.data.total = { confirmed, deaths, recovered, critical, mild };
-		this.data.total.update = new sb.Date().valueOf();
 
+		this.data.update = new sb.Date().valueOf();
 		this.data.pastebinLink = null;
-		this.data.nextReload = new sb.Date().addHours(1).valueOf();
+		this.data.nextReload = new sb.Date().addMinutes(30).valueOf();
 	}
 
 	if (args[0] === \"dump\" || args[0] === \"json\") {
@@ -230,12 +181,15 @@ ON DUPLICATE KEY UPDATE
 		: this.data.total;
 
 	if (targetData) {
-		const delta = sb.Utils.timeDelta(new sb.Date(targetData.update));
-		const { confirmed, deaths, recovered, country, critical, mild } = targetData;
+		const delta = sb.Utils.timeDelta(new sb.Date(this.data.update));
+		const { confirmed, deaths, newCases, newDeaths, recovered, country, critical, mild } = targetData;
 
 		if (args.length > 0) {
+			const plusCases = (newCases > 0) ? ` (+${newCases})` : \"\";
+			const plusDeaths = (newDeaths > 0) ? ` (+${newDeaths})` : \"\";
+
 			return {
-				reply: `${country} has ${confirmed} confirmed case${(confirmed === 1) ? \"\" : \"s\"}, ${deaths ?? \"no\"} death${(deaths === 1) ? \"\" : \"s\"} and ${recovered ?? \"no\"} recovered case${(recovered === 1) ? \"\" : \"s\"}. Last update: ${delta}`
+				reply: `${country} has ${confirmed} confirmed case${(confirmed === 1) ? \"\" : \"s\"}${plusCases}, ${deaths ?? \"no\"} death${(deaths === 1) ? \"\" : \"s\"}${plusDeaths} and ${recovered ?? \"no\"} recovered case${(recovered === 1) ? \"\" : \"s\"}. Last update: ${delta}`
 			}
 		}
 		else {
