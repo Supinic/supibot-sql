@@ -147,12 +147,10 @@ VALUES
 
 		let when = \"right now!\";
 		const status = await sb.VideoLANConnector.status();
-
-		console.log({status, id});
 		
 		if (status.currentplid !== -1 && status.currentplid !== id && status.time !== 0) {
 			const { time, length } = status;
-			const inQueue = sb.VideoLANConnector.videoQueue.filter(i => i.vlcID > id);
+			const inQueue = sb.VideoLANConnector.videoQueue.filter(i => i.vlcID > status.currentplid);
 			const totalTimeRemaining = (length - time) + inQueue.reduce((acc, cur) => acc += cur.length, 0);
 
 			when = sb.Utils.timeDelta(new sb.Date().addSeconds(totalTimeRemaining));
@@ -276,12 +274,10 @@ ON DUPLICATE KEY UPDATE
 
 		let when = \"right now!\";
 		const status = await sb.VideoLANConnector.status();
-
-		console.log({status, id});
 		
 		if (status.currentplid !== -1 && status.currentplid !== id && status.time !== 0) {
 			const { time, length } = status;
-			const inQueue = sb.VideoLANConnector.videoQueue.filter(i => i.vlcID > id);
+			const inQueue = sb.VideoLANConnector.videoQueue.filter(i => i.vlcID > status.currentplid);
 			const totalTimeRemaining = (length - time) + inQueue.reduce((acc, cur) => acc += cur.length, 0);
 
 			when = sb.Utils.timeDelta(new sb.Date().addSeconds(totalTimeRemaining));
