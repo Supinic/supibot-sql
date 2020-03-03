@@ -54,13 +54,13 @@ VALUES
 		readFile(\"/proc/meminfo\")
 	]);
 
-	const memoryData = String(memory).split(\"\\n\").map(i => i.split(/:\\s+/)[1]);
-
+	const memoryData = String(memory).split(\"\\n\").filter(Boolean).map(i => Number(i.split(/:\\s+/)[1].replace(/kB/, \"\")) * 1000);
 	const pong = \"P\" + chars[context.invocation[1]] + \"ng!\";
+
 	const data = {
 		Uptime: sb.Utils.timeDelta(sb.Master.started).replace(\"ago\", \"\").trim(),
 		Temperature: temperature.stdout.match(/([\\d\\.]+)/)[1] + \"°C\",
-		Memory: memoryData[2] + \"/\" + memoryData[0],
+		\"Free memory\": sb.Utils.formatByteSize(memoryData[2], 0) + \"/\" + sb.Utils.formatByteSize(memoryData[0], 0),
 		\"Latency to TMI\": (endLatency[0] * 1e3 + endLatency[1] / 1e6) + \" ms\",
 		\"Commands used\": sb.Runtime.commandsUsed
 	};
@@ -99,13 +99,13 @@ ON DUPLICATE KEY UPDATE
 		readFile(\"/proc/meminfo\")
 	]);
 
-	const memoryData = String(memory).split(\"\\n\").map(i => i.split(/:\\s+/)[1]);
-
+	const memoryData = String(memory).split(\"\\n\").filter(Boolean).map(i => Number(i.split(/:\\s+/)[1].replace(/kB/, \"\")) * 1000);
 	const pong = \"P\" + chars[context.invocation[1]] + \"ng!\";
+
 	const data = {
 		Uptime: sb.Utils.timeDelta(sb.Master.started).replace(\"ago\", \"\").trim(),
 		Temperature: temperature.stdout.match(/([\\d\\.]+)/)[1] + \"°C\",
-		Memory: memoryData[2] + \"/\" + memoryData[0],
+		\"Free memory\": sb.Utils.formatByteSize(memoryData[2], 0) + \"/\" + sb.Utils.formatByteSize(memoryData[0], 0),
 		\"Latency to TMI\": (endLatency[0] * 1e3 + endLatency[1] / 1e6) + \" ms\",
 		\"Commands used\": sb.Runtime.commandsUsed
 	};
