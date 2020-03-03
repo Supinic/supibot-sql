@@ -40,14 +40,30 @@ VALUES
 		1,
 		0,
 		'(async function funFact () {
-	const data = await sb.Got({
-		prefixUrl: \"https://uselessfacts.jsph.pl/\",
-		url: \"random.json\",
-		searchParams: \"language=en\"
+	const { year, month } = new sb.Date();
+	const randomDate = new sb.Date(
+		sb.Utils.random(2017, year),
+		sb.Utils.random(1, 12)
+	);
+
+	const rawData = await sb.Got({
+		prefixUrl: \"https://uselessfacts.net/api\",
+		url: \"posts\",
+		searchParams: \"d=\" + randomDate.toJSON()
 	}).json();
 
+	const data = rawData.filter(i => i._id !== this.data.previousFactID);
+	if (data.length === 0) {
+		return {
+			reply: \"No fun facts found :(\"
+		};
+	}
+
+	const randomFact = sb.Utils.randArray(data);
+	this.data.previousFactID = randomFact._id;
+
 	return {
-		reply: data.text
+		reply: randomFact.title
 	};
 })',
 		'No arguments.',
@@ -56,13 +72,29 @@ VALUES
 
 ON DUPLICATE KEY UPDATE
 	Code = '(async function funFact () {
-	const data = await sb.Got({
-		prefixUrl: \"https://uselessfacts.jsph.pl/\",
-		url: \"random.json\",
-		searchParams: \"language=en\"
+	const { year, month } = new sb.Date();
+	const randomDate = new sb.Date(
+		sb.Utils.random(2017, year),
+		sb.Utils.random(1, 12)
+	);
+
+	const rawData = await sb.Got({
+		prefixUrl: \"https://uselessfacts.net/api\",
+		url: \"posts\",
+		searchParams: \"d=\" + randomDate.toJSON()
 	}).json();
 
+	const data = rawData.filter(i => i._id !== this.data.previousFactID);
+	if (data.length === 0) {
+		return {
+			reply: \"No fun facts found :(\"
+		};
+	}
+
+	const randomFact = sb.Utils.randArray(data);
+	this.data.previousFactID = randomFact._id;
+
 	return {
-		reply: data.text
+		reply: randomFact.title
 	};
 })'
