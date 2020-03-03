@@ -77,8 +77,10 @@ VALUES
 
 	const data = vod.data[0];
 	const delta = sb.Utils.timeDelta(new sb.Date(data.created_at));
+	const prettyDuration = data.duration.match(/\\d+[hm]/g).join(\", \");
+
 	return {
-		reply: `${data.title} - published ${delta} ${data.url}${liveString}`
+		reply: `${data.title} (length: ${prettyDuration}) - published ${delta} ${data.url}${liveString}`
 	};
 })',
 		NULL,
@@ -124,7 +126,9 @@ ON DUPLICATE KEY UPDATE
 
 	const data = vod.data[0];
 	const delta = sb.Utils.timeDelta(new sb.Date(data.created_at));
+	const prettyDuration = data.duration.match(/\\d+[hm]/g).join(\", \");
+
 	return {
-		reply: `${data.title} - published ${delta} ${data.url}${liveString}`
+		reply: `${data.title} (length: ${prettyDuration}) - published ${delta} ${data.url}${liveString}`
 	};
 })'
