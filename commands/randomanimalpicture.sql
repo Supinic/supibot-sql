@@ -69,7 +69,7 @@ VALUES
 	let result = null;
 	switch (type) {
 		case \"bird\":
-			result = (await sb.Got.instances.SRA(\"img/bird\").json()).link;
+			result = (await sb.Got.instances.SRA(\"img/birb\").json()).link;
 			break;
 
 		case \"cat\":
@@ -124,7 +124,7 @@ ON DUPLICATE KEY UPDATE
 	let result = null;
 	switch (type) {
 		case \"bird\":
-			result = (await sb.Got.instances.SRA(\"img/bird\").json()).link;
+			result = (await sb.Got.instances.SRA(\"img/birb\").json()).link;
 			break;
 
 		case \"cat\":
