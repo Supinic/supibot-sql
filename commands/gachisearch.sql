@@ -48,7 +48,7 @@ VALUES
 	const { data } = await sb.Got.instances.Supinic({
 		url: \"track/search\",
 		searchParams: new sb.URLParams()
-			.set(\"name\", \"christian\")
+			.set(\"name\", query)
 			.set(\"includeTags\", \"6\")
 			.toString()
 	}).json();
@@ -81,7 +81,7 @@ ON DUPLICATE KEY UPDATE
 	const { data } = await sb.Got.instances.Supinic({
 		url: \"track/search\",
 		searchParams: new sb.URLParams()
-			.set(\"name\", \"christian\")
+			.set(\"name\", query)
 			.set(\"includeTags\", \"6\")
 			.toString()
 	}).json();
