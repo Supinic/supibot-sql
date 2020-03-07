@@ -83,7 +83,7 @@ VALUES
 	else {
 		let link = \"\";
 		if (!context.channel || context.channel.Links_Allowed === true) {
-			link = \"https://en.wikipedia.org/?curid=\" + key;
+			link = `https://${language}.wikipedia.org/?curid=${key}`;
 		}
 
 		return {
@@ -148,7 +148,7 @@ ON DUPLICATE KEY UPDATE
 	else {
 		let link = \"\";
 		if (!context.channel || context.channel.Links_Allowed === true) {
-			link = \"https://en.wikipedia.org/?curid=\" + key;
+			link = `https://${language}.wikipedia.org/?curid=${key}`;
 		}
 
 		return {
