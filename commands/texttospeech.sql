@@ -31,7 +31,7 @@ VALUES
 		0,
 		0,
 		1,
-		1,
+		0,
 		NULL,
 		0,
 		0,
@@ -40,7 +40,7 @@ VALUES
 		1,
 		0,
 		'(async function textToSpeech (context, ...args) {
-	if (args.length === 0) {
+	if (context.channel?.ID !== 38 || args.length === 0) {
 		return {
 			reply: \"List of available voices: https://supinic.com/stream/tts\"
 		};
@@ -65,6 +65,7 @@ VALUES
 	const limit = sb.Config.get(\"TTS_TIME_LIMIT\");
 	const voiceData = sb.Config.get(\"TTS_VOICE_DATA\");
 	const availableVoices = voiceData.map(i => i.name.toLowerCase());
+	const voiceMap = Object.fromEntries(voiceData.map(i => [i.name, i.id]));
 	const ttsData = [];
 	let currentVoice = \"Brian\";
 	let currentText = [];
@@ -138,6 +139,10 @@ VALUES
 			reply: `Your TTS was refused! You used too many voices - ${ttsData.length}, but the maximum is 3.`,
 			cooldown: { length: 5000 }
 		};
+	}
+
+	for (const record of ttsData) {
+		record.voice = voiceMap[record.voice];
 	}
 
 	let messageTime = 0n;
@@ -187,7 +192,7 @@ VALUES
 
 ON DUPLICATE KEY UPDATE
 	Code = '(async function textToSpeech (context, ...args) {
-	if (args.length === 0) {
+	if (context.channel?.ID !== 38 || args.length === 0) {
 		return {
 			reply: \"List of available voices: https://supinic.com/stream/tts\"
 		};
@@ -212,6 +217,7 @@ ON DUPLICATE KEY UPDATE
 	const limit = sb.Config.get(\"TTS_TIME_LIMIT\");
 	const voiceData = sb.Config.get(\"TTS_VOICE_DATA\");
 	const availableVoices = voiceData.map(i => i.name.toLowerCase());
+	const voiceMap = Object.fromEntries(voiceData.map(i => [i.name, i.id]));
 	const ttsData = [];
 	let currentVoice = \"Brian\";
 	let currentText = [];
@@ -285,6 +291,10 @@ ON DUPLICATE KEY UPDATE
 			reply: `Your TTS was refused! You used too many voices - ${ttsData.length}, but the maximum is 3.`,
 			cooldown: { length: 5000 }
 		};
+	}
+
+	for (const record of ttsData) {
+		record.voice = voiceMap[record.voice];
 	}
 
 	let messageTime = 0n;
