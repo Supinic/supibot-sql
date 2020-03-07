@@ -25,7 +25,7 @@ VALUES
 	(
 		181,
 		'dontpingme',
-		'[\"dpm\", \"pingoptout\"]',
+		'[\"dpm\", \"pingoptout\", \"unping\"]',
 		'Sets/unsets a command pinging you when it\'s being invoked.',
 		5000,
 		0,
