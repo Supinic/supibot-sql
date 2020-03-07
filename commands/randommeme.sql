@@ -54,11 +54,18 @@ VALUES
 		};
 	}
 
-	if (!this.data[subreddit]) {
-		this.data[subreddit] = await sb.Got.instances.Reddit(subreddit + \"/about.json\").json();
+	if (!this.data.meta) {
+		this.data.meta = {};
+	}
+	if (!this.data.posts) {
+		this.data.posts = {};
 	}
 
-	const check = this.data[subreddit];
+	if (!this.data.meta[subreddit]) {
+		this.data.meta[subreddit] = await sb.Got.instances.Reddit(subreddit + \"/about.json\").json();
+	}
+
+	const check = this.data.meta[subreddit];
 	if (!check) {
 		return {
 			reply: \"No data obtained...\"
@@ -79,11 +86,23 @@ VALUES
 			reply: \"That subreddit is flagged as 18+, and thus not safe to post here!\"
 		};
 	}
-	
-	const { data } = await sb.Got.instances.Reddit(subreddit + \"/hot.json\").json();
-	const children = data.children.filter(i => (
-		(!safeSpace || !i.data.over_18) && !i.data.selftext && !i.data.selftext_html)
-	);
+
+	if (!this.data.posts[subreddit] || sb.Date.now() > this.data.posts[subreddit].expiry) {
+		const { data } = await sb.Got.instances.Reddit(subreddit + \"/hot.json\").json();
+		this.data.posts[subreddit] = {
+			repeatedPosts: [],
+			list: data.children,
+			expiry: new sb.Date().addHours(1).valueOf()
+		};
+	}
+
+	const { list, repeatedPosts } = this.data.posts[subreddit];
+	const children = list.filter(i => (
+		(!safeSpace || !i.data.over_18)
+		&& !i.data.selftext
+		&& !i.data.selftext_html
+		&& !repeatedPosts.includes(i.data.id)
+	));
 
 	const quarantine = (check.data.quarantine) ? \"⚠\" : \"\";
 	const post = sb.Utils.randArray(children);
@@ -93,6 +112,11 @@ VALUES
 		}
 	}
 	else {
+		// Add the currently used post ID at the beginning of the array
+		repeatedPosts.unshift(post.data.id);
+		// And then splice off everything over the length of 3.
+		repeatedPosts.splice(3);
+
 		const delta = sb.Utils.timeDelta(post.data.created_utc * 1000);
 		return {
 			reply: `${quarantine} ${post.data.title} ${post.data.url} (posted ${delta})`
@@ -119,11 +143,18 @@ ON DUPLICATE KEY UPDATE
 		};
 	}
 
-	if (!this.data[subreddit]) {
-		this.data[subreddit] = await sb.Got.instances.Reddit(subreddit + \"/about.json\").json();
+	if (!this.data.meta) {
+		this.data.meta = {};
+	}
+	if (!this.data.posts) {
+		this.data.posts = {};
 	}
 
-	const check = this.data[subreddit];
+	if (!this.data.meta[subreddit]) {
+		this.data.meta[subreddit] = await sb.Got.instances.Reddit(subreddit + \"/about.json\").json();
+	}
+
+	const check = this.data.meta[subreddit];
 	if (!check) {
 		return {
 			reply: \"No data obtained...\"
@@ -144,11 +175,23 @@ ON DUPLICATE KEY UPDATE
 			reply: \"That subreddit is flagged as 18+, and thus not safe to post here!\"
 		};
 	}
-	
-	const { data } = await sb.Got.instances.Reddit(subreddit + \"/hot.json\").json();
-	const children = data.children.filter(i => (
-		(!safeSpace || !i.data.over_18) && !i.data.selftext && !i.data.selftext_html)
-	);
+
+	if (!this.data.posts[subreddit] || sb.Date.now() > this.data.posts[subreddit].expiry) {
+		const { data } = await sb.Got.instances.Reddit(subreddit + \"/hot.json\").json();
+		this.data.posts[subreddit] = {
+			repeatedPosts: [],
+			list: data.children,
+			expiry: new sb.Date().addHours(1).valueOf()
+		};
+	}
+
+	const { list, repeatedPosts } = this.data.posts[subreddit];
+	const children = list.filter(i => (
+		(!safeSpace || !i.data.over_18)
+		&& !i.data.selftext
+		&& !i.data.selftext_html
+		&& !repeatedPosts.includes(i.data.id)
+	));
 
 	const quarantine = (check.data.quarantine) ? \"⚠\" : \"\";
 	const post = sb.Utils.randArray(children);
@@ -158,6 +201,11 @@ ON DUPLICATE KEY UPDATE
 		}
 	}
 	else {
+		// Add the currently used post ID at the beginning of the array
+		repeatedPosts.unshift(post.data.id);
+		// And then splice off everything over the length of 3.
+		repeatedPosts.splice(3);
+
 		const delta = sb.Utils.timeDelta(post.data.created_utc * 1000);
 		return {
 			reply: `${quarantine} ${post.data.title} ${post.data.url} (posted ${delta})`
