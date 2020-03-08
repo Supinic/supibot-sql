@@ -60,6 +60,11 @@ VALUES
 
 			country = country.trim();
 
+			// Making sure totals aren\'t counted in again
+			if (country.toLowerCase().includes(\"total\")) {
+				continue;
+			}
+			
 			// Fixing special cases
 			if (country === \"S. Korea\") {
 				country = \"South Korea\";
@@ -69,7 +74,7 @@ VALUES
 
 			totalNewCases += newCases;
 			totalNewDeaths += newDeaths;
-			
+
 			this.data.cache.push({
 				country, confirmed, newCases, deaths, newDeaths, recovered, critical, active, cpm
 			});
@@ -151,6 +156,11 @@ ON DUPLICATE KEY UPDATE
 
 			country = country.trim();
 
+			// Making sure totals aren\'t counted in again
+			if (country.toLowerCase().includes(\"total\")) {
+				continue;
+			}
+			
 			// Fixing special cases
 			if (country === \"S. Korea\") {
 				country = \"South Korea\";
@@ -160,7 +170,7 @@ ON DUPLICATE KEY UPDATE
 
 			totalNewCases += newCases;
 			totalNewDeaths += newDeaths;
-			
+
 			this.data.cache.push({
 				country, confirmed, newCases, deaths, newDeaths, recovered, critical, active, cpm
 			});
