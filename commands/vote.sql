@@ -86,7 +86,7 @@ VALUES
 		});
 		await row.save();
 
-		return { reply: \"Sucessfully voted.\" };
+		return { reply: \"Successfully voted.\" };
 	}
 })',
 		NULL,
@@ -141,6 +141,6 @@ ON DUPLICATE KEY UPDATE
 		});
 		await row.save();
 
-		return { reply: \"Sucessfully voted.\" };
+		return { reply: \"Successfully voted.\" };
 	}
 })'
