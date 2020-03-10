@@ -70,16 +70,23 @@ VALUES
 	}
 
 	if (targetChannel.Banphrase_API_Type === \"Pajbot\") {
-		const check = await sb.Banphrase.executeExternalAPI(
+		const data = await sb.Banphrase.executeExternalAPI(
 			message,
 			targetChannel.Banphrase_API_Type,
-			targetChannel.Banphrase_API_URL
+			targetChannel.Banphrase_API_URL,
+			{ fullResponse: true }
 		);
 
-		if (check) {
-			console.log(\"bancheck result\", check);
+		if (data.banned) {
+			console.warn(data);
+			
+			const { id, name, phrase, length, permanent, operator, case_sensitive: sensitive } = data.banphrase_data;
+			const punishment = (permanent)
+				? \"permanent ban\"
+				: `${sb.Utils.formatTime(length)} seconds timeout`;
+
 			return {
-				reply: `The phrase \"${check}\" will get you timed out!`
+				reply: `Banphrase ID ${id} - ${name}. ${operator}: \"${phrase}\"; punishment: ${punishment}. Case sensitive: ${sensitive ? \"yes\" : \"no\"}.`
 			};
 		}
 	}
@@ -136,16 +143,23 @@ ON DUPLICATE KEY UPDATE
 	}
 
 	if (targetChannel.Banphrase_API_Type === \"Pajbot\") {
-		const check = await sb.Banphrase.executeExternalAPI(
+		const data = await sb.Banphrase.executeExternalAPI(
 			message,
 			targetChannel.Banphrase_API_Type,
-			targetChannel.Banphrase_API_URL
+			targetChannel.Banphrase_API_URL,
+			{ fullResponse: true }
 		);
 
-		if (check) {
-			console.log(\"bancheck result\", check);
+		if (data.banned) {
+			console.warn(data);
+			
+			const { id, name, phrase, length, permanent, operator, case_sensitive: sensitive } = data.banphrase_data;
+			const punishment = (permanent)
+				? \"permanent ban\"
+				: `${sb.Utils.formatTime(length)} seconds timeout`;
+
 			return {
-				reply: `The phrase \"${check}\" will get you timed out!`
+				reply: `Banphrase ID ${id} - ${name}. ${operator}: \"${phrase}\"; punishment: ${punishment}. Case sensitive: ${sensitive ? \"yes\" : \"no\"}.`
 			};
 		}
 	}
