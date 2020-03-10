@@ -27,7 +27,7 @@ VALUES
 		'corona',
 		NULL,
 		'Checks the current amount of infected/deceased people from the Corona Virus spread started in October-December 2019.',
-		15000,
+		7500,
 		0,
 		0,
 		0,
@@ -40,10 +40,38 @@ VALUES
 		1,
 		0,
 		'(async function corona (context, ...args) {
+	if (this.data.fetching) {
+		return { 
+			reply: \"Someone else is currently fetching the data. Try again in a moment.\"
+		};
+	}
+
 	if (!this.data.cache || sb.Date.now() > this.data.nextReload) {
+		if (context.channel) {
+			sb.Master.send(`${context.user.Name}, Fetching new data! ppHop`, context.channel);
+		}
+		else {
+			sb.Master.pm(context.user.Name, \"Fetching new data! ppHop\", context.platform);
+		}
+
+		this.data.fetching = true;
+
 		const html = await sb.Got.instances.FakeAgent(\"https://www.worldometers.info/coronavirus/\").text();
 		const $ = sb.Utils.cheerio(html);
 		const rows = Array.from($(\"#main_table_countries tbody tr\"));
+		
+		if (rows.length === 0) {
+			this.data.fetching = false;
+			return {
+				reply: \"The data source website is currently under heavy load or down! Try again later (at least 15s).\",
+				cooldown: {
+					user: null,
+					channel: null,
+					length: 15000
+				}
+			};
+		}
+
 		let totalNewCases = 0;
 		let totalNewDeaths = 0;
 
@@ -88,6 +116,8 @@ VALUES
 		this.data.update = new sb.Date().valueOf();
 		this.data.pastebinLink = null;
 		this.data.nextReload = new sb.Date().addMinutes(30).valueOf();
+
+		this.data.fetching = false;
 	}
 
 	if (args[0] === \"dump\" || args[0] === \"json\") {
@@ -136,10 +166,38 @@ VALUES
 
 ON DUPLICATE KEY UPDATE
 	Code = '(async function corona (context, ...args) {
+	if (this.data.fetching) {
+		return { 
+			reply: \"Someone else is currently fetching the data. Try again in a moment.\"
+		};
+	}
+
 	if (!this.data.cache || sb.Date.now() > this.data.nextReload) {
+		if (context.channel) {
+			sb.Master.send(`${context.user.Name}, Fetching new data! ppHop`, context.channel);
+		}
+		else {
+			sb.Master.pm(context.user.Name, \"Fetching new data! ppHop\", context.platform);
+		}
+
+		this.data.fetching = true;
+
 		const html = await sb.Got.instances.FakeAgent(\"https://www.worldometers.info/coronavirus/\").text();
 		const $ = sb.Utils.cheerio(html);
 		const rows = Array.from($(\"#main_table_countries tbody tr\"));
+		
+		if (rows.length === 0) {
+			this.data.fetching = false;
+			return {
+				reply: \"The data source website is currently under heavy load or down! Try again later (at least 15s).\",
+				cooldown: {
+					user: null,
+					channel: null,
+					length: 15000
+				}
+			};
+		}
+
 		let totalNewCases = 0;
 		let totalNewDeaths = 0;
 
@@ -184,6 +242,8 @@ ON DUPLICATE KEY UPDATE
 		this.data.update = new sb.Date().valueOf();
 		this.data.pastebinLink = null;
 		this.data.nextReload = new sb.Date().addMinutes(30).valueOf();
+
+		this.data.fetching = false;
 	}
 
 	if (args[0] === \"dump\" || args[0] === \"json\") {
