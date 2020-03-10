@@ -145,12 +145,12 @@ VALUES
 			const perMillion = (cpm > 0) ? `This is ${cpm} cases per 1 million people. ` : \"\";
 
 			return {
-				reply: `${country} has ${confirmed} confirmed case${(confirmed === 1) ? \"\" : \"s\"}${plusCases}, ${deaths ?? \"no\"} death${(deaths === 1) ? \"\" : \"s\"}${plusDeaths} and ${recovered ?? \"no\"} recovered case${(recovered === 1) ? \"\" : \"s\"}. ${perMillion}Last update: ${delta}.`
+				reply: `${country} has ${confirmed} confirmed case${(confirmed === 1) ? \"\" : \"s\"}${plusCases}, ${deaths ?? \"no\"} death${(deaths === 1) ? \"\" : \"s\"}${plusDeaths} and ${recovered ?? \"no\"} recovered case${(recovered === 1) ? \"\" : \"s\"}. ${perMillion}Last check: ${delta}.`
 			}
 		}
 		else {
 			return {
-				reply: `${confirmed} (+${newCases}) corona virus cases are tracked so far. ${mild} are in mild, and ${critical} in critical condition; ${recovered} have fully recovered, and there are ${deaths} (+${newDeaths}) deceased. Last check: ${delta}`
+				reply: `${confirmed} (+${newCases}) corona virus cases are tracked so far. ${mild} are in mild, and ${critical} in critical condition; ${recovered} have fully recovered, and there are ${deaths} (+${newDeaths}) deceased. Last check: ${delta}.`
 			}
 		}
 	}
@@ -271,12 +271,12 @@ ON DUPLICATE KEY UPDATE
 			const perMillion = (cpm > 0) ? `This is ${cpm} cases per 1 million people. ` : \"\";
 
 			return {
-				reply: `${country} has ${confirmed} confirmed case${(confirmed === 1) ? \"\" : \"s\"}${plusCases}, ${deaths ?? \"no\"} death${(deaths === 1) ? \"\" : \"s\"}${plusDeaths} and ${recovered ?? \"no\"} recovered case${(recovered === 1) ? \"\" : \"s\"}. ${perMillion}Last update: ${delta}.`
+				reply: `${country} has ${confirmed} confirmed case${(confirmed === 1) ? \"\" : \"s\"}${plusCases}, ${deaths ?? \"no\"} death${(deaths === 1) ? \"\" : \"s\"}${plusDeaths} and ${recovered ?? \"no\"} recovered case${(recovered === 1) ? \"\" : \"s\"}. ${perMillion}Last check: ${delta}.`
 			}
 		}
 		else {
 			return {
-				reply: `${confirmed} (+${newCases}) corona virus cases are tracked so far. ${mild} are in mild, and ${critical} in critical condition; ${recovered} have fully recovered, and there are ${deaths} (+${newDeaths}) deceased. Last check: ${delta}`
+				reply: `${confirmed} (+${newCases}) corona virus cases are tracked so far. ${mild} are in mild, and ${critical} in critical condition; ${recovered} have fully recovered, and there are ${deaths} (+${newDeaths}) deceased. Last check: ${delta}.`
 			}
 		}
 	}
