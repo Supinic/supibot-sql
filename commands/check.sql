@@ -255,7 +255,7 @@ VALUES
 					: `ends in ${sb.Utils.timeDelta(poll.End)}.`;
 
 				return {
-					reply: `Poll ${identifier} ${delta} (${poll.Status}) - ${poll.Text}`
+					reply: `Poll ID ${poll.ID} ${delta} (${poll.Status}) - ${poll.Text}`
 				};
 			}
 
@@ -267,7 +267,7 @@ VALUES
 
 			const [yes, no] = sb.Utils.splitByCondition(votes, i => i.Vote === \"Yes\");
 			return {
-				reply: `Poll ${poll.ID} (${poll.Status}) - ${poll.Text} - Votes: ${yes.length}:${no.length}`
+				reply: `Poll ID ${poll.ID} (${poll.Status}) - ${poll.Text} - Votes: ${yes.length}:${no.length}`
 			}
 		}
 
@@ -564,7 +564,7 @@ ON DUPLICATE KEY UPDATE
 					: `ends in ${sb.Utils.timeDelta(poll.End)}.`;
 
 				return {
-					reply: `Poll ${identifier} ${delta} (${poll.Status}) - ${poll.Text}`
+					reply: `Poll ID ${poll.ID} ${delta} (${poll.Status}) - ${poll.Text}`
 				};
 			}
 
@@ -576,7 +576,7 @@ ON DUPLICATE KEY UPDATE
 
 			const [yes, no] = sb.Utils.splitByCondition(votes, i => i.Vote === \"Yes\");
 			return {
-				reply: `Poll ${poll.ID} (${poll.Status}) - ${poll.Text} - Votes: ${yes.length}:${no.length}`
+				reply: `Poll ID ${poll.ID} (${poll.Status}) - ${poll.Text} - Votes: ${yes.length}:${no.length}`
 			}
 		}
 
