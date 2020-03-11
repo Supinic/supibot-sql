@@ -39,20 +39,20 @@ VALUES
 		1,
 		1,
 		0,
-		'async (extra, user) => {
+		'(async function id (context, user) {
 	let targetUser = null;
 	if (user) {
-		targetUser = await sb.Utils.getDiscordUserDataFromMentions(user, extra.append) || await sb.User.get(user, true);
+		targetUser = await sb.Utils.getDiscordUserDataFromMentions(user, context.append) || await sb.User.get(user, true);
 	}
 	else {
-		targetUser = extra.user;
+		targetUser = context.user;
 	}
 
 	if (!targetUser) {
 		return { reply: \"No data for given user name!\" };
 	}
 
-	const [idString, pronoun] = (targetUser.ID === extra.user.ID) 
+	const [idString, pronoun] = (targetUser.ID === context.user.ID)
 		? [\"Your ID is \", \"you\"]
 		: [\"That person\'s ID is \", \"they\"];
 
@@ -60,32 +60,46 @@ VALUES
 		? \"first brought to life as an mIRC bot\"
 		: (targetUser.ID < sb.Config.get(\"SELF_ID\"))
 			? \"first mentioned in logs (predating Supibot)\"
-			: \"first seen by the bot\"
+			: \"first seen by the bot\";
+
+	const delta = sb.Utils.timeDelta(targetUser.Started_Using);
+	const now = new sb.Date();
+	const { year, month, day } = new sb.Date(targetUser.Started_Using);
+
+	let birthdayString = \"\";
+	if (now.year > year && now.month === month && now.day === day) {
+		if (targetUser.ID === sb.Config.get(\"SELF_ID\")) {
+			birthdayString = \"It\'s my birthday! FeelsBirthdayMan MrDestructoid\";
+		}
+		else {
+			birthdayString = `It\'s your account\'s ${now.year - year}. anniversary in my database! FeelsBirthdayMan Clap`;
+		}
+	}
 
 	return {
-		 reply: idString + targetUser.ID + \" and \" + pronoun + \" were \" + temporalReply + \" \" + sb.Utils.timeDelta(targetUser.Started_Using) + \".\" 
+		reply: `${idString} ${targetUser.ID} and ${pronoun} were ${temporalReply} ${delta}. ${birthdayString}`
 	};
-}',
+})',
 		'$id => Posts your ID in supibot\'s user database.
 $id <user> => Posts their ID in supibot\'s user database.',
 		NULL
 	)
 
 ON DUPLICATE KEY UPDATE
-	Code = 'async (extra, user) => {
+	Code = '(async function id (context, user) {
 	let targetUser = null;
 	if (user) {
-		targetUser = await sb.Utils.getDiscordUserDataFromMentions(user, extra.append) || await sb.User.get(user, true);
+		targetUser = await sb.Utils.getDiscordUserDataFromMentions(user, context.append) || await sb.User.get(user, true);
 	}
 	else {
-		targetUser = extra.user;
+		targetUser = context.user;
 	}
 
 	if (!targetUser) {
 		return { reply: \"No data for given user name!\" };
 	}
 
-	const [idString, pronoun] = (targetUser.ID === extra.user.ID) 
+	const [idString, pronoun] = (targetUser.ID === context.user.ID)
 		? [\"Your ID is \", \"you\"]
 		: [\"That person\'s ID is \", \"they\"];
 
@@ -93,9 +107,23 @@ ON DUPLICATE KEY UPDATE
 		? \"first brought to life as an mIRC bot\"
 		: (targetUser.ID < sb.Config.get(\"SELF_ID\"))
 			? \"first mentioned in logs (predating Supibot)\"
-			: \"first seen by the bot\"
+			: \"first seen by the bot\";
+
+	const delta = sb.Utils.timeDelta(targetUser.Started_Using);
+	const now = new sb.Date();
+	const { year, month, day } = new sb.Date(targetUser.Started_Using);
+
+	let birthdayString = \"\";
+	if (now.year > year && now.month === month && now.day === day) {
+		if (targetUser.ID === sb.Config.get(\"SELF_ID\")) {
+			birthdayString = \"It\'s my birthday! FeelsBirthdayMan MrDestructoid\";
+		}
+		else {
+			birthdayString = `It\'s your account\'s ${now.year - year}. anniversary in my database! FeelsBirthdayMan Clap`;
+		}
+	}
 
 	return {
-		 reply: idString + targetUser.ID + \" and \" + pronoun + \" were \" + temporalReply + \" \" + sb.Utils.timeDelta(targetUser.Started_Using) + \".\" 
+		reply: `${idString} ${targetUser.ID} and ${pronoun} were ${temporalReply} ${delta}. ${birthdayString}`
 	};
-}'
+})'

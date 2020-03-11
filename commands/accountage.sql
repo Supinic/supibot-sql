@@ -40,26 +40,41 @@ VALUES
 		1,
 		0,
 		'(async function accountAge (context, user) {
-	if (!user) { 
+	if (!user) {
 		user = context.user.Name;
 	}
 
-	try {
-		const searchParams = new sb.URLParams().set(\"login\", user).toString();
-		const rawData = await sb.Got.instances.Twitch.V5(\"users\", { searchParams });
+	const rawData = await sb.Got.instances.Twitch.V5({
+		url: \"users\",
+		throwHttpErrors: false,
+		searchParams: new sb.URLParams()
+			.set(\"login\", user)
+			.toString()
+	});
 
-		const data = rawData.users[0];
-		const delta = sb.Utils.timeDelta(new sb.Date(data.created_at));
-		const pronoun = (user.toLowerCase() === context.user.Name)
-			? \"Your\"
-			: \"That\";
+	const data = rawData.users[0];
+	if (!data) {
+		return {
+			reply: \"That Twitch account has no data associated with them.\"
+		};
+	}
 
-		return { reply: `${pronoun} Twitch account was created ${delta}.` };
+	const now = new sb.Date();
+	const created = new sb.Date(data.created_at);
+	const delta = sb.Utils.timeDelta(created);
+	const pronoun = (user.toLowerCase() === context.user.Name)
+		? \"Your\"
+		: \"That\";
+
+	let anniversary = \"\";
+	if (now.year > created.year && now.month === created.month && now.day === created.day) {
+		const who = (user.ID === sb.Config.get(\"SELF_ID\")) ? \"my\" : \"your\";
+		anniversary = `It\'s ${who} ${now.year - created.year}. Twitch anniversary! FeelsBirthdayMan Clap`;
 	}
-	catch (e) {
-		console.log(e, e.response);
-		return { reply: `That Twitch account has no data associated with them.` };
-	}
+
+	return {
+		reply: `${pronoun} Twitch account was created ${delta}. ${anniversary}`
+	};
 })',
 		'No arguments: Shows your Twitch account\'s username.
 If given, the first argument is the username to check.
@@ -71,24 +86,39 @@ $accage supibot',
 
 ON DUPLICATE KEY UPDATE
 	Code = '(async function accountAge (context, user) {
-	if (!user) { 
+	if (!user) {
 		user = context.user.Name;
 	}
 
-	try {
-		const searchParams = new sb.URLParams().set(\"login\", user).toString();
-		const rawData = await sb.Got.instances.Twitch.V5(\"users\", { searchParams });
+	const rawData = await sb.Got.instances.Twitch.V5({
+		url: \"users\",
+		throwHttpErrors: false,
+		searchParams: new sb.URLParams()
+			.set(\"login\", user)
+			.toString()
+	});
 
-		const data = rawData.users[0];
-		const delta = sb.Utils.timeDelta(new sb.Date(data.created_at));
-		const pronoun = (user.toLowerCase() === context.user.Name)
-			? \"Your\"
-			: \"That\";
+	const data = rawData.users[0];
+	if (!data) {
+		return {
+			reply: \"That Twitch account has no data associated with them.\"
+		};
+	}
 
-		return { reply: `${pronoun} Twitch account was created ${delta}.` };
+	const now = new sb.Date();
+	const created = new sb.Date(data.created_at);
+	const delta = sb.Utils.timeDelta(created);
+	const pronoun = (user.toLowerCase() === context.user.Name)
+		? \"Your\"
+		: \"That\";
+
+	let anniversary = \"\";
+	if (now.year > created.year && now.month === created.month && now.day === created.day) {
+		const who = (user.ID === sb.Config.get(\"SELF_ID\")) ? \"my\" : \"your\";
+		anniversary = `It\'s ${who} ${now.year - created.year}. Twitch anniversary! FeelsBirthdayMan Clap`;
 	}
-	catch (e) {
-		console.log(e, e.response);
-		return { reply: `That Twitch account has no data associated with them.` };
-	}
+
+	return {
+		reply: `${pronoun} Twitch account was created ${delta}. ${anniversary}`
+	};
 })'
