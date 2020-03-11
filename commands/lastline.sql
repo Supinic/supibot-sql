@@ -81,6 +81,11 @@ VALUES
 	}
 	else {
 		return {
+			cooldown: {
+				user: null,
+				channel: context.channel.ID,
+				length: 5000,
+			},
 			partialReplies: [
 				{
 					bancheck: false,
@@ -145,6 +150,11 @@ ON DUPLICATE KEY UPDATE
 	}
 	else {
 		return {
+			cooldown: {
+				user: null,
+				channel: context.channel.ID,
+				length: 5000,
+			},
 			partialReplies: [
 				{
 					bancheck: false,
