@@ -25,7 +25,7 @@ VALUES
 	(
 		204,
 		'chan',
-		NULL,
+		'[\"4chan\", \"textchan\", \"filechan\", \"imagechan\"]',
 		'Pulls a random post from a random board, or a specified one, if you provide it.',
 		10000,
 		0,
@@ -40,10 +40,22 @@ VALUES
 		0,
 		0,
 		'(async function chan (context, identifier) {
-	if (!context.channel?.NSFW) {
-		return {
-			reply: \"This command can currently only be used in NSFW channels!\"
-		};
+	const safeSpace = Boolean(!context.channel?.NSFW);
+	let resultType = (context.channel?.NSFW)
+		? \"file\"
+		: \"content\";
+
+	if (context.invocation === \"textchan\") {
+		resultType = \"content\";
+	}
+	else if (context.invocation === \"imagechan\" || context.invocation === \"filechan\") {
+		if (safeSpace) {
+			return { 
+				reply: \"You can\'t fetch images in this channel!\"
+			};
+		}
+
+		resultType = \"file\";
 	}
 
 	if (!this.data.boards) {
@@ -61,14 +73,25 @@ VALUES
 	if (identifier) {
 		identifier = identifier.toLowerCase().replace(/\\//g, \"\");
 		board = this.data.boards.find(i => i.name === identifier);
+
 		if (!board) {
 			return {
 				reply: \"Couldn\'t match your board! Please only use their abbreviations.\"
 			};
 		}
+		if (safeSpace && board.nsfw) {
+			return {
+				reply: \"That board is not available in SFW channels!\"
+			};
+		}
 	}
 	else {
-		board = sb.Utils.randArray(this.data.boards);
+		if (safeSpace) {
+			board = sb.Utils.randArray(this.data.boards.filter(i => !i.nsfw));
+		}
+		else {
+			board = sb.Utils.randArray(this.data.boards);
+		}
 	}
 
 	const now = sb.Date.now();
@@ -106,10 +129,10 @@ VALUES
 		thread.postsExpiration = new sb.Date().addMinutes(5).valueOf();
 	}
 
-	const eligiblePosts = thread.posts.filter(i => i.file);
+	const eligiblePosts = thread.posts.filter(i => i[resultType]);
 	const post = sb.Utils.randArray(eligiblePosts);
 	return {
-		reply: `${post.file}`
+		reply: post[resultType]
 	};
 })',
 		NULL,
@@ -118,10 +141,22 @@ VALUES
 
 ON DUPLICATE KEY UPDATE
 	Code = '(async function chan (context, identifier) {
-	if (!context.channel?.NSFW) {
-		return {
-			reply: \"This command can currently only be used in NSFW channels!\"
-		};
+	const safeSpace = Boolean(!context.channel?.NSFW);
+	let resultType = (context.channel?.NSFW)
+		? \"file\"
+		: \"content\";
+
+	if (context.invocation === \"textchan\") {
+		resultType = \"content\";
+	}
+	else if (context.invocation === \"imagechan\" || context.invocation === \"filechan\") {
+		if (safeSpace) {
+			return { 
+				reply: \"You can\'t fetch images in this channel!\"
+			};
+		}
+
+		resultType = \"file\";
 	}
 
 	if (!this.data.boards) {
@@ -139,14 +174,25 @@ ON DUPLICATE KEY UPDATE
 	if (identifier) {
 		identifier = identifier.toLowerCase().replace(/\\//g, \"\");
 		board = this.data.boards.find(i => i.name === identifier);
+
 		if (!board) {
 			return {
 				reply: \"Couldn\'t match your board! Please only use their abbreviations.\"
 			};
 		}
+		if (safeSpace && board.nsfw) {
+			return {
+				reply: \"That board is not available in SFW channels!\"
+			};
+		}
 	}
 	else {
-		board = sb.Utils.randArray(this.data.boards);
+		if (safeSpace) {
+			board = sb.Utils.randArray(this.data.boards.filter(i => !i.nsfw));
+		}
+		else {
+			board = sb.Utils.randArray(this.data.boards);
+		}
 	}
 
 	const now = sb.Date.now();
@@ -184,9 +230,9 @@ ON DUPLICATE KEY UPDATE
 		thread.postsExpiration = new sb.Date().addMinutes(5).valueOf();
 	}
 
-	const eligiblePosts = thread.posts.filter(i => i.file);
+	const eligiblePosts = thread.posts.filter(i => i[resultType]);
 	const post = sb.Utils.randArray(eligiblePosts);
 	return {
-		reply: `${post.file}`
+		reply: post[resultType]
 	};
 })'
