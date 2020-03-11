@@ -41,7 +41,7 @@ VALUES
 		0,
 		'(async function corona (context, ...args) {
 	if (this.data.fetching) {
-		return { 
+		return {
 			reply: \"Someone else is currently fetching the data. Try again in a moment.\"
 		};
 	}
@@ -59,7 +59,7 @@ VALUES
 		const html = await sb.Got.instances.FakeAgent(\"https://www.worldometers.info/coronavirus/\").text();
 		const $ = sb.Utils.cheerio(html);
 		const rows = Array.from($(\"#main_table_countries tbody tr\"));
-		
+
 		if (rows.length === 0) {
 			this.data.fetching = false;
 			return {
@@ -92,7 +92,7 @@ VALUES
 			if (country.toLowerCase().includes(\"total\")) {
 				continue;
 			}
-			
+
 			// Fixing special cases
 			if (country === \"S. Korea\") {
 				country = \"South Korea\";
@@ -110,12 +110,13 @@ VALUES
 
 		const [confirmed, deaths, recovered] = $(\".maincounter-number\").text().replace(/,/g, \"\").split(\" \").filter(Boolean).map(Number);
 		const [mild, critical] = Array.from($(\".number-table\")).map(i => Number(i.firstChild.nodeValue.replace(/,/g, \"\")));
-
+		const lastUpdateString = $($(\".label-counter\")[0].nextSibling).text().replace(\"Last updated: \", \"\");
+		
+		this.data.update = new sb.Date(lastUpdateString);
 		this.data.total = { confirmed, deaths, recovered, critical, mild, newCases: totalNewCases, newDeaths: totalNewDeaths };
 
-		this.data.update = new sb.Date().valueOf();
 		this.data.pastebinLink = null;
-		this.data.nextReload = new sb.Date().addMinutes(30).valueOf();
+		this.data.nextReload = new sb.Date().addMinutes(15).valueOf();
 
 		this.data.fetching = false;
 	}
@@ -167,7 +168,7 @@ VALUES
 ON DUPLICATE KEY UPDATE
 	Code = '(async function corona (context, ...args) {
 	if (this.data.fetching) {
-		return { 
+		return {
 			reply: \"Someone else is currently fetching the data. Try again in a moment.\"
 		};
 	}
@@ -185,7 +186,7 @@ ON DUPLICATE KEY UPDATE
 		const html = await sb.Got.instances.FakeAgent(\"https://www.worldometers.info/coronavirus/\").text();
 		const $ = sb.Utils.cheerio(html);
 		const rows = Array.from($(\"#main_table_countries tbody tr\"));
-		
+
 		if (rows.length === 0) {
 			this.data.fetching = false;
 			return {
@@ -218,7 +219,7 @@ ON DUPLICATE KEY UPDATE
 			if (country.toLowerCase().includes(\"total\")) {
 				continue;
 			}
-			
+
 			// Fixing special cases
 			if (country === \"S. Korea\") {
 				country = \"South Korea\";
@@ -236,12 +237,13 @@ ON DUPLICATE KEY UPDATE
 
 		const [confirmed, deaths, recovered] = $(\".maincounter-number\").text().replace(/,/g, \"\").split(\" \").filter(Boolean).map(Number);
 		const [mild, critical] = Array.from($(\".number-table\")).map(i => Number(i.firstChild.nodeValue.replace(/,/g, \"\")));
-
+		const lastUpdateString = $($(\".label-counter\")[0].nextSibling).text().replace(\"Last updated: \", \"\");
+		
+		this.data.update = new sb.Date(lastUpdateString);
 		this.data.total = { confirmed, deaths, recovered, critical, mild, newCases: totalNewCases, newDeaths: totalNewDeaths };
 
-		this.data.update = new sb.Date().valueOf();
 		this.data.pastebinLink = null;
-		this.data.nextReload = new sb.Date().addMinutes(30).valueOf();
+		this.data.nextReload = new sb.Date().addMinutes(15).valueOf();
 
 		this.data.fetching = false;
 	}
