@@ -82,7 +82,7 @@ VALUES
 					reply: `Incorrect format provided! Use (voice|lang):(name) instead.`
 				};
 			}
-			
+
 			param = param.toLowerCase();
 
 			if (type === \"lang\") {
@@ -94,15 +94,14 @@ VALUES
 					};
 				}
 
-				console.log(filtered);
-				newVoice = filtered[0].name;
+				newVoice = sb.Utils.randArray(filtered).name;
 			}
 			else if (type === \"voice\") {
 				if (param === \"random\") {
 					param = sb.Utils.randArray(availableVoices);
 				}
-				
-				if (!availableVoices.includes(param)) {					
+
+				if (!availableVoices.includes(param)) {
 					this.data.pending = false;
 					return {
 						reply: `Voice not found: ${param}`,
@@ -135,7 +134,7 @@ VALUES
 		text: currentText.join(\" \")
 	});
 
-	if (ttsData.length > 3) {	
+	if (ttsData.length > 3) {
 		this.data.pending = false;
 		return {
 			reply: `Your TTS was refused! You used too many voices - ${ttsData.length}, but the maximum is 3.`,
@@ -234,7 +233,7 @@ ON DUPLICATE KEY UPDATE
 					reply: `Incorrect format provided! Use (voice|lang):(name) instead.`
 				};
 			}
-			
+
 			param = param.toLowerCase();
 
 			if (type === \"lang\") {
@@ -246,15 +245,14 @@ ON DUPLICATE KEY UPDATE
 					};
 				}
 
-				console.log(filtered);
-				newVoice = filtered[0].name;
+				newVoice = sb.Utils.randArray(filtered).name;
 			}
 			else if (type === \"voice\") {
 				if (param === \"random\") {
 					param = sb.Utils.randArray(availableVoices);
 				}
-				
-				if (!availableVoices.includes(param)) {					
+
+				if (!availableVoices.includes(param)) {
 					this.data.pending = false;
 					return {
 						reply: `Voice not found: ${param}`,
@@ -287,7 +285,7 @@ ON DUPLICATE KEY UPDATE
 		text: currentText.join(\" \")
 	});
 
-	if (ttsData.length > 3) {	
+	if (ttsData.length > 3) {
 		this.data.pending = false;
 		return {
 			reply: `Your TTS was refused! You used too many voices - ${ttsData.length}, but the maximum is 3.`,
