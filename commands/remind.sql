@@ -42,10 +42,10 @@ VALUES
 		0,
 		'({
 	strings: {
-		\"public-incoming\": \"You have too many public reminders pending!\",
-		\"public-outgoing\": \"That person has too many public reminders pending!\",
-		\"private-incoming\": \"You have too many private reminders pending!\",
-		\"private-outgoing\": \"That person has too many private reminders pending!\",
+		\"public-incoming\": \"That person has too many public reminders pending!\",
+		\"public-outgoing\":  \"You have too many public reminders pending!\",
+		\"private-incoming\": \"That person has too many private reminders pending!\",
+		\"private-outgoing\": \"You have too many private reminders pending!\"
 	}
 })',
 		'(async function remind (context, ...args) {
@@ -54,7 +54,7 @@ VALUES
 		return { reply: \"Not enough info provided!\", meta: { skipCooldown: true } };
 	}
 	else if (sb.User.bots.has(context.user.ID)) {
-		deprecationNotice = \"Deprecation notice :) Bots should be using Supibot reminder API!\";
+		deprecationNotice = \"Deprecation notice: bots should be using the reminder API! \";
 	}
 
 	let targetUser = await sb.Utils.getDiscordUserDataFromMentions(args[0].toLowerCase(), context.append) || await sb.User.get(args[0], true);
@@ -163,31 +163,29 @@ VALUES
 		? sb.Utils.timeDelta(timestamp)
 		: \"when they next type in chat\";
 
-	try {
-		resultID = await sb.Reminder.create({
-			Channel: context?.channel?.ID ?? null,
-			Platform: context.platform.ID,
-			User_From: context.user.ID,
-			User_To: targetUser.ID,
-			Text: reminderText || \"(no message)\",
-			Schedule: timestamp,
-			Created: new sb.Date(),
-			Private_Message: isPrivate
-		});
-	}
-	catch (e) {
-		return { reply: e.message };
-	}
+	const result = await sb.Reminder.create({
+		Channel: context?.channel?.ID ?? null,
+		Platform: context.platform.ID,
+		User_From: context.user.ID,
+		User_To: targetUser.ID,
+		Text: reminderText || \"(no message)\",
+		Schedule: timestamp,
+		Created: new sb.Date(),
+		Private_Message: isPrivate
+	});
 
-	const reply = [
-		deprecationNotice,
-		\"I will\" + (isPrivate ? \" privately\" : \"\") + \" remind\",
-		(targetUser.ID === context.user.ID) ? \"you\" : targetUser.Name,
-		stringDelta,
-		`(ID ${resultID})`
-	].join(\" \");
-
-	return { reply: reply };
+	if (result.success) {
+		const who = (targetUser.ID === context.user.ID) ? \"you\" : targetUser.Name;
+		const method = (isPrivate) ? \"privately \" : \"\";
+		return {
+			reply: `${deprecationNotice}I will ${method}remind ${who} ${stringDelta} (ID ${result.ID})`
+		};
+	}
+	else {
+		return {
+			reply: this.staticData.strings[result.cause]
+		};
+	}
 })',
 		NULL,
 		NULL
@@ -200,7 +198,7 @@ ON DUPLICATE KEY UPDATE
 		return { reply: \"Not enough info provided!\", meta: { skipCooldown: true } };
 	}
 	else if (sb.User.bots.has(context.user.ID)) {
-		deprecationNotice = \"Deprecation notice :) Bots should be using Supibot reminder API!\";
+		deprecationNotice = \"Deprecation notice: bots should be using the reminder API! \";
 	}
 
 	let targetUser = await sb.Utils.getDiscordUserDataFromMentions(args[0].toLowerCase(), context.append) || await sb.User.get(args[0], true);
@@ -309,29 +307,27 @@ ON DUPLICATE KEY UPDATE
 		? sb.Utils.timeDelta(timestamp)
 		: \"when they next type in chat\";
 
-	try {
-		resultID = await sb.Reminder.create({
-			Channel: context?.channel?.ID ?? null,
-			Platform: context.platform.ID,
-			User_From: context.user.ID,
-			User_To: targetUser.ID,
-			Text: reminderText || \"(no message)\",
-			Schedule: timestamp,
-			Created: new sb.Date(),
-			Private_Message: isPrivate
-		});
-	}
-	catch (e) {
-		return { reply: e.message };
-	}
+	const result = await sb.Reminder.create({
+		Channel: context?.channel?.ID ?? null,
+		Platform: context.platform.ID,
+		User_From: context.user.ID,
+		User_To: targetUser.ID,
+		Text: reminderText || \"(no message)\",
+		Schedule: timestamp,
+		Created: new sb.Date(),
+		Private_Message: isPrivate
+	});
 
-	const reply = [
-		deprecationNotice,
-		\"I will\" + (isPrivate ? \" privately\" : \"\") + \" remind\",
-		(targetUser.ID === context.user.ID) ? \"you\" : targetUser.Name,
-		stringDelta,
-		`(ID ${resultID})`
-	].join(\" \");
-
-	return { reply: reply };
+	if (result.success) {
+		const who = (targetUser.ID === context.user.ID) ? \"you\" : targetUser.Name;
+		const method = (isPrivate) ? \"privately \" : \"\";
+		return {
+			reply: `${deprecationNotice}I will ${method}remind ${who} ${stringDelta} (ID ${result.ID})`
+		};
+	}
+	else {
+		return {
+			reply: this.staticData.strings[result.cause]
+		};
+	}
 })'
