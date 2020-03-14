@@ -56,14 +56,30 @@ VALUES
 
 		this.data.fetching = true;
 
-		const html = await sb.Got.instances.FakeAgent(\"https://www.worldometers.info/coronavirus/\").text();
+		let html = null;
+		try {
+			html = await sb.Got.instances.FakeAgent(\"https://www.worldometers.info/coronavirus/\").text();
+		}
+		catch (e) {
+			console.warn(\"Corona site dead?\", e);
+			this.data.fetching = false;
+			return {
+				reply: \"The data source website is currently under down! Try again later (at least 1 minute).\",
+				cooldown: {
+					user: null,
+					channel: null,
+					length: 60000
+				}
+			};
+		}
+
 		const $ = sb.Utils.cheerio(html);
 		const rows = Array.from($(\"#main_table_countries tbody tr\"));
 
 		if (rows.length === 0) {
 			this.data.fetching = false;
 			return {
-				reply: \"The data source website is currently under heavy load or down! Try again later (at least 15s).\",
+				reply: \"The data source website is currently under heavy load! Try again later (at least 15s).\",
 				cooldown: {
 					user: null,
 					channel: null,
@@ -183,14 +199,30 @@ ON DUPLICATE KEY UPDATE
 
 		this.data.fetching = true;
 
-		const html = await sb.Got.instances.FakeAgent(\"https://www.worldometers.info/coronavirus/\").text();
+		let html = null;
+		try {
+			html = await sb.Got.instances.FakeAgent(\"https://www.worldometers.info/coronavirus/\").text();
+		}
+		catch (e) {
+			console.warn(\"Corona site dead?\", e);
+			this.data.fetching = false;
+			return {
+				reply: \"The data source website is currently under down! Try again later (at least 1 minute).\",
+				cooldown: {
+					user: null,
+					channel: null,
+					length: 60000
+				}
+			};
+		}
+
 		const $ = sb.Utils.cheerio(html);
 		const rows = Array.from($(\"#main_table_countries tbody tr\"));
 
 		if (rows.length === 0) {
 			this.data.fetching = false;
 			return {
-				reply: \"The data source website is currently under heavy load or down! Try again later (at least 15s).\",
+				reply: \"The data source website is currently under heavy load! Try again later (at least 15s).\",
 				cooldown: {
 					user: null,
 					channel: null,
