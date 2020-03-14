@@ -39,8 +39,33 @@ VALUES
 		1,
 		0,
 		0,
-		'(async function chan (context, identifier) {
-	const safeSpace = Boolean(!context.channel?.NSFW);
+		'(async function chan (context, identifier, ...rest) {
+	if (!identifier) {
+		return {
+			reply: \"You must specify a board name!\"
+		};
+	}
+
+	const enabled = {
+		content: {
+			sfw: true,
+			nsfw: false
+		},
+		file: {
+			sfw: false,
+			nsfw: false
+		}
+	};
+
+	if (context.platform.Name === \"discord\") {
+		enabled.file.sfw = true;
+		enabled.content.nsfw = true;
+
+		if (context.channel?.NSFW) {
+			enabled.file.nsfw = true;
+		}
+	}
+
 	let resultType = (context.channel?.NSFW)
 		? \"file\"
 		: \"content\";
@@ -49,10 +74,10 @@ VALUES
 		resultType = \"content\";
 	}
 	else if (context.invocation === \"imagechan\" || context.invocation === \"filechan\") {
-		if (safeSpace) {
-			return { 
-				reply: \"You can\'t fetch images in this channel!\"
-			};
+		if (!enabled.file.sfw && !enabled.file.nsfw) {
+			return {
+				reply: \"You cannot query for images here!\"
+			}
 		}
 
 		resultType = \"file\";
@@ -70,28 +95,18 @@ VALUES
 	}
 
 	let board = null;
-	if (identifier) {
-		identifier = identifier.toLowerCase().replace(/\\//g, \"\");
-		board = this.data.boards.find(i => i.name === identifier);
+	identifier = identifier.toLowerCase().replace(/\\//g, \"\");
+	board = this.data.boards.find(i => i.name === identifier);
 
-		if (!board) {
-			return {
-				reply: \"Couldn\'t match your board! Please only use their abbreviations.\"
-			};
-		}
-		if (safeSpace && board.nsfw) {
-			return {
-				reply: \"That board is not available in SFW channels!\"
-			};
-		}
+	if (!board) {
+		return {
+			reply: \"Couldn\'t match your board! Use their abbreviations only.\"
+		};
 	}
-	else {
-		if (safeSpace) {
-			board = sb.Utils.randArray(this.data.boards.filter(i => !i.nsfw));
-		}
-		else {
-			board = sb.Utils.randArray(this.data.boards);
-		}
+	else if (board.nsfw && !enabled[resultType].nsfw) {
+		return {
+			reply: \"You can\'t query this NSFW board for that result type here!\"
+		};
 	}
 
 	const now = sb.Date.now();
@@ -103,17 +118,31 @@ VALUES
 			.filter(i => !i.sticky && !i.closed && i.replies >= 5)
 			.map(i => ({
 				ID: i.no,
-				content: sb.Utils.fixHTML(`${i.sub ?? \"\"}${i.com ?? \"\"}`),
+				content: sb.Utils.fixHTML(sb.Utils.removeHTML(`${i.sub ?? \"\"}${i.com ?? \"\"}`)),
 				modified: new sb.Date(i.last_modified),
 				created: new sb.Date(i.tim),
 				posts: [],
 				postsExpiration: 0
 			}));
 
-		board.postsExpiration = new sb.Date().addHours(1).valueOf();
+		board.threadsExpiration = new sb.Date().addHours(1).valueOf();
 	}
 
-	const thread = sb.Utils.randArray(board.threads);
+	let thread = null;
+	if (rest.length > 0) {
+		const query = rest.join(\" \").toLowerCase();
+		thread = sb.Utils.randArray(board.threads.filter(i => i.content.toLowerCase().includes(query)));
+
+		if (!thread) {
+			return {
+				reply: \"No threads found for your query!\"
+			};
+		}
+	}
+	else {
+		thread = sb.Utils.randArray(board.threads);
+	}
+
 	if (thread.posts.length === 0 || thread.postsExpiration < now) {
 		const data = await sb.Got(`https://a.4cdn.org/${board.name}/thread/${thread.ID}.json`).json();
 		thread.posts = data.posts.map(i => ({
@@ -126,13 +155,13 @@ VALUES
 				: null
 		}));
 
-		thread.postsExpiration = new sb.Date().addMinutes(5).valueOf();
+		thread.postsExpiration = new sb.Date().addMinutes(10).valueOf();
 	}
 
 	const eligiblePosts = thread.posts.filter(i => i[resultType]);
 	const post = sb.Utils.randArray(eligiblePosts);
 	return {
-		reply: post[resultType]
+		reply: `${post.ID}: ${post[resultType]}`
 	};
 })',
 		NULL,
@@ -140,8 +169,33 @@ VALUES
 	)
 
 ON DUPLICATE KEY UPDATE
-	Code = '(async function chan (context, identifier) {
-	const safeSpace = Boolean(!context.channel?.NSFW);
+	Code = '(async function chan (context, identifier, ...rest) {
+	if (!identifier) {
+		return {
+			reply: \"You must specify a board name!\"
+		};
+	}
+
+	const enabled = {
+		content: {
+			sfw: true,
+			nsfw: false
+		},
+		file: {
+			sfw: false,
+			nsfw: false
+		}
+	};
+
+	if (context.platform.Name === \"discord\") {
+		enabled.file.sfw = true;
+		enabled.content.nsfw = true;
+
+		if (context.channel?.NSFW) {
+			enabled.file.nsfw = true;
+		}
+	}
+
 	let resultType = (context.channel?.NSFW)
 		? \"file\"
 		: \"content\";
@@ -150,10 +204,10 @@ ON DUPLICATE KEY UPDATE
 		resultType = \"content\";
 	}
 	else if (context.invocation === \"imagechan\" || context.invocation === \"filechan\") {
-		if (safeSpace) {
-			return { 
-				reply: \"You can\'t fetch images in this channel!\"
-			};
+		if (!enabled.file.sfw && !enabled.file.nsfw) {
+			return {
+				reply: \"You cannot query for images here!\"
+			}
 		}
 
 		resultType = \"file\";
@@ -171,28 +225,18 @@ ON DUPLICATE KEY UPDATE
 	}
 
 	let board = null;
-	if (identifier) {
-		identifier = identifier.toLowerCase().replace(/\\//g, \"\");
-		board = this.data.boards.find(i => i.name === identifier);
+	identifier = identifier.toLowerCase().replace(/\\//g, \"\");
+	board = this.data.boards.find(i => i.name === identifier);
 
-		if (!board) {
-			return {
-				reply: \"Couldn\'t match your board! Please only use their abbreviations.\"
-			};
-		}
-		if (safeSpace && board.nsfw) {
-			return {
-				reply: \"That board is not available in SFW channels!\"
-			};
-		}
+	if (!board) {
+		return {
+			reply: \"Couldn\'t match your board! Use their abbreviations only.\"
+		};
 	}
-	else {
-		if (safeSpace) {
-			board = sb.Utils.randArray(this.data.boards.filter(i => !i.nsfw));
-		}
-		else {
-			board = sb.Utils.randArray(this.data.boards);
-		}
+	else if (board.nsfw && !enabled[resultType].nsfw) {
+		return {
+			reply: \"You can\'t query this NSFW board for that result type here!\"
+		};
 	}
 
 	const now = sb.Date.now();
@@ -204,17 +248,31 @@ ON DUPLICATE KEY UPDATE
 			.filter(i => !i.sticky && !i.closed && i.replies >= 5)
 			.map(i => ({
 				ID: i.no,
-				content: sb.Utils.fixHTML(`${i.sub ?? \"\"}${i.com ?? \"\"}`),
+				content: sb.Utils.fixHTML(sb.Utils.removeHTML(`${i.sub ?? \"\"}${i.com ?? \"\"}`)),
 				modified: new sb.Date(i.last_modified),
 				created: new sb.Date(i.tim),
 				posts: [],
 				postsExpiration: 0
 			}));
 
-		board.postsExpiration = new sb.Date().addHours(1).valueOf();
+		board.threadsExpiration = new sb.Date().addHours(1).valueOf();
 	}
 
-	const thread = sb.Utils.randArray(board.threads);
+	let thread = null;
+	if (rest.length > 0) {
+		const query = rest.join(\" \").toLowerCase();
+		thread = sb.Utils.randArray(board.threads.filter(i => i.content.toLowerCase().includes(query)));
+
+		if (!thread) {
+			return {
+				reply: \"No threads found for your query!\"
+			};
+		}
+	}
+	else {
+		thread = sb.Utils.randArray(board.threads);
+	}
+
 	if (thread.posts.length === 0 || thread.postsExpiration < now) {
 		const data = await sb.Got(`https://a.4cdn.org/${board.name}/thread/${thread.ID}.json`).json();
 		thread.posts = data.posts.map(i => ({
@@ -227,12 +285,12 @@ ON DUPLICATE KEY UPDATE
 				: null
 		}));
 
-		thread.postsExpiration = new sb.Date().addMinutes(5).valueOf();
+		thread.postsExpiration = new sb.Date().addMinutes(10).valueOf();
 	}
 
 	const eligiblePosts = thread.posts.filter(i => i[resultType]);
 	const post = sb.Utils.randArray(eligiblePosts);
 	return {
-		reply: post[resultType]
+		reply: `${post.ID}: ${post[resultType]}`
 	};
 })'
