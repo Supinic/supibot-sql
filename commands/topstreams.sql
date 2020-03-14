@@ -17,6 +17,7 @@ INSERT INTO
 		Ping,
 		Pipeable,
 		Archived,
+		Static_Data,
 		Code,
 		Examples,
 		Dynamic_Description
@@ -39,6 +40,7 @@ VALUES
 		1,
 		1,
 		0,
+		NULL,
 		'(async function topStreams (context, ...args) {
 	const params = new sb.URLParams(\"%20\").set(\"limit\", 10);
 	if (args.length > 0) {

@@ -17,6 +17,7 @@ INSERT INTO
 		Ping,
 		Pipeable,
 		Archived,
+		Static_Data,
 		Code,
 		Examples,
 		Dynamic_Description
@@ -39,6 +40,7 @@ VALUES
 		1,
 		1,
 		0,
+		NULL,
 		'(async function _8ball () {
 	return {
 		reply: sb.Utils.randArray(sb.Config.get(\"8_BALL_RESPONSES\"))

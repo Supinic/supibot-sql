@@ -17,6 +17,7 @@ INSERT INTO
 		Ping,
 		Pipeable,
 		Archived,
+		Static_Data,
 		Code,
 		Examples,
 		Dynamic_Description
@@ -39,6 +40,7 @@ VALUES
 		1,
 		1,
 		0,
+		NULL,
 		'(async function countLineTotal () {
 	let preciseLines = 0;
 	for (const channel of sb.Channel.data.filter(i => i.Type !== \"Inactive\")) {

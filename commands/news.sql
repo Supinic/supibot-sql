@@ -17,6 +17,7 @@ INSERT INTO
 		Ping,
 		Pipeable,
 		Archived,
+		Static_Data,
 		Code,
 		Examples,
 		Dynamic_Description
@@ -39,6 +40,7 @@ VALUES
 		1,
 		1,
 		0,
+		NULL,
 		'(async function news (context, ...rest) {
 	const params = new sb.URLParams().set(\"language\", \"en\");
 	if (rest[0] && sb.ExtraNews.check(rest[0])) {

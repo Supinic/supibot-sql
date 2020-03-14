@@ -17,6 +17,7 @@ INSERT INTO
 		Ping,
 		Pipeable,
 		Archived,
+		Static_Data,
 		Code,
 		Examples,
 		Dynamic_Description
@@ -39,6 +40,7 @@ VALUES
 		1,
 		1,
 		0,
+		NULL,
 		'(async function when (context) {
 	const list = sb.VideoLANConnector.videoQueue;
 	const current = await sb.VideoLANConnector.currentlyPlayingData();

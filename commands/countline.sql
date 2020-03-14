@@ -17,6 +17,7 @@ INSERT INTO
 		Ping,
 		Pipeable,
 		Archived,
+		Static_Data,
 		Code,
 		Examples,
 		Dynamic_Description
@@ -39,6 +40,7 @@ VALUES
 		1,
 		1,
 		0,
+		NULL,
 		'(async function countLine (context, user) {
 	if (user) {
 		user = await sb.Utils.getDiscordUserDataFromMentions(user, context.append) || await sb.User.get(user, true);

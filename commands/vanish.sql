@@ -17,6 +17,7 @@ INSERT INTO
 		Ping,
 		Pipeable,
 		Archived,
+		Static_Data,
 		Code,
 		Examples,
 		Dynamic_Description
@@ -39,6 +40,7 @@ VALUES
 		0,
 		1,
 		0,
+		NULL,
 		'(async function vanish (context) {
 	if (context.channel === null || context.channel.Mode !== \"Moderator\") {
 		return { reply: \"You cannot vanish here!\" };

@@ -17,6 +17,7 @@ INSERT INTO
 		Ping,
 		Pipeable,
 		Archived,
+		Static_Data,
 		Code,
 		Examples,
 		Dynamic_Description
@@ -39,6 +40,7 @@ VALUES
 		1,
 		1,
 		0,
+		NULL,
 		'(async function playSound (context, playsound) {
 	if (!sb.Config.get(\"PLAYSOUNDS_ENABLED\")) {
 		return { reply: \"Playsounds are currently disabled!\" };

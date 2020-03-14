@@ -17,6 +17,7 @@ INSERT INTO
 		Ping,
 		Pipeable,
 		Archived,
+		Static_Data,
 		Code,
 		Examples,
 		Dynamic_Description
@@ -39,6 +40,7 @@ VALUES
 		1,
 		1,
 		0,
+		NULL,
 		'async () => {
 	// According to Murray & Teare (1993), the probability of an American silver nickel landing on its edge is around 1 in 6000 tosses	
 	const number =  sb.Utils.random(1, 6000);

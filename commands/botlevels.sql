@@ -17,6 +17,7 @@ INSERT INTO
 		Ping,
 		Pipeable,
 		Archived,
+		Static_Data,
 		Code,
 		Examples,
 		Dynamic_Description
@@ -39,6 +40,7 @@ VALUES
 		0,
 		0,
 		0,
+		NULL,
 		'async () => ({ reply: \"Bots: https://supinic.com/bot/channel-bots || Levels: https://supinic.com/bot/channel-bots/levels\" })',
 		NULL,
 		NULL

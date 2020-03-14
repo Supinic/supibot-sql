@@ -17,6 +17,7 @@ INSERT INTO
 		Ping,
 		Pipeable,
 		Archived,
+		Static_Data,
 		Code,
 		Examples,
 		Dynamic_Description
@@ -39,6 +40,7 @@ VALUES
 		1,
 		1,
 		1,
+		NULL,
 		'(async function probe (context, targetUser) {
 	if (!targetUser) {
 		return { reply: \"No user provided!\", meta: { skipCooldown: true } };

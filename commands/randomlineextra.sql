@@ -17,6 +17,7 @@ INSERT INTO
 		Ping,
 		Pipeable,
 		Archived,
+		Static_Data,
 		Code,
 		Examples,
 		Dynamic_Description
@@ -39,6 +40,7 @@ VALUES
 		0,
 		1,
 		0,
+		NULL,
 		'(async function randomLineExtra () {
 	const channels = sb.Config.get(\"EXTRA_RANDOM_LINE_CHANNELS\");
 	const [channel, emoji] = sb.Utils.randArray(Object.entries(channels));

@@ -17,6 +17,7 @@ INSERT INTO
 		Ping,
 		Pipeable,
 		Archived,
+		Static_Data,
 		Code,
 		Examples,
 		Dynamic_Description
@@ -39,6 +40,7 @@ VALUES
 		1,
 		1,
 		0,
+		NULL,
 		'(async function whatEmoteIsIt (context, emote) {
 	const data = await sb.Got.instances.Leppunen(\"twitch/emotes/\" + emote).json();
 	const {error, channel, channelid, emoteid, emotecode, tier} = data;

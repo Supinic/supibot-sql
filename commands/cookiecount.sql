@@ -17,6 +17,7 @@ INSERT INTO
 		Ping,
 		Pipeable,
 		Archived,
+		Static_Data,
 		Code,
 		Examples,
 		Dynamic_Description
@@ -39,6 +40,7 @@ VALUES
 		1,
 		1,
 		0,
+		NULL,
 		'(async function cookieCount (context, user) {
 	if (context.platform.Name === \"discord\" && user && user.includes(\"@\")) {
 		user = await sb.Utils.getDiscordUserDataFromMentions(user, context.append) || context.user;

@@ -17,6 +17,7 @@ INSERT INTO
 		Ping,
 		Pipeable,
 		Archived,
+		Static_Data,
 		Code,
 		Examples,
 		Dynamic_Description
@@ -39,6 +40,7 @@ VALUES
 		1,
 		1,
 		0,
+		NULL,
 		'async (extra, emote, size = 3, delay = 250) => {
 	if (extra.channel.Mode === \"Write\") {
 		return { reply: \"Cannot create pyramids in a non-VIP/Moderator chat!\" };

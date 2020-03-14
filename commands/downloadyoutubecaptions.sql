@@ -17,6 +17,7 @@ INSERT INTO
 		Ping,
 		Pipeable,
 		Archived,
+		Static_Data,
 		Code,
 		Examples,
 		Dynamic_Description
@@ -39,6 +40,7 @@ VALUES
 		1,
 		1,
 		1,
+		NULL,
 		'(async function downloadYoutubeCaptions (context, video) {
 	if (!video || !video.includes(\"youtu\")) { // @todo - put link parser verification here
 		return {

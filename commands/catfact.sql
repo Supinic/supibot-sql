@@ -17,6 +17,7 @@ INSERT INTO
 		Ping,
 		Pipeable,
 		Archived,
+		Static_Data,
 		Code,
 		Examples,
 		Dynamic_Description
@@ -39,6 +40,7 @@ VALUES
 		0,
 		1,
 		1,
+		NULL,
 		'(async function randomCatFact () {
 	const url = \"https://catfact.ninja/fact\";
 	const data = JSON.parse(await sb.Utils.request(url));

@@ -17,6 +17,7 @@ INSERT INTO
 		Ping,
 		Pipeable,
 		Archived,
+		Static_Data,
 		Code,
 		Examples,
 		Dynamic_Description
@@ -39,6 +40,7 @@ VALUES
 		1,
 		1,
 		0,
+		NULL,
 		'(async function uname () {
 	const data = await sb.Got.instances.GitHub(\"repos/supinic/supibot/commits\").json();
 	const commits = data.sort((a, b) => new sb.Date(b.commit.author.date) - new sb.Date(a.commit.author.date));

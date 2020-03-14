@@ -17,6 +17,7 @@ INSERT INTO
 		Ping,
 		Pipeable,
 		Archived,
+		Static_Data,
 		Code,
 		Examples,
 		Dynamic_Description
@@ -39,6 +40,7 @@ VALUES
 		1,
 		1,
 		0,
+		NULL,
 		'(async function topGames () {
 	const data = await sb.Got.instances.Twitch.Kraken(\"games/top\").json();
 	if (!Array.isArray(data.top)) {

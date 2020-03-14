@@ -17,6 +17,7 @@ INSERT INTO
 		Ping,
 		Pipeable,
 		Archived,
+		Static_Data,
 		Code,
 		Examples,
 		Dynamic_Description
@@ -39,6 +40,7 @@ VALUES
 		1,
 		1,
 		1,
+		NULL,
 		'async (extra, ID) => {
 	if (!ID  || !Number(ID)) {
 		return { reply: \"No or invalid ID provided\" };

@@ -17,6 +17,7 @@ INSERT INTO
 		Ping,
 		Pipeable,
 		Archived,
+		Static_Data,
 		Code,
 		Examples,
 		Dynamic_Description
@@ -39,6 +40,7 @@ VALUES
 		1,
 		1,
 		1,
+		NULL,
 		'async () => {
 	const url = \"https://dog.ceo/api/breeds/image/random\";
 	const data = JSON.parse(await sb.Utils.request(url));

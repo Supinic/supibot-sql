@@ -17,6 +17,7 @@ INSERT INTO
 		Ping,
 		Pipeable,
 		Archived,
+		Static_Data,
 		Code,
 		Examples,
 		Dynamic_Description
@@ -39,6 +40,7 @@ VALUES
 		1,
 		0,
 		0,
+		NULL,
 		'(async function pipe (context, ...args) {
 	const invocations = args.join(\" \").split(\"|\").map(i => i.trim());
 	if (!context.externalPipe && invocations.length < 2) {

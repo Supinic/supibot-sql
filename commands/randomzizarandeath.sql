@@ -17,6 +17,7 @@ INSERT INTO
 		Ping,
 		Pipeable,
 		Archived,
+		Static_Data,
 		Code,
 		Examples,
 		Dynamic_Description
@@ -39,6 +40,7 @@ VALUES
 		1,
 		1,
 		0,
+		NULL,
 		'(async function randomZizaranDeath () {
 	if (!this.data.videoList) {
 		const playlistID = \"PLbpExg9_Xax24tS9rNt8IP49VFFaDghAG\";

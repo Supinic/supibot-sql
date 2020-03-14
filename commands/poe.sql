@@ -17,6 +17,7 @@ INSERT INTO
 		Ping,
 		Pipeable,
 		Archived,
+		Static_Data,
 		Code,
 		Examples,
 		Dynamic_Description
@@ -39,6 +40,7 @@ VALUES
 		1,
 		1,
 		0,
+		NULL,
 		'(async function poe (context, league, ...item) {
 	const now = new sb.Date();
 	const patching = new sb.Date(\"2020-03-13 18:00 GMT+1\")

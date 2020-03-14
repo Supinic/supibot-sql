@@ -17,6 +17,7 @@ INSERT INTO
 		Ping,
 		Pipeable,
 		Archived,
+		Static_Data,
 		Code,
 		Examples,
 		Dynamic_Description
@@ -39,6 +40,7 @@ VALUES
 		1,
 		1,
 		0,
+		NULL,
 		'(async function randomClip (context, ...args) {
 	let channel = context.channel?.Name ?? null;
 	if (args.length > 0 && !args[0].includes(\":\")) {

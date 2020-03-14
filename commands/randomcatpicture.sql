@@ -17,6 +17,7 @@ INSERT INTO
 		Ping,
 		Pipeable,
 		Archived,
+		Static_Data,
 		Code,
 		Examples,
 		Dynamic_Description
@@ -39,6 +40,7 @@ VALUES
 		1,
 		1,
 		1,
+		NULL,
 		'async () => {
 	const url = \"https://api.thecatapi.com/v1/images/search\";
 	const data = JSON.parse(await sb.Utils.request(url));

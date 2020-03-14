@@ -17,6 +17,7 @@ INSERT INTO
 		Ping,
 		Pipeable,
 		Archived,
+		Static_Data,
 		Code,
 		Examples,
 		Dynamic_Description
@@ -39,6 +40,7 @@ VALUES
 		0,
 		1,
 		0,
+		NULL,
 		'async (extra) => {
 	return {
 		reply: sb.Utils.randArray(sb.Config.get(\"FORSEN_CD\")) + \" \" + extra.invocation

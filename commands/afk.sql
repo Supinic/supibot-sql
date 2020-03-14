@@ -17,6 +17,7 @@ INSERT INTO
 		Ping,
 		Pipeable,
 		Archived,
+		Static_Data,
 		Code,
 		Examples,
 		Dynamic_Description
@@ -39,6 +40,7 @@ VALUES
 		0,
 		1,
 		0,
+		NULL,
 		'(async function afk (context, ...args) {
 	if (context.privateMessage && sb.AwayFromKeyboard.data.find(i => i.User_Alias === context.user.ID)) {
 		return {

@@ -17,6 +17,7 @@ INSERT INTO
 		Ping,
 		Pipeable,
 		Archived,
+		Static_Data,
 		Code,
 		Examples,
 		Dynamic_Description
@@ -39,6 +40,7 @@ VALUES
 		1,
 		1,
 		0,
+		NULL,
 		'(async function discord (context) {
 	return { reply: \"Join the Hackerman club today! Now with subscriber emotes supiniOkay https://discord.gg/wHWjRzp\" };
 })',

@@ -17,6 +17,7 @@ INSERT INTO
 		Ping,
 		Pipeable,
 		Archived,
+		Static_Data,
 		Code,
 		Examples,
 		Dynamic_Description
@@ -39,6 +40,7 @@ VALUES
 		0,
 		1,
 		0,
+		NULL,
 		'async (extra, user, emote) => {
 	if (!user || user.toLowerCase() === extra.user.Name) {
 		return { reply: \"You can\'t really kiss yourself 😕\" };
