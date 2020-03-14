@@ -40,7 +40,14 @@ VALUES
 		1,
 		1,
 		0,
-		NULL,
+		'({
+	strings: {
+		\"public-incoming\": \"You have too many public reminders pending!\",
+		\"public-outgoing\": \"That person has too many public reminders pending!\",
+		\"private-incoming\": \"You have too many private reminders pending!\",
+		\"private-outgoing\": \"That person has too many private reminders pending!\",
+	}
+})',
 		'(async function remind (context, ...args) {
 	let deprecationNotice = \"\";
 	if (args.length === 0) {
