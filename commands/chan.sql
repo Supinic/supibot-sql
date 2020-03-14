@@ -162,9 +162,18 @@ VALUES
 
 	const eligiblePosts = thread.posts.filter(i => i[resultType]);
 	const post = sb.Utils.randArray(eligiblePosts);
-	return {
-		reply: `${post.ID}: ${post[resultType]}`
-	};
+	
+	if (resultType === \"file\") {
+		return {
+			reply: `${post.ID}: ${post.file} ${post.content}`
+		};
+	}
+	else if (resultType === \"content\") {
+		return {
+			reply: `${post.ID}: ${post.content}`
+		};		
+	}
+	
 })',
 		NULL,
 		NULL
@@ -292,7 +301,16 @@ ON DUPLICATE KEY UPDATE
 
 	const eligiblePosts = thread.posts.filter(i => i[resultType]);
 	const post = sb.Utils.randArray(eligiblePosts);
-	return {
-		reply: `${post.ID}: ${post[resultType]}`
-	};
+	
+	if (resultType === \"file\") {
+		return {
+			reply: `${post.ID}: ${post.file} ${post.content}`
+		};
+	}
+	else if (resultType === \"content\") {
+		return {
+			reply: `${post.ID}: ${post.content}`
+		};		
+	}
+	
 })'
