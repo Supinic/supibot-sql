@@ -151,7 +151,7 @@ VALUES
 			ID: i.no,
 			author: i.name,
 			content: sb.Utils.fixHTML(sb.Utils.removeHTML(i.com ?? \"\")),
-			created: new sb.Date(i.tim),
+			created: new sb.Date(i.time * 1000),
 			file: (typeof i.filename !== \"undefined\")
 				? `https://i.4cdn.org/${board.name}/${i.tim}${i.ext}`
 				: null
@@ -162,18 +162,19 @@ VALUES
 
 	const eligiblePosts = thread.posts.filter(i => i[resultType]);
 	const post = sb.Utils.randArray(eligiblePosts);
-	
+	const delta = sb.Utils.timeDelta(post.created);
+
 	if (resultType === \"file\") {
 		return {
-			reply: `${post.ID}: ${post.file} ${post.content}`
+			reply: `${post.ID} (posted ${delta}): ${post.file} ${post.content}`
 		};
 	}
 	else if (resultType === \"content\") {
 		return {
-			reply: `${post.ID}: ${post.content}`
-		};		
+			reply: `${post.ID} (posted ${delta}): ${post.content}`
+		};
 	}
-	
+
 })',
 		NULL,
 		NULL
@@ -290,7 +291,7 @@ ON DUPLICATE KEY UPDATE
 			ID: i.no,
 			author: i.name,
 			content: sb.Utils.fixHTML(sb.Utils.removeHTML(i.com ?? \"\")),
-			created: new sb.Date(i.tim),
+			created: new sb.Date(i.time * 1000),
 			file: (typeof i.filename !== \"undefined\")
 				? `https://i.4cdn.org/${board.name}/${i.tim}${i.ext}`
 				: null
@@ -301,16 +302,17 @@ ON DUPLICATE KEY UPDATE
 
 	const eligiblePosts = thread.posts.filter(i => i[resultType]);
 	const post = sb.Utils.randArray(eligiblePosts);
-	
+	const delta = sb.Utils.timeDelta(post.created);
+
 	if (resultType === \"file\") {
 		return {
-			reply: `${post.ID}: ${post.file} ${post.content}`
+			reply: `${post.ID} (posted ${delta}): ${post.file} ${post.content}`
 		};
 	}
 	else if (resultType === \"content\") {
 		return {
-			reply: `${post.ID}: ${post.content}`
-		};		
+			reply: `${post.ID} (posted ${delta}): ${post.content}`
+		};
 	}
-	
+
 })'
