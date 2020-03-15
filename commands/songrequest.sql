@@ -40,7 +40,9 @@ VALUES
 		1,
 		1,
 		0,
-		NULL,
+		'({
+	videoLimit: 5
+})',
 		'(async function songRequest (context, ...args) {
 	const state = sb.Config.get(\"SONG_REQUESTS_STATE\");
 	if (state === \"off\") {
@@ -56,6 +58,14 @@ VALUES
 	}
 	else if (args.length === 0) {
 		return { reply: \"You must search for a link or a video description!\" };
+	}
+
+	const { vlcID: playingID } = await sb.VideoLANConnector.currentlyPlayingData();
+	const userRequests = sb.VideoLANConnector.videoQueue.filter(i => i.vlcID >= playingID && i.user === context.user.ID).length;
+	if (userRequests >= this.staticData.videoLimit) {
+		return {
+			reply: `Can only request up to ${this.staticData.videoLimit} videos in the queue!`
+		}
 	}
 
 	const url = args.join(\" \");
@@ -183,6 +193,14 @@ ON DUPLICATE KEY UPDATE
 	}
 	else if (args.length === 0) {
 		return { reply: \"You must search for a link or a video description!\" };
+	}
+
+	const { vlcID: playingID } = await sb.VideoLANConnector.currentlyPlayingData();
+	const userRequests = sb.VideoLANConnector.videoQueue.filter(i => i.vlcID >= playingID && i.user === context.user.ID).length;
+	if (userRequests >= this.staticData.videoLimit) {
+		return {
+			reply: `Can only request up to ${this.staticData.videoLimit} videos in the queue!`
+		}
 	}
 
 	const url = args.join(\" \");
