@@ -41,6 +41,7 @@ VALUES
 		1,
 		0,
 		'({
+	repeats: 5,
 	forsenE: [
 		\"Is the drdisrespect shooting connected to call of duty? Correct me if Im wrong but isn’t the scene just filled with wannabe thugs console shitters?\",
 		\"Not sure if I formulated bad or people didnt get it. Im asking if its likely to be a hardcore call of duty nerd.\",
@@ -63,9 +64,17 @@ VALUES
 		\"Twitch seems to be having some issues right now, pressed go live twice but no one can watch. will be back if they fix it\"
 	]
 })',
-		'(async function forsenE () {
+		'(async function forsenE (context) {
+	if (!this.data.previousPosts) {
+		this.data.previousPosts = [];
+	}
+
+	const post = sb.Utils.randArray(this.staticData.forsenE.filter(i => !this.data.previousPosts.includes(i)));
+	this.data.previousPosts.unshift(post);
+	this.data.previousPosts.splice(this.staticData.repeats);
+
 	return {
-		reply: sb.Utils.randArray(this.staticData.forsenE) + \" forsenE\"
+		reply: post + \" forsenE\"
 	};
 })',
 		'No arguments.',
@@ -73,8 +82,16 @@ VALUES
 	)
 
 ON DUPLICATE KEY UPDATE
-	Code = '(async function forsenE () {
+	Code = '(async function forsenE (context) {
+	if (!this.data.previousPosts) {
+		this.data.previousPosts = [];
+	}
+
+	const post = sb.Utils.randArray(this.staticData.forsenE.filter(i => !this.data.previousPosts.includes(i)));
+	this.data.previousPosts.unshift(post);
+	this.data.previousPosts.splice(this.staticData.repeats);
+
 	return {
-		reply: sb.Utils.randArray(this.staticData.forsenE) + \" forsenE\"
+		reply: post + \" forsenE\"
 	};
 })'

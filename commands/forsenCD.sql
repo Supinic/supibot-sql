@@ -41,6 +41,7 @@ VALUES
 		1,
 		0,
 		'({
+	repeats: 5,
 	forsenCD: [
 		\"Mishaps lead to recaps. Full vid coming soon. P.S. - My director Alex was fired.\",
 		\"“If you hold the door open for someone and there’s no acknowledgement... remind them.”\",
@@ -96,9 +97,17 @@ VALUES
 	]
 })',
 		'(async function forsenCD (context) {
-	return {
-		reply: sb.Utils.randArray(this.staticData.forsenCD) + \" \" + context.invocation
+	if (!this.data.previousPosts) {
+		this.data.previousPosts = [];
 	}
+
+	const post = sb.Utils.randArray(this.staticData.forsenCD.filter(i => !this.data.previousPosts.includes(i)));
+	this.data.previousPosts.unshift(post);
+	this.data.previousPosts.splice(this.staticData.repeats);
+
+	return {
+		reply: post + \" \" + context.invocation
+	};
 })',
 		'No arguments.',
 		NULL
@@ -106,7 +115,15 @@ VALUES
 
 ON DUPLICATE KEY UPDATE
 	Code = '(async function forsenCD (context) {
-	return {
-		reply: sb.Utils.randArray(this.staticData.forsenCD) + \" \" + context.invocation
+	if (!this.data.previousPosts) {
+		this.data.previousPosts = [];
 	}
+
+	const post = sb.Utils.randArray(this.staticData.forsenCD.filter(i => !this.data.previousPosts.includes(i)));
+	this.data.previousPosts.unshift(post);
+	this.data.previousPosts.splice(this.staticData.repeats);
+
+	return {
+		reply: post + \" \" + context.invocation
+	};
 })'
