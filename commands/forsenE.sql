@@ -62,6 +62,11 @@ VALUES
 		\"So my power just died right after the Ouija board answered “stop now” . Guess we are not playing that shit anymore.\",
 		\"ISP being a cunt today. Ill be back tomorrow\",
 		\"Twitch seems to be having some issues right now, pressed go live twice but no one can watch. will be back if they fix it\"
+	],
+	notes: [
+		`Source for the \"b.\" tweet: https://twitter.com/Forsen/status/1057549668253659136`,
+		`Source for the Cyborgmatt tweet (tweeted at DotA guy for access to league autochess) https://i.imgur.com/sILIqzj.png`,
+		`Source for the GFMB quote: https://i.nuuls.com/umDfs.png`
 	]
 })',
 		'(async function forsenE (context) {
