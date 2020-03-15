@@ -161,13 +161,18 @@ VALUES
 
 		let when = \"right now!\";
 		const status = await sb.VideoLANConnector.status();
-		
-		if (status.currentplid !== -1 && status.currentplid !== id && status.time !== 0) {
-			const { time, length } = status;
-			const inQueue = sb.VideoLANConnector.videoQueue.filter(i => i.vlcID > status.currentplid);
-			const totalTimeRemaining = (length - time) + inQueue.reduce((acc, cur) => acc += cur.length, 0);
 
-			when = sb.Utils.timeDelta(new sb.Date().addSeconds(totalTimeRemaining));
+		if (status.currentplid !== -1 && status.currentplid !== id && status.time !== 0) {
+			const { vlcID: nowID } = await sb.VideoLANConnector.currentlyPlayingData()
+			const { time, length } = status;
+			
+			const playingDate = new sb.Date().addSeconds(length - time);
+			const inQueue = sb.VideoLANConnector.videoQueue.filter(i => i.vlcID > nowID);
+			for (const { length } of inQueue) {
+				playingDate.addSeconds(length);
+			}			
+			
+			when = sb.Utils.timeDelta(playingDate);
 		}
 
 		return {
@@ -298,13 +303,18 @@ ON DUPLICATE KEY UPDATE
 
 		let when = \"right now!\";
 		const status = await sb.VideoLANConnector.status();
-		
-		if (status.currentplid !== -1 && status.currentplid !== id && status.time !== 0) {
-			const { time, length } = status;
-			const inQueue = sb.VideoLANConnector.videoQueue.filter(i => i.vlcID > status.currentplid);
-			const totalTimeRemaining = (length - time) + inQueue.reduce((acc, cur) => acc += cur.length, 0);
 
-			when = sb.Utils.timeDelta(new sb.Date().addSeconds(totalTimeRemaining));
+		if (status.currentplid !== -1 && status.currentplid !== id && status.time !== 0) {
+			const { vlcID: nowID } = await sb.VideoLANConnector.currentlyPlayingData()
+			const { time, length } = status;
+			
+			const playingDate = new sb.Date().addSeconds(length - time);
+			const inQueue = sb.VideoLANConnector.videoQueue.filter(i => i.vlcID > nowID);
+			for (const { length } of inQueue) {
+				playingDate.addSeconds(length);
+			}			
+			
+			when = sb.Utils.timeDelta(playingDate);
 		}
 
 		return {
