@@ -67,6 +67,18 @@ VALUES
 		\"Commands used\": sb.Runtime.commandsUsed
 	};
 
+	if (context.channel) {
+		const type = context.channel.Banphrase_API_Type;
+		const url = context.channel.Banphrase_API_URL;
+
+		if (type && url) {
+			data[\"Banphrase API\"] = `Using ${type} API: ${url}.`;
+		}
+		else {
+			data[\"Banphrase API\"] = \"Not connected.\"
+		}
+	}	
+
 	return {
 		reply: pong + \" \" + Object.entries(data).map(([name, value]) => name + \": \" + value).join(\"; \")
 	};
@@ -111,6 +123,18 @@ ON DUPLICATE KEY UPDATE
 		\"Latency to TMI\": (endLatency[0] * 1e3 + endLatency[1] / 1e6) + \" ms\",
 		\"Commands used\": sb.Runtime.commandsUsed
 	};
+
+	if (context.channel) {
+		const type = context.channel.Banphrase_API_Type;
+		const url = context.channel.Banphrase_API_URL;
+
+		if (type && url) {
+			data[\"Banphrase API\"] = `Using ${type} API: ${url}.`;
+		}
+		else {
+			data[\"Banphrase API\"] = \"Not connected.\"
+		}
+	}	
 
 	return {
 		reply: pong + \" \" + Object.entries(data).map(([name, value]) => name + \": \" + value).join(\"; \")
