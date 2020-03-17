@@ -50,8 +50,8 @@ VALUES
 
 	if (!first || !second) {
 		return {
-			reply: \"Both currencies must be provided!\",
-			meta: { skipCooldown: true }
+			reply: \"Invalid syntax! Consult the command\'s help for more info.\",
+			cooldown: 2500
 		};
 	}
 
@@ -72,7 +72,7 @@ VALUES
 	amount = amount.replace(/[kmbt]/gi, \"\").replace(/,/g, \".\");
 	if (!Number(amount)) {
 		return {
-			reply: \"The amount must be a proper finite number!\",
+			reply: \"The amount of currency must be a proper finite number!\",
 			cooldown: {
 				length: 2500
 			}
@@ -81,7 +81,10 @@ VALUES
 
 	const currencySymbol = first.toUpperCase() + \"_\" + second.toUpperCase();
 	if (!(/[A-Z]{3}_[A-Z]{3}/.test(currencySymbol))) {
-		return { reply: \"Both currencies must be represented by exactly 3 letters!\" };
+		return { 
+			reply: \"Invalid syntax! Consult the command\'s help for more info.\",
+			cooldown: 2500
+		};
 	}
 
 	if (!this.data.cache) {
@@ -130,7 +133,7 @@ VALUES
 	}
 	else {
 		return {
-			reply: \"One or both currencies were not recognized\"
+			reply: \"One or both currencies were not recognized!\"
 		};
 	}
 })',
@@ -139,7 +142,17 @@ $currency <amount> <currency code> to <currency code> => Converts that amount of
 
 $currency USD to EUR
 $currency 5000 SEK to AUD',
-		NULL
+		'async (prefix) =>  [
+	`Converts an amount of currency (or 1, if not specified) to another currency`,
+	``,
+
+	`<code>${prefix}currency 100 EUR to USD</code>`,
+	`100 EUR = (amount) USD`,
+	``,
+
+	`<code>${prefix}currency EUR to VND</code>`,
+	`1 EUR = (amount) VND`
+];'
 	)
 
 ON DUPLICATE KEY UPDATE
@@ -152,8 +165,8 @@ ON DUPLICATE KEY UPDATE
 
 	if (!first || !second) {
 		return {
-			reply: \"Both currencies must be provided!\",
-			meta: { skipCooldown: true }
+			reply: \"Invalid syntax! Consult the command\'s help for more info.\",
+			cooldown: 2500
 		};
 	}
 
@@ -174,7 +187,7 @@ ON DUPLICATE KEY UPDATE
 	amount = amount.replace(/[kmbt]/gi, \"\").replace(/,/g, \".\");
 	if (!Number(amount)) {
 		return {
-			reply: \"The amount must be a proper finite number!\",
+			reply: \"The amount of currency must be a proper finite number!\",
 			cooldown: {
 				length: 2500
 			}
@@ -183,7 +196,10 @@ ON DUPLICATE KEY UPDATE
 
 	const currencySymbol = first.toUpperCase() + \"_\" + second.toUpperCase();
 	if (!(/[A-Z]{3}_[A-Z]{3}/.test(currencySymbol))) {
-		return { reply: \"Both currencies must be represented by exactly 3 letters!\" };
+		return { 
+			reply: \"Invalid syntax! Consult the command\'s help for more info.\",
+			cooldown: 2500
+		};
 	}
 
 	if (!this.data.cache) {
@@ -232,7 +248,7 @@ ON DUPLICATE KEY UPDATE
 	}
 	else {
 		return {
-			reply: \"One or both currencies were not recognized\"
+			reply: \"One or both currencies were not recognized!\"
 		};
 	}
 })'
