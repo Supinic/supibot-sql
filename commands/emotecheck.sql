@@ -40,44 +40,176 @@ VALUES
 		1,
 		1,
 		0,
-		NULL,
+		'({
+	emotes: {
+		pride: [
+			\"PrideAsexual\",
+			\"PrideBalloons\",
+			\"PrideBisexual\",
+			\"PrideCheers\",
+			\"PrideFlag\",
+			\"PrideGasp\",
+			\"PrideGive\",
+			\"PrideHi\",
+			\"PrideLesbian\",
+			\"PrideLionChomp\",
+			\"PrideLionHey\",
+			\"PrideLionYay\",
+			\"PridePan\",
+			\"PrideParty\",
+			\"PrideSaba\",
+			\"PrideShine\",
+			\"PrideTake\",
+			\"PrideTrans\",
+			\"PrideWingL\",
+			\"PrideWingR\"
+		],
+		haha: [
+			\"Haha2020\",
+			\"HahaBaby\",
+			\"HahaBall\",
+			\"HahaCat\",
+			\"HahaDoge\",
+			\"HahaDreidel\",
+			\"HahaElf\",
+			\"HahaGingercat\",
+			\"HahaGoose\",
+			\"HahaHide\",
+			\"HahaLean\",
+			\"HahaNutcracker\",
+			\"HahaNyandeer\",
+			\"HahaPoint\",
+			\"HahaPresent\",
+			\"HahaReindeer\",
+			\"HahaShrugLeft\",
+			\"HahaShrugMiddle\",
+			\"HahaShrugRight\",
+			\"HahaSleep\",
+			\"HahaSnowhal\",
+			\"HahaSweat\",
+			\"HahaThink\",
+			\"HahaThisisfine\",
+			\"HahaTurtledove\"
+		],
+		rpg: [
+			\"RPGAyaya\",
+			\"RPGBukka\",
+			\"RPGBukkaNoo\",
+			\"RPGEmpty\",
+			\"RPGEpicStaff\",
+			\"RPGEpicSword\",
+			\"RPGFei\",
+			\"RPGFireball\",
+			\"RPGGhosto\",
+			\"RPGHP\",
+			\"RPGMana\",
+			\"RPGOops\",
+			\"RPGPhatLoot\",
+			\"RPGSeven\",
+			\"RPGShihu\",
+			\"RPGStaff\",
+			\"RPGTreeNua\",
+			\"RPGYonger\"
+		],
+		fb: [
+			\"FBBlock\",
+			\"FBCatch\",
+			\"FBChallenge\",
+			\"FBPass\",
+			\"FBPenalty\",
+			\"FBRun\",
+			\"FBSpiral\",
+			\"FBtouchdown\"
+		],
+
+		get food () { return this.fight; },
+		fight: [
+			\"FightBagel\",
+			\"FightBerry\",
+			\"FightBox\",
+			\"FightBurger\",
+			\"FightCC\",
+			\"FightCake\",
+			\"FightCheese\",
+			\"FightChips\",
+			\"FightCookie\",
+			\"FightCorn\",
+			\"FightCup\",
+			\"FightEgg\",
+			\"FightFruit\",
+			\"FightFry\",
+			\"FightIce\",
+			\"FightJello\",
+			\"FightMash\",
+			\"FightNacho\",
+			\"FightPBJ\",
+			\"FightPC\",
+			\"FightPepper\",
+			\"FightPie\",
+			\"FightPizza\",
+			\"FightPop\",
+			\"FightPudding\",
+			\"FightRamen\",
+			\"FightSalad\",
+			\"FightSardine\",
+			\"FightSmoothie\",
+			\"FightSmore\",
+			\"FightSoda\",
+			\"FightSoup\",
+			\"FightSpag\",
+			\"FightSub\",
+			\"FightTomato\"
+		],
+		
+		get kk () { return this.KKona; },
+		KKona: [
+			\"BBrexit\",
+			\"CCabron\",
+			\"CChile\",
+			\"GGyros\",
+			\"KKarjala\",
+			\"KKebab\",
+			\"KKhan\",
+			\"KKiwi\",
+			\"KKomrade\",
+			\"KKona\",
+			\"KKozak\",
+			\"KKraut\",
+			\"KKrikey\",
+			\"KKroissant\",
+			\"KKurwa\"
+		],
+		
+		get luv () { return this.valentine; },
+		valentine: [
+			\"LuvBlondeL\",
+			\"LuvBlondeR\",
+			\"LuvBlush\",
+			\"LuvBrownL\",
+			\"LuvBrownR\",
+			\"LuvCool\",
+			\"LuvGift\",
+			\"LuvHearts\",
+			\"LuvOops\",
+			\"LuvPeekL\",
+			\"LuvPeekR\",
+			\"LuvSign\",
+			\"LuvSnooze\",
+			\"LuvUok\"
+		]
+	}
+})',
 		'(async function emoteCheck (context, type) {
 	if (!type) {
 		return { reply: \"No type provided\" };
 	}
 
-	switch (type) {
-		case \"pride\":
-			return { reply: \"PrideFlag PridePan PrideTrans PrideBisexual PrideLesbian PrideAsexual PrideBalloons PrideSaba PrideGive PrideTake PrideLionHey PrideLionYay PrideLionChomp PrideShine PrideParty PrideWingL PrideWingR PrideCheers PrideGasp PrideHi pride emote check gachiPRIDE\" };
-
-		case \"food\":
-		case \"fight\":
-			return { reply: \"FightBagel FightBerry FightBox FightBurger FightCC FightCake FightCheese FightChips FightCookie FightCorn FightCup FightEgg FightFruit FightFry FightIce FightJello FightMash FightNacho FightPBJ FightPC FightPepper FightPie FightPizza FightPop FightPudding FightRamen FightSalad FightSardine FightSmoothie FightSmore FightSoda FightSoup FightSpag FightSub FightTomato food check OpieOP\" };
-
-		case \"haha\":
-		case \"holiday\":
-			// Removed HahaDisapprove, as it is not publicly available despite being a part of the set
-			return { reply: \"Haha2020 HahaBaby HahaBall HahaCat HahaDoge HahaDreidel HahaElf HahaGingercat HahaGoose HahaHide HahaLean HahaNutcracker HahaNyandeer HahaPoint HahaPresent HahaReindeer HahaShrugLeft HahaShrugMiddle HahaShrugRight HahaSleep HahaSnowhal HahaSweat HahaThink HahaThisisfine HahaTurtledove\"};
-
-		case \"rpg\":
-			return { reply: \"RPGAyaya RPGBukka RPGBukkaNoo RPGEmpty RPGEpicStaff RPGEpicSword RPGFei RPGFireball RPGGhosto RPGHP RPGMana RPGOops RPGPhatLoot RPGSeven RPGShihu RPGStaff RPGTreeNua RPGYonger TwitchRPG\" };
-
-		case \"fb\":
-		case \"football\":
-			return { reply: \"FBBlock FBCatch FBChallenge FBPass FBPenalty FBRun FBSpiral FBtouchdown KKona 🏈\" };
-
-		case \"kk\":
-			return {
-				reply: \"KKona KKomrade KKrikey KKurwa KKebab KKroissant KKozak KKhan KKarjala CCabron CChile GGyros BBrexit KKraut\"
-			};
-
-		case \"luv\":
-			return {
-				reply: \"LuvBlondeL LuvBlondeR LuvBlush LuvBrownL LuvBrownR LuvCool LuvGift LuvHearts LuvOops LuvPeekL LuvPeekR LuvSign LuvSnooze LuvUok\"
-			};
-
-		default: return { reply: \"No such emote set exists!\" };
-	}
+	const result = this.staticData.emotes[type];
+	return {
+		reply: (result)
+			? result.join(\" \")
+			: \"No emote set available for that type\"
+	};
 })',
 		NULL,
 		NULL
@@ -89,36 +221,10 @@ ON DUPLICATE KEY UPDATE
 		return { reply: \"No type provided\" };
 	}
 
-	switch (type) {
-		case \"pride\":
-			return { reply: \"PrideFlag PridePan PrideTrans PrideBisexual PrideLesbian PrideAsexual PrideBalloons PrideSaba PrideGive PrideTake PrideLionHey PrideLionYay PrideLionChomp PrideShine PrideParty PrideWingL PrideWingR PrideCheers PrideGasp PrideHi pride emote check gachiPRIDE\" };
-
-		case \"food\":
-		case \"fight\":
-			return { reply: \"FightBagel FightBerry FightBox FightBurger FightCC FightCake FightCheese FightChips FightCookie FightCorn FightCup FightEgg FightFruit FightFry FightIce FightJello FightMash FightNacho FightPBJ FightPC FightPepper FightPie FightPizza FightPop FightPudding FightRamen FightSalad FightSardine FightSmoothie FightSmore FightSoda FightSoup FightSpag FightSub FightTomato food check OpieOP\" };
-
-		case \"haha\":
-		case \"holiday\":
-			// Removed HahaDisapprove, as it is not publicly available despite being a part of the set
-			return { reply: \"Haha2020 HahaBaby HahaBall HahaCat HahaDoge HahaDreidel HahaElf HahaGingercat HahaGoose HahaHide HahaLean HahaNutcracker HahaNyandeer HahaPoint HahaPresent HahaReindeer HahaShrugLeft HahaShrugMiddle HahaShrugRight HahaSleep HahaSnowhal HahaSweat HahaThink HahaThisisfine HahaTurtledove\"};
-
-		case \"rpg\":
-			return { reply: \"RPGAyaya RPGBukka RPGBukkaNoo RPGEmpty RPGEpicStaff RPGEpicSword RPGFei RPGFireball RPGGhosto RPGHP RPGMana RPGOops RPGPhatLoot RPGSeven RPGShihu RPGStaff RPGTreeNua RPGYonger TwitchRPG\" };
-
-		case \"fb\":
-		case \"football\":
-			return { reply: \"FBBlock FBCatch FBChallenge FBPass FBPenalty FBRun FBSpiral FBtouchdown KKona 🏈\" };
-
-		case \"kk\":
-			return {
-				reply: \"KKona KKomrade KKrikey KKurwa KKebab KKroissant KKozak KKhan KKarjala CCabron CChile GGyros BBrexit KKraut\"
-			};
-
-		case \"luv\":
-			return {
-				reply: \"LuvBlondeL LuvBlondeR LuvBlush LuvBrownL LuvBrownR LuvCool LuvGift LuvHearts LuvOops LuvPeekL LuvPeekR LuvSign LuvSnooze LuvUok\"
-			};
-
-		default: return { reply: \"No such emote set exists!\" };
-	}
+	const result = this.staticData.emotes[type];
+	return {
+		reply: (result)
+			? result.join(\" \")
+			: \"No emote set available for that type\"
+	};
 })'
