@@ -37,13 +37,13 @@ VALUES
 		0,
 		0,
 		0,
-		1,
+		0,
 		1,
 		0,
 		NULL,
 		'(async function top (extra, limit) {
 	if (!Number.isFinite(Number(limit))) {
-		limit = 10;
+		limit = 3;
 	}
 	if (limit > 10) {
 		return { reply: \"Limit set too high!\" };
@@ -51,9 +51,9 @@ VALUES
 
 	const channels = (extra.channel.ID === 7 || extra.channel.ID === 8)
 		? [7, 8, 46]
-		: [extra.channel.ID]
+		: [extra.channel.ID];
 
-	const top = (await sb.Query.getRecordset(rs => rs
+	const top = await sb.Query.getRecordset(rs => rs
 		.select(\"SUM(Message_Count) AS Total\")
 		.select(\"User_Alias.Name AS Name\")
 		.from(\"chat_data\", \"Message_Meta_User_Alias\")
@@ -61,11 +61,16 @@ VALUES
 		.where(\"Channel IN %n+\", channels)
 		.groupBy(\"User_Alias\")
 		.orderBy(\"SUM(Message_Count) DESC\")
-		.limit(10)
-	));
+		.limit(limit)
+	);
+
+	const chatters = top.map((i, ind) => {
+		const name = i.Name[0] + `\\u{E0000}` + i.Name.slice(1);
+		return `#${ind + 1}: ${name} (${i.Total})`;
+	}).join(\", \");
 
 	return {
-		reply: \"Top \" + limit + \" chatters: \" + top.map((i, ind) => \"(#\" + (ind + 1) + \") \" + i.Name + \" - \" + i.Total).join(\", \")
+		reply: `Top ${limit} chatters: ${chatters}`
 	};
 })',
 		NULL,
@@ -75,7 +80,7 @@ VALUES
 ON DUPLICATE KEY UPDATE
 	Code = '(async function top (extra, limit) {
 	if (!Number.isFinite(Number(limit))) {
-		limit = 10;
+		limit = 3;
 	}
 	if (limit > 10) {
 		return { reply: \"Limit set too high!\" };
@@ -83,9 +88,9 @@ ON DUPLICATE KEY UPDATE
 
 	const channels = (extra.channel.ID === 7 || extra.channel.ID === 8)
 		? [7, 8, 46]
-		: [extra.channel.ID]
+		: [extra.channel.ID];
 
-	const top = (await sb.Query.getRecordset(rs => rs
+	const top = await sb.Query.getRecordset(rs => rs
 		.select(\"SUM(Message_Count) AS Total\")
 		.select(\"User_Alias.Name AS Name\")
 		.from(\"chat_data\", \"Message_Meta_User_Alias\")
@@ -93,10 +98,15 @@ ON DUPLICATE KEY UPDATE
 		.where(\"Channel IN %n+\", channels)
 		.groupBy(\"User_Alias\")
 		.orderBy(\"SUM(Message_Count) DESC\")
-		.limit(10)
-	));
+		.limit(limit)
+	);
+
+	const chatters = top.map((i, ind) => {
+		const name = i.Name[0] + `\\u{E0000}` + i.Name.slice(1);
+		return `#${ind + 1}: ${name} (${i.Total})`;
+	}).join(\", \");
 
 	return {
-		reply: \"Top \" + limit + \" chatters: \" + top.map((i, ind) => \"(#\" + (ind + 1) + \") \" + i.Name + \" - \" + i.Total).join(\", \")
+		reply: `Top ${limit} chatters: ${chatters}`
 	};
 })'
