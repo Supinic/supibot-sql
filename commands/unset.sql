@@ -130,6 +130,7 @@ VALUES
 				return { reply: \"That reminder is already deactivated!\" };
 			}
 			else {
+				row.values.Priority = null;
 				row.values.Status = \"Dismissed by author\";
 				await row.save();
 				return { reply: \"Suggestion ID \" + ID + \" has been flagged as \\\"Dismissed by author\\\".\" };
@@ -233,6 +234,7 @@ ON DUPLICATE KEY UPDATE
 				return { reply: \"That reminder is already deactivated!\" };
 			}
 			else {
+				row.values.Priority = null;
 				row.values.Status = \"Dismissed by author\";
 				await row.save();
 				return { reply: \"Suggestion ID \" + ID + \" has been flagged as \\\"Dismissed by author\\\".\" };
