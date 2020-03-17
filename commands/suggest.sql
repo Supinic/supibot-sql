@@ -51,8 +51,10 @@ VALUES
 	const row = await sb.Query.getRow(\"data\", \"Suggestion\")
 	row.setValues({
 		Text: args.join(\" \"),
-		User_Alias: context.user.ID
+		User_Alias: context.user.ID,
+		Priority: 255
 	});
+
 	await row.save();
 
 	return { 
@@ -74,8 +76,10 @@ ON DUPLICATE KEY UPDATE
 	const row = await sb.Query.getRow(\"data\", \"Suggestion\")
 	row.setValues({
 		Text: args.join(\" \"),
-		User_Alias: context.user.ID
+		User_Alias: context.user.ID,
+		Priority: 255
 	});
+
 	await row.save();
 
 	return { 
