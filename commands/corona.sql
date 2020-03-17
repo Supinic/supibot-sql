@@ -40,7 +40,15 @@ VALUES
 		1,
 		1,
 		0,
-		NULL,
+		'({
+	special: {
+		\"CAR\": \"Central African Republic\",
+		\"DRC\": \"Democratic Republic of the Congo\",
+		\"UAE\": \"United Arab Emirates\",
+		\"UK\": \"United Kingdom\",
+		\"USA\": \"United States of America\"
+	}
+})',
 		'(async function corona (context, ...args) {
 	if (this.data.fetching) {
 		return {
@@ -122,14 +130,22 @@ VALUES
 			totalNewDeaths += newDeaths;
 
 			this.data.cache.push({
-				country, confirmed, newCases, deaths, newDeaths, recovered, critical, active, cpm
+				country,
+				confirmed,
+				newCases,
+				deaths,
+				newDeaths,
+				recovered,
+				critical,
+				active,
+				cpm
 			});
 		}
 
 		const [confirmed, deaths, recovered] = $(\".maincounter-number\").text().replace(/,/g, \"\").split(\" \").filter(Boolean).map(Number);
 		const [mild, critical] = Array.from($(\".number-table\")).map(i => Number(i.firstChild.nodeValue.replace(/,/g, \"\")));
 		const lastUpdateString = $($(\".label-counter\")[0].nextSibling).text().replace(\"Last updated: \", \"\");
-		
+
 		this.data.update = new sb.Date(lastUpdateString);
 		this.data.total = { confirmed, deaths, recovered, critical, mild, newCases: totalNewCases, newDeaths: totalNewDeaths };
 
@@ -159,12 +175,25 @@ VALUES
 		const { confirmed, deaths, newCases, newDeaths, recovered, country, critical, mild, cpm } = targetData;
 
 		if (args.length > 0) {
+			const fixedCountryName = this.staticData.special[country] ?? country;
+			const countryData = await sb.Query.getRecordset(rs => rs
+				.select(\"Code_Alpha_2 AS Code\")
+				.from(\"data\", \"Country\")
+				.where(\"Name = %s\", fixedCountryName)
+				.limit(1)
+				.single()
+			);
+
+			const emoji = (countryData.Code)
+				? String.fromCodePoint(...countryData.Code.split(\"\").map(i => i.charCodeAt(0) + 127397))
+				: \"\";
+
 			const plusCases = (newCases > 0) ? ` (+${newCases})` : \"\";
 			const plusDeaths = (newDeaths > 0) ? ` (+${newDeaths})` : \"\";
 			const perMillion = (cpm > 0) ? `This is ${cpm} cases per 1 million people. ` : \"\";
 
 			return {
-				reply: `${country} has ${confirmed} confirmed case${(confirmed === 1) ? \"\" : \"s\"}${plusCases}, ${deaths ?? \"no\"} death${(deaths === 1) ? \"\" : \"s\"}${plusDeaths} and ${recovered ?? \"no\"} recovered case${(recovered === 1) ? \"\" : \"s\"}. ${perMillion}Last check: ${delta}.`
+				reply: `${emoji ?? country} has ${confirmed} confirmed case${(confirmed === 1) ? \"\" : \"s\"}${plusCases}, ${deaths ?? \"no\"} death${(deaths === 1) ? \"\" : \"s\"}${plusDeaths} and ${recovered ?? \"no\"} recovered case${(recovered === 1) ? \"\" : \"s\"}. ${perMillion}Last check: ${delta}.`
 			}
 		}
 		else {
@@ -265,14 +294,22 @@ ON DUPLICATE KEY UPDATE
 			totalNewDeaths += newDeaths;
 
 			this.data.cache.push({
-				country, confirmed, newCases, deaths, newDeaths, recovered, critical, active, cpm
+				country,
+				confirmed,
+				newCases,
+				deaths,
+				newDeaths,
+				recovered,
+				critical,
+				active,
+				cpm
 			});
 		}
 
 		const [confirmed, deaths, recovered] = $(\".maincounter-number\").text().replace(/,/g, \"\").split(\" \").filter(Boolean).map(Number);
 		const [mild, critical] = Array.from($(\".number-table\")).map(i => Number(i.firstChild.nodeValue.replace(/,/g, \"\")));
 		const lastUpdateString = $($(\".label-counter\")[0].nextSibling).text().replace(\"Last updated: \", \"\");
-		
+
 		this.data.update = new sb.Date(lastUpdateString);
 		this.data.total = { confirmed, deaths, recovered, critical, mild, newCases: totalNewCases, newDeaths: totalNewDeaths };
 
@@ -302,12 +339,25 @@ ON DUPLICATE KEY UPDATE
 		const { confirmed, deaths, newCases, newDeaths, recovered, country, critical, mild, cpm } = targetData;
 
 		if (args.length > 0) {
+			const fixedCountryName = this.staticData.special[country] ?? country;
+			const countryData = await sb.Query.getRecordset(rs => rs
+				.select(\"Code_Alpha_2 AS Code\")
+				.from(\"data\", \"Country\")
+				.where(\"Name = %s\", fixedCountryName)
+				.limit(1)
+				.single()
+			);
+
+			const emoji = (countryData.Code)
+				? String.fromCodePoint(...countryData.Code.split(\"\").map(i => i.charCodeAt(0) + 127397))
+				: \"\";
+
 			const plusCases = (newCases > 0) ? ` (+${newCases})` : \"\";
 			const plusDeaths = (newDeaths > 0) ? ` (+${newDeaths})` : \"\";
 			const perMillion = (cpm > 0) ? `This is ${cpm} cases per 1 million people. ` : \"\";
 
 			return {
-				reply: `${country} has ${confirmed} confirmed case${(confirmed === 1) ? \"\" : \"s\"}${plusCases}, ${deaths ?? \"no\"} death${(deaths === 1) ? \"\" : \"s\"}${plusDeaths} and ${recovered ?? \"no\"} recovered case${(recovered === 1) ? \"\" : \"s\"}. ${perMillion}Last check: ${delta}.`
+				reply: `${emoji ?? country} has ${confirmed} confirmed case${(confirmed === 1) ? \"\" : \"s\"}${plusCases}, ${deaths ?? \"no\"} death${(deaths === 1) ? \"\" : \"s\"}${plusDeaths} and ${recovered ?? \"no\"} recovered case${(recovered === 1) ? \"\" : \"s\"}. ${perMillion}Last check: ${delta}.`
 			}
 		}
 		else {
