@@ -44,7 +44,7 @@ VALUES
 	const limit = 30_000;
 	return {
 		limit,
-		maxCooldown: (this.Cooldown + (duration - 10000) * 10) * limigt
+		maxCooldown: (this.Cooldown + (limit - 10000) * 10)
 	};
 })()',
 		'(async function textToSpeech (context, ...args) {
@@ -120,6 +120,7 @@ VALUES
 			if (newVoice !== currentVoice)  {
 				if (currentText.length > 0) {
 					ttsData.push({
+						name: currentVoice,
 						voice: currentVoice,
 						text: currentText.join(\" \")
 					});
@@ -135,6 +136,7 @@ VALUES
 	}
 
 	ttsData.push({
+		name: currentVoice,
 		voice: currentVoice,
 		text: currentText.join(\" \")
 	});
@@ -184,13 +186,14 @@ VALUES
 	let cooldown = (duration > 10000)
 		? (context.command.Cooldown + (duration - 10000) * 10) * (ttsData.length)
 		: context.command.Cooldown;
-	
+
 	if (cooldown > this.staticData.maxCooldown) {
 		cooldown = this.staticData.maxCooldown;
 	}
 
+	const randomVoicesString = `You used these voices: ${ttsData.map(i => i.name).join(\", \")}.`;
 	return {
-		reply: `Your message has been succesfully played on TTS! It took ${duration / 1000} seconds to read out, and your cooldown is ${cooldown / 1000} seconds.`,
+		reply: `Your message has been succesfully played on TTS! It took ${duration / 1000} seconds to read out, and your cooldown is ${cooldown / 1000} seconds. ${randomVoicesString}`,
 		cooldown: {
 			length: cooldown
 		}
@@ -274,6 +277,7 @@ ON DUPLICATE KEY UPDATE
 			if (newVoice !== currentVoice)  {
 				if (currentText.length > 0) {
 					ttsData.push({
+						name: currentVoice,
 						voice: currentVoice,
 						text: currentText.join(\" \")
 					});
@@ -289,6 +293,7 @@ ON DUPLICATE KEY UPDATE
 	}
 
 	ttsData.push({
+		name: currentVoice,
 		voice: currentVoice,
 		text: currentText.join(\" \")
 	});
@@ -338,13 +343,14 @@ ON DUPLICATE KEY UPDATE
 	let cooldown = (duration > 10000)
 		? (context.command.Cooldown + (duration - 10000) * 10) * (ttsData.length)
 		: context.command.Cooldown;
-	
+
 	if (cooldown > this.staticData.maxCooldown) {
 		cooldown = this.staticData.maxCooldown;
 	}
 
+	const randomVoicesString = `You used these voices: ${ttsData.map(i => i.name).join(\", \")}.`;
 	return {
-		reply: `Your message has been succesfully played on TTS! It took ${duration / 1000} seconds to read out, and your cooldown is ${cooldown / 1000} seconds.`,
+		reply: `Your message has been succesfully played on TTS! It took ${duration / 1000} seconds to read out, and your cooldown is ${cooldown / 1000} seconds. ${randomVoicesString}`,
 		cooldown: {
 			length: cooldown
 		}
