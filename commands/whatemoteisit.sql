@@ -48,10 +48,10 @@ VALUES
 		return { reply: error + \"!\" };
 	}
 
-	const channelLink = \"https://twitchemotes.com/channels/\" + channelid;
+	const emoteLink = \"https://twitchemotes.com/emotes/\" + emoteid;
 	return {
-		reply: `${emotecode} (ID ${emoteid}) - ${channelLink} (ID ${channelid}) tier ${tier} sub emote`
-	}
+		reply: `${emotecode} (ID ${emoteid}) - tier ${tier} sub emote to channel ${channel}. ${emoteLink}`
+	};
 })',
 		NULL,
 		NULL
@@ -65,8 +65,8 @@ ON DUPLICATE KEY UPDATE
 		return { reply: error + \"!\" };
 	}
 
-	const channelLink = \"https://twitchemotes.com/channels/\" + channelid;
+	const emoteLink = \"https://twitchemotes.com/emotes/\" + emoteid;
 	return {
-		reply: `${emotecode} (ID ${emoteid}) - ${channelLink} (ID ${channelid}) tier ${tier} sub emote`
-	}
+		reply: `${emotecode} (ID ${emoteid}) - tier ${tier} sub emote to channel ${channel}. ${emoteLink}`
+	};
 })'
