@@ -84,7 +84,7 @@ VALUES
 		}
 
 		const $ = sb.Utils.cheerio(html);
-		const rows = Array.from($(\"#main_table_countries tbody tr\"));
+		const rows = Array.from($(\"#main_table_countries_today tbody tr\"));
 
 		if (rows.length === 0) {
 			this.data.fetching = false;
@@ -248,7 +248,7 @@ ON DUPLICATE KEY UPDATE
 		}
 
 		const $ = sb.Utils.cheerio(html);
-		const rows = Array.from($(\"#main_table_countries tbody tr\"));
+		const rows = Array.from($(\"#main_table_countries_today tbody tr\"));
 
 		if (rows.length === 0) {
 			this.data.fetching = false;
