@@ -133,7 +133,7 @@ VALUES
 	let thread = null;
 	if (rest.length > 0) {
 		const query = rest.join(\" \").toLowerCase();
-		thread = sb.Utils.randArray(board.threads.filter(i => i.content.toLowerCase().includes(query)));
+		thread = sb.Utils.randArray(board.threads.filter(i => !i.dead && i.content.toLowerCase().includes(query)));
 
 		if (!thread) {
 			return {
@@ -142,11 +142,25 @@ VALUES
 		}
 	}
 	else {
-		thread = sb.Utils.randArray(board.threads);
+		thread = sb.Utils.randArray(board.threads.filter(i => !i.dead));
 	}
 
 	if (thread.posts.length === 0 || thread.postsExpiration < now) {
-		const data = await sb.Got(`https://a.4cdn.org/${board.name}/thread/${thread.ID}.json`).json();
+		const { body: data, statusCode } = await sb.Got({
+			url: `https://a.4cdn.org/${board.name}/thread/${thread.ID}.json`,
+			throwHttpErrors: false,
+			responseType: \"json\"
+		});
+
+		if (statusCode === 404) {
+			thread.dead = true;
+
+			return {
+				reply: \"The thread has been pruned/archived! Please try again.\",
+				cooldown: 5000
+			};
+		}
+
 		thread.posts = data.posts.map(i => ({
 			ID: i.no,
 			author: i.name,
@@ -174,7 +188,6 @@ VALUES
 			reply: `${post.ID} (posted ${delta}): ${post.content}`
 		};
 	}
-
 })',
 		NULL,
 		NULL
@@ -273,7 +286,7 @@ ON DUPLICATE KEY UPDATE
 	let thread = null;
 	if (rest.length > 0) {
 		const query = rest.join(\" \").toLowerCase();
-		thread = sb.Utils.randArray(board.threads.filter(i => i.content.toLowerCase().includes(query)));
+		thread = sb.Utils.randArray(board.threads.filter(i => !i.dead && i.content.toLowerCase().includes(query)));
 
 		if (!thread) {
 			return {
@@ -282,11 +295,25 @@ ON DUPLICATE KEY UPDATE
 		}
 	}
 	else {
-		thread = sb.Utils.randArray(board.threads);
+		thread = sb.Utils.randArray(board.threads.filter(i => !i.dead));
 	}
 
 	if (thread.posts.length === 0 || thread.postsExpiration < now) {
-		const data = await sb.Got(`https://a.4cdn.org/${board.name}/thread/${thread.ID}.json`).json();
+		const { body: data, statusCode } = await sb.Got({
+			url: `https://a.4cdn.org/${board.name}/thread/${thread.ID}.json`,
+			throwHttpErrors: false,
+			responseType: \"json\"
+		});
+
+		if (statusCode === 404) {
+			thread.dead = true;
+
+			return {
+				reply: \"The thread has been pruned/archived! Please try again.\",
+				cooldown: 5000
+			};
+		}
+
 		thread.posts = data.posts.map(i => ({
 			ID: i.no,
 			author: i.name,
@@ -314,5 +341,4 @@ ON DUPLICATE KEY UPDATE
 			reply: `${post.ID} (posted ${delta}): ${post.content}`
 		};
 	}
-
 })'
