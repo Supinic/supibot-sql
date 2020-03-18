@@ -40,7 +40,13 @@ VALUES
 		1,
 		1,
 		0,
-		NULL,
+		'(() => {
+	const limit = 30_000;
+	return {
+		limit,
+		maxCooldown: (this.Cooldown + (duration - 10000) * 10) * limigt
+	};
+})()',
 		'(async function textToSpeech (context, ...args) {
 	if (context.channel?.ID !== 38 || args.length === 0) {
 		return {
@@ -64,7 +70,6 @@ VALUES
 	}
 
 	const partCheck = (string) => string.match(/^(voice|lang):\\w+$/);
-	const limit = sb.Config.get(\"TTS_TIME_LIMIT\");
 	const voiceData = sb.Config.get(\"TTS_VOICE_DATA\");
 	const availableVoices = voiceData.map(i => i.name.toLowerCase());
 	const voiceMap = Object.fromEntries(voiceData.map(i => [i.name, i.id]));
@@ -153,7 +158,7 @@ VALUES
 		result = await sb.LocalRequest.playTextToSpeech({
 			tts: ttsData,
 			volume: sb.Config.get(\"TTS_VOLUME\"),
-			limit: sb.Config.get(\"TTS_TIME_LIMIT\")
+			limit: this.staticData.limit
 		});
 		messageTime = process.hrtime.bigint() - messageTime;
 	}
@@ -170,7 +175,7 @@ VALUES
 
 	if (result === null || result === false) {
 		return {
-			reply: `Your TTS was refused, because its length exceeded the limit of ${limit / 1000} seconds!`,
+			reply: `Your TTS was refused, because its length exceeded the limit of ${this.staticData.limit / 1000} seconds!`,
 			cooldown: { length: 5000 }
 		};
 	}
@@ -179,6 +184,10 @@ VALUES
 	let cooldown = (duration > 10000)
 		? (context.command.Cooldown + (duration - 10000) * 10) * (ttsData.length)
 		: context.command.Cooldown;
+	
+	if (cooldown > this.staticData.maxCooldown) {
+		cooldown = this.staticData.maxCooldown;
+	}
 
 	return {
 		reply: `Your message has been succesfully played on TTS! It took ${duration / 1000} seconds to read out, and your cooldown is ${cooldown / 1000} seconds.`,
@@ -215,7 +224,6 @@ ON DUPLICATE KEY UPDATE
 	}
 
 	const partCheck = (string) => string.match(/^(voice|lang):\\w+$/);
-	const limit = sb.Config.get(\"TTS_TIME_LIMIT\");
 	const voiceData = sb.Config.get(\"TTS_VOICE_DATA\");
 	const availableVoices = voiceData.map(i => i.name.toLowerCase());
 	const voiceMap = Object.fromEntries(voiceData.map(i => [i.name, i.id]));
@@ -304,7 +312,7 @@ ON DUPLICATE KEY UPDATE
 		result = await sb.LocalRequest.playTextToSpeech({
 			tts: ttsData,
 			volume: sb.Config.get(\"TTS_VOLUME\"),
-			limit: sb.Config.get(\"TTS_TIME_LIMIT\")
+			limit: this.staticData.limit
 		});
 		messageTime = process.hrtime.bigint() - messageTime;
 	}
@@ -321,7 +329,7 @@ ON DUPLICATE KEY UPDATE
 
 	if (result === null || result === false) {
 		return {
-			reply: `Your TTS was refused, because its length exceeded the limit of ${limit / 1000} seconds!`,
+			reply: `Your TTS was refused, because its length exceeded the limit of ${this.staticData.limit / 1000} seconds!`,
 			cooldown: { length: 5000 }
 		};
 	}
@@ -330,6 +338,10 @@ ON DUPLICATE KEY UPDATE
 	let cooldown = (duration > 10000)
 		? (context.command.Cooldown + (duration - 10000) * 10) * (ttsData.length)
 		: context.command.Cooldown;
+	
+	if (cooldown > this.staticData.maxCooldown) {
+		cooldown = this.staticData.maxCooldown;
+	}
 
 	return {
 		reply: `Your message has been succesfully played on TTS! It took ${duration / 1000} seconds to read out, and your cooldown is ${cooldown / 1000} seconds.`,
