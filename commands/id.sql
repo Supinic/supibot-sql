@@ -42,27 +42,32 @@ VALUES
 		0,
 		NULL,
 		'(async function id (context, user) {
-	let targetUser = null;
+	let targetUser = context.user;
 	if (user) {
 		targetUser = await sb.Utils.getDiscordUserDataFromMentions(user, context.append) || await sb.User.get(user, true);
-	}
-	else {
-		targetUser = context.user;
 	}
 
 	if (!targetUser) {
 		return { reply: \"No data for given user name!\" };
 	}
-
-	const [idString, pronoun] = (targetUser.ID === context.user.ID)
-		? [\"Your ID is \", \"you\"]
-		: [\"That person\'s ID is \", \"they\"];
+	
+	let idString = \"That person\'s ID is\";
+	let pronoun = \"they were\";
+	
+	if (sb.User.bots.has(targetUser.ID)) {
+		idString = \"That bot\'s ID is\";
+		pronoun = \"it was\";
+	}
+	else if (targetUser.ID === context.user.ID) {
+		idString = \"Your ID is\";
+		pronoun = \"you were\";
+	}
 
 	const temporalReply = (targetUser.ID === sb.Config.get(\"SELF_ID\"))
 		? \"first brought to life as an mIRC bot\"
 		: (targetUser.ID < sb.Config.get(\"SELF_ID\"))
 			? \"first mentioned in logs (predating Supibot)\"
-			: \"first seen by the bot\";
+			: \"first seen\";
 
 	const delta = sb.Utils.timeDelta(targetUser.Started_Using);
 	const now = new sb.Date();
@@ -79,7 +84,7 @@ VALUES
 	}
 
 	return {
-		reply: `${idString} ${targetUser.ID} and ${pronoun} were ${temporalReply} ${delta}. ${birthdayString}`
+		reply: `${idString} ${targetUser.ID} and ${pronoun} ${temporalReply} ${delta}. ${birthdayString}`
 	};
 })',
 		'$id => Posts your ID in supibot\'s user database.
@@ -89,27 +94,32 @@ $id <user> => Posts their ID in supibot\'s user database.',
 
 ON DUPLICATE KEY UPDATE
 	Code = '(async function id (context, user) {
-	let targetUser = null;
+	let targetUser = context.user;
 	if (user) {
 		targetUser = await sb.Utils.getDiscordUserDataFromMentions(user, context.append) || await sb.User.get(user, true);
-	}
-	else {
-		targetUser = context.user;
 	}
 
 	if (!targetUser) {
 		return { reply: \"No data for given user name!\" };
 	}
-
-	const [idString, pronoun] = (targetUser.ID === context.user.ID)
-		? [\"Your ID is \", \"you\"]
-		: [\"That person\'s ID is \", \"they\"];
+	
+	let idString = \"That person\'s ID is\";
+	let pronoun = \"they were\";
+	
+	if (sb.User.bots.has(targetUser.ID)) {
+		idString = \"That bot\'s ID is\";
+		pronoun = \"it was\";
+	}
+	else if (targetUser.ID === context.user.ID) {
+		idString = \"Your ID is\";
+		pronoun = \"you were\";
+	}
 
 	const temporalReply = (targetUser.ID === sb.Config.get(\"SELF_ID\"))
 		? \"first brought to life as an mIRC bot\"
 		: (targetUser.ID < sb.Config.get(\"SELF_ID\"))
 			? \"first mentioned in logs (predating Supibot)\"
-			: \"first seen by the bot\";
+			: \"first seen\";
 
 	const delta = sb.Utils.timeDelta(targetUser.Started_Using);
 	const now = new sb.Date();
@@ -126,6 +136,6 @@ ON DUPLICATE KEY UPDATE
 	}
 
 	return {
-		reply: `${idString} ${targetUser.ID} and ${pronoun} were ${temporalReply} ${delta}. ${birthdayString}`
+		reply: `${idString} ${targetUser.ID} and ${pronoun} ${temporalReply} ${delta}. ${birthdayString}`
 	};
 })'
