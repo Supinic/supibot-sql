@@ -101,6 +101,7 @@ VALUES
 	const { list, repeatedPosts } = this.data.posts[subreddit];
 	const children = list.filter(i => (
 		(!safeSpace || !i.data.over_18)
+		&& !i.stickied
 		&& !i.data.selftext
 		&& !i.data.selftext_html
 		&& !repeatedPosts.includes(i.data.id)
@@ -190,6 +191,7 @@ ON DUPLICATE KEY UPDATE
 	const { list, repeatedPosts } = this.data.posts[subreddit];
 	const children = list.filter(i => (
 		(!safeSpace || !i.data.over_18)
+		&& !i.stickied
 		&& !i.data.selftext
 		&& !i.data.selftext_html
 		&& !repeatedPosts.includes(i.data.id)
