@@ -72,7 +72,7 @@ VALUES
 
 	const url = args.join(\" \");
 	const parsedURL = require(\"url\").parse(url);
-	if (url.endsWith(\".mp3\")) {
+	if (url.endsWith(\".mp3\") || url.endsWith(\".ogg\")) {
 		try {
 			const id = await sb.VideoLANConnector.add(url, context.user.ID, {name: url});
 			return { reply: \"Your custom link request has been added to the queue with ID \" + id };
@@ -214,7 +214,7 @@ ON DUPLICATE KEY UPDATE
 
 	const url = args.join(\" \");
 	const parsedURL = require(\"url\").parse(url);
-	if (url.endsWith(\".mp3\")) {
+	if (url.endsWith(\".mp3\") || url.endsWith(\".ogg\")) {
 		try {
 			const id = await sb.VideoLANConnector.add(url, context.user.ID, {name: url});
 			return { reply: \"Your custom link request has been added to the queue with ID \" + id };
