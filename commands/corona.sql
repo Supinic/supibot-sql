@@ -47,7 +47,17 @@ VALUES
 		\"UAE\": \"United Arab Emirates\",
 		\"UK\": \"United Kingdom\",
 		\"USA\": \"United States of America\"
-	}
+	},
+	regions: [
+		\"Africa\", 
+		\"Antarctica\", 
+		\"Asia\", 
+		\"Central America\", 
+		\"Europe\", 
+		\"North America\", 
+		\"Oceania\", 
+		\"South America\"
+	].map(i => i.toLowerCase())
 })',
 		'(async function corona (context, ...args) {
 	if (this.data.fetching) {
@@ -128,7 +138,7 @@ VALUES
 			country = country.replace(/\\./g, \"\");
 
 			this.data.countries.push(country);
-			
+
 			totalNewCases += newCases;
 			totalNewDeaths += newDeaths;
 
@@ -168,14 +178,47 @@ VALUES
 		};
 	}
 
-	const inputCountry = args.join(\" \").toLowerCase();
-	const bestMatch = sb.Utils.selectClosestString(inputCountry, this.data.countries, {
-		ignoreCase: true
-	});
+	let targetData = null;
+	const input = args.join(\" \").toLowerCase();
 
-	const targetData = (args.length > 0)
-		? this.data.cache.find(i => i.country.toLowerCase() === bestMatch)
-		: this.data.total;
+	if (this.staticData.regions.includes(input)) {
+		const special = Object.values(this.staticData.special).map(i => i.toLowerCase());
+		const eligibleCountries = (await sb.Query.getRecordset(rs => rs
+			.select(\"Name\")
+			.from(\"data\", \"Country\")
+			.where(\"Region = %s\", input)
+		)).map(i => i.Name.toLowerCase());
+
+		const eligibleData = this.data.cache.filter(i => (
+			eligibleCountries.includes(i.country.toLowerCase())
+			|| eligibleCountries.includes((s.staticData.special[i.country] || \"\").toLowerCase())
+		));
+
+		targetData = {
+			confirmed: 0,
+			deaths: 0,
+			newCases: 0,
+			newDeaths: 0,
+			recovered: 0
+		};
+
+		for (const record of eligibleData) {
+			for (const key of Object.keys(targetData)) {
+				targetData[key] += record[key];
+			}
+		}
+
+		targetData.country = args.join(\" \");
+	}
+	else {
+		const bestMatch = sb.Utils.selectClosestString(input, this.data.countries, {
+			ignoreCase: true
+		});
+
+		targetData = (args.length > 0)
+			? this.data.cache.find(i => i.country.toLowerCase() === bestMatch)
+			: this.data.total;
+	}
 
 	if (targetData) {
 		const delta = sb.Utils.timeDelta(new sb.Date(this.data.update));
@@ -191,9 +234,9 @@ VALUES
 				.single()
 			);
 
-			const emoji = (countryData.Code)
+			const emoji = (countryData?.Code)
 				? String.fromCodePoint(...countryData.Code.split(\"\").map(i => i.charCodeAt(0) + 127397))
-				: \"\";
+				: country;
 
 			const plusCases = (newCases > 0) ? ` (+${newCases})` : \"\";
 			const plusDeaths = (newDeaths > 0) ? ` (+${newDeaths})` : \"\";
@@ -300,7 +343,7 @@ ON DUPLICATE KEY UPDATE
 			country = country.replace(/\\./g, \"\");
 
 			this.data.countries.push(country);
-			
+
 			totalNewCases += newCases;
 			totalNewDeaths += newDeaths;
 
@@ -340,14 +383,47 @@ ON DUPLICATE KEY UPDATE
 		};
 	}
 
-	const inputCountry = args.join(\" \").toLowerCase();
-	const bestMatch = sb.Utils.selectClosestString(inputCountry, this.data.countries, {
-		ignoreCase: true
-	});
+	let targetData = null;
+	const input = args.join(\" \").toLowerCase();
 
-	const targetData = (args.length > 0)
-		? this.data.cache.find(i => i.country.toLowerCase() === bestMatch)
-		: this.data.total;
+	if (this.staticData.regions.includes(input)) {
+		const special = Object.values(this.staticData.special).map(i => i.toLowerCase());
+		const eligibleCountries = (await sb.Query.getRecordset(rs => rs
+			.select(\"Name\")
+			.from(\"data\", \"Country\")
+			.where(\"Region = %s\", input)
+		)).map(i => i.Name.toLowerCase());
+
+		const eligibleData = this.data.cache.filter(i => (
+			eligibleCountries.includes(i.country.toLowerCase())
+			|| eligibleCountries.includes((s.staticData.special[i.country] || \"\").toLowerCase())
+		));
+
+		targetData = {
+			confirmed: 0,
+			deaths: 0,
+			newCases: 0,
+			newDeaths: 0,
+			recovered: 0
+		};
+
+		for (const record of eligibleData) {
+			for (const key of Object.keys(targetData)) {
+				targetData[key] += record[key];
+			}
+		}
+
+		targetData.country = args.join(\" \");
+	}
+	else {
+		const bestMatch = sb.Utils.selectClosestString(input, this.data.countries, {
+			ignoreCase: true
+		});
+
+		targetData = (args.length > 0)
+			? this.data.cache.find(i => i.country.toLowerCase() === bestMatch)
+			: this.data.total;
+	}
 
 	if (targetData) {
 		const delta = sb.Utils.timeDelta(new sb.Date(this.data.update));
@@ -363,9 +439,9 @@ ON DUPLICATE KEY UPDATE
 				.single()
 			);
 
-			const emoji = (countryData.Code)
+			const emoji = (countryData?.Code)
 				? String.fromCodePoint(...countryData.Code.split(\"\").map(i => i.charCodeAt(0) + 127397))
-				: \"\";
+				: country;
 
 			const plusCases = (newCases > 0) ? ` (+${newCases})` : \"\";
 			const plusDeaths = (newDeaths > 0) ? ` (+${newDeaths})` : \"\";
