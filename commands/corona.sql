@@ -101,6 +101,7 @@ VALUES
 		let totalNewCases = 0;
 		let totalNewDeaths = 0;
 
+		this.data.countries = [];
 		this.data.cache = [];
 		for (const row of rows) {
 			let [country, confirmed, newCases, deaths, newDeaths, recovered, active, critical, cpm] = Array.from($(row).children()).map((i, ind) => {
@@ -126,6 +127,8 @@ VALUES
 			// Fixing \"U.A.E.\" and \"U.K.\"
 			country = country.replace(/\\./g, \"\");
 
+			this.data.countries.push(country);
+			
 			totalNewCases += newCases;
 			totalNewDeaths += newDeaths;
 
@@ -142,9 +145,9 @@ VALUES
 			});
 		}
 
-		const [confirmed, deaths, recovered] = $(\".maincounter-number\").text().replace(/,/g, \"\").split(\" \").filter(Boolean).map(Number);
+		const [confirmed, deaths, recovered] = $(\".maincounter-number\").text().replace(/,/g, \"\").replace(/\\s+/g, \" \").split(\" \").filter(Boolean).map(Number);
 		const [mild, critical] = Array.from($(\".number-table\")).map(i => Number(i.firstChild.nodeValue.replace(/,/g, \"\")));
-		const lastUpdateString = $($(\".label-counter\")[0].nextSibling).text().replace(\"Last updated: \", \"\");
+		const lastUpdateString = $(\".label-counter\").next().text().replace(\"Last updated \", \"\");
 
 		this.data.update = new sb.Date(lastUpdateString);
 		this.data.total = { confirmed, deaths, recovered, critical, mild, newCases: totalNewCases, newDeaths: totalNewDeaths };
@@ -166,8 +169,12 @@ VALUES
 	}
 
 	const inputCountry = args.join(\" \").toLowerCase();
+	const bestMatch = sb.Utils.selectClosestString(inputCountry, this.data.countries, {
+		ignoreCase: true
+	});
+
 	const targetData = (args.length > 0)
-		? this.data.cache.find(i => i.country.toLowerCase().includes(inputCountry))
+		? this.data.cache.find(i => i.country.toLowerCase() === bestMatch)
 		: this.data.total;
 
 	if (targetData) {
@@ -266,6 +273,7 @@ ON DUPLICATE KEY UPDATE
 		let totalNewCases = 0;
 		let totalNewDeaths = 0;
 
+		this.data.countries = [];
 		this.data.cache = [];
 		for (const row of rows) {
 			let [country, confirmed, newCases, deaths, newDeaths, recovered, active, critical, cpm] = Array.from($(row).children()).map((i, ind) => {
@@ -291,6 +299,8 @@ ON DUPLICATE KEY UPDATE
 			// Fixing \"U.A.E.\" and \"U.K.\"
 			country = country.replace(/\\./g, \"\");
 
+			this.data.countries.push(country);
+			
 			totalNewCases += newCases;
 			totalNewDeaths += newDeaths;
 
@@ -307,9 +317,9 @@ ON DUPLICATE KEY UPDATE
 			});
 		}
 
-		const [confirmed, deaths, recovered] = $(\".maincounter-number\").text().replace(/,/g, \"\").split(\" \").filter(Boolean).map(Number);
+		const [confirmed, deaths, recovered] = $(\".maincounter-number\").text().replace(/,/g, \"\").replace(/\\s+/g, \" \").split(\" \").filter(Boolean).map(Number);
 		const [mild, critical] = Array.from($(\".number-table\")).map(i => Number(i.firstChild.nodeValue.replace(/,/g, \"\")));
-		const lastUpdateString = $($(\".label-counter\")[0].nextSibling).text().replace(\"Last updated: \", \"\");
+		const lastUpdateString = $(\".label-counter\").next().text().replace(\"Last updated \", \"\");
 
 		this.data.update = new sb.Date(lastUpdateString);
 		this.data.total = { confirmed, deaths, recovered, critical, mild, newCases: totalNewCases, newDeaths: totalNewDeaths };
@@ -331,8 +341,12 @@ ON DUPLICATE KEY UPDATE
 	}
 
 	const inputCountry = args.join(\" \").toLowerCase();
+	const bestMatch = sb.Utils.selectClosestString(inputCountry, this.data.countries, {
+		ignoreCase: true
+	});
+
 	const targetData = (args.length > 0)
-		? this.data.cache.find(i => i.country.toLowerCase().includes(inputCountry))
+		? this.data.cache.find(i => i.country.toLowerCase() === bestMatch)
 		: this.data.total;
 
 	if (targetData) {
