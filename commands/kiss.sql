@@ -40,39 +40,53 @@ VALUES
 		0,
 		1,
 		0,
-		NULL,
-		'async (extra, user, emote) => {
-	if (!user || user.toLowerCase() === extra.user.Name) {
-		return { reply: \"You can\'t really kiss yourself 😕\" };
+		'({
+	emojis: [\"👩‍❤️‍💋‍👨\", \"💋\", \"😗\", \"👩‍❤️‍💋‍👨\", \"😙\", \"😚\", \"😽\", \"💋😳\"]
+})',
+		'(async function kiss (context, user, emote) {
+	if (!user || user.toLowerCase() === context.user.Name) {
+		return {
+			reply: \"You can\'t really kiss yourself 😕\"
+		};
 	}
 	else if (user === sb.Config.get(\"SELF\")) {
-		return { reply: \"😊\" };
+		return {
+			reply: \"😊\"
+		};
 	}
 	else {
-		const target = (emote)
+		const string = (emote)
 			? emote + \" 💋\"
-			: sb.Utils.randArray(sb.Config.get(\"KISS_EMOJIS\"));
-	
-		return { reply: extra.user.Name + \" kisses \" + user + \" \" + target };
+			: sb.Utils.randArray(this.staticData.emojis);
+
+		return { 
+			reply: `${context.user.Name} kisses ${user} ${string}` 
+		};
 	}
-}',
+})',
 		NULL,
 		NULL
 	)
 
 ON DUPLICATE KEY UPDATE
-	Code = 'async (extra, user, emote) => {
-	if (!user || user.toLowerCase() === extra.user.Name) {
-		return { reply: \"You can\'t really kiss yourself 😕\" };
+	Code = '(async function kiss (context, user, emote) {
+	if (!user || user.toLowerCase() === context.user.Name) {
+		return {
+			reply: \"You can\'t really kiss yourself 😕\"
+		};
 	}
 	else if (user === sb.Config.get(\"SELF\")) {
-		return { reply: \"😊\" };
+		return {
+			reply: \"😊\"
+		};
 	}
 	else {
-		const target = (emote)
+		const string = (emote)
 			? emote + \" 💋\"
-			: sb.Utils.randArray(sb.Config.get(\"KISS_EMOJIS\"));
-	
-		return { reply: extra.user.Name + \" kisses \" + user + \" \" + target };
+			: sb.Utils.randArray(this.staticData.emojis);
+
+		return { 
+			reply: `${context.user.Name} kisses ${user} ${string}` 
+		};
 	}
-}'
+})'
