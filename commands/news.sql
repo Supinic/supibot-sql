@@ -114,18 +114,30 @@ VALUES
 	}).join(\"\");
 	
 	return [
-		\"Fetches short random articles, based on the argument(s) provided\",
-		\"No arguments = a topic-independent English (US) article\",
-		\"Two-letter ISO code of a country = topic-independent article from that country\'s news\",
-		\"Any word(s) that are not above country codes = English (US) article that contains given word(s)\",
-		\"Combination of country code (must be first) and any word(s) = that country\'s news\' article with given word(s)\",		
-		\"=\".repeat(30),
-		prefix + \"news => Johnson & Johnson ordered to pay man $8 BILLION over drug causing him to grow breasts - RT. Johnson & Johnson ordered to pay man $8 BILLION over drug causing him to grow breasts\",
-		prefix + \"news FI => Budjettivääntö jatkuu eduskunnassa – IS lähettää keskustelun suorana (Ilta-Sanomat)\",
-		prefix + \"news Germany => ...\",
-		prefix + \"news Donald Trump => ...\",
-		\"=\".repeat(30),
-		\"Specific country news were generously provided:\",
+		\"Fetches short news articles.\",
+		\"\",
+
+		`<code>${prefix}news</code>`,
+		\"(worldwide news in english)\",
+		\"\",
+	
+		`<code>${prefix}news (text to search)</code>`,
+		\"(worldwide news in english, that contain the text you searched for\",
+		\"\",
+		
+		`<code>${prefix}news (two-letter country code)</code>`,
+		\"(country-specific news)\",
+		\"\",
+
+		`<code>${prefix}news (two-letter country code) (text to search for)</code>`,
+		\"(country-specific news that contain the text you searched for)\",
+		\"\",
+
+		`<code>${prefix}news (special combination)</code>`,
+		\"(special news, usually country-specific. consult table below)\",
+		\"\",
+
+		\"The following are special codes. Those were often \'helped\' by people.\",
 		\"<table><thead><th>Code</th><th>Language</th><th>Helpers</th></thead>\" + extraNews + \"</table>\"
 	];
 }'
