@@ -90,8 +90,8 @@ VALUES
 			args.unshift(...userData.Data.defaultLocation.address);
 		}
 	}
-	else if (args[0] === \"set\" && args[1] === \"location\") {
-		args = args.slice(2);
+	else if (args[0] === \"set\") {
+		args = args.slice((args[1] === \"location\") ? 2 : 1);
 		let privateLocation = false;
 
 		if (args[0] === \"private\") {
@@ -279,11 +279,11 @@ VALUES
 	\"=\".repeat(20),
 	\"\",
 
-	`<code>${prefix}weather set location (location)</code>`,
+	`<code>${prefix}weather set (location)</code>`,
 	\"Sets your own weather location. Its name will show up in chat.\",
 	\"\",
 
-	`<code>${prefix}weather set location private (location)</code>`,
+	`<code>${prefix}weather set private (location)</code>`,
 	\"Sets your own weather location. Its name will NOT show up in chat.\",
 	\"\",
 
@@ -350,8 +350,8 @@ ON DUPLICATE KEY UPDATE
 			args.unshift(...userData.Data.defaultLocation.address);
 		}
 	}
-	else if (args[0] === \"set\" && args[1] === \"location\") {
-		args = args.slice(2);
+	else if (args[0] === \"set\") {
+		args = args.slice((args[1] === \"location\") ? 2 : 1);
 		let privateLocation = false;
 
 		if (args[0] === \"private\") {
