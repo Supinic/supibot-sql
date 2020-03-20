@@ -260,7 +260,30 @@ VALUES
 	}
 })',
 		NULL,
-		NULL
+		'async (prefix) => {
+	const row = await sb.Query.getRow(\"chat_data\", \"Command\");
+	await row.load(200);
+
+	const data = eval(row.values.Static_Data);
+	const regions = data.regions.map(i => `<code>${i}</code>`);
+
+
+	return [
+		`Checks the latest data on the Corona COVID-19 virus\'s spread.`,
+
+		`<code>${prefix}corona</code>`,
+		\"Posts global data.\",
+		\"\",
+
+		`<code>${prefix}corona (country)</code>`,
+		`Posts given country\'s data. If the country is not found, or it has no cases, it will say \"no data available\".`,
+		``,
+
+		`<code>${prefix}corona (region)</code>`,
+		\"Posts data for a given global region. Supported regions:\",
+		regions.join(\"<br>\")
+	];
+}'
 	)
 
 ON DUPLICATE KEY UPDATE
