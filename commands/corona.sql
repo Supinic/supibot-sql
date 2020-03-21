@@ -191,7 +191,7 @@ VALUES
 
 		const eligibleData = this.data.cache.filter(i => (
 			eligibleCountries.includes(i.country.toLowerCase())
-			|| eligibleCountries.includes((s.staticData.special[i.country] || \"\").toLowerCase())
+			|| eligibleCountries.includes((this.staticData.special[i.country] || \"\").toLowerCase())
 		));
 
 		targetData = {
@@ -419,7 +419,7 @@ ON DUPLICATE KEY UPDATE
 
 		const eligibleData = this.data.cache.filter(i => (
 			eligibleCountries.includes(i.country.toLowerCase())
-			|| eligibleCountries.includes((s.staticData.special[i.country] || \"\").toLowerCase())
+			|| eligibleCountries.includes((this.staticData.special[i.country] || \"\").toLowerCase())
 		));
 
 		targetData = {
