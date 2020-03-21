@@ -72,17 +72,8 @@ VALUES
 
 	const url = args.join(\" \");
 	const parsedURL = require(\"url\").parse(url);
-	if (url.endsWith(\".mp3\") || url.endsWith(\".ogg\")) {
-		try {
-			const id = await sb.VideoLANConnector.add(url, context.user.ID, {name: url});
-			return { reply: \"Your custom link request has been added to the queue with ID \" + id };
-		}
-		catch (e) {
-			console.error(e);
-			return { reply: \"VLC is not responding (probably not running or sr\'s are off), no link has been added!\" };
-		}
-	}
-	else if (parsedURL.host === \"supinic.com\" && parsedURL.path.includes(\"/track/detail\")) {
+
+	if (parsedURL.host === \"supinic.com\" && parsedURL.path.includes(\"/track/detail\")) {
 		const songID = Number(parsedURL.path.match(/(\\d+)/)[1]);
 		if (!songID) {
 			return { reply: \"Invalid link!\" };
@@ -113,34 +104,63 @@ VALUES
 			};
 		}
 	}
+	else if (parsedURL.host) {
+		const data = await sb.Got({
+			url,
+			method: \"HEAD\",
+			throwHttpErrors: false
+		});
 
-	const limit = sb.Config.get(\"MAX_SONG_REQUEST_LENGTH\");
-	const { body, statusCode } = await sb.Got.instances.Supinic({
-		url: \"trackData/fetch\",
-		searchParams: new sb.URLParams()
-			.set(\"url\", url)
-			.toString()
-	});
+		let passed = false;
+		if (data.statusCode === 200) {
+			const type = data.headers[\"content-type\"];
+			passed = type.startsWith(\"audio/\") || type.startsWith(\"video/\");
+		}
+		else {
+			passed = url.endsWith(\".mp3\") || url.endsWith(\".mp4\") || url.endsWith(\".ogg\");
+		}
 
-	if (statusCode === 502 || statusCode === 503) {
-		return {
-			reply: \"The supinic.com API is restarting or down! Please try again later.\"
-		};
-	}
-
-	let data = body.data;
-	if (!data) {
-		data = await sb.Utils.fetchYoutubeVideo(args.join(\" \").replace(/-/g, \"\"), sb.Config.get(\"API_GOOGLE_YOUTUBE\"));
-		if (!data) {
-			return { reply: \"No video matching that query has been found.\" };
+		if (passed) {
+			try {
+				const id = await sb.VideoLANConnector.add(url, context.user.ID, {name: url});
+				return {
+					reply: \"Your custom link request has been added to the queue with ID \" + id
+				};
+			}
+			catch (e) {
+				console.error(e);
+				return {
+					reply: \"VLC is not responding (probably not running or sr\'s are off), no link has been added!\"
+				};
+			}
 		}
 	}
 
-	if (state === \"necrodancer\") {
-		const redirectCommand = sb.Command.get(\"necrodancer\");
-		return await redirectCommand.execute(context, data.link);
+	let data = null;
+	try {
+		data = await sb.Utils.linkParser.fetchData(url);
+	}
+	catch {
+		data = null;
 	}
 
+	if (!data) {
+		const lookup = await sb.Utils.fetchYoutubeVideo(
+			args.join(\" \").replace(/-/g, \"\"),
+			sb.Config.get(\"API_GOOGLE_YOUTUBE\")
+		);
+
+		if (!lookup) {
+			return {
+				reply: \"No video matching that query has been found.\"
+			};
+		}
+		else {
+			data = await sb.Utils.linkParser.fetchData(lookup.link);
+		}
+	}
+
+	const limit = sb.Config.get(\"MAX_SONG_REQUEST_LENGTH\");
 	const length = data.duration || data.length;
 	if (length > limit) {
 		return {
@@ -163,17 +183,26 @@ VALUES
 		const status = await sb.VideoLANConnector.status();
 
 		if (status.currentplid !== -1 && status.currentplid !== id && status.time !== 0) {
-			const { vlcID: nowID } = await sb.VideoLANConnector.currentlyPlayingData()
+			const { vlcID: nowID } = await sb.VideoLANConnector.currentlyPlayingData();
 			const { time, length } = status;
-			
+
 			const playingDate = new sb.Date().addSeconds(length - time);
 			const inQueue = sb.VideoLANConnector.videoQueue.filter(i => i.vlcID > nowID);
 			for (const { length } of inQueue) {
-				playingDate.addSeconds(length);
-			}			
-			
+				playingDate.addSeconds(length ?? 0);
+			}
+
 			when = sb.Utils.timeDelta(playingDate);
 		}
+
+		const row = await sb.Query.getRow(\"chat_data\", \"Song_Request\");
+		row.setValues({
+			Link: data.ID,
+			Video_Type: 1,
+			Status: null,
+			User_Alias: context.user.ID,
+		});
+		await row.save();
 
 		return {
 			reply: `Video \"${data.name}\" by ${data.author} successfully added to queue with ID ${id}! It is playing ${when}`
@@ -214,17 +243,8 @@ ON DUPLICATE KEY UPDATE
 
 	const url = args.join(\" \");
 	const parsedURL = require(\"url\").parse(url);
-	if (url.endsWith(\".mp3\") || url.endsWith(\".ogg\")) {
-		try {
-			const id = await sb.VideoLANConnector.add(url, context.user.ID, {name: url});
-			return { reply: \"Your custom link request has been added to the queue with ID \" + id };
-		}
-		catch (e) {
-			console.error(e);
-			return { reply: \"VLC is not responding (probably not running or sr\'s are off), no link has been added!\" };
-		}
-	}
-	else if (parsedURL.host === \"supinic.com\" && parsedURL.path.includes(\"/track/detail\")) {
+
+	if (parsedURL.host === \"supinic.com\" && parsedURL.path.includes(\"/track/detail\")) {
 		const songID = Number(parsedURL.path.match(/(\\d+)/)[1]);
 		if (!songID) {
 			return { reply: \"Invalid link!\" };
@@ -255,34 +275,63 @@ ON DUPLICATE KEY UPDATE
 			};
 		}
 	}
+	else if (parsedURL.host) {
+		const data = await sb.Got({
+			url,
+			method: \"HEAD\",
+			throwHttpErrors: false
+		});
 
-	const limit = sb.Config.get(\"MAX_SONG_REQUEST_LENGTH\");
-	const { body, statusCode } = await sb.Got.instances.Supinic({
-		url: \"trackData/fetch\",
-		searchParams: new sb.URLParams()
-			.set(\"url\", url)
-			.toString()
-	});
+		let passed = false;
+		if (data.statusCode === 200) {
+			const type = data.headers[\"content-type\"];
+			passed = type.startsWith(\"audio/\") || type.startsWith(\"video/\");
+		}
+		else {
+			passed = url.endsWith(\".mp3\") || url.endsWith(\".mp4\") || url.endsWith(\".ogg\");
+		}
 
-	if (statusCode === 502 || statusCode === 503) {
-		return {
-			reply: \"The supinic.com API is restarting or down! Please try again later.\"
-		};
-	}
-
-	let data = body.data;
-	if (!data) {
-		data = await sb.Utils.fetchYoutubeVideo(args.join(\" \").replace(/-/g, \"\"), sb.Config.get(\"API_GOOGLE_YOUTUBE\"));
-		if (!data) {
-			return { reply: \"No video matching that query has been found.\" };
+		if (passed) {
+			try {
+				const id = await sb.VideoLANConnector.add(url, context.user.ID, {name: url});
+				return {
+					reply: \"Your custom link request has been added to the queue with ID \" + id
+				};
+			}
+			catch (e) {
+				console.error(e);
+				return {
+					reply: \"VLC is not responding (probably not running or sr\'s are off), no link has been added!\"
+				};
+			}
 		}
 	}
 
-	if (state === \"necrodancer\") {
-		const redirectCommand = sb.Command.get(\"necrodancer\");
-		return await redirectCommand.execute(context, data.link);
+	let data = null;
+	try {
+		data = await sb.Utils.linkParser.fetchData(url);
+	}
+	catch {
+		data = null;
 	}
 
+	if (!data) {
+		const lookup = await sb.Utils.fetchYoutubeVideo(
+			args.join(\" \").replace(/-/g, \"\"),
+			sb.Config.get(\"API_GOOGLE_YOUTUBE\")
+		);
+
+		if (!lookup) {
+			return {
+				reply: \"No video matching that query has been found.\"
+			};
+		}
+		else {
+			data = await sb.Utils.linkParser.fetchData(lookup.link);
+		}
+	}
+
+	const limit = sb.Config.get(\"MAX_SONG_REQUEST_LENGTH\");
 	const length = data.duration || data.length;
 	if (length > limit) {
 		return {
@@ -305,17 +354,26 @@ ON DUPLICATE KEY UPDATE
 		const status = await sb.VideoLANConnector.status();
 
 		if (status.currentplid !== -1 && status.currentplid !== id && status.time !== 0) {
-			const { vlcID: nowID } = await sb.VideoLANConnector.currentlyPlayingData()
+			const { vlcID: nowID } = await sb.VideoLANConnector.currentlyPlayingData();
 			const { time, length } = status;
-			
+
 			const playingDate = new sb.Date().addSeconds(length - time);
 			const inQueue = sb.VideoLANConnector.videoQueue.filter(i => i.vlcID > nowID);
 			for (const { length } of inQueue) {
-				playingDate.addSeconds(length);
-			}			
-			
+				playingDate.addSeconds(length ?? 0);
+			}
+
 			when = sb.Utils.timeDelta(playingDate);
 		}
+
+		const row = await sb.Query.getRow(\"chat_data\", \"Song_Request\");
+		row.setValues({
+			Link: data.ID,
+			Video_Type: 1,
+			Status: null,
+			User_Alias: context.user.ID,
+		});
+		await row.save();
 
 		return {
 			reply: `Video \"${data.name}\" by ${data.author} successfully added to queue with ID ${id}! It is playing ${when}`
