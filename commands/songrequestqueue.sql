@@ -40,7 +40,9 @@ VALUES
 		1,
 		1,
 		0,
-		NULL,
+		'({
+	isCustom: (string) => (string.endsWith(\".mp3\") || string.endsWith(\".ogg\") || string.endsWith(\".mp4\"))
+})',
 		'(async function songRequestQueue (context) {
 	const state = sb.Config.get(\"SONG_REQUESTS_STATE\");
 	if (state === \"off\") {
@@ -78,16 +80,17 @@ VALUES
 
 	if (!status.information) {
 		return {
-			reply: \"No song currently queued. Check history here: https://supinic.com/stream/video-queue\"
+			reply: \"No songs are currently queued. Check history here: https://supinic.com/stream/video-queue\"
 		};
 	}
 
-	const url = (status.information.category.meta.url.includes(\".mp3\"))
-		? status.information.category.meta.url
+	const checkUrl = status.information.category.meta.url;
+	const url = (this.staticData.isCustom(checkUrl))
+		? checkUrl
 		: sb.Utils.linkParser.parseLink(status.information.category.meta.url);
 
 	const firstSongIndex = sb.VideoLANConnector.videoQueue.findIndex(i => {
-		if (i.link.includes(\".mp3\")) {
+		if (this.staticData.isCustom(i.link)) {
 			return i.link === url;
 		}
 		else {
@@ -149,16 +152,17 @@ ON DUPLICATE KEY UPDATE
 
 	if (!status.information) {
 		return {
-			reply: \"No song currently queued. Check history here: https://supinic.com/stream/video-queue\"
+			reply: \"No songs are currently queued. Check history here: https://supinic.com/stream/video-queue\"
 		};
 	}
 
-	const url = (status.information.category.meta.url.includes(\".mp3\"))
-		? status.information.category.meta.url
+	const checkUrl = status.information.category.meta.url;
+	const url = (this.staticData.isCustom(checkUrl))
+		? checkUrl
 		: sb.Utils.linkParser.parseLink(status.information.category.meta.url);
 
 	const firstSongIndex = sb.VideoLANConnector.videoQueue.findIndex(i => {
-		if (i.link.includes(\".mp3\")) {
+		if (this.staticData.isCustom(i.link)) {
 			return i.link === url;
 		}
 		else {
