@@ -77,23 +77,31 @@ VALUES
 		userRequest = userRequests[1];
 	}
 
-	const status = await sb.VideoLANConnector.status();
-	let length = status.length - status.time;
+	try {
+		const status = await sb.VideoLANConnector.status();
+		let length = status.length - status.time;
 
-	for (const request of queued.slice(1)) {
-		if (request.vlcID === userRequest.vlcID) {
-			break;
+		for (const request of queued.slice(1)) {
+			if (request.vlcID === userRequest.vlcID) {
+				break;
+			}
+
+			length += (request.length || 0);
 		}
 
-		length += (request.length || 0);
+		const delta = sb.Utils.formatTime(length);
+		const bridge = (prepend) ? \"Then,\" : \"Your next video\";
+
+		return {
+			reply: `${prepend} ${bridge} \"${userRequest.name}\" is playing in ${delta}.`
+		};
 	}
-
-	const delta = sb.Utils.formatTime(length);
-	const bridge = (prepend) ? \"Then,\" : \"Your next video\";
-
-	return {
-		reply: `${prepend} ${bridge} \"${userRequest.name}\" is playing in ${delta}.`
-	};
+	catch (e) {
+		console.warn(e);
+		return {
+			reply: \"VLC did not respond, no data available!\"
+		};
+	}
 })',
 		NULL,
 		NULL
@@ -136,21 +144,29 @@ ON DUPLICATE KEY UPDATE
 		userRequest = userRequests[1];
 	}
 
-	const status = await sb.VideoLANConnector.status();
-	let length = status.length - status.time;
+	try {
+		const status = await sb.VideoLANConnector.status();
+		let length = status.length - status.time;
 
-	for (const request of queued.slice(1)) {
-		if (request.vlcID === userRequest.vlcID) {
-			break;
+		for (const request of queued.slice(1)) {
+			if (request.vlcID === userRequest.vlcID) {
+				break;
+			}
+
+			length += (request.length || 0);
 		}
 
-		length += (request.length || 0);
+		const delta = sb.Utils.formatTime(length);
+		const bridge = (prepend) ? \"Then,\" : \"Your next video\";
+
+		return {
+			reply: `${prepend} ${bridge} \"${userRequest.name}\" is playing in ${delta}.`
+		};
 	}
-
-	const delta = sb.Utils.formatTime(length);
-	const bridge = (prepend) ? \"Then,\" : \"Your next video\";
-
-	return {
-		reply: `${prepend} ${bridge} \"${userRequest.name}\" is playing in ${delta}.`
-	};
+	catch (e) {
+		console.warn(e);
+		return {
+			reply: \"VLC did not respond, no data available!\"
+		};
+	}
 })'
