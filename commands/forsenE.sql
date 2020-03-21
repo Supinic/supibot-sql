@@ -63,7 +63,8 @@ VALUES
 			\"GFMB. We can only afford 1 headset. Money is tight. Thats why we are doing sponsored stream today.\",
 			\"So my power just died right after the Ouija board answered “stop now” . Guess we are not playing that shit anymore.\",
 			\"ISP being a cunt today. Ill be back tomorrow\",
-			\"Twitch seems to be having some issues right now, pressed go live twice but no one can watch. will be back if they fix it\"
+			\"Twitch seems to be having some issues right now, pressed go live twice but no one can watch. will be back if they fix it\",
+			\"oh and @AdmiralBulldog I\'m coming for your ass ;)\"
 		],
 		notes: [
 			`Source for the \"b.\" tweet: https://twitter.com/Forsen/status/1057549668253659136`,
