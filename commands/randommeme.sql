@@ -40,7 +40,14 @@ VALUES
 		1,
 		1,
 		0,
-		NULL,
+		'(() => {
+	this.data.meta = {};
+	this.data.posts = {};
+
+	return {
+		banned: [\"moobs\"]
+	};
+})()',
 		'(async function randomMeme (context, subreddit) {
 	if (!subreddit) {
 		subreddit = sb.Utils.randArray([\"dankmemes\", \"memes\", \"pewdiepiesubmissions\"]);
@@ -54,13 +61,6 @@ VALUES
 		return {
 			reply: \"That subreddit has been banned from viewing!\"
 		};
-	}
-
-	if (!this.data.meta) {
-		this.data.meta = {};
-	}
-	if (!this.data.posts) {
-		this.data.posts = {};
 	}
 
 	if (!this.data.meta[subreddit]) {
@@ -115,6 +115,13 @@ VALUES
 		}
 	}
 	else {
+		if (post.data.over_18 && context.append.pipe) {
+			return {
+				success: false,
+				reason: \"pipe-nsfw\"
+			};
+		}
+
 		// Add the currently used post ID at the beginning of the array
 		repeatedPosts.unshift(post.data.id);
 		// And then splice off everything over the length of 3.
@@ -146,13 +153,6 @@ ON DUPLICATE KEY UPDATE
 		};
 	}
 
-	if (!this.data.meta) {
-		this.data.meta = {};
-	}
-	if (!this.data.posts) {
-		this.data.posts = {};
-	}
-
 	if (!this.data.meta[subreddit]) {
 		this.data.meta[subreddit] = await sb.Got.instances.Reddit(subreddit + \"/about.json\").json();
 	}
@@ -205,6 +205,13 @@ ON DUPLICATE KEY UPDATE
 		}
 	}
 	else {
+		if (post.data.over_18 && context.append.pipe) {
+			return {
+				success: false,
+				reason: \"pipe-nsfw\"
+			};
+		}
+
 		// Add the currently used post ID at the beginning of the array
 		repeatedPosts.unshift(post.data.id);
 		// And then splice off everything over the length of 3.

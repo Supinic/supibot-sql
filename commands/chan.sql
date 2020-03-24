@@ -38,7 +38,7 @@ VALUES
 		0,
 		0,
 		1,
-		0,
+		1,
 		0,
 		NULL,
 		'(async function chan (context, identifier, ...rest) {
@@ -108,6 +108,13 @@ VALUES
 	else if (board.nsfw && !enabled[resultType].nsfw) {
 		return {
 			reply: \"You can\'t query this NSFW board for that result type here!\"
+		};
+	}
+
+	if (board.nsfw && context.append.pipe) {
+		return {
+			success: false,
+			reason: \"pipe-nsfw\"
 		};
 	}
 
@@ -261,6 +268,13 @@ ON DUPLICATE KEY UPDATE
 	else if (board.nsfw && !enabled[resultType].nsfw) {
 		return {
 			reply: \"You can\'t query this NSFW board for that result type here!\"
+		};
+	}
+
+	if (board.nsfw && context.append.pipe) {
+		return {
+			success: false,
+			reason: \"pipe-nsfw\"
 		};
 	}
 

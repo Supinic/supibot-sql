@@ -116,6 +116,7 @@ VALUES
 				case \"filter\": reply = \"You can\'t use this command here!\"; break;
 				case \"block\": reply = \"That user has blocked you from this command!\"; break;
 				case \"opt-out\": reply = \"That user has opted out from this command!\"; break;
+				case \"pipe-nsfw\": reply = \"You cannot pipe NSFW results!\"; break;
 
 				default: reply = `An unexpected pipe result (${result.reason}) has been encountered!`
 			}
@@ -222,6 +223,7 @@ ON DUPLICATE KEY UPDATE
 				case \"filter\": reply = \"You can\'t use this command here!\"; break;
 				case \"block\": reply = \"That user has blocked you from this command!\"; break;
 				case \"opt-out\": reply = \"That user has opted out from this command!\"; break;
+				case \"pipe-nsfw\": reply = \"You cannot pipe NSFW results!\"; break;
 
 				default: reply = `An unexpected pipe result (${result.reason}) has been encountered!`
 			}
