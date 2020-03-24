@@ -42,7 +42,7 @@ VALUES
 		0,
 		NULL,
 		'(async function pipe (context, ...args) {
-	const invocations = args.join(\" \").split(\"|\").map(i => i.trim());
+	const invocations = args.join(\" \").split(/[|>]/).map(i => i.trim());
 	if (!context.externalPipe && invocations.length < 2) {
 		return { reply: \"At least two commands must be piped together!\" };
 	}
@@ -120,7 +120,7 @@ VALUES
 				default: reply = `An unexpected pipe result (${result.reason}) has been encountered!`
 			}
 
-			return { 
+			return {
 				reply: `Command ${cmd} failed: ${reply}`
 			};
 		}
@@ -148,7 +148,7 @@ VALUES
 
 ON DUPLICATE KEY UPDATE
 	Code = '(async function pipe (context, ...args) {
-	const invocations = args.join(\" \").split(\"|\").map(i => i.trim());
+	const invocations = args.join(\" \").split(/[|>]/).map(i => i.trim());
 	if (!context.externalPipe && invocations.length < 2) {
 		return { reply: \"At least two commands must be piped together!\" };
 	}
@@ -226,7 +226,7 @@ ON DUPLICATE KEY UPDATE
 				default: reply = `An unexpected pipe result (${result.reason}) has been encountered!`
 			}
 
-			return { 
+			return {
 				reply: `Command ${cmd} failed: ${reply}`
 			};
 		}
