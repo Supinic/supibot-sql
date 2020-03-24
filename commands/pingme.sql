@@ -60,6 +60,9 @@ VALUES
 	else if (targetUser.ID === context.user.ID) {
 		return { reply: \"That makes no sense FeelsDankMan\" };
 	}
+	else if (targetUser.ID === sb.Config.get(\"SELF_ID\")) {
+		return { reply: \"Pong! FeelsDankMan I\'m here\" };
+	}
 
 	const { success, cause, ID } = await sb.Reminder.create({
 		Channel: context.channel?.ID || null,
@@ -99,6 +102,9 @@ ON DUPLICATE KEY UPDATE
 	}
 	else if (targetUser.ID === context.user.ID) {
 		return { reply: \"That makes no sense FeelsDankMan\" };
+	}
+	else if (targetUser.ID === sb.Config.get(\"SELF_ID\")) {
+		return { reply: \"Pong! FeelsDankMan I\'m here\" };
 	}
 
 	const { success, cause, ID } = await sb.Reminder.create({
