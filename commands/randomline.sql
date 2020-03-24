@@ -189,7 +189,7 @@ VALUES
 				targetID = ID - counts[0] - counts[1];
 				targetChannel = channels[2];
 			}
-			
+
 			result = await sb.Query.getRecordset(rs => rs
 				.select(\"Text\", \"Posted\", \"Name\")
 				.from(\"chat_line\", targetChannel)
@@ -197,7 +197,7 @@ VALUES
 				.where(targetChannel + \".ID = %n\", targetID)
 				.single()
 			);
-			
+
 			console.log({result, ID, targetID, targetChannel, channels})
 		}
 		else {
@@ -224,7 +224,20 @@ VALUES
 	}
 
 	return {
-		reply: `(${sb.Utils.timeDelta(result.Posted)}) ${result.Name}: ${result.Text}`
+		partialReplies: [
+			{
+				bancheck: false,
+				message: `(${sb.Utils.timeDelta(result.Posted)})`
+			},
+			{
+				bancheck: true,
+				message: `${result.Name}:`				
+			},
+			{
+				bancheck: true,
+				message: `${result.Text}`
+			}			
+		]
 	};
 })',
 		NULL,
@@ -387,7 +400,7 @@ ON DUPLICATE KEY UPDATE
 				targetID = ID - counts[0] - counts[1];
 				targetChannel = channels[2];
 			}
-			
+
 			result = await sb.Query.getRecordset(rs => rs
 				.select(\"Text\", \"Posted\", \"Name\")
 				.from(\"chat_line\", targetChannel)
@@ -395,7 +408,7 @@ ON DUPLICATE KEY UPDATE
 				.where(targetChannel + \".ID = %n\", targetID)
 				.single()
 			);
-			
+
 			console.log({result, ID, targetID, targetChannel, channels})
 		}
 		else {
@@ -422,6 +435,19 @@ ON DUPLICATE KEY UPDATE
 	}
 
 	return {
-		reply: `(${sb.Utils.timeDelta(result.Posted)}) ${result.Name}: ${result.Text}`
+		partialReplies: [
+			{
+				bancheck: false,
+				message: `(${sb.Utils.timeDelta(result.Posted)})`
+			},
+			{
+				bancheck: true,
+				message: `${result.Name}:`				
+			},
+			{
+				bancheck: true,
+				message: `${result.Text}`
+			}			
+		]
 	};
 })'
