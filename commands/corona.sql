@@ -278,7 +278,7 @@ VALUES
 		targetData = this.data.cache.find(i => i.country.toLowerCase() === bestMatch);
 	}
 	else {
-		this.data.cache.find(i => i.country === \"Total\" && i.region == null);
+		targetData = this.data.cache.find(i => i.total && i.region === null);
 	}
 
 	if (targetData) {
@@ -337,8 +337,8 @@ VALUES
 		else {
 			const emoji = sb.Utils.randArray([\"🌏\", \"🌎\", \"🌍\"]);
 			return {
-				reply: `${emoji} ${confirmed} (+${newCases}) corona virus cases are tracked so far. ${mild} are in mild, and ${critical} in critical condition; ${recovered} have fully recovered, and there are ${deaths} (+${newDeaths}) deceased. Last check: ${delta}.`
-			}
+				reply: `${emoji} ${confirmed} (+${newCases}) corona virus cases are tracked so far. ${critical} in critical condition; ${recovered} have fully recovered, and there are ${deaths} (+${newDeaths}) deceased.`
+			};
 		}
 	}
 	else {
@@ -463,7 +463,7 @@ ON DUPLICATE KEY UPDATE
 		targetData = this.data.cache.find(i => i.country.toLowerCase() === bestMatch);
 	}
 	else {
-		this.data.cache.find(i => i.country === \"Total\" && i.region == null);
+		targetData = this.data.cache.find(i => i.total && i.region === null);
 	}
 
 	if (targetData) {
@@ -522,8 +522,8 @@ ON DUPLICATE KEY UPDATE
 		else {
 			const emoji = sb.Utils.randArray([\"🌏\", \"🌎\", \"🌍\"]);
 			return {
-				reply: `${emoji} ${confirmed} (+${newCases}) corona virus cases are tracked so far. ${mild} are in mild, and ${critical} in critical condition; ${recovered} have fully recovered, and there are ${deaths} (+${newDeaths}) deceased. Last check: ${delta}.`
-			}
+				reply: `${emoji} ${confirmed} (+${newCases}) corona virus cases are tracked so far. ${critical} in critical condition; ${recovered} have fully recovered, and there are ${deaths} (+${newDeaths}) deceased.`
+			};
 		}
 	}
 	else {
