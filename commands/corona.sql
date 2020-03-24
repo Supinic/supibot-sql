@@ -162,9 +162,6 @@ VALUES
 						if (country === \"S. Korea\") {
 							country = \"South Korea\";
 						}
-						if (special[country]) {
-							country = special[country];
-						}
 
 						// Fixing \"U.A.E.\" and \"U.K.\"
 						country = country.replace(/\\./g, \"\");
@@ -220,7 +217,7 @@ VALUES
 				url: \"country/us\",
 				region: \"USA\",
 				selector: \"#usa_table_countries_today tbody tr\",
-				fields: [\"country\", \"total\", \"newCases\", \"deaths\", \"newDeaths\"]
+				fields: [\"country\", \"confirmed\", \"newCases\", \"deaths\", \"newDeaths\"]
 			})
 		]);
 
@@ -405,7 +402,7 @@ ON DUPLICATE KEY UPDATE
 				url: \"country/us\",
 				region: \"USA\",
 				selector: \"#usa_table_countries_today tbody tr\",
-				fields: [\"country\", \"total\", \"newCases\", \"deaths\", \"newDeaths\"]
+				fields: [\"country\", \"confirmed\", \"newCases\", \"deaths\", \"newDeaths\"]
 			})
 		]);
 
