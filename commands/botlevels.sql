@@ -41,10 +41,18 @@ VALUES
 		0,
 		0,
 		NULL,
-		'async () => ({ reply: \"Bots: https://supinic.com/bot/channel-bots || Levels: https://supinic.com/bot/channel-bots/levels\" })',
+		'(async function botLevels () {
+	return {
+		reply: \"Bots: https://supinic.com/bot/channel-bots // Levels: https://supinic.com/bot/channel-bots/levels // Badges: https://supinic.com/bot/channel-bots/badges\"
+	};
+})',
 		NULL,
 		NULL
 	)
 
 ON DUPLICATE KEY UPDATE
-	Code = 'async () => ({ reply: \"Bots: https://supinic.com/bot/channel-bots || Levels: https://supinic.com/bot/channel-bots/levels\" })'
+	Code = '(async function botLevels () {
+	return {
+		reply: \"Bots: https://supinic.com/bot/channel-bots // Levels: https://supinic.com/bot/channel-bots/levels // Badges: https://supinic.com/bot/channel-bots/badges\"
+	};
+})'
