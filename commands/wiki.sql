@@ -73,7 +73,7 @@ VALUES
 			.set(\"action\", \"query\")
 			.set(\"prop\", \"extracts\")
 			.set(\"redirects\", \"1\")
-			.set(\"titles\", args.join(\" \"))
+			.set(\"titles\", args.map(i => sb.Utils.capitalize(i)).join(\" \"))
 			.toString()
 	}).json();
 
@@ -138,7 +138,7 @@ ON DUPLICATE KEY UPDATE
 			.set(\"action\", \"query\")
 			.set(\"prop\", \"extracts\")
 			.set(\"redirects\", \"1\")
-			.set(\"titles\", args.join(\" \"))
+			.set(\"titles\", args.map(i => sb.Utils.capitalize(i)).join(\" \"))
 			.toString()
 	}).json();
 
