@@ -42,6 +42,12 @@ VALUES
 		0,
 		NULL,
 		'(async function when (context) {
+	if (sb.Config.get(\"SONG_REQUESTS_STATE\") === \"off\") {
+		return {
+			reply: \"Song requests are currently off!\"
+		};
+	}
+
 	const list = sb.VideoLANConnector.videoQueue;
 	const current = await sb.VideoLANConnector.currentlyPlayingData();
 	if (!current) {
@@ -109,6 +115,12 @@ VALUES
 
 ON DUPLICATE KEY UPDATE
 	Code = '(async function when (context) {
+	if (sb.Config.get(\"SONG_REQUESTS_STATE\") === \"off\") {
+		return {
+			reply: \"Song requests are currently off!\"
+		};
+	}
+
 	const list = sb.VideoLANConnector.videoQueue;
 	const current = await sb.VideoLANConnector.currentlyPlayingData();
 	if (!current) {
