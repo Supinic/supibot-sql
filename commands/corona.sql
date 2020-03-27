@@ -87,10 +87,7 @@ VALUES
 		fetchData: async (options = {}) => {
 			let html = null;
 			try {
-				html = await sb.Got.instances.FakeAgent({
-					prefixUrl: baseURL,
-					url: options.url
-				}).text();
+				html = await sb.Got.instances.FakeAgent(options.url).text();
 			}
 			catch (e) {
 				return {
@@ -206,29 +203,36 @@ VALUES
 
 		this.data.fetching = true;
 
-		const [mainData, usaData] = await Promise.all([
+		const [mainData, ...regionalData] = await Promise.all([
 			this.staticData.fetchData({
-				url: \"\",
+				url: this.staticData.baseURL,
 				region: null,
 				selector: \"#main_table_countries_today tbody tr\",
 				fields: [\"country\", \"confirmed\", \"newCases\", \"deaths\", \"newDeaths\", \"recovered\", \"active\", \"critical\", \"cpm\", \"dpm\"]
 			}),
 			this.staticData.fetchData({
-				url: \"country/us\",
+				url: this.staticData.baseURL + \"country/us\",
 				region: \"USA\",
 				selector: \"#usa_table_countries_today tbody tr\",
 				fields: [\"country\", \"confirmed\", \"newCases\", \"deaths\", \"newDeaths\"]
+			}),
+			this.staticData.fetchData({
+				url: \"https://www.canada.ca/en/public-health/services/diseases/2019-novel-coronavirus-infection.html\",
+				region: \"Canada\",
+				selector: \".table.table-striped.table-bordered tbody tr\",
+				fields: [\"country\", \"confirmed\", \"probable\", \"deaths\"]
 			})
 		]);
 
 		this.data.fetching = false;
 
-		if (!mainData.success || !usaData.success) {
-			const { reply, cooldown } = this.staticData.handlers[mainData.cause || usaData.cause];
+		if (!mainData.success || regionalData.some(i => !i.success)) {
+			const cause = mainData.cause || regionalData.find(i => !i.success)?.cause;
+			const { reply, cooldown } = this.staticData.handlers[cause];
 			return { reply, cooldown };
 		}
 
-		this.data.cache = [mainData.rows, usaData.rows].flat();
+		this.data.cache = [mainData.rows, regionalData.map(i => i.rows)].flat(Infinity);
 		this.data.countries = new Set(this.data.cache.filter(i => i.country).map(i => i.country));
 
 		const lastUpdateString = mainData.selector(\".label-counter\").next().text().replace(\"Last updated \", \"\");
@@ -310,6 +314,9 @@ VALUES
 			let emoji = country;
 			if (region === \"USA\") {
 				region = \" (🇺🇸)\";
+			}
+			else if (region === \"Canada\") {
+				region = \" (🇨🇦)\";
 			}
 			else if (countryData?.Code) {
 				emoji = String.fromCodePoint(...countryData.Code.split(\"\").map(i => i.charCodeAt(0) + 127397));
@@ -391,29 +398,36 @@ ON DUPLICATE KEY UPDATE
 
 		this.data.fetching = true;
 
-		const [mainData, usaData] = await Promise.all([
+		const [mainData, ...regionalData] = await Promise.all([
 			this.staticData.fetchData({
-				url: \"\",
+				url: this.staticData.baseURL,
 				region: null,
 				selector: \"#main_table_countries_today tbody tr\",
 				fields: [\"country\", \"confirmed\", \"newCases\", \"deaths\", \"newDeaths\", \"recovered\", \"active\", \"critical\", \"cpm\", \"dpm\"]
 			}),
 			this.staticData.fetchData({
-				url: \"country/us\",
+				url: this.staticData.baseURL + \"country/us\",
 				region: \"USA\",
 				selector: \"#usa_table_countries_today tbody tr\",
 				fields: [\"country\", \"confirmed\", \"newCases\", \"deaths\", \"newDeaths\"]
+			}),
+			this.staticData.fetchData({
+				url: \"https://www.canada.ca/en/public-health/services/diseases/2019-novel-coronavirus-infection.html\",
+				region: \"Canada\",
+				selector: \".table.table-striped.table-bordered tbody tr\",
+				fields: [\"country\", \"confirmed\", \"probable\", \"deaths\"]
 			})
 		]);
 
 		this.data.fetching = false;
 
-		if (!mainData.success || !usaData.success) {
-			const { reply, cooldown } = this.staticData.handlers[mainData.cause || usaData.cause];
+		if (!mainData.success || regionalData.some(i => !i.success)) {
+			const cause = mainData.cause || regionalData.find(i => !i.success)?.cause;
+			const { reply, cooldown } = this.staticData.handlers[cause];
 			return { reply, cooldown };
 		}
 
-		this.data.cache = [mainData.rows, usaData.rows].flat();
+		this.data.cache = [mainData.rows, regionalData.map(i => i.rows)].flat(Infinity);
 		this.data.countries = new Set(this.data.cache.filter(i => i.country).map(i => i.country));
 
 		const lastUpdateString = mainData.selector(\".label-counter\").next().text().replace(\"Last updated \", \"\");
@@ -495,6 +509,9 @@ ON DUPLICATE KEY UPDATE
 			let emoji = country;
 			if (region === \"USA\") {
 				region = \" (🇺🇸)\";
+			}
+			else if (region === \"Canada\") {
+				region = \" (🇨🇦)\";
 			}
 			else if (countryData?.Code) {
 				emoji = String.fromCodePoint(...countryData.Code.split(\"\").map(i => i.charCodeAt(0) + 127397));
