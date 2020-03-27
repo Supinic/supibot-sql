@@ -63,16 +63,15 @@ VALUES
 	let formattedAddress = null;
 
 	if (args.length === 0) {
-		if (context.user.Data.defaultLocation) {
-			skipLocation = context.user.Data.defaultLocation.private;
-			args = context.user.Data.defaultLocation.address;
+		if (context.user.Data.location) {
+			skipLocation = context.user.Data.location.hidden;
+			coords = context.user.Data.location.coordinates;
+			formattedAddress = context.user.Data.location.formatted;
 		}
 		else {
 			return {
-				reply: \"No place has been provided!\",
-				cooldown: {
-					length: 1000
-				}
+				reply: \"No place provided!\",
+				cooldown: 2500
 			};
 		}
 	}
@@ -113,22 +112,24 @@ VALUES
 	let type = \"currently\";
 	const weatherRegex = /(hour|day|week)(\\+?(\\d+))?$/;
 
-	if (args[args.length - 1].includes(\"-\")) {
-		return { reply: \"Checking for weather history is not currently implemented\" };
-	}
-	else if (weatherRegex.test(args[args.length - 1])) {
-		const match = args.pop().match(weatherRegex);
-
-		if (match[2]) { // +<number> = shift by X, used in daily/hourly
-			number = Number(match[3]);
-			type = (match[1] === \"day\") ? \"daily\" : (match[1] === \"hour\") ? \"hourly\" : null;
-
-			if (!type || (type === \"daily\" && number > 7) || (type === \"hourly\" && number > 48)) {
-				return { reply: \"Invalid combination of parameters!\" };
-			}
+	if (args.length > 0) {
+		if (args[args.length - 1].includes(\"-\")) {
+			return { reply: \"Checking for weather history is not currently implemented\" };
 		}
-		else { // summary
-			type = (match[1] === \"day\") ? \"hourly\" : (match[1] === \"hour\") ? \"minutely\" : \"daily\";
+		else if (args && weatherRegex.test(args[args.length - 1])) {
+			const match = args.pop().match(weatherRegex);
+	
+			if (match[2]) { // +<number> = shift by X, used in daily/hourly
+				number = Number(match[3]);
+				type = (match[1] === \"day\") ? \"daily\" : (match[1] === \"hour\") ? \"hourly\" : null;
+	
+				if (!type || (type === \"daily\" && number > 7) || (type === \"hourly\" && number > 48)) {
+					return { reply: \"Invalid combination of parameters!\" };
+				}
+			}
+			else { // summary
+				type = (match[1] === \"day\") ? \"hourly\" : (match[1] === \"hour\") ? \"minutely\" : \"daily\";
+			}
 		}
 	}
 
@@ -268,16 +269,15 @@ ON DUPLICATE KEY UPDATE
 	let formattedAddress = null;
 
 	if (args.length === 0) {
-		if (context.user.Data.defaultLocation) {
-			skipLocation = context.user.Data.defaultLocation.private;
-			args = context.user.Data.defaultLocation.address;
+		if (context.user.Data.location) {
+			skipLocation = context.user.Data.location.hidden;
+			coords = context.user.Data.location.coordinates;
+			formattedAddress = context.user.Data.location.formatted;
 		}
 		else {
 			return {
-				reply: \"No place has been provided!\",
-				cooldown: {
-					length: 1000
-				}
+				reply: \"No place provided!\",
+				cooldown: 2500
 			};
 		}
 	}
@@ -318,22 +318,24 @@ ON DUPLICATE KEY UPDATE
 	let type = \"currently\";
 	const weatherRegex = /(hour|day|week)(\\+?(\\d+))?$/;
 
-	if (args[args.length - 1].includes(\"-\")) {
-		return { reply: \"Checking for weather history is not currently implemented\" };
-	}
-	else if (weatherRegex.test(args[args.length - 1])) {
-		const match = args.pop().match(weatherRegex);
-
-		if (match[2]) { // +<number> = shift by X, used in daily/hourly
-			number = Number(match[3]);
-			type = (match[1] === \"day\") ? \"daily\" : (match[1] === \"hour\") ? \"hourly\" : null;
-
-			if (!type || (type === \"daily\" && number > 7) || (type === \"hourly\" && number > 48)) {
-				return { reply: \"Invalid combination of parameters!\" };
-			}
+	if (args.length > 0) {
+		if (args[args.length - 1].includes(\"-\")) {
+			return { reply: \"Checking for weather history is not currently implemented\" };
 		}
-		else { // summary
-			type = (match[1] === \"day\") ? \"hourly\" : (match[1] === \"hour\") ? \"minutely\" : \"daily\";
+		else if (args && weatherRegex.test(args[args.length - 1])) {
+			const match = args.pop().match(weatherRegex);
+	
+			if (match[2]) { // +<number> = shift by X, used in daily/hourly
+				number = Number(match[3]);
+				type = (match[1] === \"day\") ? \"daily\" : (match[1] === \"hour\") ? \"hourly\" : null;
+	
+				if (!type || (type === \"daily\" && number > 7) || (type === \"hourly\" && number > 48)) {
+					return { reply: \"Invalid combination of parameters!\" };
+				}
+			}
+			else { // summary
+				type = (match[1] === \"day\") ? \"hourly\" : (match[1] === \"hour\") ? \"minutely\" : \"daily\";
+			}
 		}
 	}
 
