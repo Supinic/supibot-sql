@@ -241,9 +241,51 @@ VALUES
 	}
 
 	let targetData = null;
-	const input = args.join(\" \").toLowerCase();
+	let input = args.join(\" \").toLowerCase();
 
-	if (this.staticData.regions.includes(input)) {
+	if (input.startsWith(\"@\")) {
+		const userData = await sb.User.get(input);
+		if (!userData) {
+			return {
+				success: false,
+				reply: \"That user does not exist!\"
+			};
+		}
+		else if (!userData.Data.location) {
+			return {
+				success: false,
+				reply: \"That user does not have their location set!\"
+			};
+		}
+		else if (userData.Data.location.hidden) {
+			return {
+				success: false,
+				reply: \"That user has hidden their precise location!\"
+			};
+		}
+		else if (!userData.Data.location.components.country) {
+			return {
+				success: false,
+				reply: \"That user does not have their country location set!\"
+			};
+		}
+		
+		input = userData.Data.location.components.country; 
+	}
+	
+	if (input === \"top\") {
+		const result = this.data.cache
+			.filter(i => !i.total && !i.region)
+			.sort((a, b) => b.confirmed - a.confirmed)
+			.slice(0, 10)
+			.map((i, ind) => `#${ind + 1}: ${i.country} (${i.confirmed})`)
+			.join(\"; \");
+
+		return {
+			reply: \"Top 10 countries by cases: \" + result
+		};
+	}
+	else if (this.staticData.regions.includes(input)) {
 		const special = Object.values(this.staticData.special).map(i => i.toLowerCase());
 		const eligibleCountries = (await sb.Query.getRecordset(rs => rs
 			.select(\"Name\")
@@ -321,7 +363,7 @@ VALUES
 			else if (countryData?.Code) {
 				emoji = String.fromCodePoint(...countryData.Code.split(\"\").map(i => i.charCodeAt(0) + 127397));
 			}
-			
+
 			let linkString = \"\";
 			if (link) {
 				if (context.platform.Name === \"discord\") {
@@ -445,9 +487,51 @@ ON DUPLICATE KEY UPDATE
 	}
 
 	let targetData = null;
-	const input = args.join(\" \").toLowerCase();
+	let input = args.join(\" \").toLowerCase();
 
-	if (this.staticData.regions.includes(input)) {
+	if (input.startsWith(\"@\")) {
+		const userData = await sb.User.get(input);
+		if (!userData) {
+			return {
+				success: false,
+				reply: \"That user does not exist!\"
+			};
+		}
+		else if (!userData.Data.location) {
+			return {
+				success: false,
+				reply: \"That user does not have their location set!\"
+			};
+		}
+		else if (userData.Data.location.hidden) {
+			return {
+				success: false,
+				reply: \"That user has hidden their precise location!\"
+			};
+		}
+		else if (!userData.Data.location.components.country) {
+			return {
+				success: false,
+				reply: \"That user does not have their country location set!\"
+			};
+		}
+		
+		input = userData.Data.location.components.country; 
+	}
+	
+	if (input === \"top\") {
+		const result = this.data.cache
+			.filter(i => !i.total && !i.region)
+			.sort((a, b) => b.confirmed - a.confirmed)
+			.slice(0, 10)
+			.map((i, ind) => `#${ind + 1}: ${i.country} (${i.confirmed})`)
+			.join(\"; \");
+
+		return {
+			reply: \"Top 10 countries by cases: \" + result
+		};
+	}
+	else if (this.staticData.regions.includes(input)) {
 		const special = Object.values(this.staticData.special).map(i => i.toLowerCase());
 		const eligibleCountries = (await sb.Query.getRecordset(rs => rs
 			.select(\"Name\")
@@ -525,7 +609,7 @@ ON DUPLICATE KEY UPDATE
 			else if (countryData?.Code) {
 				emoji = String.fromCodePoint(...countryData.Code.split(\"\").map(i => i.charCodeAt(0) + 127397));
 			}
-			
+
 			let linkString = \"\";
 			if (link) {
 				if (context.platform.Name === \"discord\") {

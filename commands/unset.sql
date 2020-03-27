@@ -42,10 +42,10 @@ VALUES
 		0,
 		NULL,
 		'(async function unset (context, type, ID) {
-	if ((!type && !ID) || Number(type) || (!Number(ID) && ID !== \"last\")) {
-		const prefix = sb.Config.get(\"COMMAND_PREFIX\");
+	if (!type) {
 		return {
-			reply: `The correct syntax is: ${prefix}unset <type> <ID> or ${prefix}unset <type> \"last\". Check the command\'s help for more info.`
+			success: false,
+			reply: \"No type provided!\"
 		};
 	}
 
@@ -62,7 +62,7 @@ VALUES
 				.limit(1)
 				.single()
 			);
-				
+
 		}
 		else if (type === \"suggestion\" || type === \"suggest\") {
 			result = await sb.Query.getRecordset(rs => rs
@@ -84,17 +84,17 @@ VALUES
 		else {
 			ID = result.ID;
 		}
-	}	
+	}
 
 	ID = Number(ID);
 	switch (type) {
-		case \"notify\": 
+		case \"notify\":
 		case \"reminder\": {
 			let row = await sb.Query.getRow(\"chat_data\", \"Reminder\");
 			try {
 				await row.load(ID);
 			}
-			catch (e) {
+			catch {
 				return { reply: \"ID does not exist!\" };
 			}
 
@@ -119,7 +119,7 @@ VALUES
 			try {
 				await row.load(ID);
 			}
-			catch (e) {
+			catch {
 				return { reply: \"ID does not exist!\" };
 			}
 
@@ -135,6 +135,15 @@ VALUES
 				await row.save();
 				return { reply: \"Suggestion ID \" + ID + \" has been flagged as \\\"Dismissed by author\\\".\" };
 			}
+		}
+
+		case \"location\": {
+			context.user.Data.location = null;
+
+			await context.user.saveProperty(\"Data\", context.user.Data);
+			return {
+				reply: \"Your location has been unset successfully!\"
+			};
 		}
 
 		default: return { reply: \"Unrecognized target\" };
@@ -146,10 +155,10 @@ VALUES
 
 ON DUPLICATE KEY UPDATE
 	Code = '(async function unset (context, type, ID) {
-	if ((!type && !ID) || Number(type) || (!Number(ID) && ID !== \"last\")) {
-		const prefix = sb.Config.get(\"COMMAND_PREFIX\");
+	if (!type) {
 		return {
-			reply: `The correct syntax is: ${prefix}unset <type> <ID> or ${prefix}unset <type> \"last\". Check the command\'s help for more info.`
+			success: false,
+			reply: \"No type provided!\"
 		};
 	}
 
@@ -166,7 +175,7 @@ ON DUPLICATE KEY UPDATE
 				.limit(1)
 				.single()
 			);
-				
+
 		}
 		else if (type === \"suggestion\" || type === \"suggest\") {
 			result = await sb.Query.getRecordset(rs => rs
@@ -188,17 +197,17 @@ ON DUPLICATE KEY UPDATE
 		else {
 			ID = result.ID;
 		}
-	}	
+	}
 
 	ID = Number(ID);
 	switch (type) {
-		case \"notify\": 
+		case \"notify\":
 		case \"reminder\": {
 			let row = await sb.Query.getRow(\"chat_data\", \"Reminder\");
 			try {
 				await row.load(ID);
 			}
-			catch (e) {
+			catch {
 				return { reply: \"ID does not exist!\" };
 			}
 
@@ -223,7 +232,7 @@ ON DUPLICATE KEY UPDATE
 			try {
 				await row.load(ID);
 			}
-			catch (e) {
+			catch {
 				return { reply: \"ID does not exist!\" };
 			}
 
@@ -239,6 +248,15 @@ ON DUPLICATE KEY UPDATE
 				await row.save();
 				return { reply: \"Suggestion ID \" + ID + \" has been flagged as \\\"Dismissed by author\\\".\" };
 			}
+		}
+
+		case \"location\": {
+			context.user.Data.location = null;
+
+			await context.user.saveProperty(\"Data\", context.user.Data);
+			return {
+				reply: \"Your location has been unset successfully!\"
+			};
 		}
 
 		default: return { reply: \"Unrecognized target\" };

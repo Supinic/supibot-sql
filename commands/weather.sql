@@ -40,9 +40,27 @@ VALUES
 		1,
 		1,
 		0,
-		NULL,
+		'({
+	icons: {
+		\"clear-day\": \"🌞\",
+		\"clear-night\": \"🌚\",
+		\"rain\": \"🌧️\",
+		\"snow\": \"🌨️\",
+		\"sleet\": \"🌧️🌨️\",
+		\"fog\": \"🌫️\",
+		\"cloudy\": \"☁️\",
+		\"partly-cloudy-day\": \"⛅\",
+		\"partly-cloudy-night\": \"☁️\",
+		\"hail\": \"☄️\",
+		\"thunderstorm\": \"🌩️\",
+		\"tornado\": \"🌪️\",
+		\"wind\": \"💨\"
+	}
+})',
 		'(async function weather (context, ...args) {
 	let skipLocation = false;
+	let coords = null;
+	let formattedAddress = null;
 
 	if (args.length === 0) {
 		if (context.user.Data.defaultLocation) {
@@ -76,77 +94,20 @@ VALUES
 				}
 			};
 		}
-		else if (!userData.Data.defaultLocation) {
+		else if (!userData.Data.location) {
 			return {
-				reply: \"That user did not set their default location!\",
+				reply: \"That user did not set their location!\",
 				cooldown: {
 					length: 1000
 				}
 			};
 		}
 		else {
-			skipLocation = userData.Data.defaultLocation.private;
-			args = args.slice(1);
-			args.unshift(...userData.Data.defaultLocation.address);
+			coords = userData.Data.location.coordinates;
+			skipLocation = userData.Data.location.hidden;
+			formattedAddress = userData.Data.location.formatted;
 		}
 	}
-	else if (args[0] === \"set\") {
-		args = args.slice((args[1] === \"location\") ? 2 : 1);
-		let privateLocation = false;
-
-		if (args[0] === \"private\") {
-			args = args.slice(1);
-			privateLocation = true;
-		}
-
-		if (args.length === 0) {
-			return {
-				reply: \"No default location provided!\",
-				cooldown: {
-					length: 1000
-				}
-			};
-		}
-
-		const check = (await sb.Command.get(\"weather\").execute(context, ...args)).reply;
-		if (!check || !check.includes(\"(now)\")) {
-			return {
-				reply: \"Your location must be valid, and contain no extra arguments!\",
-				cooldown: {
-					length: 1000
-				}
-			};
-		}
-
-		context.user.Data.defaultLocation = {
-			address: args,
-			private: privateLocation
-		};
-		await context.user.saveProperty(\"Data\", context.user.Data);
-
-		return {
-			reply: \"Default location has been set! Use $weather without parameters, it will now find your default location\'s weather.\",
-			cooldown: {
-				length: 1000
-			}
-		}
-	}
-
-	const icons = {
-		\"clear-day\": \"🌞\",
-		\"clear-night\": \"🌚\",
-		\"rain\": \"🌧️\",
-		\"snow\": \"🌨️\",
-		\"sleet\": \"🌧️🌨️\",
-		\"fog\": \"🌫️\",
-		\"cloudy\": \"☁️\",
-		\"partly-cloudy-day\": \"⛅\",
-		\"partly-cloudy-night\": \"☁️\",
-		\"hail\": \"☄️\",
-		\"thunderstorm\": \"🌩️\",
-		\"tornado\": \"🌪️\",
-		\"wind\": \"💨\"
-	};
 
 	let number = null;
 	let type = \"currently\";
@@ -171,23 +132,27 @@ VALUES
 		}
 	}
 
-	const geoData = await sb.Got({
-		url: \"https://maps.googleapis.com/maps/api/geocode/json\",
-		searchParams: new sb.URLParams()
-			.set(\"key\", sb.Config.get(\"API_GOOGLE_GEOCODING\"))
-			.set(\"address\", args.join(\" \"))
-			.toString()
-	}).json();
-	
-	if (!geoData.results[0]) {
-		return {
-			reply: \"That place was not found FeelsBadMan\"
-		};
+	if (!coords) {
+		const geoData = await sb.Got({
+			url: \"https://maps.googleapis.com/maps/api/geocode/json\",
+			searchParams: new sb.URLParams()
+				.set(\"key\", sb.Config.get(\"API_GOOGLE_GEOCODING\"))
+				.set(\"address\", args.join(\" \"))
+				.toString()
+		}).json();
+
+		if (!geoData.results[0]) {
+			return {
+				reply: \"That place was not found! FeelsBadMan\"
+			};
+		}
+
+		formattedAddress = geoData.results[0].formatted_address;
+		coords = geoData.results[0].geometry.location;
 	}
 
-	const coords = geoData.results[0].geometry.location;
 	const excluded = [\"currently\", \"minutely\", \"hourly\", \"daily\", \"alerts\"].filter(i => i !== type);
-	const key = sb.Config.get(\"API_DARKSKY\");	
+	const key = sb.Config.get(\"API_DARKSKY\");
 
 	const topData = await sb.Got({
 		url: `https://api.darksky.net/forecast/${key}/${coords.lat},${coords.lng}`,
@@ -207,7 +172,7 @@ VALUES
 			? topData.currently
 			: topData[type].data[number];
 
-		const icon = icons[data.icon];
+		const icon = this.staticData.icons[data.icon];
 		const precip = (data.precipProbability === 0)
 			? \"No precipitation expected.\"
 			: (sb.Utils.round(data.precipProbability * 100) + \"% chance of \" + sb.Utils.round(data.precipIntensity, 2) + \" mm \" + data.precipType + \".\");
@@ -249,7 +214,7 @@ VALUES
 
 	const place = (skipLocation)
 		? \"(location hidden)\"
-		: geoData.results[0].formatted_address;
+		: formattedAddress;
 
 	return {
 		reply: `${place} ${plusTime}: ${message}`
@@ -299,6 +264,8 @@ VALUES
 ON DUPLICATE KEY UPDATE
 	Code = '(async function weather (context, ...args) {
 	let skipLocation = false;
+	let coords = null;
+	let formattedAddress = null;
 
 	if (args.length === 0) {
 		if (context.user.Data.defaultLocation) {
@@ -332,77 +299,20 @@ ON DUPLICATE KEY UPDATE
 				}
 			};
 		}
-		else if (!userData.Data.defaultLocation) {
+		else if (!userData.Data.location) {
 			return {
-				reply: \"That user did not set their default location!\",
+				reply: \"That user did not set their location!\",
 				cooldown: {
 					length: 1000
 				}
 			};
 		}
 		else {
-			skipLocation = userData.Data.defaultLocation.private;
-			args = args.slice(1);
-			args.unshift(...userData.Data.defaultLocation.address);
+			coords = userData.Data.location.coordinates;
+			skipLocation = userData.Data.location.hidden;
+			formattedAddress = userData.Data.location.formatted;
 		}
 	}
-	else if (args[0] === \"set\") {
-		args = args.slice((args[1] === \"location\") ? 2 : 1);
-		let privateLocation = false;
-
-		if (args[0] === \"private\") {
-			args = args.slice(1);
-			privateLocation = true;
-		}
-
-		if (args.length === 0) {
-			return {
-				reply: \"No default location provided!\",
-				cooldown: {
-					length: 1000
-				}
-			};
-		}
-
-		const check = (await sb.Command.get(\"weather\").execute(context, ...args)).reply;
-		if (!check || !check.includes(\"(now)\")) {
-			return {
-				reply: \"Your location must be valid, and contain no extra arguments!\",
-				cooldown: {
-					length: 1000
-				}
-			};
-		}
-
-		context.user.Data.defaultLocation = {
-			address: args,
-			private: privateLocation
-		};
-		await context.user.saveProperty(\"Data\", context.user.Data);
-
-		return {
-			reply: \"Default location has been set! Use $weather without parameters, it will now find your default location\'s weather.\",
-			cooldown: {
-				length: 1000
-			}
-		}
-	}
-
-	const icons = {
-		\"clear-day\": \"🌞\",
-		\"clear-night\": \"🌚\",
-		\"rain\": \"🌧️\",
-		\"snow\": \"🌨️\",
-		\"sleet\": \"🌧️🌨️\",
-		\"fog\": \"🌫️\",
-		\"cloudy\": \"☁️\",
-		\"partly-cloudy-day\": \"⛅\",
-		\"partly-cloudy-night\": \"☁️\",
-		\"hail\": \"☄️\",
-		\"thunderstorm\": \"🌩️\",
-		\"tornado\": \"🌪️\",
-		\"wind\": \"💨\"
-	};
 
 	let number = null;
 	let type = \"currently\";
@@ -427,23 +337,27 @@ ON DUPLICATE KEY UPDATE
 		}
 	}
 
-	const geoData = await sb.Got({
-		url: \"https://maps.googleapis.com/maps/api/geocode/json\",
-		searchParams: new sb.URLParams()
-			.set(\"key\", sb.Config.get(\"API_GOOGLE_GEOCODING\"))
-			.set(\"address\", args.join(\" \"))
-			.toString()
-	}).json();
-	
-	if (!geoData.results[0]) {
-		return {
-			reply: \"That place was not found FeelsBadMan\"
-		};
+	if (!coords) {
+		const geoData = await sb.Got({
+			url: \"https://maps.googleapis.com/maps/api/geocode/json\",
+			searchParams: new sb.URLParams()
+				.set(\"key\", sb.Config.get(\"API_GOOGLE_GEOCODING\"))
+				.set(\"address\", args.join(\" \"))
+				.toString()
+		}).json();
+
+		if (!geoData.results[0]) {
+			return {
+				reply: \"That place was not found! FeelsBadMan\"
+			};
+		}
+
+		formattedAddress = geoData.results[0].formatted_address;
+		coords = geoData.results[0].geometry.location;
 	}
 
-	const coords = geoData.results[0].geometry.location;
 	const excluded = [\"currently\", \"minutely\", \"hourly\", \"daily\", \"alerts\"].filter(i => i !== type);
-	const key = sb.Config.get(\"API_DARKSKY\");	
+	const key = sb.Config.get(\"API_DARKSKY\");
 
 	const topData = await sb.Got({
 		url: `https://api.darksky.net/forecast/${key}/${coords.lat},${coords.lng}`,
@@ -463,7 +377,7 @@ ON DUPLICATE KEY UPDATE
 			? topData.currently
 			: topData[type].data[number];
 
-		const icon = icons[data.icon];
+		const icon = this.staticData.icons[data.icon];
 		const precip = (data.precipProbability === 0)
 			? \"No precipitation expected.\"
 			: (sb.Utils.round(data.precipProbability * 100) + \"% chance of \" + sb.Utils.round(data.precipIntensity, 2) + \" mm \" + data.precipType + \".\");
@@ -505,7 +419,7 @@ ON DUPLICATE KEY UPDATE
 
 	const place = (skipLocation)
 		? \"(location hidden)\"
-		: geoData.results[0].formatted_address;
+		: formattedAddress;
 
 	return {
 		reply: `${place} ${plusTime}: ${message}`
