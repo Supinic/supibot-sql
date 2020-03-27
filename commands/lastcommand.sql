@@ -45,6 +45,7 @@ VALUES
 	const data = await sb.Query.getRecordset(rs => {
 		rs.select(\"Result\")
 			.from(\"chat_data\", \"Command_Execution\")
+			.where(\"Command <> %n\", this.ID)
 			.where(\"User_Alias = %n\", context.user.ID)
 			.where(\"Executed > DATE_ADD(NOW(), INTERVAL -1 MINUTE)\")
 			.orderBy(\"Executed DESC\")
@@ -76,6 +77,7 @@ ON DUPLICATE KEY UPDATE
 	const data = await sb.Query.getRecordset(rs => {
 		rs.select(\"Result\")
 			.from(\"chat_data\", \"Command_Execution\")
+			.where(\"Command <> %n\", this.ID)
 			.where(\"User_Alias = %n\", context.user.ID)
 			.where(\"Executed > DATE_ADD(NOW(), INTERVAL -1 MINUTE)\")
 			.orderBy(\"Executed DESC\")
