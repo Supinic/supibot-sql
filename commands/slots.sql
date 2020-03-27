@@ -96,7 +96,10 @@ VALUES
 
 	if (type === \"array\") {
 		if (emotes.length < limit) {
-			return { reply: \"You must provide at least \" + limit + \" emotes/words to roll the slots!\" };
+			return { 
+				reply: \"You must provide at least \" + limit + \" emotes/words to roll the slots!\",
+				cooldown: this.Cooldown / 2
+			};
 		}
 
 		for (let i = 0; i < limit; i++) {
@@ -220,7 +223,10 @@ ON DUPLICATE KEY UPDATE
 
 	if (type === \"array\") {
 		if (emotes.length < limit) {
-			return { reply: \"You must provide at least \" + limit + \" emotes/words to roll the slots!\" };
+			return { 
+				reply: \"You must provide at least \" + limit + \" emotes/words to roll the slots!\",
+				cooldown: this.Cooldown / 2
+			};
 		}
 
 		for (let i = 0; i < limit; i++) {
