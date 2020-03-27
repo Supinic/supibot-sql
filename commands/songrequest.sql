@@ -183,7 +183,8 @@ VALUES
 		const status = await sb.VideoLANConnector.status();
 
 		if (status.currentplid !== -1 && status.currentplid !== id && status.time !== 0) {
-			const { vlcID: nowID } = await sb.VideoLANConnector.currentlyPlayingData();
+			const currentlyPlaying = await sb.VideoLANConnector.currentlyPlayingData();
+			const nowID = currentlyPlaying?.vlcID ?? Infinity;
 			const { time, length } = status;
 
 			const playingDate = new sb.Date().addSeconds(length - time);
@@ -354,7 +355,8 @@ ON DUPLICATE KEY UPDATE
 		const status = await sb.VideoLANConnector.status();
 
 		if (status.currentplid !== -1 && status.currentplid !== id && status.time !== 0) {
-			const { vlcID: nowID } = await sb.VideoLANConnector.currentlyPlayingData();
+			const currentlyPlaying = await sb.VideoLANConnector.currentlyPlayingData();
+			const nowID = currentlyPlaying?.vlcID ?? Infinity;
 			const { time, length } = status;
 
 			const playingDate = new sb.Date().addSeconds(length - time);
