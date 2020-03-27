@@ -66,10 +66,16 @@ VALUES
 		}
 	}
 	else if (!targetUser) {
-		return { reply: \"An invalid user was provided!\", meta: { skipCooldown: true } };
+		return {
+			reply: \"An invalid user was provided!\",
+			cooldown: this.Cooldown / 2
+		};
 	}
-	else if (targetUser.Name === sb.Config.get(\"SELF\")) {
-		return { reply: \"I\'m always here, so you don\'t have to \" + context.invocation + \" me :)\", meta: { skipCooldown: true } };
+	else if (targetUser.ID === sb.Config.get(\"SELF_ID\")) {
+		return {
+			reply: \"I\'m always here, so you don\'t have to \" + context.invocation + \" me :)\",
+			cooldown: this.Cooldown / 2
+		};
 	}
 	else {
 		args.shift();
@@ -87,7 +93,8 @@ VALUES
 
 	if (isPrivate && context.channel !== null) {
 		return {
-			reply: \"Do not attempt to set private reminders outside of private messages!\"
+			reply: \"You should create private reminders in private messages!\",
+			cooldown: this.Cooldown / 2
 		};
 	}
 
@@ -120,28 +127,32 @@ VALUES
 	}
 
 	const comparison = new sb.Date(now.valueOf() + delta);
-
 	if (delta === 0) {
 		if (targetUser === context.user) {
 			return {
-				reply: \"If you want to remind yourself, you must use a timed reminder!\"
+				reply: \"If you want to remind yourself, you must use a timed reminder!\",
+				cooldown: this.Cooldown / 2
 			};
 		}
 	}
 	else if (now > comparison) {
-		return { reply: \"Timed reminders in the past are only available for people that posess a time machine!\" };
+		return { reply: \"Timed reminders set in the past are only available for people that posess a time machine!\" };
 	}
 	else if (Math.abs(now - comparison) < 30.0e3) {
-		return { reply: \"You cannot set a timed reminder in less than 30 seconds!\", meta: { skipCooldown: true } };
-	}
-	else if (comparison > sb.Config.get(\"SQL_DATETIME_LIMIT\")) {
 		return {
-			reply: \"Unfortunately, only dates within the SQL DATETIME range are supported - up to Dec 31st 9999\",
-			meta: { skipCooldown: true }
+			reply: \"You cannot set a timed reminder in less than 30 seconds!\",
+			cooldown: this.Cooldown / 2
 		};
 	}
-	else if (!Number.isFinite(comparison.valueOf())) {
-		return { reply: \"Invalid time description!\", meta: { skipCooldown: true } };
+	else if (delta > sb.Config.get(\"SQL_DATETIME_LIMIT\")) {
+		const description = (Number.isFinite(comparison.valueOf()))
+			? comparison.format(\"Y-m-d\")
+			: `${Math.trunc(delta / 31_536_000_000)} years in the future`;
+
+		return {
+			reply: `Your reminder was set to approximately ${description}, but the limit is 31st December 9999.`,
+			cooldown: this.Cooldown / 2
+		};
 	}
 
 	// If it is a timed reminder via PMs, only allow it if it a self reminder.
@@ -152,12 +163,11 @@ VALUES
 		}
 		else {
 			return {
-				reply: \"You cannot set a timed reminder for someone else via private messages!\"
+				reply: \"You cannot create a private timed reminder for someone else!\"
 			};
 		}
 	}
 
-	let resultID = null;
 	const timestamp = (delta === 0) ? null : new sb.Date(now.valueOf() + delta);
 	const stringDelta = (timestamp)
 		? sb.Utils.timeDelta(timestamp)
@@ -210,10 +220,16 @@ ON DUPLICATE KEY UPDATE
 		}
 	}
 	else if (!targetUser) {
-		return { reply: \"An invalid user was provided!\", meta: { skipCooldown: true } };
+		return {
+			reply: \"An invalid user was provided!\",
+			cooldown: this.Cooldown / 2
+		};
 	}
-	else if (targetUser.Name === sb.Config.get(\"SELF\")) {
-		return { reply: \"I\'m always here, so you don\'t have to \" + context.invocation + \" me :)\", meta: { skipCooldown: true } };
+	else if (targetUser.ID === sb.Config.get(\"SELF_ID\")) {
+		return {
+			reply: \"I\'m always here, so you don\'t have to \" + context.invocation + \" me :)\",
+			cooldown: this.Cooldown / 2
+		};
 	}
 	else {
 		args.shift();
@@ -231,7 +247,8 @@ ON DUPLICATE KEY UPDATE
 
 	if (isPrivate && context.channel !== null) {
 		return {
-			reply: \"Do not attempt to set private reminders outside of private messages!\"
+			reply: \"You should create private reminders in private messages!\",
+			cooldown: this.Cooldown / 2
 		};
 	}
 
@@ -264,28 +281,32 @@ ON DUPLICATE KEY UPDATE
 	}
 
 	const comparison = new sb.Date(now.valueOf() + delta);
-
 	if (delta === 0) {
 		if (targetUser === context.user) {
 			return {
-				reply: \"If you want to remind yourself, you must use a timed reminder!\"
+				reply: \"If you want to remind yourself, you must use a timed reminder!\",
+				cooldown: this.Cooldown / 2
 			};
 		}
 	}
 	else if (now > comparison) {
-		return { reply: \"Timed reminders in the past are only available for people that posess a time machine!\" };
+		return { reply: \"Timed reminders set in the past are only available for people that posess a time machine!\" };
 	}
 	else if (Math.abs(now - comparison) < 30.0e3) {
-		return { reply: \"You cannot set a timed reminder in less than 30 seconds!\", meta: { skipCooldown: true } };
-	}
-	else if (comparison > sb.Config.get(\"SQL_DATETIME_LIMIT\")) {
 		return {
-			reply: \"Unfortunately, only dates within the SQL DATETIME range are supported - up to Dec 31st 9999\",
-			meta: { skipCooldown: true }
+			reply: \"You cannot set a timed reminder in less than 30 seconds!\",
+			cooldown: this.Cooldown / 2
 		};
 	}
-	else if (!Number.isFinite(comparison.valueOf())) {
-		return { reply: \"Invalid time description!\", meta: { skipCooldown: true } };
+	else if (delta > sb.Config.get(\"SQL_DATETIME_LIMIT\")) {
+		const description = (Number.isFinite(comparison.valueOf()))
+			? comparison.format(\"Y-m-d\")
+			: `${Math.trunc(delta / 31_536_000_000)} years in the future`;
+
+		return {
+			reply: `Your reminder was set to approximately ${description}, but the limit is 31st December 9999.`,
+			cooldown: this.Cooldown / 2
+		};
 	}
 
 	// If it is a timed reminder via PMs, only allow it if it a self reminder.
@@ -296,12 +317,11 @@ ON DUPLICATE KEY UPDATE
 		}
 		else {
 			return {
-				reply: \"You cannot set a timed reminder for someone else via private messages!\"
+				reply: \"You cannot create a private timed reminder for someone else!\"
 			};
 		}
 	}
 
-	let resultID = null;
 	const timestamp = (delta === 0) ? null : new sb.Date(now.valueOf() + delta);
 	const stringDelta = (timestamp)
 		? sb.Utils.timeDelta(timestamp)
