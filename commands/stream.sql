@@ -46,59 +46,43 @@ VALUES
 		return { reply: \"Pick a command first.\" };
 	}
 
-	switch (type.toLowerCase()) {
+	type = type.toLowerCase();
+	switch (type) {
 		case \"game\":
-			try {
-				await sb.Got.instances.Twitch.Kraken({
-					method: \"PUT\",
-					url: \"channels/\" + (await sb.Utils.getTwitchID(\"supinic\")),
-					headers: {
-						\"Authorization\": \"OAuth \" + sb.Config.get(\"TWITCH_OAUTH_EDITOR\")
-					},
-					json: {
-						channel: {
-							game: rest.join(\" \")
-						}
-					}
-				});
+		case \"status\":
+		case \"title\": {
+			let setType = type;
+			if (setType === \"title\") {
+				setType = \"status\";
 			}
-			catch (e) {
-				console.error(e);
+
+			const channelID = await sb.Utils.getTwitchID(\"supinic\");
+			const { body, statusCode } = await sb.Got.instances.Twitch.Kraken({
+				method: \"PUT\",
+				url: \"channels/\" + channelID,
+				headers: {
+					\"Authorization\": \"OAuth \" + sb.Config.get(\"TWITCH_OAUTH_EDITOR\")
+				},
+				json: {
+					channel: {
+						[setType]: rest.join(\" \")
+					}
+				},
+				throwHttpErrors: false,
+				resolveBodyOnly: false
+			});
+
+			if (statusCode !== 200) {
+				const { status, error, message } = JSON.parse(body.message);
 				return {
-					reply: \"Twitch API threw an error!\"
-				}
+					reply: `Twitch API Error - ${status} ${error}: ${message}`
+				};
 			}
 
 			return {
 				reply: \"Game set successfully.\"
 			};
-
-		case \"status\":
-		case \"title\":
-			try {
-				await sb.Got.instances.Twitch.Kraken({
-					method: \"PUT\",
-					url: \"channels/\" + (await sb.Utils.getTwitchID(\"supinic\")),
-					headers: {
-						\"Authorization\": \"OAuth \" + sb.Config.get(\"TWITCH_OAUTH_EDITOR\")
-					},
-					json: {
-						channel: {
-							status: rest.join(\" \")
-						}
-					}
-				});
-			}
-			catch (e) {
-				console.error(e);
-				return {
-					reply: \"Twitch API threw an error!\"
-				}
-			}
-
-			return {
-				reply: \"Title set successfully.\"
-			};
+		}
 
 		case \"tts\": {
 			const value = (rest.shift() === \"true\");
@@ -168,59 +152,43 @@ ON DUPLICATE KEY UPDATE
 		return { reply: \"Pick a command first.\" };
 	}
 
-	switch (type.toLowerCase()) {
+	type = type.toLowerCase();
+	switch (type) {
 		case \"game\":
-			try {
-				await sb.Got.instances.Twitch.Kraken({
-					method: \"PUT\",
-					url: \"channels/\" + (await sb.Utils.getTwitchID(\"supinic\")),
-					headers: {
-						\"Authorization\": \"OAuth \" + sb.Config.get(\"TWITCH_OAUTH_EDITOR\")
-					},
-					json: {
-						channel: {
-							game: rest.join(\" \")
-						}
-					}
-				});
+		case \"status\":
+		case \"title\": {
+			let setType = type;
+			if (setType === \"title\") {
+				setType = \"status\";
 			}
-			catch (e) {
-				console.error(e);
+
+			const channelID = await sb.Utils.getTwitchID(\"supinic\");
+			const { body, statusCode } = await sb.Got.instances.Twitch.Kraken({
+				method: \"PUT\",
+				url: \"channels/\" + channelID,
+				headers: {
+					\"Authorization\": \"OAuth \" + sb.Config.get(\"TWITCH_OAUTH_EDITOR\")
+				},
+				json: {
+					channel: {
+						[setType]: rest.join(\" \")
+					}
+				},
+				throwHttpErrors: false,
+				resolveBodyOnly: false
+			});
+
+			if (statusCode !== 200) {
+				const { status, error, message } = JSON.parse(body.message);
 				return {
-					reply: \"Twitch API threw an error!\"
-				}
+					reply: `Twitch API Error - ${status} ${error}: ${message}`
+				};
 			}
 
 			return {
 				reply: \"Game set successfully.\"
 			};
-
-		case \"status\":
-		case \"title\":
-			try {
-				await sb.Got.instances.Twitch.Kraken({
-					method: \"PUT\",
-					url: \"channels/\" + (await sb.Utils.getTwitchID(\"supinic\")),
-					headers: {
-						\"Authorization\": \"OAuth \" + sb.Config.get(\"TWITCH_OAUTH_EDITOR\")
-					},
-					json: {
-						channel: {
-							status: rest.join(\" \")
-						}
-					}
-				});
-			}
-			catch (e) {
-				console.error(e);
-				return {
-					reply: \"Twitch API threw an error!\"
-				}
-			}
-
-			return {
-				reply: \"Title set successfully.\"
-			};
+		}
 
 		case \"tts\": {
 			const value = (rest.shift() === \"true\");
