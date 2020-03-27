@@ -60,7 +60,9 @@ VALUES
 
 	const data = sb.Config.get(\"WOLFRAM_QUERY_CENSOR_FN\")(rawData);
 	return { 
-		reply: data
+		reply: (context.platform.Name === \"discord\")
+			? `\\`${data}\\``
+			: data
 	};
 })',
 		NULL,
@@ -87,6 +89,8 @@ ON DUPLICATE KEY UPDATE
 
 	const data = sb.Config.get(\"WOLFRAM_QUERY_CENSOR_FN\")(rawData);
 	return { 
-		reply: data
+		reply: (context.platform.Name === \"discord\")
+			? `\\`${data}\\``
+			: data
 	};
 })'
