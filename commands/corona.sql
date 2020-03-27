@@ -321,8 +321,17 @@ VALUES
 			else if (countryData?.Code) {
 				emoji = String.fromCodePoint(...countryData.Code.split(\"\").map(i => i.charCodeAt(0) + 127397));
 			}
+			
+			let linkString = \"\";
+			if (link) {
+				if (context.platform.Name === \"discord\") {
+					linkString = `More info: <${link}>`;
+				}
+				else {
+					linkString = `More info: ${link}`;
+				}
+			}
 
-			const linkString = (link) ? `More info: ${link}` : \"\";
 			const plusCases = (newCases > 0) ? ` (+${newCases})` : \"\";
 			const plusDeaths = (newDeaths > 0) ? ` (+${newDeaths})` : \"\";
 			const million = [];
@@ -516,8 +525,17 @@ ON DUPLICATE KEY UPDATE
 			else if (countryData?.Code) {
 				emoji = String.fromCodePoint(...countryData.Code.split(\"\").map(i => i.charCodeAt(0) + 127397));
 			}
+			
+			let linkString = \"\";
+			if (link) {
+				if (context.platform.Name === \"discord\") {
+					linkString = `More info: <${link}>`;
+				}
+				else {
+					linkString = `More info: ${link}`;
+				}
+			}
 
-			const linkString = (link) ? `More info: ${link}` : \"\";
 			const plusCases = (newCases > 0) ? ` (+${newCases})` : \"\";
 			const plusDeaths = (newDeaths > 0) ? ` (+${newDeaths})` : \"\";
 			const million = [];
