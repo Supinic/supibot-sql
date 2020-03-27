@@ -291,10 +291,6 @@ VALUES
 	\"If you set your own weather location, show its weather.\",
 	\"\",
 
-	`<code>${prefix}weather hour+1</code>`,
-	\"If you set your own weather location, show its forecast in one hour.\",
-	\"\",
-
 	`<code>${prefix}weather @User</code>`,
 	\"If that user has set their own weather location, show its weather. The <code>@</code> symbol is mandatory.\",
 ]'
