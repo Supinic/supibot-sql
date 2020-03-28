@@ -40,11 +40,21 @@ VALUES
 		0,
 		1,
 		0,
-		NULL,
+		'({
+	channels: {
+		\"amouranth\": \"💃🏼\",
+		\"athenelive\": \"🇫🇷🤖\",
+		\"drdisrespect\": \"💿\",
+		\"drdisrespectlive\": \"💿\",
+		\"ninja\": \"👤\",
+		\"stpeach\": \"🍑\",
+		\"alinity\": \"🍝👩💰\",
+		\"p4wnyhof\": \"🇩🇪🤖\",
+		\"pokimane\": \"😍\"
+	}
+})',
 		'(async function randomLineExtra () {
-	const channels = sb.Config.get(\"EXTRA_RANDOM_LINE_CHANNELS\");
-	const [channel, emoji] = sb.Utils.randArray(Object.entries(channels));
-
+	const [channel, emoji] = sb.Utils.randArray(Object.entries(this.staticData.channels));
 	const max = (await sb.Query.getRecordset(rs => rs
 		.select(\"MAX(ID) AS ID\")
 		.from(\"chat_line\", channel)
@@ -68,9 +78,7 @@ VALUES
 
 ON DUPLICATE KEY UPDATE
 	Code = '(async function randomLineExtra () {
-	const channels = sb.Config.get(\"EXTRA_RANDOM_LINE_CHANNELS\");
-	const [channel, emoji] = sb.Utils.randArray(Object.entries(channels));
-
+	const [channel, emoji] = sb.Utils.randArray(Object.entries(this.staticData.channels));
 	const max = (await sb.Query.getRecordset(rs => rs
 		.select(\"MAX(ID) AS ID\")
 		.from(\"chat_line\", channel)
