@@ -216,12 +216,14 @@ VALUES
 				selector: \"#usa_table_countries_today tbody tr\",
 				fields: [\"country\", \"confirmed\", \"newCases\", \"deaths\", \"newDeaths\"]
 			}),
+/*
 			this.staticData.fetchData({
 				url: \"https://www.canada.ca/en/public-health/services/diseases/2019-novel-coronavirus-infection.html\",
 				region: \"Canada\",
 				selector: \".table.table-striped.table-bordered tbody tr\",
 				fields: [\"country\", \"confirmed\", \"probable\", \"deaths\"]
 			})
+*/
 		]);
 
 		this.data.fetching = false;
@@ -462,12 +464,14 @@ ON DUPLICATE KEY UPDATE
 				selector: \"#usa_table_countries_today tbody tr\",
 				fields: [\"country\", \"confirmed\", \"newCases\", \"deaths\", \"newDeaths\"]
 			}),
+/*
 			this.staticData.fetchData({
 				url: \"https://www.canada.ca/en/public-health/services/diseases/2019-novel-coronavirus-infection.html\",
 				region: \"Canada\",
 				selector: \".table.table-striped.table-bordered tbody tr\",
 				fields: [\"country\", \"confirmed\", \"probable\", \"deaths\"]
 			})
+*/
 		]);
 
 		this.data.fetching = false;
