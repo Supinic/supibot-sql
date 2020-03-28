@@ -80,7 +80,7 @@ VALUES
 			}
 
 			return {
-				reply: \"Game set successfully.\"
+				reply: sb.Utils.capitalize(setType) + \" set successfully.\"
 			};
 		}
 
@@ -186,7 +186,7 @@ ON DUPLICATE KEY UPDATE
 			}
 
 			return {
-				reply: \"Game set successfully.\"
+				reply: sb.Utils.capitalize(setType) + \" set successfully.\"
 			};
 		}
 
