@@ -41,7 +41,6 @@ VALUES
 		1,
 		0,
 		'({
-	owoFaces: [\"(・`ω´・)\", \";;w;;\", \"owo\", \"UwU\", \">w<\", \"^w^\"],
 	convert: {
 		map: (string, map) => [...string].map(i => map[i] || i).join(\"\"),
 		translate: (string, dictionary) => {
@@ -177,7 +176,7 @@ VALUES
 				.replace(/N([aeiou])/g, \"Ny$1\")
 				.replace(/N([AEIOU])/g, \"Ny$1\")
 				.replace(/ove/g, \"uv\")
-				.replace(/[!?]+/g, \" \" + sb.Utils.randArray(this.owoFaces) + \" \")
+				.replace(/[!?]+/g, \" \" + sb.Utils.randArray([\"(・`ω´・)\", \";;w;;\", \"owo\", \"UwU\", \">w<\", \"^w^\"]) + \" \")
 		}
 	]
 })',
