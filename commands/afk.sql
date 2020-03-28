@@ -40,7 +40,66 @@ VALUES
 		0,
 		1,
 		0,
-		NULL,
+		'({
+	foodEmojis: [
+		\"🍋\",
+		\"🍞\",
+		\"🥐\",
+		\"🥖\",
+		\"🥨\",
+		\"🥯\",
+		\"🥞\",
+		\"🧀\",
+		\"🍖\",
+		\"🍗\",
+		\"🥩\",
+		\"🥓\",
+		\"🍔\",
+		\"🍟\",
+		\"🍕\",
+		\"🌭\",
+		\"🥪\",
+		\"🌮\",
+		\"🌯\",
+		\"🥙\",
+		\"🍳\",
+		\"🥘\",
+		\"🍲\",
+		\"🥣\",
+		\"🥗\",
+		\"🍿\",
+		\"🥫\",
+		\"🍱\",
+		\"🍘\",
+		\"🍙\",
+		\"🍚\",
+		\"🍛\",
+		\"🍜\",
+		\"🍝\",
+		\"🍠\",
+		\"🍢\",
+		\"🍣\",
+		\"🍤\",
+		\"🍥\",
+		\"🍡\",
+		\"🥟\",
+		\"🥠\",
+		\"🥡\",
+		\"🍦\",
+		\"🍧\",
+		\"🍨\",
+		\"🍩\",
+		\"🍪\",
+		\"🎂\",
+		\"🍰\",
+		\"🥧\",
+		\"🍫\",
+		\"🍬\",
+		\"🍭\",
+		\"🍮\",
+		\"🍯\"
+	]
+})',
 		'(async function afk (context, ...args) {
 	if (context.privateMessage && sb.AwayFromKeyboard.data.find(i => i.User_Alias === context.user.ID)) {
 		return {
@@ -69,15 +128,14 @@ VALUES
 		case \"study\": [status, text] = [\"now studying\", (text || \"🤓\") + \" 📚\"]; break;
 		case \"food\": {
 			let useAutoEmoji = true;
-			const eatingEmojis = sb.Config.get(\"FOOD_EMOJIS\");
-			for (const emoji of eatingEmojis) {
+			for (const emoji of this.staticData.foodEmojis) {
 				if (text.includes(emoji)) {
 					useAutoEmoji = false;
 				}
 			}
 
 			const appendText = (useAutoEmoji)
-				? sb.Utils.randArray(eatingEmojis)
+				? sb.Utils.randArray(this.staticData.foodEmojis)
 				: \"\";
 
 			status = \"now eating\";
@@ -153,15 +211,14 @@ ON DUPLICATE KEY UPDATE
 		case \"study\": [status, text] = [\"now studying\", (text || \"🤓\") + \" 📚\"]; break;
 		case \"food\": {
 			let useAutoEmoji = true;
-			const eatingEmojis = sb.Config.get(\"FOOD_EMOJIS\");
-			for (const emoji of eatingEmojis) {
+			for (const emoji of this.staticData.foodEmojis) {
 				if (text.includes(emoji)) {
 					useAutoEmoji = false;
 				}
 			}
 
 			const appendText = (useAutoEmoji)
-				? sb.Utils.randArray(eatingEmojis)
+				? sb.Utils.randArray(this.staticData.foodEmojis)
 				: \"\";
 
 			status = \"now eating\";
