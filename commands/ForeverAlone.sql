@@ -176,13 +176,18 @@ VALUES
 			.toString()
 	}).json();
 
-	const { userName, sex, introductionText, introductionSpeech, price } = data.content[0];
-	if (sb.Config.get(\"TTS_ENABLED\") && !sb.Command.get(\"tts\").data.pending) {
+	const ttsData = sb.Command.get(\"tts\").data;
+	const { userName, sex, languageName, introductionText, introductionSpeech, price } = data.content[0];
+	if (sb.Config.get(\"TTS_ENABLED\") && !ttsData.pending) {
+		ttsData.pending = true;
+
 		await sb.LocalRequest.playSpecialAudio({
 			url: introductionSpeech,
 			volume: sb.Config.get(\"TTS_VOLUME\"),
 			limit: 20_000
 		});
+
+		ttsData.pending = false;
 	}
 
 	let type = \"(unspecified)\";
@@ -194,7 +199,7 @@ VALUES
 	}
 
 	return {
-		reply: `${userName} ${type} plays ${game.name} for $${price / 100}: ${introductionText}`
+		reply: `${userName} ${type} plays ${game.name} for $${price / 100}: ${introductionText} ${languageName ?? \"\"}`
 	};
 })',
 		NULL,
@@ -244,13 +249,18 @@ ON DUPLICATE KEY UPDATE
 			.toString()
 	}).json();
 
-	const { userName, sex, introductionText, introductionSpeech, price } = data.content[0];
-	if (sb.Config.get(\"TTS_ENABLED\") && !sb.Command.get(\"tts\").data.pending) {
+	const ttsData = sb.Command.get(\"tts\").data;
+	const { userName, sex, languageName, introductionText, introductionSpeech, price } = data.content[0];
+	if (sb.Config.get(\"TTS_ENABLED\") && !ttsData.pending) {
+		ttsData.pending = true;
+
 		await sb.LocalRequest.playSpecialAudio({
 			url: introductionSpeech,
 			volume: sb.Config.get(\"TTS_VOLUME\"),
 			limit: 20_000
 		});
+
+		ttsData.pending = false;
 	}
 
 	let type = \"(unspecified)\";
@@ -262,6 +272,6 @@ ON DUPLICATE KEY UPDATE
 	}
 
 	return {
-		reply: `${userName} ${type} plays ${game.name} for $${price / 100}: ${introductionText}`
+		reply: `${userName} ${type} plays ${game.name} for $${price / 100}: ${introductionText} ${languageName ?? \"\"}`
 	};
 })'
