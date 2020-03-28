@@ -188,7 +188,7 @@ VALUES
 			const { time, length } = status;
 
 			const playingDate = new sb.Date().addSeconds(length - time);
-			const inQueue = sb.VideoLANConnector.videoQueue.filter(i => i.vlcID > nowID);
+			const inQueue = sb.VideoLANConnector.videoQueue.filter(i => i.vlcID > nowID && i.vlcID < id);
 			for (const { length } of inQueue) {
 				playingDate.addSeconds(length ?? 0);
 			}
@@ -360,7 +360,7 @@ ON DUPLICATE KEY UPDATE
 			const { time, length } = status;
 
 			const playingDate = new sb.Date().addSeconds(length - time);
-			const inQueue = sb.VideoLANConnector.videoQueue.filter(i => i.vlcID > nowID);
+			const inQueue = sb.VideoLANConnector.videoQueue.filter(i => i.vlcID > nowID && i.vlcID < id);
 			for (const { length } of inQueue) {
 				playingDate.addSeconds(length ?? 0);
 			}
