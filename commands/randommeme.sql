@@ -45,12 +45,18 @@ VALUES
 	this.data.posts = {};
 
 	return {
-		banned: [\"moobs\"]
+		banned: [\"moobs\"],
+		defaultMemeSubreddits: [
+			\"okbuddyretard\",
+			\"memes\",
+			\"dankmemes\",
+			\"pewdiepiesubmissions\"
+		]
 	};
 })()',
 		'(async function randomMeme (context, subreddit) {
 	if (!subreddit) {
-		subreddit = sb.Utils.randArray([\"dankmemes\", \"memes\", \"pewdiepiesubmissions\"]);
+		subreddit = sb.Utils.randArray(this.staticData.defaultMemeSubreddits);
 	}
 
 	subreddit = subreddit.toLowerCase();
@@ -140,7 +146,7 @@ VALUES
 ON DUPLICATE KEY UPDATE
 	Code = '(async function randomMeme (context, subreddit) {
 	if (!subreddit) {
-		subreddit = sb.Utils.randArray([\"dankmemes\", \"memes\", \"pewdiepiesubmissions\"]);
+		subreddit = sb.Utils.randArray(this.staticData.defaultMemeSubreddits);
 	}
 
 	subreddit = subreddit.toLowerCase();
