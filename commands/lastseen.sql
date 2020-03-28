@@ -87,7 +87,7 @@ VALUES
 
 	const delta = sb.Utils.timeDelta(stalk.Date);
 	const channel = (stalk.Platform === \"Twitch\" || stalk.Platform === \"Mixer\")
-		? stalk.Platform.toLowerCase() + \"-\" + stalk.Channel[0] + \"\\u{E0000}\" + stalk.Channel.slice(1)
+		? `${stalk.Platform.toLowerCase()}-${stalk.Channel}`
 		: stalk.Platform;
 
 	return {
@@ -161,7 +161,7 @@ ON DUPLICATE KEY UPDATE
 
 	const delta = sb.Utils.timeDelta(stalk.Date);
 	const channel = (stalk.Platform === \"Twitch\" || stalk.Platform === \"Mixer\")
-		? stalk.Platform.toLowerCase() + \"-\" + stalk.Channel[0] + \"\\u{E0000}\" + stalk.Channel.slice(1)
+		? `${stalk.Platform.toLowerCase()}-${stalk.Channel}`
 		: stalk.Platform;
 
 	return {
