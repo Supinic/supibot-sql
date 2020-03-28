@@ -178,7 +178,7 @@ VALUES
 
 	const ttsData = sb.Command.get(\"tts\").data;
 	const { userName, sex, languageName, introductionText, introductionSpeech, price } = data.content[0];
-	if (sb.Config.get(\"TTS_ENABLED\") && !ttsData.pending) {
+	if (context.channel?.ID === 38 && sb.Config.get(\"TTS_ENABLED\") && !ttsData.pending) {
 		ttsData.pending = true;
 
 		await sb.LocalRequest.playSpecialAudio({
@@ -251,7 +251,7 @@ ON DUPLICATE KEY UPDATE
 
 	const ttsData = sb.Command.get(\"tts\").data;
 	const { userName, sex, languageName, introductionText, introductionSpeech, price } = data.content[0];
-	if (sb.Config.get(\"TTS_ENABLED\") && !ttsData.pending) {
+	if (context.channel?.ID === 38 && sb.Config.get(\"TTS_ENABLED\") && !ttsData.pending) {
 		ttsData.pending = true;
 
 		await sb.LocalRequest.playSpecialAudio({
