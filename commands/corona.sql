@@ -41,7 +41,13 @@ VALUES
 		1,
 		0,
 		'(() => {
-	const baseURL = \"https://worldometers.info/coronavirus/\";
+	const special = {
+		\"CAR\": \"Central African Republic\",
+		\"DRC\": \"Democratic Republic of the Congo\",
+		\"UAE\": \"United Arab Emirates\",
+		\"UK\": \"United Kingdom\",
+		\"USA\": \"United States of America\"
+	};
 	const regions = [
 		\"Africa\",
 		\"Antarctica\",
@@ -52,198 +58,103 @@ VALUES
 		\"Oceania\",
 		\"South America\"
 	].map(i => i.toLowerCase());
-	const special = {
-		\"CAR\": \"Central African Republic\",
-		\"DRC\": \"Democratic Republic of the Congo\",
-		\"UAE\": \"United Arab Emirates\",
-		\"UK\": \"United Kingdom\",
-		\"USA\": \"United States of America\"
-	};
-	const handlers = {
-		\"fetch-fail\": {
-			reply: \"The data source website is currently under down! Try again later (at least 1 minute),\",
-			cooldown: {
-				user: null,
-				channel: null,
-				length: 60000
-			}
-		},
-		\"no-rows\": {
-			reply: \"The data source website is currently under heavy load! Try again later (at least 15s).\",
-			cooldown: {
-				user: null,
-				channel: null,
-				length: 15000
-			}
-		},
-	};
 
 	return {
-		baseURL,
-		handlers,
-		regions,
 		special,
-
-		fetchData: async (options = {}) => {
-			let html = null;
-			try {
-				html = await sb.Got.instances.FakeAgent(options.url).text();
-			}
-			catch (e) {
-				return {
-					success: false,
-					cause: \"fetch-fail\",
-					exception: e
-				}
-			}
-
-			const $ = sb.Utils.cheerio(html);
-			const rows = Array.from($(options.selector));
-			if (rows.length === 0) {
-				return {
-					success: false,
-					cause: \"no-rows\"
-				}
-			}
-
-			const total = {};
-			for (const field of options.fields) {
-				if (field === \"country\") {
-					total.country = \"Total\";
-					total.region = options.region;
-				}
-				else {
-					total[field] = 0;
-				}
-			}
-
-			const result = [];
-			for (const row of rows) {
-				const values = Array.from($(row).children()).map((node, ind) => {
-					let value = null;
-					const selector = $(node);
-
-					if (ind !== 0) {
-						value = Number(selector.text().replace(/,/g, \"\")) || 0;
-					}
-					else {
-						const country = selector.text();
-						value = {
-							country,
-							link: (node.firstChild?.tagName === \"a\")
-								? `${baseURL}${node.firstChild.attribs.href}`
-								: null
-						};
-					}
-
-					return value;
-				});
-				
-				if (values[0].country.toLowerCase().includes(\"total\")) {
-					continue;
-				}
-
-				const rowObject = { 
-					region: options.region ?? null
-				};
-
-				for (let i = 0; i < options.fields.length; i++) {
-					const field = options.fields[i];
-					let value = values[i];
-
-					if (field === \"country\") {
-						let { country, link } = value;
-						country = country.trim();
-
-						// Fixing special cases
-						if (country === \"S. Korea\") {
-							country = \"South Korea\";
-						}
-
-						// Fixing \"U.A.E.\" and \"U.K.\"
-						country = country.replace(/\\./g, \"\");
-						rowObject.country = country;
-						rowObject.link = link;
-					}
-					else {
-						total[field] += value;
-						rowObject[field] = value;
+		regions,
+		fetch: {
+			topData: (limit) => sb.Query.getRecordset(rs => rs
+				.select(\"Place.Name AS Country\", \"All_Cases\")
+				.from(\"corona\", \"Status\")
+				.join({
+					toTable: \"Place\",
+					on: \"Place.ID = Status.Place\"
+				})
+				.where(\"Place.Parent IS NULL\")
+				.groupBy(\"Place\")
+				.orderBy(\"Date DESC\")
+				.orderBy(\"All_Cases DESC\")
+				.limit(limit)
+			),
+			regionalData: (region) => sb.Query.getRecordset(rs => rs
+				.select(\"Place.Name\")
+				.select(\"Place.Parent\")
+				.select(\"Place.Region\")
+				.select(\"All_Cases\")
+				.select(\"All_Deaths\")
+				.select(\"All_Recoveries\")
+				.select(\"New_Cases\")
+				.select(\"New_Deaths\")
+				.from(\"corona\", \"Status\")
+				.join({
+					toTable: \"Place\",
+					on: \"Place.ID = Status.Place\"
+				})
+				.where({ condition: region === null }, \"Place.Parent IS NULL\")
+				.where({ condition: typeof region === \"string\" }, \"Place.Region = %s\", region)
+				.groupBy(\"Status.Place\")
+				.orderBy(\"Status.Date DESC\")
+			),
+			countryData: (region, country, direct = false) => sb.Query.getRecordset(rs => rs
+				.select(\"Place.Name\")
+				.select(\"Place.Parent\")
+				.select(\"All_Cases\")
+				.select(\"All_Deaths\")
+				.select(\"All_Recoveries\")
+				.select(\"New_Cases\")
+				.select(\"New_Deaths\")
+				.from(\"corona\", \"Status\")
+				.join({
+					toTable: \"Place\",
+					on: \"Place.ID = Status.Place\"
+				})
+				.where({ condition: direct === false }, \"Place.Name %*like*\", country)
+				.where({ condition: direct === true }, \"Place.Name = %s\", country)
+				.where({ condition: region !== null }, \"Place.Parent = %s\", region)
+				.orderBy(\"Status.Date DESC\")
+				.limit(1)
+			)
+		},
+		sumObjectArray: (array) => {
+			const result = {};
+			for (const row of array) {
+				for (const key of Object.keys(row)) {
+					if (typeof row[key] === \"number\") {
+						result[key] = (result[key] ?? 0) + row[key];
 					}
 				}
-
-				result.push(rowObject);
 			}
 
-			result.push({
-				total: true,
-				...total
-			});
-			
-			return {
-				success: true,
-				rows: result,
-				selector: $
-			};
+			return result;
+		},
+		getEmoji: async (country) => {
+			if (country === null) {
+				return sb.Utils.randArray([\"🌏\", \"🌎\", \"🌍\"]);
+			}
+
+			const fixedCountryName = special[country.toUpperCase()] ?? country;
+			const countryData = await sb.Query.getRecordset(rs => rs
+				.select(\"Code_Alpha_2 AS Code\")
+				.from(\"data\", \"Country\")
+				.where(\"Name = %s\", fixedCountryName)
+				.limit(1)
+				.single()
+			);
+
+			if (countryData?.Code) {
+				return String.fromCodePoint(...countryData.Code.split(\"\").map(i => i.charCodeAt(0) + 127397));
+			}
+			else {
+				return null;
+			}
 		}
 	};
 })()',
 		'(async function corona (context, ...args) {
-	if (this.data.fetching) {
-		return {
-			reply: \"Someone else is currently fetching the data. Try again in a moment.\"
-		};
-	}
-	else if (!this.data.cache || sb.Date.now() > this.data.nextReload) {
-		if (context.channel) {
-			sb.Master.send(`${context.user.Name}, Fetching new data! ppHop`, context.channel);
-		}
-		else {
-			sb.Master.pm(context.user.Name, \"Fetching new data! ppHop\", context.platform);
-		}
-
-		this.data.fetching = true;
-
-		const [mainData, ...regionalData] = await Promise.all([
-			this.staticData.fetchData({
-				url: this.staticData.baseURL,
-				region: null,
-				selector: \"#main_table_countries_today tbody tr\",
-				fields: [\"country\", \"confirmed\", \"newCases\", \"deaths\", \"newDeaths\", \"recovered\", \"active\", \"critical\", \"cpm\", \"dpm\"]
-			}),
-			this.staticData.fetchData({
-				url: this.staticData.baseURL + \"country/us\",
-				region: \"USA\",
-				selector: \"#usa_table_countries_today tbody tr\",
-				fields: [\"country\", \"confirmed\", \"newCases\", \"deaths\", \"newDeaths\"]
-			}),
-/*
-			this.staticData.fetchData({
-				url: \"https://www.canada.ca/en/public-health/services/diseases/2019-novel-coronavirus-infection.html\",
-				region: \"Canada\",
-				selector: \".table.table-striped.table-bordered tbody tr\",
-				fields: [\"country\", \"confirmed\", \"probable\", \"deaths\"]
-			})
-*/
-		]);
-
-		this.data.fetching = false;
-
-		if (!mainData.success || regionalData.some(i => !i.success)) {
-			const cause = mainData.cause || regionalData.find(i => !i.success)?.cause;
-			const { reply, cooldown } = this.staticData.handlers[cause];
-			return { reply, cooldown };
-		}
-
-		this.data.cache = [mainData.rows, regionalData.map(i => i.rows)].flat(Infinity);
-		this.data.countries = new Set(this.data.cache.filter(i => i.country).map(i => i.country));
-
-		const lastUpdateString = mainData.selector(\".label-counter\").next().text().replace(\"Last updated \", \"\");
-		this.data.update = new sb.Date(lastUpdateString);
-		this.data.nextReload = new sb.Date().addMinutes(15).valueOf();
-	}
-
+	const input = args.join(\" \").toLowerCase();
+	let region = null;
+	let country = null;
 	let targetData = null;
-	let input = args.join(\" \").toLowerCase();
 
 	if (input.startsWith(\"@\")) {
 		const userData = await sb.User.get(input);
@@ -271,141 +182,90 @@ VALUES
 				reply: \"That user does not have their country location set!\"
 			};
 		}
-		
-		input = userData.Data.location.components.country; 
+
+		country = userData.Data.location.components.country;
 	}
-	
+
 	if (input === \"top\") {
-		const result = this.data.cache
-			.filter(i => !i.total && !i.region)
-			.sort((a, b) => b.confirmed - a.confirmed)
-			.slice(0, 10)
-			.map((i, ind) => `#${ind + 1}: ${i.country} (${i.confirmed})`)
+		const result = (await this.staticData.fetch.topData(10))
+			.map((i, ind) => `#${ind + 1}: ${i.Country} (${i.All_Cases})`)
 			.join(\"; \");
 
 		return {
 			reply: \"Top 10 countries by cases: \" + result
 		};
 	}
-	else if (this.staticData.regions.includes(input)) {
-		const special = Object.values(this.staticData.special).map(i => i.toLowerCase());
-		const eligibleCountries = (await sb.Query.getRecordset(rs => rs
-			.select(\"Name\")
-			.from(\"data\", \"Country\")
-			.where(\"Region = %s\", input)
-		)).map(i => i.Name.toLowerCase());
-
-		const eligibleData = this.data.cache.filter(i => (
-			eligibleCountries.includes(i.country.toLowerCase())
-			|| eligibleCountries.includes((this.staticData.special[i.country] || \"\").toLowerCase())
-		));
-
-		targetData = {
-			confirmed: 0,
-			deaths: 0,
-			newCases: 0,
-			newDeaths: 0,
-			recovered: 0
-		};
-
-		for (const record of eligibleData) {
-			for (const key of Object.keys(targetData)) {
-				targetData[key] += record[key];
-			}
-		}
-
-		targetData.country = args.join(\" \");
+	else if (input.includes(\":\")) {
+		[region, country] = input.split(\":\").map(i => i.trim());
 	}
-	else if (args.length > 0) {
-		const bestMatch = sb.Utils.selectClosestString(
-			input,
-			Array.from(this.data.countries),
+	else if (input.length > 0) {
+		country = input;
+	}
+
+	if (this.staticData.regions.includes(input)) {
+		region = input;
+		targetData = await this.staticData.fetch.regionalData(region);
+	}
+	else if (country) {
+		const [loose, strict] = await Promise.all([
+			this.staticData.fetch.countryData(region, country, false),
+			this.staticData.fetch.countryData(region, country, true)
+		]);
+
+		const result = sb.Utils.selectClosestString(
+			country,
+			[loose[0]?.Name, strict[0]?.Name].filter(Boolean),
 			{ ignoreCase: true }
 		);
 
-		targetData = this.data.cache.find(i => i.country.toLowerCase() === bestMatch);
+		targetData = [loose, strict].find(i => i[0]?.Name && i[0].Name.toLowerCase() === result.toLowerCase());
 	}
 	else {
-		targetData = this.data.cache.find(i => i.total && i.region === null);
+		targetData = await this.staticData.fetch.regionalData(null);
 	}
 
-	if (targetData) {
-		const delta = sb.Utils.timeDelta(new sb.Date(this.data.update));
-		const {
-			confirmed,
-			country,
-			cpm,
-			critical,
-			dpm,
-			deaths,
-			link,
-			newCases,
-			newDeaths,
-			recovered
-		} = targetData;
-
-		if (args.length > 0) {
-			let region = targetData.region ?? \"\";
-			const fixedCountryName = this.staticData.special[country] ?? country;
-			const countryData = await sb.Query.getRecordset(rs => rs
-				.select(\"Code_Alpha_2 AS Code\")
-				.from(\"data\", \"Country\")
-				.where(\"Name = %s\", fixedCountryName)
-				.limit(1)
-				.single()
-			);
-
-			let emoji = country;
-			if (region === \"USA\") {
-				region = \" (🇺🇸)\";
-			}
-			else if (region === \"Canada\") {
-				region = \" (🇨🇦)\";
-			}
-			else if (countryData?.Code) {
-				emoji = String.fromCodePoint(...countryData.Code.split(\"\").map(i => i.charCodeAt(0) + 127397));
-			}
-
-			let linkString = \"\";
-			if (link) {
-				if (context.platform.Name === \"discord\") {
-					linkString = `More info: <${link}>`;
-				}
-				else {
-					linkString = `More info: ${link}`;
-				}
-			}
-
-			const plusCases = (newCases > 0) ? ` (+${newCases})` : \"\";
-			const plusDeaths = (newDeaths > 0) ? ` (+${newDeaths})` : \"\";
-			const million = [];
-			if (cpm > 0) {
-				million.push(`${cpm} cases`);
-			}
-			if (dpm > 0) {
-				million.push(`${dpm} deaths`);
-			}
-
-			const perMillion = (million.length > 0)
-				? `This is ${million.join(\" and \")} per million. `
-				: \"\";
-
-			return {
-				reply: `${emoji ?? country}${region} has ${confirmed} confirmed case${(confirmed === 1) ? \"\" : \"s\"}${plusCases}, ${deaths ?? \"no\"} death${(deaths === 1) ? \"\" : \"s\"}${plusDeaths} and ${recovered ?? \"no\"} recovered case${(recovered === 1) ? \"\" : \"s\"}. ${perMillion}${linkString}`
-			}
-		}
-		else {
-			const emoji = sb.Utils.randArray([\"🌏\", \"🌎\", \"🌍\"]);
-			return {
-				reply: `${emoji} ${confirmed} (+${newCases}) corona virus cases are tracked so far. ${critical} in critical condition; ${recovered} have fully recovered, and there are ${deaths} (+${newDeaths}) deceased.`
-			};
-		}
-	}
-	else {
+	if (!targetData || targetData.length === 0) {
 		return {
-			reply: \"That country has no Corona virus data available.\"
+			reply: \"That country has no Corona virus data available!\"
 		};
 	}
+	
+	const { Region: prettyRegion } = targetData[0];
+	if (targetData.length === 1) {
+		targetData = targetData[0];
+	}
+	else if (targetData.length > 1) {
+		targetData = this.staticData.sumObjectArray(targetData);
+	}
+
+	let intro = null;
+	if (region) {
+		intro = prettyRegion;
+	}
+	else if (!targetData.Parent) {
+		intro = await this.staticData.getEmoji(targetData.Name ?? null);
+		if (!intro) {
+			intro = targetData.Name;
+		}
+	}
+	else {
+		const emoji = await this.staticData.getEmoji(targetData.Parent);
+		intro = `${targetData.Name} (${emoji})`;
+	}
+
+	const {
+		All_Cases: allCases,
+		All_Deaths: allDeaths,
+		All_Recoveries: allRecoveries,
+		New_Cases: newCases,
+		New_Deaths: newDeaths,
+	} = targetData;
+
+	const plusCases = (newCases > 0) ? ` (+${newCases})` : \"\";
+	const plusDeaths = (newDeaths > 0) ? ` (+${newDeaths})` : \"\";
+	return {
+		reply: `${intro} has ${allCases} confirmed case${(allCases === 1) ? \"\" : \"s\"}${plusCases}, ${allDeaths ?? \"no\"} death${(allDeaths === 1) ? \"\" : \"s\"}${plusDeaths} and ${allRecoveries ?? \"no\"} recovered case${(allRecoveries === 1) ? \"\" : \"s\"}.`
+	};
 })',
 		NULL,
 		'async (prefix) => {
@@ -436,62 +296,10 @@ VALUES
 
 ON DUPLICATE KEY UPDATE
 	Code = '(async function corona (context, ...args) {
-	if (this.data.fetching) {
-		return {
-			reply: \"Someone else is currently fetching the data. Try again in a moment.\"
-		};
-	}
-	else if (!this.data.cache || sb.Date.now() > this.data.nextReload) {
-		if (context.channel) {
-			sb.Master.send(`${context.user.Name}, Fetching new data! ppHop`, context.channel);
-		}
-		else {
-			sb.Master.pm(context.user.Name, \"Fetching new data! ppHop\", context.platform);
-		}
-
-		this.data.fetching = true;
-
-		const [mainData, ...regionalData] = await Promise.all([
-			this.staticData.fetchData({
-				url: this.staticData.baseURL,
-				region: null,
-				selector: \"#main_table_countries_today tbody tr\",
-				fields: [\"country\", \"confirmed\", \"newCases\", \"deaths\", \"newDeaths\", \"recovered\", \"active\", \"critical\", \"cpm\", \"dpm\"]
-			}),
-			this.staticData.fetchData({
-				url: this.staticData.baseURL + \"country/us\",
-				region: \"USA\",
-				selector: \"#usa_table_countries_today tbody tr\",
-				fields: [\"country\", \"confirmed\", \"newCases\", \"deaths\", \"newDeaths\"]
-			}),
-/*
-			this.staticData.fetchData({
-				url: \"https://www.canada.ca/en/public-health/services/diseases/2019-novel-coronavirus-infection.html\",
-				region: \"Canada\",
-				selector: \".table.table-striped.table-bordered tbody tr\",
-				fields: [\"country\", \"confirmed\", \"probable\", \"deaths\"]
-			})
-*/
-		]);
-
-		this.data.fetching = false;
-
-		if (!mainData.success || regionalData.some(i => !i.success)) {
-			const cause = mainData.cause || regionalData.find(i => !i.success)?.cause;
-			const { reply, cooldown } = this.staticData.handlers[cause];
-			return { reply, cooldown };
-		}
-
-		this.data.cache = [mainData.rows, regionalData.map(i => i.rows)].flat(Infinity);
-		this.data.countries = new Set(this.data.cache.filter(i => i.country).map(i => i.country));
-
-		const lastUpdateString = mainData.selector(\".label-counter\").next().text().replace(\"Last updated \", \"\");
-		this.data.update = new sb.Date(lastUpdateString);
-		this.data.nextReload = new sb.Date().addMinutes(15).valueOf();
-	}
-
+	const input = args.join(\" \").toLowerCase();
+	let region = null;
+	let country = null;
 	let targetData = null;
-	let input = args.join(\" \").toLowerCase();
 
 	if (input.startsWith(\"@\")) {
 		const userData = await sb.User.get(input);
@@ -519,139 +327,88 @@ ON DUPLICATE KEY UPDATE
 				reply: \"That user does not have their country location set!\"
 			};
 		}
-		
-		input = userData.Data.location.components.country; 
+
+		country = userData.Data.location.components.country;
 	}
-	
+
 	if (input === \"top\") {
-		const result = this.data.cache
-			.filter(i => !i.total && !i.region)
-			.sort((a, b) => b.confirmed - a.confirmed)
-			.slice(0, 10)
-			.map((i, ind) => `#${ind + 1}: ${i.country} (${i.confirmed})`)
+		const result = (await this.staticData.fetch.topData(10))
+			.map((i, ind) => `#${ind + 1}: ${i.Country} (${i.All_Cases})`)
 			.join(\"; \");
 
 		return {
 			reply: \"Top 10 countries by cases: \" + result
 		};
 	}
-	else if (this.staticData.regions.includes(input)) {
-		const special = Object.values(this.staticData.special).map(i => i.toLowerCase());
-		const eligibleCountries = (await sb.Query.getRecordset(rs => rs
-			.select(\"Name\")
-			.from(\"data\", \"Country\")
-			.where(\"Region = %s\", input)
-		)).map(i => i.Name.toLowerCase());
-
-		const eligibleData = this.data.cache.filter(i => (
-			eligibleCountries.includes(i.country.toLowerCase())
-			|| eligibleCountries.includes((this.staticData.special[i.country] || \"\").toLowerCase())
-		));
-
-		targetData = {
-			confirmed: 0,
-			deaths: 0,
-			newCases: 0,
-			newDeaths: 0,
-			recovered: 0
-		};
-
-		for (const record of eligibleData) {
-			for (const key of Object.keys(targetData)) {
-				targetData[key] += record[key];
-			}
-		}
-
-		targetData.country = args.join(\" \");
+	else if (input.includes(\":\")) {
+		[region, country] = input.split(\":\").map(i => i.trim());
 	}
-	else if (args.length > 0) {
-		const bestMatch = sb.Utils.selectClosestString(
-			input,
-			Array.from(this.data.countries),
+	else if (input.length > 0) {
+		country = input;
+	}
+
+	if (this.staticData.regions.includes(input)) {
+		region = input;
+		targetData = await this.staticData.fetch.regionalData(region);
+	}
+	else if (country) {
+		const [loose, strict] = await Promise.all([
+			this.staticData.fetch.countryData(region, country, false),
+			this.staticData.fetch.countryData(region, country, true)
+		]);
+
+		const result = sb.Utils.selectClosestString(
+			country,
+			[loose[0]?.Name, strict[0]?.Name].filter(Boolean),
 			{ ignoreCase: true }
 		);
 
-		targetData = this.data.cache.find(i => i.country.toLowerCase() === bestMatch);
+		targetData = [loose, strict].find(i => i[0]?.Name && i[0].Name.toLowerCase() === result.toLowerCase());
 	}
 	else {
-		targetData = this.data.cache.find(i => i.total && i.region === null);
+		targetData = await this.staticData.fetch.regionalData(null);
 	}
 
-	if (targetData) {
-		const delta = sb.Utils.timeDelta(new sb.Date(this.data.update));
-		const {
-			confirmed,
-			country,
-			cpm,
-			critical,
-			dpm,
-			deaths,
-			link,
-			newCases,
-			newDeaths,
-			recovered
-		} = targetData;
-
-		if (args.length > 0) {
-			let region = targetData.region ?? \"\";
-			const fixedCountryName = this.staticData.special[country] ?? country;
-			const countryData = await sb.Query.getRecordset(rs => rs
-				.select(\"Code_Alpha_2 AS Code\")
-				.from(\"data\", \"Country\")
-				.where(\"Name = %s\", fixedCountryName)
-				.limit(1)
-				.single()
-			);
-
-			let emoji = country;
-			if (region === \"USA\") {
-				region = \" (🇺🇸)\";
-			}
-			else if (region === \"Canada\") {
-				region = \" (🇨🇦)\";
-			}
-			else if (countryData?.Code) {
-				emoji = String.fromCodePoint(...countryData.Code.split(\"\").map(i => i.charCodeAt(0) + 127397));
-			}
-
-			let linkString = \"\";
-			if (link) {
-				if (context.platform.Name === \"discord\") {
-					linkString = `More info: <${link}>`;
-				}
-				else {
-					linkString = `More info: ${link}`;
-				}
-			}
-
-			const plusCases = (newCases > 0) ? ` (+${newCases})` : \"\";
-			const plusDeaths = (newDeaths > 0) ? ` (+${newDeaths})` : \"\";
-			const million = [];
-			if (cpm > 0) {
-				million.push(`${cpm} cases`);
-			}
-			if (dpm > 0) {
-				million.push(`${dpm} deaths`);
-			}
-
-			const perMillion = (million.length > 0)
-				? `This is ${million.join(\" and \")} per million. `
-				: \"\";
-
-			return {
-				reply: `${emoji ?? country}${region} has ${confirmed} confirmed case${(confirmed === 1) ? \"\" : \"s\"}${plusCases}, ${deaths ?? \"no\"} death${(deaths === 1) ? \"\" : \"s\"}${plusDeaths} and ${recovered ?? \"no\"} recovered case${(recovered === 1) ? \"\" : \"s\"}. ${perMillion}${linkString}`
-			}
-		}
-		else {
-			const emoji = sb.Utils.randArray([\"🌏\", \"🌎\", \"🌍\"]);
-			return {
-				reply: `${emoji} ${confirmed} (+${newCases}) corona virus cases are tracked so far. ${critical} in critical condition; ${recovered} have fully recovered, and there are ${deaths} (+${newDeaths}) deceased.`
-			};
-		}
-	}
-	else {
+	if (!targetData || targetData.length === 0) {
 		return {
-			reply: \"That country has no Corona virus data available.\"
+			reply: \"That country has no Corona virus data available!\"
 		};
 	}
+	
+	const { Region: prettyRegion } = targetData[0];
+	if (targetData.length === 1) {
+		targetData = targetData[0];
+	}
+	else if (targetData.length > 1) {
+		targetData = this.staticData.sumObjectArray(targetData);
+	}
+
+	let intro = null;
+	if (region) {
+		intro = prettyRegion;
+	}
+	else if (!targetData.Parent) {
+		intro = await this.staticData.getEmoji(targetData.Name ?? null);
+		if (!intro) {
+			intro = targetData.Name;
+		}
+	}
+	else {
+		const emoji = await this.staticData.getEmoji(targetData.Parent);
+		intro = `${targetData.Name} (${emoji})`;
+	}
+
+	const {
+		All_Cases: allCases,
+		All_Deaths: allDeaths,
+		All_Recoveries: allRecoveries,
+		New_Cases: newCases,
+		New_Deaths: newDeaths,
+	} = targetData;
+
+	const plusCases = (newCases > 0) ? ` (+${newCases})` : \"\";
+	const plusDeaths = (newDeaths > 0) ? ` (+${newDeaths})` : \"\";
+	return {
+		reply: `${intro} has ${allCases} confirmed case${(allCases === 1) ? \"\" : \"s\"}${plusCases}, ${allDeaths ?? \"no\"} death${(allDeaths === 1) ? \"\" : \"s\"}${plusDeaths} and ${allRecoveries ?? \"no\"} recovered case${(allRecoveries === 1) ? \"\" : \"s\"}.`
+	};
 })'
