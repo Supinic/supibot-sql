@@ -141,7 +141,7 @@ VALUES
 	for (const token of args) {
 		if (token.includes(\"game:\")) {
 			const name = token.replace(\"game:\", \"\").toLowerCase();
-			game = this.staticData.games.find(i => i.name.toLowerCase() === name);
+			game = this.staticData.games.find(i => i.name.toLowerCase().includes(name));
 
 			if (!game) {
 				return {
@@ -177,7 +177,17 @@ VALUES
 	}).json();
 
 	const ttsData = sb.Command.get(\"tts\").data;
-	const { userName, sex, languageName, introductionText, introductionSpeech, price } = data.content[0];
+	const {
+		serveNum,
+		recommendNum,
+		userName,
+		sex,
+		languageName,
+		introductionText,
+		introductionSpeech,
+		price
+	} = data.content[0];
+
 	if (context.channel?.ID === 38 && sb.Config.get(\"TTS_ENABLED\") && !ttsData.pending) {
 		ttsData.pending = true;
 
@@ -197,9 +207,16 @@ VALUES
 	else if (sex === 1) {
 		type =  \"(F)\";
 	}
+	
+	const revenue = (serveNum > 0)
+		? `Total revenue: $${(serveNum * price) / 100}`
+		: \"\";
+	const language = (languageName)
+		? `They speak ${languageName}.`
+		: \"\";
 
 	return {
-		reply: `${userName} ${type} plays ${game.name} for $${price / 100}: ${introductionText} ${languageName ?? \"\"}`
+		reply: `${userName} ${type} plays ${game.name} for $${price / 100}: ${introductionText} ${language} ${revenue}`
 	};
 })',
 		NULL,
@@ -214,7 +231,7 @@ ON DUPLICATE KEY UPDATE
 	for (const token of args) {
 		if (token.includes(\"game:\")) {
 			const name = token.replace(\"game:\", \"\").toLowerCase();
-			game = this.staticData.games.find(i => i.name.toLowerCase() === name);
+			game = this.staticData.games.find(i => i.name.toLowerCase().includes(name));
 
 			if (!game) {
 				return {
@@ -250,7 +267,17 @@ ON DUPLICATE KEY UPDATE
 	}).json();
 
 	const ttsData = sb.Command.get(\"tts\").data;
-	const { userName, sex, languageName, introductionText, introductionSpeech, price } = data.content[0];
+	const {
+		serveNum,
+		recommendNum,
+		userName,
+		sex,
+		languageName,
+		introductionText,
+		introductionSpeech,
+		price
+	} = data.content[0];
+
 	if (context.channel?.ID === 38 && sb.Config.get(\"TTS_ENABLED\") && !ttsData.pending) {
 		ttsData.pending = true;
 
@@ -270,8 +297,15 @@ ON DUPLICATE KEY UPDATE
 	else if (sex === 1) {
 		type =  \"(F)\";
 	}
+	
+	const revenue = (serveNum > 0)
+		? `Total revenue: $${(serveNum * price) / 100}`
+		: \"\";
+	const language = (languageName)
+		? `They speak ${languageName}.`
+		: \"\";
 
 	return {
-		reply: `${userName} ${type} plays ${game.name} for $${price / 100}: ${introductionText} ${languageName ?? \"\"}`
+		reply: `${userName} ${type} plays ${game.name} for $${price / 100}: ${introductionText} ${language} ${revenue}`
 	};
 })'
