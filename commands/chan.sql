@@ -185,6 +185,8 @@ VALUES
 	const post = sb.Utils.randArray(eligiblePosts);
 	const delta = sb.Utils.timeDelta(post.created);
 
+	post.content = post.content.replace(/>>\\d+/g, \"\");
+
 	if (resultType === \"file\") {
 		return {
 			reply: `${post.ID} (posted ${delta}): ${post.file} ${post.content}`
@@ -344,6 +346,8 @@ ON DUPLICATE KEY UPDATE
 	const eligiblePosts = thread.posts.filter(i => i[resultType]);
 	const post = sb.Utils.randArray(eligiblePosts);
 	const delta = sb.Utils.timeDelta(post.created);
+
+	post.content = post.content.replace(/>>\\d+/g, \"\");
 
 	if (resultType === \"file\") {
 		return {
