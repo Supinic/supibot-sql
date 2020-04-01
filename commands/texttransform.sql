@@ -40,10 +40,11 @@ VALUES
 		1,
 		1,
 		0,
-		'({
-	convert: {
+		'(() => {
+	const convert = {
+		method: (string, fn) => fn(string),
 		map: (string, map) => [...string].map(i => map[i] || i).join(\"\"),
-		translate: (string, dictionary) => {
+			translate: (string, dictionary) => {
 			for (const [from, to] of dictionary.phrasesWords) {
 				const r = new RegExp(\"\\\\b\" + from + \"\\\\b\", \"gi\");
 				string = string.replace(r, \"_\" + to + \"_\");
@@ -71,10 +72,10 @@ VALUES
 			}
 
 			return string;
-		},
-		method: (string, fn) => fn(string)
-	},
-	types: [
+		}
+	};
+	
+	const types = [
 		{
 			name: \"bubble\",
 			type: \"map\",
@@ -177,9 +178,31 @@ VALUES
 				.replace(/N([AEIOU])/g, \"Ny$1\")
 				.replace(/ove/g, \"uv\")
 				.replace(/[!?]+/g, \" \" + sb.Utils.randArray([\"(・`ω´・)\", \";;w;;\", \"owo\", \"UwU\", \">w<\", \"^w^\"]) + \" \")
-		}
-	]
-})',
+		},
+		{
+
+			name: \"reverse\",
+			type: \"method\",
+			data: (message) => Array.from(message)
+				.reverse()
+				.join(\"\")
+				.replace(/[()]/g, (char) => (char === \")\") ? \"(\": \")\")
+		},
+		{
+			name: \"random\",
+			type: \"method\",
+			data: (message) => {
+				const random = sb.Utils.randArray(types.filter(i => i.name !== \"random\"));
+				return convert[random.type](message, random.data);
+			}
+		}       
+	];
+	
+	return {
+		convert,
+		types
+	};
+})()',
 		'(async function textTransform (context, name, ...args) {
 	if (!name) {
 		return {
