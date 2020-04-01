@@ -41,96 +41,174 @@ VALUES
 		1,
 		0,
 		'({
+	fetchGamesData: async () => {
+		const data = await sb.Got.instances.FakeAgent({
+			method: \"POST\",
+			url: \"https://www.egirl.gg/api/web/product-type/list-by-game?\"
+		}).json();
+
+		return JSON.stringify(data.content.map(i => ({
+			ID: i.id,
+			name: i.nameEn,
+			gameID: i.gameNum
+		})).sort((a, b) => a.ID - b.ID), null, 4);
+	},
+
 	games: [
 		{
-			\"ID\": 4,
-			\"name\": \"League of Legends\",
-			\"gameID\": 4637
+			ID: 1,
+			name: \"CS:GO\",
+			gameID: 656
 		},
 		{
-			\"ID\": 7,
-			\"name\": \"Overwatch\",
-			\"gameID\": 1184
+			ID: 2,
+			name: \"Dota 2\",
+			gameID: 129
 		},
 		{
-			\"ID\": 6,
-			\"name\": \"Minecraft\",
-			\"gameID\": 858
+			ID: 3,
+			name: \"PUBG\",
+			gameID: 65
 		},
 		{
-			\"ID\": 5,
-			\"name\": \"Fortnite\",
-			\"gameID\": 559
+			ID: 4,
+			name: \"League of Legends\",
+			gameID: 5108
 		},
 		{
-			\"ID\": 1,
-			\"name\": \"CSGO\",
-			\"gameID\": 555
+			ID: 5,
+			name: \"Fortnite\",
+			gameID: 689
 		},
 		{
-			\"ID\": 18,
-			\"name\": \"Call of duty\",
-			\"gameID\": 399
+			ID: 6,
+			name: \"Minecraft\",
+			gameID: 947
 		},
 		{
-			\"ID\": 12,
-			\"name\": \"Apex Legends\",
-			\"gameID\": 347
+			ID: 7,
+			name: \"Overwatch\",
+			gameID: 1308
 		},
 		{
-			\"ID\": 14,
-			\"name\": \"Dead by Daylight\",
-			\"gameID\": 230
+			ID: 8,
+			name: \"Hearthstone\",
+			gameID: 65
 		},
 		{
-			\"ID\": 13,
-			\"name\": \"VR chat\",
-			\"gameID\": 207
+			ID: 9,
+			name: \"Gwent\",
+			gameID: 13
 		},
 		{
-			\"ID\": 11,
-			\"name\": \"World of Warcraft\",
-			\"gameID\": 178
+			ID: 10,
+			name: \"Heroes of the Storm\",
+			gameID: 59
 		},
 		{
-			\"ID\": 17,
-			\"name\": \"Roblox\",
-			\"gameID\": 155
+			ID: 11,
+			name: \"World of Warcraft\",
+			gameID: 205
 		},
 		{
-			\"ID\": 2,
-			\"name\": \"DOTA2\",
-			\"gameID\": 117
+			ID: 12,
+			name: \"Apex Legends\",
+			gameID: 402
 		},
 		{
-			\"ID\": 16,
-			\"name\": \"Smash bro\",
-			\"gameID\": 105
+			ID: 13,
+			name: \"VR Chat\",
+			gameID: 232
 		},
 		{
-			\"ID\": 15,
-			\"name\": \"Rocket league\",
-			\"gameID\": 94
+			ID: 14,
+			name: \"Dead by Daylight\",
+			gameID: 257
 		},
 		{
-			\"ID\": 3,
-			\"name\": \"PUBG\",
-			\"gameID\": 60
+			ID: 15,
+			name: \"Rocket League\",
+			gameID: 116
 		},
 		{
-			\"ID\": 8,
-			\"name\": \"Hearth Stone\",
-			\"gameID\": 58
+			ID: 16,
+			name: \"Smash bro\",
+			gameID: 127
 		},
 		{
-			\"ID\": 10,
-			\"name\": \"Heroes of the Storm\",
-			\"gameID\": 56
+			ID: 17,
+			name: \"Roblox\",
+			gameID: 182
 		},
 		{
-			\"ID\": 9,
-			\"name\": \"Gwent\",
-			\"gameID\": 12
+			ID: 18,
+			name: \"Call of Duty\",
+			gameID: 468
+		},
+		{
+			ID: 19,
+			name: \"Animal Crossing: New Horizons\",
+			gameID: 48
+		},
+		{
+			ID: 20,
+			name: \"Rainbow Six\",
+			gameID: 46
+		},
+		{
+			ID: 21,
+			name: \"Grand Theft Auto V\",
+			gameID: 12
+		},
+		{
+			ID: 22,
+			name: \"Osu!\",
+			gameID: 36
+		},
+		{
+			ID: 23,
+			name: \"Destiny 2\",
+			gameID: 13
+		},
+		{
+			ID: 24,
+			name: \"Pokémon Sword/Shield\",
+			gameID: 2
+		},
+		{
+			ID: 25,
+			name: \"Monster Hunter World\",
+			gameID: 20
+		},
+		{
+			ID: 26,
+			name: \"Final Fantasy XIV Online\",
+			gameID: 15
+		},
+		{
+			ID: 27,
+			name: \"Borderlands 3\",
+			gameID: 4
+		},
+		{
+			ID: 28,
+			name: \"Black Desert Online\",
+			gameID: 4
+		},
+		{
+			ID: 29,
+			name: \"Legends of Runeterra\",
+			gameID: 6
+		},
+		{
+			ID: 30,
+			name: \"Escape From Tarkov\",
+			gameID: 11
+		},
+		{
+			ID: 31,
+			name: \"Slither io\",
+			gameID: 16
 		}
 	]
 })',
@@ -176,6 +254,13 @@ VALUES
 			.toString()
 	}).json();
 
+	if (!data.content || data.content.length === 0) {
+		return {
+			success: false,
+			reply: \"No eligible profiles found!\"
+		};
+	}
+
 	const ttsData = sb.Command.get(\"tts\").data;
 	const {
 		serveNum,
@@ -220,7 +305,33 @@ VALUES
 	};
 })',
 		NULL,
-		NULL
+		'async (prefix) => {
+	const row = await sb.Query.getRow(\"chat_data\", \"Command\");
+	await row.load(208);
+	
+	const games = eval(row.values.Static_Data).games
+		.map(i => `<li><code>${i.name}</code></li>`)
+		.sort()
+		.join(\"\");
+
+	return [
+		`Fetches a random description of a user profile from <a target=\"_blank\" href=\"egirl.gg\">egirl.gg</a>.`,
+		`If this command is executed in Supinic\'s channel and TTS is on, the user introduction audio will be played.`,
+		\"\",
+
+		`<code>${prefix}ForeverAlone</code>`,
+		\"Random user, female only\",
+		\"\",
+
+		`<code>${prefix}ForeverAlone sex:(male/female)</code>`,
+		\"Random user, specified sex only\",
+		\"\",
+
+		`<code>${prefix}ForeverAlone game:(game)</code>`,
+		\"Random user, selected game only\",
+		`List of games: <ul>${games}</ul>`			
+	];
+}'
 	)
 
 ON DUPLICATE KEY UPDATE
@@ -265,6 +376,13 @@ ON DUPLICATE KEY UPDATE
 			.set(\"sex\", selectedSex)
 			.toString()
 	}).json();
+
+	if (!data.content || data.content.length === 0) {
+		return {
+			success: false,
+			reply: \"No eligible profiles found!\"
+		};
+	}
 
 	const ttsData = sb.Command.get(\"tts\").data;
 	const {
