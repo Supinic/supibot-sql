@@ -65,13 +65,13 @@ VALUES
 	else if (!lastAFK.Ended) {
 		return {
 			reply: \"You were AFK until this moment... Try again?\",
-			meta: { skipCooldown: true }
+			cooldown: 2500
 		};
 	}
 	else if (lastAFK.Ended.addMinutes(5) <= sb.Date.now()) {
 		return {
 			reply: \"You cannot resume your AFK status, because it ended more than 5 minutes ago!\",
-			meta: { skipCooldown: true }
+			cooldown: 2500
 		};
 	}
 
@@ -131,13 +131,13 @@ ON DUPLICATE KEY UPDATE
 	else if (!lastAFK.Ended) {
 		return {
 			reply: \"You were AFK until this moment... Try again?\",
-			meta: { skipCooldown: true }
+			cooldown: 2500
 		};
 	}
 	else if (lastAFK.Ended.addMinutes(5) <= sb.Date.now()) {
 		return {
 			reply: \"You cannot resume your AFK status, because it ended more than 5 minutes ago!\",
-			meta: { skipCooldown: true }
+			cooldown: 2500
 		};
 	}
 
