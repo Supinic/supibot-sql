@@ -44,16 +44,17 @@ VALUES
 		'(async function sort (context, ...args) {
 	if (args.length < 2) {
 		return {
-			reply: \"You must supply at leats two words!\"
+			success: false,
+			reply: \"You must supply at least two words!\"
 		};
 	}
 
 	const reply = args.sort().join(\" \");
 	return {
 		reply: reply,
-		meta: {
-			skipCooldown: Boolean(context.append.pipe) // Only skip cooldown if used in a pipe
-		}
+		cooldown: (context.append.pipe)
+			? null // skip cooldown in pipe
+			: this.Cooldown // apply regular cooldown inside of pipe
 	};
 })',
 		NULL,
@@ -64,15 +65,16 @@ ON DUPLICATE KEY UPDATE
 	Code = '(async function sort (context, ...args) {
 	if (args.length < 2) {
 		return {
-			reply: \"You must supply at leats two words!\"
+			success: false,
+			reply: \"You must supply at least two words!\"
 		};
 	}
 
 	const reply = args.sort().join(\" \");
 	return {
 		reply: reply,
-		meta: {
-			skipCooldown: Boolean(context.append.pipe) // Only skip cooldown if used in a pipe
-		}
+		cooldown: (context.append.pipe)
+			? null // skip cooldown in pipe
+			: this.Cooldown // apply regular cooldown inside of pipe
 	};
 })'
