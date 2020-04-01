@@ -72,13 +72,20 @@ VALUES
 	};
 })',
 		NULL,
-		'async (prefix) => [
-	\"Consult the 8-ball for your question!\",
-	\"\",
+		'async (prefix) => {
+	const row = await sb.Query.getRow(\"chat_data\", \"Command\");
+	await row.load(133);
+	const { responses } = eval(row.values.Static_Data);
 
-	`<code>${prefix}8ball Is this command cool?</code>`,
-	sb.Utils.randArray(sb.Config.get(\"8_BALL_RESPONSES\"))
-]	'
+	return [
+		\"Consult the 8-ball for your question!\",
+		\"\",
+
+		`<code>${prefix}8ball Is this command cool?</code>`,
+		sb.Utils.randArray(responses)
+	];
+}
+'
 	)
 
 ON DUPLICATE KEY UPDATE
