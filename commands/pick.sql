@@ -49,7 +49,10 @@ VALUES
 	}
 
 	return {
-		reply: sb.Utils.randArray(words)
+		reply: sb.Utils.randArray(words),
+		cooldown: (context.append.pipe)
+			? 0
+			: this.Cooldown
 	}
 })',
 		NULL,
@@ -65,6 +68,9 @@ ON DUPLICATE KEY UPDATE
 	}
 
 	return {
-		reply: sb.Utils.randArray(words)
+		reply: sb.Utils.randArray(words),
+		cooldown: (context.append.pipe)
+			? 0
+			: this.Cooldown
 	}
 })'
