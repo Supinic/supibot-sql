@@ -27,7 +27,7 @@ VALUES
 		104,
 		'pipe',
 		NULL,
-		'Pipes the result of one command to another, and so forth. Each command will be used as if used separately, so each will be checked for cooldowns and banphrases. Use the pipe character \"|\" to separate each command.',
+		'Pipes the result of one command to another, and so forth. Each command will be used as if used separately, so each will be checked for cooldowns and banphrases. Use the character \"|\" or \">\" to separate each command.',
 		5000,
 		0,
 		1,
@@ -144,7 +144,21 @@ VALUES
 	};
 })',
 		NULL,
-		NULL
+		'async (prefix) => {
+	return [
+		\"Pipes multiple commands together, where each command\'s result will become the input of another.\",
+		\"Separate the commands with <code>|</code> or <code>&gt;</code> characters.\",
+		\"\",
+		
+		`<code>${prefix}pipe news RU | translate</code>`,
+		\"Fetches russian news, and immediately translates them to English (by default).\",
+		\"\",
+
+		`<code>${prefix}pipe 4Head | translate to:german | notify (user)</code>`,
+		\"Fetches a random joke, translates it to German, and reminds the target user with the text.\",
+		\"\"		
+	];
+}'
 	)
 
 ON DUPLICATE KEY UPDATE
