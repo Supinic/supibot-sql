@@ -70,6 +70,7 @@ VALUES
 					toTable: \"Place\",
 					on: \"Place.ID = Status.Place\"
 				})
+				.where(\"Latest = %b\", true)
 				.where(\"Place.Parent IS NULL\")
 				.groupBy(\"Place\")
 				.orderBy(\"Date DESC\")
@@ -90,6 +91,7 @@ VALUES
 					toTable: \"Place\",
 					on: \"Place.ID = Status.Place\"
 				})
+				.where(\"Latest = %b\", true)
 				.where({ condition: region === null }, \"Place.Parent IS NULL\")
 				.where({ condition: typeof region === \"string\" }, \"Place.Region = %s\", region)
 				.groupBy(\"Status.Place\")
@@ -108,6 +110,7 @@ VALUES
 					toTable: \"Place\",
 					on: \"Place.ID = Status.Place\"
 				})
+				.where(\"Latest = %b\", true)
 				.where({ condition: direct === false }, \"Place.Name %*like*\", country)
 				.where({ condition: direct === true }, \"Place.Name = %s\", country)
 				.where({ condition: region !== null }, \"Place.Parent = %s\", region)
@@ -218,7 +221,12 @@ VALUES
 			{ ignoreCase: true }
 		);
 
-		targetData = [loose, strict].find(i => i[0]?.Name && i[0].Name.toLowerCase() === result.toLowerCase());
+		if (result) {
+			targetData = [loose, strict].find(i => i[0]?.Name && i[0].Name.toLowerCase() === result.toLowerCase());
+		}
+		else {
+			targetData = loose;
+		}
 	}
 	else {
 		targetData = await this.staticData.fetch.regionalData(null);
@@ -239,7 +247,7 @@ VALUES
 	}
 
 	let intro = null;
-	if (region) {
+	if (region && !country) {
 		intro = prettyRegion;
 	}
 	else if (!targetData.Parent) {
@@ -261,10 +269,41 @@ VALUES
 		New_Deaths: newDeaths,
 	} = targetData;
 
-	const plusCases = (newCases > 0) ? ` (+${newCases})` : \"\";
-	const plusDeaths = (newDeaths > 0) ? ` (+${newDeaths})` : \"\";
+	const group = sb.Utils.groupDigits;
+	const cases = { 	
+		amount: group(allCases),
+		word: (allCases === 1) ? \"case\" : \"cases\",
+		plusPrefix: (newCases > 0) ? \"+\" : (newCases < 0) ? \"-\" : \"±\",
+		plusWord: (newCases === 1) ? \"case\" : \"cases\",
+		plusAmount: (newCases) ? group(newCases) : null
+	};
+	const deaths = {
+		amount: (allDeaths) ? group(allDeaths) : \"unknown amount of\",
+		word: (allDeaths === 1) ? \"death\" : \"deaths\",
+		plusPrefix: (newDeaths > 0) ? \"+\" : (newDeaths < 0) ? \"-\" : \"±\",
+		plusWord: (newDeaths === 1) ? \"death\" : \"deaths\",
+		plusAmount: (newDeaths) ? group(newDeaths) : null		
+	};
+	const recoveries = {
+		amount: (allRecoveries) ? group(allRecoveries) : \"unknown amount of\",
+		word: (allRecoveries === 1) ? \"recovery\" : \"recoveries\"
+	};
+
 	return {
-		reply: `${intro} has ${allCases} confirmed case${(allCases === 1) ? \"\" : \"s\"}${plusCases}, ${allDeaths ?? \"no\"} death${(allDeaths === 1) ? \"\" : \"s\"}${plusDeaths} and ${allRecoveries ?? \"no\"} recovered case${(allRecoveries === 1) ? \"\" : \"s\"}.`
+		reply: sb.Utils.tag.trim `
+			${intro}
+			has ${cases.amount} confirmed ${cases.word}${(newCases === null)
+				? \"\" 
+				: ` (${cases.plusPrefix}${cases.plusAmount} ${cases.plusWord})`
+			},
+
+			${deaths.amount} ${deaths.word}${(newDeaths === null)
+				? \"\"
+				: ` (${deaths.plusPrefix}${deaths.plusAmount} ${deaths.plusWord})`
+			}
+
+			and ${recoveries.amount} ${recoveries.word}.
+		`
 	};
 })',
 		NULL,
@@ -273,23 +312,37 @@ VALUES
 	await row.load(200);
 
 	const data = eval(row.values.Static_Data);
-	const regions = data.regions.map(i => `<code>${i}</code>`);
+	const regions = data.regions.map(i => `<li><code>${i}</code></li>`).join(\"\");
 
+	const subregions = (await sb.Query.getRecordset(rs => rs
+		.select(\"DISTINCT Parent\")
+		.from(\"corona\", \"Place\")
+       		.where(\"Parent IS NOT NULL\")
+	)).map(i => `<li><code>${i.Parent}</code></li>`).sort().join(\"\");		
 
 	return [
-		`Checks the latest data on the Corona COVID-19 virus\'s spread.`,
+		`Checks the latest data on the Corona COVID-19 virus\'s spread, either globally or in a region/country.`,
 
 		`<code>${prefix}corona</code>`,
-		\"Posts global data.\",
+		\"Posts the current global stats.\",
 		\"\",
 
-		`<code>${prefix}corona (country)</code>`,
-		`Posts given country\'s data. If the country is not found, or it has no cases, it will say \"no data available\".`,
-		``,
+		`<code>${prefix}corona (global region)</code>`,
+		`Posts a given global region\'s cumulative stats.`,
+		`Supported global regions: <ul>${regions}</ul>`,
 
-		`<code>${prefix}corona (region)</code>`,
-		\"Posts data for a given global region. Supported regions:\",
-		regions.join(\"<br>\")
+		`<code>${prefix}corona (country/region)</code>`,
+		`Posts a given country\'s <b>OR</b> region\'s data. Countries take precedence. I.e. \"Georgia\" will post the country, not the USA state.`,
+		\"\",
+
+		`<code>${prefix}corona (region):(country)</code>`,
+		`E.g.: <code>${prefix}corona USA:Georgia</code>`,
+		`Posts a given country region\'s data. Use when you need to specify an ambiguous region.`,
+		`Keep in mind the region names are local. E.g. <code>Lombardia</code> and not <code>Lombardy</code>`,
+		`Supported countries with regions: <ul>${subregions}</ul>`,
+
+		`<code>${prefix}corona @User</code>`,
+		\"If a given user has set their default location (and it is public), this will check their country\'s corona stats.\"
 	];
 }'
 	)
@@ -363,7 +416,12 @@ ON DUPLICATE KEY UPDATE
 			{ ignoreCase: true }
 		);
 
-		targetData = [loose, strict].find(i => i[0]?.Name && i[0].Name.toLowerCase() === result.toLowerCase());
+		if (result) {
+			targetData = [loose, strict].find(i => i[0]?.Name && i[0].Name.toLowerCase() === result.toLowerCase());
+		}
+		else {
+			targetData = loose;
+		}
 	}
 	else {
 		targetData = await this.staticData.fetch.regionalData(null);
@@ -384,7 +442,7 @@ ON DUPLICATE KEY UPDATE
 	}
 
 	let intro = null;
-	if (region) {
+	if (region && !country) {
 		intro = prettyRegion;
 	}
 	else if (!targetData.Parent) {
@@ -406,9 +464,40 @@ ON DUPLICATE KEY UPDATE
 		New_Deaths: newDeaths,
 	} = targetData;
 
-	const plusCases = (newCases > 0) ? ` (+${newCases})` : \"\";
-	const plusDeaths = (newDeaths > 0) ? ` (+${newDeaths})` : \"\";
+	const group = sb.Utils.groupDigits;
+	const cases = { 	
+		amount: group(allCases),
+		word: (allCases === 1) ? \"case\" : \"cases\",
+		plusPrefix: (newCases > 0) ? \"+\" : (newCases < 0) ? \"-\" : \"±\",
+		plusWord: (newCases === 1) ? \"case\" : \"cases\",
+		plusAmount: (newCases) ? group(newCases) : null
+	};
+	const deaths = {
+		amount: (allDeaths) ? group(allDeaths) : \"unknown amount of\",
+		word: (allDeaths === 1) ? \"death\" : \"deaths\",
+		plusPrefix: (newDeaths > 0) ? \"+\" : (newDeaths < 0) ? \"-\" : \"±\",
+		plusWord: (newDeaths === 1) ? \"death\" : \"deaths\",
+		plusAmount: (newDeaths) ? group(newDeaths) : null		
+	};
+	const recoveries = {
+		amount: (allRecoveries) ? group(allRecoveries) : \"unknown amount of\",
+		word: (allRecoveries === 1) ? \"recovery\" : \"recoveries\"
+	};
+
 	return {
-		reply: `${intro} has ${allCases} confirmed case${(allCases === 1) ? \"\" : \"s\"}${plusCases}, ${allDeaths ?? \"no\"} death${(allDeaths === 1) ? \"\" : \"s\"}${plusDeaths} and ${allRecoveries ?? \"no\"} recovered case${(allRecoveries === 1) ? \"\" : \"s\"}.`
+		reply: sb.Utils.tag.trim `
+			${intro}
+			has ${cases.amount} confirmed ${cases.word}${(newCases === null)
+				? \"\" 
+				: ` (${cases.plusPrefix}${cases.plusAmount} ${cases.plusWord})`
+			},
+
+			${deaths.amount} ${deaths.word}${(newDeaths === null)
+				? \"\"
+				: ` (${deaths.plusPrefix}${deaths.plusAmount} ${deaths.plusWord})`
+			}
+
+			and ${recoveries.amount} ${recoveries.word}.
+		`
 	};
 })'
