@@ -328,8 +328,8 @@ VALUES
 		\"\",
 
 		`<code>${prefix}ForeverAlone game:(game)</code>`,
-		\"Random user, selected game only\",
-		`List of games: <ul>${games}</ul>`			
+		\"Random user, selected game only. Only uses the first word of the game you provide.\",
+		`List of games: <ul>${games}</ul>`
 	];
 }'
 	)
