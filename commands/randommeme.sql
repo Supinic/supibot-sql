@@ -28,7 +28,7 @@ VALUES
 		'randommeme',
 		'[\"rm\"]',
 		'If no parameters are provided, posts a random reddit meme. If you provide a subreddit, a post will be chosen randomly. NSFW subreddits and posts are only available on NSFW Discord channels!',
-		10000,
+		20000,
 		0,
 		0,
 		0,
@@ -45,7 +45,11 @@ VALUES
 	this.data.posts = {};
 
 	return {
-		banned: [\"moobs\"],
+		banned: [
+			\"moobs\",
+			\"feetpics\",
+			\"foot\"
+		],
 		defaultMemeSubreddits: [
 			\"okbuddyretard\",
 			\"memes\",
@@ -59,15 +63,8 @@ VALUES
 		subreddit = sb.Utils.randArray(this.staticData.defaultMemeSubreddits);
 	}
 
-	subreddit = subreddit.toLowerCase();
-
-	const banned = [\"moobs\"];
 	const safeSpace = Boolean(!context.privateMessage && !context.channel?.NSFW);
-	if (banned.includes(subreddit)) {
-		return {
-			reply: \"That subreddit has been banned from viewing!\"
-		};
-	}
+	subreddit = subreddit.toLowerCase();
 
 	if (!this.data.meta[subreddit]) {
 		this.data.meta[subreddit] = await sb.Got.instances.Reddit(subreddit + \"/about.json\").json();
@@ -89,7 +86,7 @@ VALUES
 			reply: \"That subreddit does not exist!\"
 		};
 	}
-	else if (check.data.over18 && safeSpace) {
+	else if (safeSpace && (this.staticData.banned.includes(subreddit) || check.data.over18)) {
 		return {
 			reply: \"That subreddit is flagged as 18+, and thus not safe to post here!\"
 		};
@@ -149,15 +146,8 @@ ON DUPLICATE KEY UPDATE
 		subreddit = sb.Utils.randArray(this.staticData.defaultMemeSubreddits);
 	}
 
-	subreddit = subreddit.toLowerCase();
-
-	const banned = [\"moobs\"];
 	const safeSpace = Boolean(!context.privateMessage && !context.channel?.NSFW);
-	if (banned.includes(subreddit)) {
-		return {
-			reply: \"That subreddit has been banned from viewing!\"
-		};
-	}
+	subreddit = subreddit.toLowerCase();
 
 	if (!this.data.meta[subreddit]) {
 		this.data.meta[subreddit] = await sb.Got.instances.Reddit(subreddit + \"/about.json\").json();
@@ -179,7 +169,7 @@ ON DUPLICATE KEY UPDATE
 			reply: \"That subreddit does not exist!\"
 		};
 	}
-	else if (check.data.over18 && safeSpace) {
+	else if (safeSpace && (this.staticData.banned.includes(subreddit) || check.data.over18)) {
 		return {
 			reply: \"That subreddit is flagged as 18+, and thus not safe to post here!\"
 		};
