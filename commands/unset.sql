@@ -40,7 +40,22 @@ VALUES
 		1,
 		1,
 		0,
-		NULL,
+		'({
+	variables: [
+		{
+			names: [\"notify\", \"reminder\"],
+			description: \"Unsets an active reminder either set by you or for you.\"
+		},
+		{
+			names: [\"suggest\", \"suggestion\"],
+			description: \"Marks an active suggestion created by you to be \\\"Dismissed by author\\\".\"
+		},
+		{
+			names: [\"location\"],
+			description: \"Removes your location if you have set one before.\"
+		}
+	]
+})',
 		'(async function unset (context, type, ID) {
 	if (!type) {
 		return {
@@ -150,7 +165,30 @@ VALUES
 	}
 })',
 		NULL,
-		NULL
+		'async (prefix) => {
+	const row = await sb.Query.getRow(\"chat_data\", \"Command\");
+	await row.load(63);
+	
+	const { variables } = eval(row.values.Static_Data);
+	const list = variables.map(i => `<li><code>${i.names.join(\"/\")}</code> ${i.description}</li>`).join(\"\");
+
+	return [
+		\"Unsets a variable that you have set in Supibot beforehand.\",
+		\"\",
+
+		`<code>${prefix}unset (variable) (ID)</code>`,
+		`Unsets the variable of the given type, and the given ID.`,
+		\"\",
+		
+
+		`<code>${prefix}unset (variable) last</code>`,
+		`If applicable, unsets the last variable of given that type that you have set.`,
+		\"\",
+
+		\"List of variables:\",
+		`<ul>${list}</ul>`		
+	];	
+}'
 	)
 
 ON DUPLICATE KEY UPDATE

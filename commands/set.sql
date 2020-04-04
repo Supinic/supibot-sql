@@ -40,7 +40,14 @@ VALUES
 		1,
 		1,
 		0,
-		NULL,
+		'({
+	variables: [
+		{
+			names: [\"location\"],
+			description: \"Sets your IRL location in the context of Supibot. This is then used in commands like $weather, $time, $corona, ...\"
+		}
+	]
+})',
 		'(async function set (context, type, ...args) {
 	if (!type) {
 		return {
@@ -99,7 +106,25 @@ VALUES
 	};
 })',
 		NULL,
-		NULL
+		'async (prefix) => {
+	const row = await sb.Query.getRow(\"chat_data\", \"Command\");
+	await row.load(207);
+	
+	const { variables } = eval(row.values.Static_Data);
+	const list = variables.map(i => `<li><code>${i.names.join(\"/\")}</code> ${i.description}</li>`).join(\"\");
+
+	return [
+		\"Sets a variable that you can then use in Supibot\'s commands.\",
+		\"\",
+
+		`<code>${prefix}set (variable) (data)</code>`,
+		`Sets the variable of the given type with given data.`,
+		\"\",
+		
+		\"List of variables:\",
+		`<ul>${list}</ul>`		
+	];	
+}'
 	)
 
 ON DUPLICATE KEY UPDATE
