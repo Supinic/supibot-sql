@@ -40,7 +40,17 @@ VALUES
 		1,
 		1,
 		0,
-		NULL,
+		'(() => {
+	this.data.labyrinth = {
+		date: null,
+		normal: null,
+		cruel: null,
+		merciless: null,
+		uber: null
+	};
+
+	return {};
+})();',
 		'(async function poe (context, commandType, ...args) {
 	if (!commandType) {
 		return {
@@ -61,10 +71,28 @@ VALUES
 				};
 			}
 
-			const date = new sb.Date().addHours(-2).format(\"Y-m-d\");
-			const url = `https://www.poelab.com/wp-content/labfiles/${date}_${labType}.jpg`;
+			if (!this.data.labyrinth.date || this.data.labyrinth.date.day !== new sb.Date().day) {
+				this.data.labyrinth.date = new sb.Date().setTimezoneOffset(0);
+			}
+
+			const dateString = this.data.labyrinth.date.format(\"Y-m-d\");
+			const url = `https://www.poelab.com/wp-content/labfiles/${dateString}_${labType}.jpg`;
+			if (!this.data.labyrinth[labType]) {
+				const { statusCode } = await sb.Got.instances.FakeAgent({
+					method: \"GET\",
+					throwHttpErrors: false,
+					url
+				});
+
+				this.data.labyrinth[labType] = (statusCode === 200);
+				if (statusCode !== 200) {
+					return {
+						reply: `The ${labType} labyrinth has not been scouted yet!`
+					};
+				}
+			}
 			return {
-				reply: \"Latest labyrinth map: \" + url
+				reply: `Today\'s ${labType} labyrinth map: ${url}`
 			};
 		}
 		
@@ -98,10 +126,28 @@ ON DUPLICATE KEY UPDATE
 				};
 			}
 
-			const date = new sb.Date().addHours(-2).format(\"Y-m-d\");
-			const url = `https://www.poelab.com/wp-content/labfiles/${date}_${labType}.jpg`;
+			if (!this.data.labyrinth.date || this.data.labyrinth.date.day !== new sb.Date().day) {
+				this.data.labyrinth.date = new sb.Date().setTimezoneOffset(0);
+			}
+
+			const dateString = this.data.labyrinth.date.format(\"Y-m-d\");
+			const url = `https://www.poelab.com/wp-content/labfiles/${dateString}_${labType}.jpg`;
+			if (!this.data.labyrinth[labType]) {
+				const { statusCode } = await sb.Got.instances.FakeAgent({
+					method: \"GET\",
+					throwHttpErrors: false,
+					url
+				});
+
+				this.data.labyrinth[labType] = (statusCode === 200);
+				if (statusCode !== 200) {
+					return {
+						reply: `The ${labType} labyrinth has not been scouted yet!`
+					};
+				}
+			}
 			return {
-				reply: \"Latest labyrinth map: \" + url
+				reply: `Today\'s ${labType} labyrinth map: ${url}`
 			};
 		}
 		
