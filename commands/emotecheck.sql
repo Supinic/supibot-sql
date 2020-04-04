@@ -196,6 +196,15 @@ VALUES
 			\"LuvSign\",
 			\"LuvSnooze\",
 			\"LuvUok\"
+		],
+
+		sir: [ // Implemented on 2020-04-02, a \"reward\" for having 2FA on your Twitch account
+			\"SirMad\",
+			\"SirPrise\",
+			\"SirSad\",
+			\"SirShield\",
+			\"SirSword\",
+			\"SirUwU\"
 		]
 	}
 })',
