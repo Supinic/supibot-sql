@@ -105,6 +105,8 @@ VALUES
 				.select(\"All_Recoveries\")
 				.select(\"New_Cases\")
 				.select(\"New_Deaths\")
+				.select(\"Population\")
+				.select(\"Tests\")
 				.from(\"corona\", \"Status\")
 				.join({
 					toTable: \"Place\",
@@ -267,6 +269,8 @@ VALUES
 		All_Recoveries: allRecoveries,
 		New_Cases: newCases,
 		New_Deaths: newDeaths,
+		Population: population,
+		Tests: tests
 	} = targetData;
 
 	const group = sb.Utils.groupDigits;
@@ -289,20 +293,41 @@ VALUES
 		word: (allRecoveries === 1) ? \"recovery\" : \"recoveries\"
 	};
 
+	const ratios = {};
+	if (population !== null) {
+		ratios.cpm = sb.Utils.round((allCases / population) * 1e6, 2);
+		ratios.dpm = sb.Utils.round((allDeaths / population) * 1e6, 2);
+		if (tests !== null) {
+			ratios.tpm = sb.Utils.round((tests / population) * 1e6, 2);
+		}
+	}
+
 	return {
 		reply: sb.Utils.tag.trim `
 			${intro}
-			has ${cases.amount} confirmed ${cases.word}${(newCases === null)
+			has ${cases.amount} confirmed ${cases.word}${(cases.plusAmount === null)
 				? \"\" 
-				: ` (${cases.plusPrefix}${cases.plusAmount} ${cases.plusWord})`
+				: ` (${cases.plusPrefix}${cases.plusAmount})`
 			},
 
-			${deaths.amount} ${deaths.word}${(newDeaths === null)
+			${deaths.amount} ${deaths.word}${(deaths.plusAmount === null)
 				? \"\"
-				: ` (${deaths.plusPrefix}${deaths.plusAmount} ${deaths.plusWord})`
+				: ` (${deaths.plusPrefix}${deaths.plusAmount})`
 			}
 
-			and ${recoveries.amount} ${recoveries.word}.
+			and ${recoveries.amount} ${recoveries.word}.		
+
+			${(tests !== null)
+				? `${tests} people have been tested.`
+				: \"\"
+			}
+
+			${(ratios.cpm)
+				? (ratios.tpm)
+					? `This is ${ratios.cpm} cases, ${ratios.dpm} deaths, and ${ratios.tpm} tests per million.`
+					: `This is ${ratios.cpm} cases, and ${ratios.dpm} deaths per million.`
+				: \"\"
+			}	
 		`
 	};
 })',
@@ -322,6 +347,7 @@ VALUES
 
 	return [
 		`Checks the latest data on the Corona COVID-19 virus\'s spread, either globally or in a region/country.`,
+		`The code for scraper can be found on GitHub: <a target=\"_blank\" href=\"https://github.com/Supinic/supi-corona\">supi-corona</a>.`,
 
 		`<code>${prefix}corona</code>`,
 		\"Posts the current global stats.\",
@@ -462,6 +488,8 @@ ON DUPLICATE KEY UPDATE
 		All_Recoveries: allRecoveries,
 		New_Cases: newCases,
 		New_Deaths: newDeaths,
+		Population: population,
+		Tests: tests
 	} = targetData;
 
 	const group = sb.Utils.groupDigits;
@@ -484,20 +512,41 @@ ON DUPLICATE KEY UPDATE
 		word: (allRecoveries === 1) ? \"recovery\" : \"recoveries\"
 	};
 
+	const ratios = {};
+	if (population !== null) {
+		ratios.cpm = sb.Utils.round((allCases / population) * 1e6, 2);
+		ratios.dpm = sb.Utils.round((allDeaths / population) * 1e6, 2);
+		if (tests !== null) {
+			ratios.tpm = sb.Utils.round((tests / population) * 1e6, 2);
+		}
+	}
+
 	return {
 		reply: sb.Utils.tag.trim `
 			${intro}
-			has ${cases.amount} confirmed ${cases.word}${(newCases === null)
+			has ${cases.amount} confirmed ${cases.word}${(cases.plusAmount === null)
 				? \"\" 
-				: ` (${cases.plusPrefix}${cases.plusAmount} ${cases.plusWord})`
+				: ` (${cases.plusPrefix}${cases.plusAmount})`
 			},
 
-			${deaths.amount} ${deaths.word}${(newDeaths === null)
+			${deaths.amount} ${deaths.word}${(deaths.plusAmount === null)
 				? \"\"
-				: ` (${deaths.plusPrefix}${deaths.plusAmount} ${deaths.plusWord})`
+				: ` (${deaths.plusPrefix}${deaths.plusAmount})`
 			}
 
-			and ${recoveries.amount} ${recoveries.word}.
+			and ${recoveries.amount} ${recoveries.word}.		
+
+			${(tests !== null)
+				? `${tests} people have been tested.`
+				: \"\"
+			}
+
+			${(ratios.cpm)
+				? (ratios.tpm)
+					? `This is ${ratios.cpm} cases, ${ratios.dpm} deaths, and ${ratios.tpm} tests per million.`
+					: `This is ${ratios.cpm} cases, and ${ratios.dpm} deaths per million.`
+				: \"\"
+			}	
 		`
 	};
 })'
