@@ -40,7 +40,27 @@ VALUES
 		1,
 		1,
 		0,
-		NULL,
+		'({
+	replacements: [
+		{
+			regex: /desu/ig,
+			string: \"tbh\"
+		},
+		{
+			regex: /baka/ig,
+			string: \"smh\"
+		},
+		{
+			regex: /senpai/ig,
+			string: \"fam\"
+		},
+		{
+			regex: /kek/ig,
+			string: \"cuck\"
+		},
+
+	]
+})',
 		'(async function chan (context, identifier, ...rest) {
 	if (!identifier) {
 		return {
@@ -66,6 +86,9 @@ VALUES
 		if (context.channel?.NSFW) {
 			enabled.file.nsfw = true;
 		}
+	}
+	else if (context.platform.Name === \"twitch\" && context.channel?.Links_Allowed) {
+		enabled.file.sfw = true;
 	}
 
 	let resultType = (context.channel?.NSFW)
@@ -186,6 +209,10 @@ VALUES
 	const delta = sb.Utils.timeDelta(post.created);
 
 	post.content = post.content.replace(/>>\\d+/g, \"\");
+
+	for (const { regex, string } of this.staticData.replacements) {
+		post.content = post.content.replace(regex, string);
+	}
 
 	if (resultType === \"file\") {
 		return {
@@ -229,6 +256,9 @@ ON DUPLICATE KEY UPDATE
 			enabled.file.nsfw = true;
 		}
 	}
+	else if (context.platform.Name === \"twitch\" && context.channel?.Links_Allowed) {
+		enabled.file.sfw = true;
+	}
 
 	let resultType = (context.channel?.NSFW)
 		? \"file\"
@@ -348,6 +378,10 @@ ON DUPLICATE KEY UPDATE
 	const delta = sb.Utils.timeDelta(post.created);
 
 	post.content = post.content.replace(/>>\\d+/g, \"\");
+
+	for (const { regex, string } of this.staticData.replacements) {
+		post.content = post.content.replace(regex, string);
+	}
 
 	if (resultType === \"file\") {
 		return {
