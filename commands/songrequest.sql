@@ -93,15 +93,7 @@ VALUES
 		}
 		else {
 			const videoTypePrefix = sb.Config.get(\"VIDEO_TYPE_REPLACE_PREFIX\");
-			const link = songData.Prefix.replace(videoTypePrefix, songData.Link);
-			const id = await sb.VideoLANConnector.add(link, context.user.ID, {
-				length: songData.Duration,
-				name: songData.Name
-			});
-
-			return {
-				reply: `Video \"${songData.Name}\" from supinic.com successfully added to queue with ID ${id}!`
-			};
+			url = songData.Prefix.replace(videoTypePrefix, songData.Link);
 		}
 	}
 	else if (parsedURL.host) {
@@ -196,11 +188,22 @@ VALUES
 			when = sb.Utils.timeDelta(playingDate);
 		}
 
+		const videoType = await sb.Query.getRecordset(rs => rs
+			.select(\"ID\")
+			.from(\"data\", \"Video_Type\")
+			.where(\"Parser_Name = %s\", data.type)
+			.limit(1)
+			.single()
+		);
+
 		const row = await sb.Query.getRow(\"chat_data\", \"Song_Request\");
 		row.setValues({
+			VLC_ID: id,
 			Link: data.ID,
-			Video_Type: 1,
-			Status: null,
+			Name: sb.Utils.wrapString(data.name, 100),
+			Video_Type: videoType.ID,
+			Length: data.duration,
+			Status: \"Queued\",
 			User_Alias: context.user.ID,
 		});
 		await row.save();
@@ -265,15 +268,7 @@ ON DUPLICATE KEY UPDATE
 		}
 		else {
 			const videoTypePrefix = sb.Config.get(\"VIDEO_TYPE_REPLACE_PREFIX\");
-			const link = songData.Prefix.replace(videoTypePrefix, songData.Link);
-			const id = await sb.VideoLANConnector.add(link, context.user.ID, {
-				length: songData.Duration,
-				name: songData.Name
-			});
-
-			return {
-				reply: `Video \"${songData.Name}\" from supinic.com successfully added to queue with ID ${id}!`
-			};
+			url = songData.Prefix.replace(videoTypePrefix, songData.Link);
 		}
 	}
 	else if (parsedURL.host) {
@@ -368,11 +363,22 @@ ON DUPLICATE KEY UPDATE
 			when = sb.Utils.timeDelta(playingDate);
 		}
 
+		const videoType = await sb.Query.getRecordset(rs => rs
+			.select(\"ID\")
+			.from(\"data\", \"Video_Type\")
+			.where(\"Parser_Name = %s\", data.type)
+			.limit(1)
+			.single()
+		);
+
 		const row = await sb.Query.getRow(\"chat_data\", \"Song_Request\");
 		row.setValues({
+			VLC_ID: id,
 			Link: data.ID,
-			Video_Type: 1,
-			Status: null,
+			Name: sb.Utils.wrapString(data.name, 100),
+			Video_Type: videoType.ID,
+			Length: data.duration,
+			Status: \"Queued\",
 			User_Alias: context.user.ID,
 		});
 		await row.save();

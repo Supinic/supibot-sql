@@ -63,6 +63,19 @@ VALUES
 		};
 	}
 
+	const data = await sb.Query.getRecordset(rs => rs
+		.select(\"COUNT(*) AS Count\", \"SUM(Length) AS Length\")
+		.from(\"chat_data\", \"Song_Request\")
+		.where(\"Status = %s OR Status = %s\", \"Current\", \"Queued\")
+		.single()
+	);
+
+	if (data.Length === null) {
+		return {
+			reply: \"No songs are currently queued. Check history here: https://supinic.com/stream/video-queue\"
+		};
+	}
+
 	let status = null;
 	try {
 		status = await sb.VideoLANConnector.status(); 
@@ -78,36 +91,11 @@ VALUES
 		}
 	}
 
-	if (!status.information) {
-		return {
-			reply: \"No songs are currently queued. Check history here: https://supinic.com/stream/video-queue\"
-		};
-	}
-
-	const checkUrl = status.information.category.meta.url;
-	const url = (this.staticData.isCustom(checkUrl))
-		? checkUrl
-		: sb.Utils.linkParser.parseLink(status.information.category.meta.url);
-
-	const firstSongIndex = sb.VideoLANConnector.videoQueue.findIndex(i => {
-		if (this.staticData.isCustom(i.link)) {
-			return i.link === url;
-		}
-		else {
-			return sb.Utils.linkParser.parseLink(i.link) === url;
-		}
-	});
-
-	if (firstSongIndex === -1) {
-		return { reply: \"No song data found!\" };
-	}
-
-	const playlist = sb.VideoLANConnector.videoQueue.slice(firstSongIndex);
-	const length = playlist.reduce((acc, cur) => acc += cur.length || 0, 0);
+	const length = data.Length - status.time;
 	const delta = sb.Utils.timeDelta(sb.Date.now() + length * 1000, true);
 
 	return {
-		reply: `There are ${playlist.length} videos in the queue, with a total length of ${delta}. Check it out here: https://supinic.com/stream/video-queue`
+		reply: `There are ${data.Count} videos in the queue, with a total length of ${delta}. Check it out here: https://supinic.com/stream/video-queue`
 	}
 })',
 		NULL,
@@ -135,6 +123,19 @@ ON DUPLICATE KEY UPDATE
 		};
 	}
 
+	const data = await sb.Query.getRecordset(rs => rs
+		.select(\"COUNT(*) AS Count\", \"SUM(Length) AS Length\")
+		.from(\"chat_data\", \"Song_Request\")
+		.where(\"Status = %s OR Status = %s\", \"Current\", \"Queued\")
+		.single()
+	);
+
+	if (data.Length === null) {
+		return {
+			reply: \"No songs are currently queued. Check history here: https://supinic.com/stream/video-queue\"
+		};
+	}
+
 	let status = null;
 	try {
 		status = await sb.VideoLANConnector.status(); 
@@ -150,35 +151,10 @@ ON DUPLICATE KEY UPDATE
 		}
 	}
 
-	if (!status.information) {
-		return {
-			reply: \"No songs are currently queued. Check history here: https://supinic.com/stream/video-queue\"
-		};
-	}
-
-	const checkUrl = status.information.category.meta.url;
-	const url = (this.staticData.isCustom(checkUrl))
-		? checkUrl
-		: sb.Utils.linkParser.parseLink(status.information.category.meta.url);
-
-	const firstSongIndex = sb.VideoLANConnector.videoQueue.findIndex(i => {
-		if (this.staticData.isCustom(i.link)) {
-			return i.link === url;
-		}
-		else {
-			return sb.Utils.linkParser.parseLink(i.link) === url;
-		}
-	});
-
-	if (firstSongIndex === -1) {
-		return { reply: \"No song data found!\" };
-	}
-
-	const playlist = sb.VideoLANConnector.videoQueue.slice(firstSongIndex);
-	const length = playlist.reduce((acc, cur) => acc += cur.length || 0, 0);
+	const length = data.Length - status.time;
 	const delta = sb.Utils.timeDelta(sb.Date.now() + length * 1000, true);
 
 	return {
-		reply: `There are ${playlist.length} videos in the queue, with a total length of ${delta}. Check it out here: https://supinic.com/stream/video-queue`
+		reply: `There are ${data.Count} videos in the queue, with a total length of ${delta}. Check it out here: https://supinic.com/stream/video-queue`
 	}
 })'

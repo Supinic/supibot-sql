@@ -40,9 +40,13 @@ VALUES
 		1,
 		1,
 		0,
-		NULL,
-		'(async function current (context) {
+		'({
+	types: [\"current\", \"previous\"]
+})',
+		'(async function current (context, type) {
+	const linkSymbol = sb.Config.get(\"VIDEO_TYPE_REPLACE_PREFIX\");
 	const state = sb.Config.get(\"SONG_REQUESTS_STATE\");
+
 	if (state === \"off\") {
 		return { reply: \"Song requests are currently turned off.\" };
 	}
@@ -50,7 +54,7 @@ VALUES
 		return { reply: \"We are on Dubtrack, check ?song for the currently playing song :)\" };
 	}
 	else if (state === \"cytube\") {
-		const playing = sb.Master.clients.cytube[0].currentlyPlaying;
+		const playing = sb.Master.clients.cytube.currentlyPlaying;
 		if (playing === null) {
 			return {
 				reply: \"Nothing is currently playing on Cytube.\"
@@ -67,65 +71,56 @@ VALUES
 		)).Link_Prefix;
 
 		const requester = playing.user ?? playing.queueby ?? \"(unknown)\";
-		const link = prefix.replace(\"$\", media.id);
+		const link = prefix.replace(linkSymbol, media.id);
 		return {
 			reply: `Currently playing on Cytube: ${media.title} ${link} (${media.duration}), queued by ${requester}`
 		}
 	}
 
-	const song = await sb.VideoLANConnector.currentlyPlaying();
-	if (song === null) {
-		return { reply: \"No song is currently playing!\" };
+	type = type || \"current\";
+	if (!this.staticData.types.includes(type)) {
+		return {
+			success: false,
+			reply: \"Invalid type provided! Supported types: \" + this.staticData.types.join(\", \")
+		};
+	}
+
+	const playing = await sb.Query.getRecordset(rs => {
+		rs.select(\"VLC_ID\", \"Link\", \"User_Alias AS User\")
+			.select(\"Video_Type.Link_Prefix AS Prefix\")
+			.from(\"chat_data\", \"Song_Request\")
+			.join({
+				toDatabase: \"data\",
+				toTable: \"Video_Type\",
+				on: \"Video_Type.ID = Song_Request.Video_type\"
+			})
+			.limit(1)
+			.single();
+
+		if (type === \"previous\") {
+			rs.where(\"Status = %s\", \"Inactive\");
+			rs.orderBy(\"Song_Request.ID DESC\");
+		}
+		else if (type === \"current\") {
+			rs.where(\"Status = %s\", \"Current\");
+		}
+
+		return rs;
+	});
+
+	if (playing) {
+		const link = playing.Prefix.replace(linkSymbol, playing.Link);
+		const { name } = await sb.Utils.linkParser.fetchData(link);
+		const userData = await sb.User.get(playing.User);
+
+		return {
+			reply: `Currently playing: ${name} (ID ${playing.VLC_ID}) - requested by ${userData.Name}. ${link}`
+		};
 	}
 	else {
-		const status = await sb.VideoLANConnector.status();
-
-		let targetURL = null;
-		let type = null;
-		if (status.information.category.meta.url) {
-			targetURL = sb.Utils.linkParser.parseLink(status.information.category.meta.url);
-			type = \"link\";
-		}
-		else if (status.information.category.meta.filename) {
-			targetURL = status.information.category.meta.filename;
-			type = \"file\";
-		}
-
-		const extraData = sb.VideoLANConnector.videoQueue.find(songData => {
-			if (type === \"file\") {
-				return songData.link.includes(targetURL);
-			}
-			else {
-				// This means the processed songData is a file, and is never the target if the looked up song is a link.
-				if (songData.name === songData.link) {
-					return false;
-				}
-
-				const songURL = sb.Utils.linkParser.parseLink(songData.link);
-				return songURL === targetURL;
-			}
-		});
-
-		if (!extraData) {
-			return { reply: \"No song data found!\" };
-		}
-
-		const userData = await sb.User.get(extraData.user);
-		if (!userData) {
-			return { reply: \"No requester user data found\" };
-		}
-
-		const data = song.category.meta;
-		if (!song.category.meta.title || !song.category.meta.url) {
-			return {
-				reply: `Currently playing: ${data.filename} (ID ${extraData.vlcID}) - current position: ${status.time}/${status.length}s - requested by ${userData.Name}`
-			};
-		}
-		else {
-			return {
-				reply: `Currently playing: ${data.title} (ID ${extraData.vlcID}) - ${extraData.link} - current position: ${status.time}/${status.length}s - requested by ${userData.Name}`
-			};
-		}
+		return {
+			reply: \"No video is currently being played.\"
+		};
 	}
 })',
 		NULL,
@@ -133,8 +128,10 @@ VALUES
 	)
 
 ON DUPLICATE KEY UPDATE
-	Code = '(async function current (context) {
+	Code = '(async function current (context, type) {
+	const linkSymbol = sb.Config.get(\"VIDEO_TYPE_REPLACE_PREFIX\");
 	const state = sb.Config.get(\"SONG_REQUESTS_STATE\");
+
 	if (state === \"off\") {
 		return { reply: \"Song requests are currently turned off.\" };
 	}
@@ -142,7 +139,7 @@ ON DUPLICATE KEY UPDATE
 		return { reply: \"We are on Dubtrack, check ?song for the currently playing song :)\" };
 	}
 	else if (state === \"cytube\") {
-		const playing = sb.Master.clients.cytube[0].currentlyPlaying;
+		const playing = sb.Master.clients.cytube.currentlyPlaying;
 		if (playing === null) {
 			return {
 				reply: \"Nothing is currently playing on Cytube.\"
@@ -159,64 +156,55 @@ ON DUPLICATE KEY UPDATE
 		)).Link_Prefix;
 
 		const requester = playing.user ?? playing.queueby ?? \"(unknown)\";
-		const link = prefix.replace(\"$\", media.id);
+		const link = prefix.replace(linkSymbol, media.id);
 		return {
 			reply: `Currently playing on Cytube: ${media.title} ${link} (${media.duration}), queued by ${requester}`
 		}
 	}
 
-	const song = await sb.VideoLANConnector.currentlyPlaying();
-	if (song === null) {
-		return { reply: \"No song is currently playing!\" };
+	type = type || \"current\";
+	if (!this.staticData.types.includes(type)) {
+		return {
+			success: false,
+			reply: \"Invalid type provided! Supported types: \" + this.staticData.types.join(\", \")
+		};
+	}
+
+	const playing = await sb.Query.getRecordset(rs => {
+		rs.select(\"VLC_ID\", \"Link\", \"User_Alias AS User\")
+			.select(\"Video_Type.Link_Prefix AS Prefix\")
+			.from(\"chat_data\", \"Song_Request\")
+			.join({
+				toDatabase: \"data\",
+				toTable: \"Video_Type\",
+				on: \"Video_Type.ID = Song_Request.Video_type\"
+			})
+			.limit(1)
+			.single();
+
+		if (type === \"previous\") {
+			rs.where(\"Status = %s\", \"Inactive\");
+			rs.orderBy(\"Song_Request.ID DESC\");
+		}
+		else if (type === \"current\") {
+			rs.where(\"Status = %s\", \"Current\");
+		}
+
+		return rs;
+	});
+
+	if (playing) {
+		const link = playing.Prefix.replace(linkSymbol, playing.Link);
+		const { name } = await sb.Utils.linkParser.fetchData(link);
+		const userData = await sb.User.get(playing.User);
+
+		return {
+			reply: `Currently playing: ${name} (ID ${playing.VLC_ID}) - requested by ${userData.Name}. ${link}`
+		};
 	}
 	else {
-		const status = await sb.VideoLANConnector.status();
-
-		let targetURL = null;
-		let type = null;
-		if (status.information.category.meta.url) {
-			targetURL = sb.Utils.linkParser.parseLink(status.information.category.meta.url);
-			type = \"link\";
-		}
-		else if (status.information.category.meta.filename) {
-			targetURL = status.information.category.meta.filename;
-			type = \"file\";
-		}
-
-		const extraData = sb.VideoLANConnector.videoQueue.find(songData => {
-			if (type === \"file\") {
-				return songData.link.includes(targetURL);
-			}
-			else {
-				// This means the processed songData is a file, and is never the target if the looked up song is a link.
-				if (songData.name === songData.link) {
-					return false;
-				}
-
-				const songURL = sb.Utils.linkParser.parseLink(songData.link);
-				return songURL === targetURL;
-			}
-		});
-
-		if (!extraData) {
-			return { reply: \"No song data found!\" };
-		}
-
-		const userData = await sb.User.get(extraData.user);
-		if (!userData) {
-			return { reply: \"No requester user data found\" };
-		}
-
-		const data = song.category.meta;
-		if (!song.category.meta.title || !song.category.meta.url) {
-			return {
-				reply: `Currently playing: ${data.filename} (ID ${extraData.vlcID}) - current position: ${status.time}/${status.length}s - requested by ${userData.Name}`
-			};
-		}
-		else {
-			return {
-				reply: `Currently playing: ${data.title} (ID ${extraData.vlcID}) - ${extraData.link} - current position: ${status.time}/${status.length}s - requested by ${userData.Name}`
-			};
-		}
+		return {
+			reply: \"No video is currently being played.\"
+		};
 	}
 })'

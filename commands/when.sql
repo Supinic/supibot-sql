@@ -42,72 +42,71 @@ VALUES
 		0,
 		NULL,
 		'(async function when (context) {
-	if (sb.Config.get(\"SONG_REQUESTS_STATE\") === \"off\") {
+	if (sb.Config.get(\"SONG_REQUESTS_STATE\") !== \"vlc\") {
 		return {
-			reply: \"Song requests are currently off!\"
+			reply: \"Song requests are currently off or not in VLC!\"
 		};
 	}
 
-	const list = sb.VideoLANConnector.videoQueue;
-	const current = await sb.VideoLANConnector.currentlyPlayingData();
-	if (!current) {
+	const prefixSymbol = sb.Config.get(\"VIDEO_TYPE_REPLACE_PREFIX\");
+	const queue = await sb.Query.getRecordset(rs => rs
+		.select(\"Length\", \"Link\", \"Name\", \"Status\", \"User_Alias\")
+		.select(\"Video_Type.Link_Prefix AS Prefix\")
+		.from(\"chat_data\", \"Song_Request\")
+		.join({
+			toDatabase: \"data\",
+			toTable: \"Video_Type\",
+			on: \"Video_Type.ID = Song_Request.Video_Type\"
+		})
+		.where(\"Status IN %s+\", [\"Current\", \"Queued\"])
+	);
+	const personal = queue.filter(i => i.User_Alias === context.user.ID);
+
+	if (queue.length === 0) {
 		return {
-			reply: \"Nothing is currently playing!\"
+			reply: \"The playlist is currently empty.\"
 		};
 	}
-
-	const queued = list.filter(i => i.vlcID >= current.vlcID).sort((a, b) => a.vlcID - b.vlcID)
-	if (queued.length === 0) {
+	else if (personal.length === 0) {
 		return {
-			reply: \"There are no videos queued right now!\"
-		};
-	}
-
-	const userRequests = queued.filter(i => i.user === context.user.ID);
-	if (userRequests.length === 0) {
-		return {
-			reply: \"You have no video(s) waiting in the queue!\"
-		};
-	}
-
-	if (userRequests[0].vlcID === current.vlcID && userRequests.length === 1) {
-		return {
-			reply: `Your request ${userRequests[0].name} is playing right now! You don\'t have any other videos in the queue.`
+			reply: \"You have no video(s) queued up.\"
 		};
 	}
 
 	let prepend = \"\";
-	let userRequest = userRequests[0];
-	if (userRequest.vlcID === current.vlcID) {
-		prepend = `Your request \"${userRequests[0].name}\" is playing right now!`;
-		userRequest = userRequests[1];
-	}
+	let target = personal[0];
+	let timeRemaining = 0;
 
-	try {
-		const status = await sb.VideoLANConnector.status();
-		let length = status.length - status.time;
-
-		for (const request of queued.slice(1)) {
-			if (request.vlcID === userRequest.vlcID) {
-				break;
-			}
-
-			length += (request.length || 0);
+	if (target.Status === \"Current\") {		
+		if (personal.length === 1) {
+			return {
+				reply: `Your request \"${target.Name}\" is playing right now. You don\'t have any other videos in the queue.`
+			};
 		}
-
-		const delta = sb.Utils.formatTime(length);
-		const bridge = (prepend) ? \"Then,\" : \"Your next video\";
-
-		return {
-			reply: `${prepend} ${bridge} \"${userRequest.name}\" is playing in ${delta}.`
-		};
+		else {
+			prepend = `Your request \"${target.Name}\" is playing right now.`;
+			target = personal[1];
+		}
 	}
-	catch (e) {
-		console.warn(e);
-		return {
-			reply: \"VLC did not respond, no data available!\"
-		};
+
+	let index = 0;
+	let loopItem = queue[index];
+	while (loopItem !== target && index < queue.length) {
+		timeRemaining += loopItem.Length;
+		loopItem = queue[++index];
 	}
+
+	const status = await sb.VideoLANConnector.status();
+	if (status) {
+		timeRemaining -= status.time;
+	}
+
+	const delta = sb.Utils.formatTime(timeRemaining);
+	const bridge = (prepend) ? \"Then,\" : \"Your next video\";
+
+	return {
+		reply: `${prepend} ${bridge} \"${target.Name}\" is playing in ${delta}.`
+	};
 })',
 		NULL,
 		NULL
@@ -115,70 +114,69 @@ VALUES
 
 ON DUPLICATE KEY UPDATE
 	Code = '(async function when (context) {
-	if (sb.Config.get(\"SONG_REQUESTS_STATE\") === \"off\") {
+	if (sb.Config.get(\"SONG_REQUESTS_STATE\") !== \"vlc\") {
 		return {
-			reply: \"Song requests are currently off!\"
+			reply: \"Song requests are currently off or not in VLC!\"
 		};
 	}
 
-	const list = sb.VideoLANConnector.videoQueue;
-	const current = await sb.VideoLANConnector.currentlyPlayingData();
-	if (!current) {
+	const prefixSymbol = sb.Config.get(\"VIDEO_TYPE_REPLACE_PREFIX\");
+	const queue = await sb.Query.getRecordset(rs => rs
+		.select(\"Length\", \"Link\", \"Name\", \"Status\", \"User_Alias\")
+		.select(\"Video_Type.Link_Prefix AS Prefix\")
+		.from(\"chat_data\", \"Song_Request\")
+		.join({
+			toDatabase: \"data\",
+			toTable: \"Video_Type\",
+			on: \"Video_Type.ID = Song_Request.Video_Type\"
+		})
+		.where(\"Status IN %s+\", [\"Current\", \"Queued\"])
+	);
+	const personal = queue.filter(i => i.User_Alias === context.user.ID);
+
+	if (queue.length === 0) {
 		return {
-			reply: \"Nothing is currently playing!\"
+			reply: \"The playlist is currently empty.\"
 		};
 	}
-
-	const queued = list.filter(i => i.vlcID >= current.vlcID).sort((a, b) => a.vlcID - b.vlcID)
-	if (queued.length === 0) {
+	else if (personal.length === 0) {
 		return {
-			reply: \"There are no videos queued right now!\"
-		};
-	}
-
-	const userRequests = queued.filter(i => i.user === context.user.ID);
-	if (userRequests.length === 0) {
-		return {
-			reply: \"You have no video(s) waiting in the queue!\"
-		};
-	}
-
-	if (userRequests[0].vlcID === current.vlcID && userRequests.length === 1) {
-		return {
-			reply: `Your request ${userRequests[0].name} is playing right now! You don\'t have any other videos in the queue.`
+			reply: \"You have no video(s) queued up.\"
 		};
 	}
 
 	let prepend = \"\";
-	let userRequest = userRequests[0];
-	if (userRequest.vlcID === current.vlcID) {
-		prepend = `Your request \"${userRequests[0].name}\" is playing right now!`;
-		userRequest = userRequests[1];
-	}
+	let target = personal[0];
+	let timeRemaining = 0;
 
-	try {
-		const status = await sb.VideoLANConnector.status();
-		let length = status.length - status.time;
-
-		for (const request of queued.slice(1)) {
-			if (request.vlcID === userRequest.vlcID) {
-				break;
-			}
-
-			length += (request.length || 0);
+	if (target.Status === \"Current\") {		
+		if (personal.length === 1) {
+			return {
+				reply: `Your request \"${target.Name}\" is playing right now. You don\'t have any other videos in the queue.`
+			};
 		}
-
-		const delta = sb.Utils.formatTime(length);
-		const bridge = (prepend) ? \"Then,\" : \"Your next video\";
-
-		return {
-			reply: `${prepend} ${bridge} \"${userRequest.name}\" is playing in ${delta}.`
-		};
+		else {
+			prepend = `Your request \"${target.Name}\" is playing right now.`;
+			target = personal[1];
+		}
 	}
-	catch (e) {
-		console.warn(e);
-		return {
-			reply: \"VLC did not respond, no data available!\"
-		};
+
+	let index = 0;
+	let loopItem = queue[index];
+	while (loopItem !== target && index < queue.length) {
+		timeRemaining += loopItem.Length;
+		loopItem = queue[++index];
 	}
+
+	const status = await sb.VideoLANConnector.status();
+	if (status) {
+		timeRemaining -= status.time;
+	}
+
+	const delta = sb.Utils.formatTime(timeRemaining);
+	const bridge = (prepend) ? \"Then,\" : \"Your next video\";
+
+	return {
+		reply: `${prepend} ${bridge} \"${target.Name}\" is playing in ${delta}.`
+	};
 })'
