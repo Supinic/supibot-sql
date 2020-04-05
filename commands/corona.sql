@@ -190,6 +190,11 @@ VALUES
 
 		country = userData.Data.location.components.country;
 	}
+	else if (input === \"stats\" || input === \"dump\") {
+		return {
+			reply: \"Check the current stats here: https://supinic.com/data/corona/latest\"
+		};
+	}
 
 	if (input === \"top\") {
 		const result = (await this.staticData.fetch.topData(10))
@@ -408,6 +413,11 @@ ON DUPLICATE KEY UPDATE
 		}
 
 		country = userData.Data.location.components.country;
+	}
+	else if (input === \"stats\" || input === \"dump\") {
+		return {
+			reply: \"Check the current stats here: https://supinic.com/data/corona/latest\"
+		};
 	}
 
 	if (input === \"top\") {
