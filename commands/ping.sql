@@ -40,7 +40,14 @@ VALUES
 		0,
 		1,
 		0,
-		NULL,
+		'({
+	checkLatency: async (callback, ...args) => {
+		const start = process.hrtime.bigint();
+		await callback(...args);
+		
+		return sb.Utils.round(Number(process.hrtime.bigint() - start) / 1.0e6, 3);
+	}
+})',
 		'(async function ping (context) {
 	const promisify = require(\"util\").promisify;
 	const readFile = require(\"fs\").promises.readFile;
@@ -63,7 +70,6 @@ VALUES
 		Uptime: sb.Utils.timeDelta(sb.Master.started).replace(\"ago\", \"\").trim(),
 		Temperature: temperature.stdout.match(/([\\d\\.]+)/)[1] + \"°C\",
 		\"Free memory\": sb.Utils.formatByteSize(memoryData[2], 0) + \"/\" + sb.Utils.formatByteSize(memoryData[0], 0),
-		\"Latency to TMI\": (endLatency[0] * 1e3 + endLatency[1] / 1e6) + \" ms\",
 		\"Commands used\": sb.Runtime.commandsUsed
 	};
 
@@ -72,12 +78,22 @@ VALUES
 		const url = context.channel.Banphrase_API_URL;
 
 		if (type && url) {
-			data[\"Banphrase API\"] = `Using ${type} API: ${url}.`;
+			const ping = await this.staticData.checkLatency(
+				async () => sb.Banphrase.executeExternalAPI(\"test\", type, url)
+			);
+
+			data[\"Banphrase API\"] = `Using ${type} API: ${url} (${Math.trunc(ping)}ms)`;
 		}
 		else {
 			data[\"Banphrase API\"] = \"Not connected.\"
-		}
+		}		
 	}	
+
+	if (context.platform.Name === \"twitch\") {
+		data[\"Latency to TMI\"] = await this.staticData.checkLatency(
+			async () => sb.Master.clients.twitch.client.ping()
+		);
+	}
 
 	return {
 		reply: pong + \" \" + Object.entries(data).map(([name, value]) => name + \": \" + value).join(\"; \")
@@ -120,7 +136,6 @@ ON DUPLICATE KEY UPDATE
 		Uptime: sb.Utils.timeDelta(sb.Master.started).replace(\"ago\", \"\").trim(),
 		Temperature: temperature.stdout.match(/([\\d\\.]+)/)[1] + \"°C\",
 		\"Free memory\": sb.Utils.formatByteSize(memoryData[2], 0) + \"/\" + sb.Utils.formatByteSize(memoryData[0], 0),
-		\"Latency to TMI\": (endLatency[0] * 1e3 + endLatency[1] / 1e6) + \" ms\",
 		\"Commands used\": sb.Runtime.commandsUsed
 	};
 
@@ -129,12 +144,22 @@ ON DUPLICATE KEY UPDATE
 		const url = context.channel.Banphrase_API_URL;
 
 		if (type && url) {
-			data[\"Banphrase API\"] = `Using ${type} API: ${url}.`;
+			const ping = await this.staticData.checkLatency(
+				async () => sb.Banphrase.executeExternalAPI(\"test\", type, url)
+			);
+
+			data[\"Banphrase API\"] = `Using ${type} API: ${url} (${Math.trunc(ping)}ms)`;
 		}
 		else {
 			data[\"Banphrase API\"] = \"Not connected.\"
-		}
+		}		
 	}	
+
+	if (context.platform.Name === \"twitch\") {
+		data[\"Latency to TMI\"] = await this.staticData.checkLatency(
+			async () => sb.Master.clients.twitch.client.ping()
+		);
+	}
 
 	return {
 		reply: pong + \" \" + Object.entries(data).map(([name, value]) => name + \": \" + value).join(\"; \")
