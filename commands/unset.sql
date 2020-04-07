@@ -161,7 +161,10 @@ VALUES
 			};
 		}
 
-		default: return { reply: \"Unrecognized target\" };
+		default: return {
+			success: false,
+			reply: \"Unrecognized target!\"
+		};
 	}
 })',
 		NULL,
@@ -297,6 +300,9 @@ ON DUPLICATE KEY UPDATE
 			};
 		}
 
-		default: return { reply: \"Unrecognized target\" };
+		default: return {
+			success: false,
+			reply: \"Unrecognized target!\"
+		};
 	}
 })'
