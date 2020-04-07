@@ -214,6 +214,10 @@ VALUES
 		post.content = post.content.replace(regex, string);
 	}
 
+	if (enabled.content.nsfw === false) {
+		post.content = post.content.replace(sb.Config.get(\"LINK_REGEX\"), \"[LINK]\");
+	}
+
 	if (resultType === \"file\") {
 		return {
 			reply: `${post.ID} (posted ${delta}): ${post.file} ${post.content}`
@@ -381,6 +385,10 @@ ON DUPLICATE KEY UPDATE
 
 	for (const { regex, string } of this.staticData.replacements) {
 		post.content = post.content.replace(regex, string);
+	}
+
+	if (enabled.content.nsfw === false) {
+		post.content = post.content.replace(sb.Config.get(\"LINK_REGEX\"), \"[LINK]\");
 	}
 
 	if (resultType === \"file\") {
