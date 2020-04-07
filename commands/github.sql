@@ -41,10 +41,18 @@ VALUES
 		1,
 		0,
 		NULL,
-		'async () => ({ reply: \"https://github.com/Supinic/supibot\" })',
+		'(async function github () { 
+	return {
+		reply: \"Supibot: https://github.com/Supinic/supibot - Website: https://github.com/Supinic/supinic.com\"
+	};
+})',
 		NULL,
 		NULL
 	)
 
 ON DUPLICATE KEY UPDATE
-	Code = 'async () => ({ reply: \"https://github.com/Supinic/supibot\" })'
+	Code = '(async function github () { 
+	return {
+		reply: \"Supibot: https://github.com/Supinic/supibot - Website: https://github.com/Supinic/supinic.com\"
+	};
+})'
