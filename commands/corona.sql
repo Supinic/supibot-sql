@@ -195,8 +195,7 @@ VALUES
 			reply: \"Check the current stats here: https://supinic.com/data/corona/latest\"
 		};
 	}
-
-	if (input === \"top\") {
+	else if (input === \"top\") {
 		const result = (await this.staticData.fetch.topData(10))
 			.map((i, ind) => `#${ind + 1}: ${i.Country} (${i.All_Cases})`)
 			.join(\"; \");
@@ -244,7 +243,7 @@ VALUES
 			reply: \"That country has no Corona virus data available!\"
 		};
 	}
-	
+
 	const { Region: prettyRegion } = targetData[0];
 	if (targetData.length === 1) {
 		targetData = targetData[0];
@@ -279,7 +278,7 @@ VALUES
 	} = targetData;
 
 	const group = sb.Utils.groupDigits;
-	const cases = { 	
+	const cases = {
 		amount: group(allCases),
 		word: (allCases === 1) ? \"case\" : \"cases\",
 		plusPrefix: (newCases > 0) ? \"+\" : (newCases < 0) ? \"-\" : \"±\",
@@ -291,7 +290,7 @@ VALUES
 		word: (allDeaths === 1) ? \"death\" : \"deaths\",
 		plusPrefix: (newDeaths > 0) ? \"+\" : (newDeaths < 0) ? \"-\" : \"±\",
 		plusWord: (newDeaths === 1) ? \"death\" : \"deaths\",
-		plusAmount: (newDeaths) ? group(newDeaths) : null		
+		plusAmount: (newDeaths) ? group(newDeaths) : null
 	};
 	const recoveries = {
 		amount: (allRecoveries) ? group(allRecoveries) : \"unknown amount of\",
@@ -311,28 +310,28 @@ VALUES
 		reply: sb.Utils.tag.trim `
 			${intro}
 			has ${cases.amount} confirmed ${cases.word}${(cases.plusAmount === null)
-				? \"\" 
-				: ` (${cases.plusPrefix}${cases.plusAmount})`
-			},
+			? \"\"
+			: ` (${cases.plusPrefix}${cases.plusAmount})`
+		},
 
 			${deaths.amount} ${deaths.word}${(deaths.plusAmount === null)
-				? \"\"
-				: ` (${deaths.plusPrefix}${deaths.plusAmount})`
-			}
+			? \"\"
+			: ` (${deaths.plusPrefix}${deaths.plusAmount})`
+		}
 
 			and ${recoveries.amount} ${recoveries.word}.		
 
-			${(tests !== null)
-				? `${tests} people have been tested.`
-				: \"\"
-			}
+			${(tests)
+			? `${group(tests)} tests have been performed so far.`
+			: \"\"
+		}
 
 			${(ratios.cpm)
-				? (ratios.tpm)
-					? `This is ${ratios.cpm} cases, ${ratios.dpm} deaths, and ${ratios.tpm} tests per million.`
-					: `This is ${ratios.cpm} cases, and ${ratios.dpm} deaths per million.`
-				: \"\"
-			}	
+			? (ratios.tpm)
+				? `This is ${group(ratios.cpm)} cases, ${group(ratios.dpm)} deaths, and ${group(ratios.tpm)} tests per million.`
+				: `This is ${group(ratios.cpm)} cases, and ${group(ratios.dpm)} deaths per million.`
+			: \"\"
+		}	
 		`
 	};
 })',
@@ -419,8 +418,7 @@ ON DUPLICATE KEY UPDATE
 			reply: \"Check the current stats here: https://supinic.com/data/corona/latest\"
 		};
 	}
-
-	if (input === \"top\") {
+	else if (input === \"top\") {
 		const result = (await this.staticData.fetch.topData(10))
 			.map((i, ind) => `#${ind + 1}: ${i.Country} (${i.All_Cases})`)
 			.join(\"; \");
@@ -468,7 +466,7 @@ ON DUPLICATE KEY UPDATE
 			reply: \"That country has no Corona virus data available!\"
 		};
 	}
-	
+
 	const { Region: prettyRegion } = targetData[0];
 	if (targetData.length === 1) {
 		targetData = targetData[0];
@@ -503,7 +501,7 @@ ON DUPLICATE KEY UPDATE
 	} = targetData;
 
 	const group = sb.Utils.groupDigits;
-	const cases = { 	
+	const cases = {
 		amount: group(allCases),
 		word: (allCases === 1) ? \"case\" : \"cases\",
 		plusPrefix: (newCases > 0) ? \"+\" : (newCases < 0) ? \"-\" : \"±\",
@@ -515,7 +513,7 @@ ON DUPLICATE KEY UPDATE
 		word: (allDeaths === 1) ? \"death\" : \"deaths\",
 		plusPrefix: (newDeaths > 0) ? \"+\" : (newDeaths < 0) ? \"-\" : \"±\",
 		plusWord: (newDeaths === 1) ? \"death\" : \"deaths\",
-		plusAmount: (newDeaths) ? group(newDeaths) : null		
+		plusAmount: (newDeaths) ? group(newDeaths) : null
 	};
 	const recoveries = {
 		amount: (allRecoveries) ? group(allRecoveries) : \"unknown amount of\",
@@ -535,28 +533,28 @@ ON DUPLICATE KEY UPDATE
 		reply: sb.Utils.tag.trim `
 			${intro}
 			has ${cases.amount} confirmed ${cases.word}${(cases.plusAmount === null)
-				? \"\" 
-				: ` (${cases.plusPrefix}${cases.plusAmount})`
-			},
+			? \"\"
+			: ` (${cases.plusPrefix}${cases.plusAmount})`
+		},
 
 			${deaths.amount} ${deaths.word}${(deaths.plusAmount === null)
-				? \"\"
-				: ` (${deaths.plusPrefix}${deaths.plusAmount})`
-			}
+			? \"\"
+			: ` (${deaths.plusPrefix}${deaths.plusAmount})`
+		}
 
 			and ${recoveries.amount} ${recoveries.word}.		
 
-			${(tests !== null)
-				? `${tests} people have been tested.`
-				: \"\"
-			}
+			${(tests)
+			? `${group(tests)} tests have been performed so far.`
+			: \"\"
+		}
 
 			${(ratios.cpm)
-				? (ratios.tpm)
-					? `This is ${ratios.cpm} cases, ${ratios.dpm} deaths, and ${ratios.tpm} tests per million.`
-					: `This is ${ratios.cpm} cases, and ${ratios.dpm} deaths per million.`
-				: \"\"
-			}	
+			? (ratios.tpm)
+				? `This is ${group(ratios.cpm)} cases, ${group(ratios.dpm)} deaths, and ${group(ratios.tpm)} tests per million.`
+				: `This is ${group(ratios.cpm)} cases, and ${group(ratios.dpm)} deaths per million.`
+			: \"\"
+		}	
 		`
 	};
 })'
