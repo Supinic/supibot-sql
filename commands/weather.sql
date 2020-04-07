@@ -110,7 +110,7 @@ VALUES
 
 	let number = null;
 	let type = \"currently\";
-	const weatherRegex = /(hour|day|week)(\\+?(\\d+))?$/;
+	const weatherRegex = /\\b(hour|day|week)(\\+?(\\d+))?$/;
 
 	if (args.length > 0) {
 		if (args[args.length - 1].includes(\"-\")) {
@@ -316,7 +316,7 @@ ON DUPLICATE KEY UPDATE
 
 	let number = null;
 	let type = \"currently\";
-	const weatherRegex = /(hour|day|week)(\\+?(\\d+))?$/;
+	const weatherRegex = /\\b(hour|day|week)(\\+?(\\d+))?$/;
 
 	if (args.length > 0) {
 		if (args[args.length - 1].includes(\"-\")) {
