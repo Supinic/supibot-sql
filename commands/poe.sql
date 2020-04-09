@@ -95,6 +95,12 @@ VALUES
 				reply: `Today\'s ${labType} labyrinth map: ${url}`
 			};
 		}
+
+		case \"uniques\": {
+			return {
+				reply: \"https://www.pathofexile.com/account/view-stash/Supinic/67dd5d58434a0f9bedde7b6604113198638f7b9338629b7dc514c39893b14fb6\"
+			};
+		}
 		
 		default: return {
 			reply: `Invalid query type provided! Currently supported: \"lab\".`
@@ -148,6 +154,12 @@ ON DUPLICATE KEY UPDATE
 			}
 			return {
 				reply: `Today\'s ${labType} labyrinth map: ${url}`
+			};
+		}
+
+		case \"uniques\": {
+			return {
+				reply: \"https://www.pathofexile.com/account/view-stash/Supinic/67dd5d58434a0f9bedde7b6604113198638f7b9338629b7dc514c39893b14fb6\"
 			};
 		}
 		
