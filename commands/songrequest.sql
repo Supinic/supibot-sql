@@ -60,17 +60,30 @@ VALUES
 		return { reply: \"You must search for a link or a video description!\" };
 	}
 
-	const currentData = await sb.VideoLANConnector.currentlyPlayingData();
-	if (currentData) {
-		const userRequests = sb.VideoLANConnector.videoQueue.filter(i => i.vlcID >= currentData.vlcID && i.user === context.user.ID).length;
-		if (userRequests >= this.staticData.videoLimit) {
-			return {
-				reply: `Can only request up to ${this.staticData.videoLimit} videos in the queue!`
-			}
+	const userRequests = await sb.Query.getRecordset(rs => rs
+		.select(\"COUNT(*) AS Amount\")
+		.from(\"chat_data\", \"Song_Request\")
+		.where(\"Status IN %s+\", [\"Current\", \"Queued\"])
+		.where(\"User_Alias = %n\", context.user.ID)
+		.single()
+	);
+
+	if (userRequests.Amount >= this.staticData.videoLimit) {
+		return {
+			reply: `Can only request up to ${this.staticData.videoLimit} videos in the queue!`
 		}
 	}
 
-	const url = args.join(\" \");
+	let type = \"youtube\";
+	for (let i = 0; i < args.length; i++) {
+		const token = args[i];
+		if (token.includes(\"type:\")) {
+			type = token.split(\":\")[1];
+			args.splice(i, 1);
+		}
+	}
+
+	let url = args.join(\" \");
 	const parsedURL = require(\"url\").parse(url);
 
 	if (parsedURL.host === \"supinic.com\" && parsedURL.path.includes(\"/track/detail\")) {
@@ -137,10 +150,32 @@ VALUES
 	}
 
 	if (!data) {
-		const lookup = await sb.Utils.fetchYoutubeVideo(
-			args.join(\" \").replace(/-/g, \"\"),
-			sb.Config.get(\"API_GOOGLE_YOUTUBE\")
-		);
+		let lookup = null;
+		if (type === \"vimeo\") {
+			const { data } = await sb.Got.instances.Vimeo({
+				url: \"videos\",
+				searchParams: new sb.URLParams()
+					.set(\"query\", args.join(\" \"))
+					.set(\"per_page\", \"1\")
+					.toString()
+			}).json();
+
+			if (data.length > 0) {
+				lookup = data[0];
+			}
+		}
+		else if (type === \"youtube\") {
+			lookup = await sb.Utils.fetchYoutubeVideo(
+				args.join(\" \").replace(/-/g, \"\"),
+				sb.Config.get(\"API_GOOGLE_YOUTUBE\")
+			);
+		}
+		else {
+			return {
+				success: false,
+				reply: \"Incorrect video search type provided!\"
+			}
+		}
 
 		if (!lookup) {
 			return {
@@ -172,6 +207,8 @@ VALUES
 		}
 
 		let when = \"right now!\";
+		let videoStatus = \"Current\";
+		let started = new sb.Date();
 		const status = await sb.VideoLANConnector.status();
 
 		if (status.currentplid !== -1 && status.currentplid !== id && status.time !== 0) {
@@ -185,6 +222,8 @@ VALUES
 				playingDate.addSeconds(length ?? 0);
 			}
 
+			started = null;
+			videoStatus = \"Queued\";
 			when = sb.Utils.timeDelta(playingDate);
 		}
 
@@ -203,7 +242,8 @@ VALUES
 			Name: sb.Utils.wrapString(data.name, 100),
 			Video_Type: videoType.ID,
 			Length: data.duration,
-			Status: \"Queued\",
+			Status: videoStatus,
+			Started: started,
 			User_Alias: context.user.ID,
 		});
 		await row.save();
@@ -235,17 +275,30 @@ ON DUPLICATE KEY UPDATE
 		return { reply: \"You must search for a link or a video description!\" };
 	}
 
-	const currentData = await sb.VideoLANConnector.currentlyPlayingData();
-	if (currentData) {
-		const userRequests = sb.VideoLANConnector.videoQueue.filter(i => i.vlcID >= currentData.vlcID && i.user === context.user.ID).length;
-		if (userRequests >= this.staticData.videoLimit) {
-			return {
-				reply: `Can only request up to ${this.staticData.videoLimit} videos in the queue!`
-			}
+	const userRequests = await sb.Query.getRecordset(rs => rs
+		.select(\"COUNT(*) AS Amount\")
+		.from(\"chat_data\", \"Song_Request\")
+		.where(\"Status IN %s+\", [\"Current\", \"Queued\"])
+		.where(\"User_Alias = %n\", context.user.ID)
+		.single()
+	);
+
+	if (userRequests.Amount >= this.staticData.videoLimit) {
+		return {
+			reply: `Can only request up to ${this.staticData.videoLimit} videos in the queue!`
 		}
 	}
 
-	const url = args.join(\" \");
+	let type = \"youtube\";
+	for (let i = 0; i < args.length; i++) {
+		const token = args[i];
+		if (token.includes(\"type:\")) {
+			type = token.split(\":\")[1];
+			args.splice(i, 1);
+		}
+	}
+
+	let url = args.join(\" \");
 	const parsedURL = require(\"url\").parse(url);
 
 	if (parsedURL.host === \"supinic.com\" && parsedURL.path.includes(\"/track/detail\")) {
@@ -312,10 +365,32 @@ ON DUPLICATE KEY UPDATE
 	}
 
 	if (!data) {
-		const lookup = await sb.Utils.fetchYoutubeVideo(
-			args.join(\" \").replace(/-/g, \"\"),
-			sb.Config.get(\"API_GOOGLE_YOUTUBE\")
-		);
+		let lookup = null;
+		if (type === \"vimeo\") {
+			const { data } = await sb.Got.instances.Vimeo({
+				url: \"videos\",
+				searchParams: new sb.URLParams()
+					.set(\"query\", args.join(\" \"))
+					.set(\"per_page\", \"1\")
+					.toString()
+			}).json();
+
+			if (data.length > 0) {
+				lookup = data[0];
+			}
+		}
+		else if (type === \"youtube\") {
+			lookup = await sb.Utils.fetchYoutubeVideo(
+				args.join(\" \").replace(/-/g, \"\"),
+				sb.Config.get(\"API_GOOGLE_YOUTUBE\")
+			);
+		}
+		else {
+			return {
+				success: false,
+				reply: \"Incorrect video search type provided!\"
+			}
+		}
 
 		if (!lookup) {
 			return {
@@ -347,6 +422,8 @@ ON DUPLICATE KEY UPDATE
 		}
 
 		let when = \"right now!\";
+		let videoStatus = \"Current\";
+		let started = new sb.Date();
 		const status = await sb.VideoLANConnector.status();
 
 		if (status.currentplid !== -1 && status.currentplid !== id && status.time !== 0) {
@@ -360,6 +437,8 @@ ON DUPLICATE KEY UPDATE
 				playingDate.addSeconds(length ?? 0);
 			}
 
+			started = null;
+			videoStatus = \"Queued\";
 			when = sb.Utils.timeDelta(playingDate);
 		}
 
@@ -378,7 +457,8 @@ ON DUPLICATE KEY UPDATE
 			Name: sb.Utils.wrapString(data.name, 100),
 			Video_Type: videoType.ID,
 			Length: data.duration,
-			Status: \"Queued\",
+			Status: videoStatus,
+			Started: started,
 			User_Alias: context.user.ID,
 		});
 		await row.save();
