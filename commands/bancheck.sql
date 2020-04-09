@@ -72,12 +72,21 @@ VALUES
 	}
 
 	if (targetChannel.Banphrase_API_Type === \"Pajbot\") {
-		const data = await sb.Banphrase.executeExternalAPI(
-			message,
-			targetChannel.Banphrase_API_Type,
-			targetChannel.Banphrase_API_URL,
-			{ fullResponse: true }
-		);
+		let data = null
+		try {
+			data = await sb.Banphrase.executeExternalAPI(
+				message,
+				targetChannel.Banphrase_API_Type,
+				targetChannel.Banphrase_API_URL,
+				{ fullResponse: true }
+			);
+		}
+		catch (e) {
+			console.warn(e);
+			return {
+				reply: \"Banphrase API did not respond in time!\"
+			};
+		}
 
 		if (data.banned) {
 			console.warn(data);
@@ -145,12 +154,21 @@ ON DUPLICATE KEY UPDATE
 	}
 
 	if (targetChannel.Banphrase_API_Type === \"Pajbot\") {
-		const data = await sb.Banphrase.executeExternalAPI(
-			message,
-			targetChannel.Banphrase_API_Type,
-			targetChannel.Banphrase_API_URL,
-			{ fullResponse: true }
-		);
+		let data = null
+		try {
+			data = await sb.Banphrase.executeExternalAPI(
+				message,
+				targetChannel.Banphrase_API_Type,
+				targetChannel.Banphrase_API_URL,
+				{ fullResponse: true }
+			);
+		}
+		catch (e) {
+			console.warn(e);
+			return {
+				reply: \"Banphrase API did not respond in time!\"
+			};
+		}
 
 		if (data.banned) {
 			console.warn(data);
