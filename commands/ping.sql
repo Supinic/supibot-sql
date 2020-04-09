@@ -42,10 +42,15 @@ VALUES
 		0,
 		'({
 	checkLatency: async (callback, ...args) => {
-		const start = process.hrtime.bigint();
-		await callback(...args);
+		try {
+			const start = process.hrtime.bigint();
+			await callback(...args);
 		
-		return sb.Utils.round(Number(process.hrtime.bigint() - start) / 1.0e6, 3);
+			return sb.Utils.round(Number(process.hrtime.bigint() - start) / 1.0e6, 3);
+		}
+		catch {
+			return null;
+		}
 	}
 })',
 		'(async function ping (context) {
@@ -53,10 +58,6 @@ VALUES
 	const readFile = require(\"fs\").promises.readFile;
 	const exec = promisify(require(\"child_process\").exec);
 	const chars = {a: \"e\", e: \"i\", i: \"o\", o: \"u\", u: \"y\", y: \"a\"};
-
-	const startLatency = process.hrtime();
-	await sb.Master.clients.twitch.client.ping();
-	const endLatency = process.hrtime(startLatency);
 
 	const [temperature, memory] = await Promise.all([
 		exec(\"/opt/vc/bin/vcgencmd measure_temp\"),
@@ -82,7 +83,11 @@ VALUES
 				async () => sb.Banphrase.executeExternalAPI(\"test\", type, url)
 			);
 
-			data[\"Banphrase API\"] = `Using ${type} API: ${url} (${Math.trunc(ping)}ms)`;
+			const result = (ping === null)
+				? \"No response from API\"
+				: `${Math.trunc(ping)}ms`;
+
+			data[\"Banphrase API\"] = `Using ${type} API: ${url} (${result})`;
 		}
 		else {
 			data[\"Banphrase API\"] = \"Not connected.\"
@@ -90,9 +95,13 @@ VALUES
 	}	
 
 	if (context.platform.Name === \"twitch\") {
-		data[\"Latency to TMI\"] = await this.staticData.checkLatency(
+		const ping = await this.staticData.checkLatency(
 			async () => sb.Master.clients.twitch.client.ping()
 		);
+
+		data[\"Latency to TMI\"] = (ping === null)
+			? \"No response from Twitch (?)\"
+			: `${Math.trunc(ping)}ms`;
 	}
 
 	return {
@@ -120,10 +129,6 @@ ON DUPLICATE KEY UPDATE
 	const exec = promisify(require(\"child_process\").exec);
 	const chars = {a: \"e\", e: \"i\", i: \"o\", o: \"u\", u: \"y\", y: \"a\"};
 
-	const startLatency = process.hrtime();
-	await sb.Master.clients.twitch.client.ping();
-	const endLatency = process.hrtime(startLatency);
-
 	const [temperature, memory] = await Promise.all([
 		exec(\"/opt/vc/bin/vcgencmd measure_temp\"),
 		readFile(\"/proc/meminfo\")
@@ -148,7 +153,11 @@ ON DUPLICATE KEY UPDATE
 				async () => sb.Banphrase.executeExternalAPI(\"test\", type, url)
 			);
 
-			data[\"Banphrase API\"] = `Using ${type} API: ${url} (${Math.trunc(ping)}ms)`;
+			const result = (ping === null)
+				? \"No response from API\"
+				: `${Math.trunc(ping)}ms`;
+
+			data[\"Banphrase API\"] = `Using ${type} API: ${url} (${result})`;
 		}
 		else {
 			data[\"Banphrase API\"] = \"Not connected.\"
@@ -156,9 +165,13 @@ ON DUPLICATE KEY UPDATE
 	}	
 
 	if (context.platform.Name === \"twitch\") {
-		data[\"Latency to TMI\"] = await this.staticData.checkLatency(
+		const ping = await this.staticData.checkLatency(
 			async () => sb.Master.clients.twitch.client.ping()
 		);
+
+		data[\"Latency to TMI\"] = (ping === null)
+			? \"No response from Twitch (?)\"
+			: `${Math.trunc(ping)}ms`;
 	}
 
 	return {
