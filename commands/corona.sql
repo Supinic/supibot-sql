@@ -192,7 +192,7 @@ VALUES
 	}
 	else if (input === \"stats\" || input === \"dump\") {
 		return {
-			reply: \"Check the current stats here: https://supinic.com/data/corona/latest\"
+			reply: \"Check the current stats here: https://supinic.com/data/corona/global/latest\"
 		};
 	}
 	else if (input === \"top\") {
@@ -415,7 +415,7 @@ ON DUPLICATE KEY UPDATE
 	}
 	else if (input === \"stats\" || input === \"dump\") {
 		return {
-			reply: \"Check the current stats here: https://supinic.com/data/corona/latest\"
+			reply: \"Check the current stats here: https://supinic.com/data/corona/global/latest\"
 		};
 	}
 	else if (input === \"top\") {
