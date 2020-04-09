@@ -54,7 +54,7 @@ VALUES
 		\"UAE\": \"United Arab Emirates\",
 		\"UK\": \"United Kingdom\",
 		\"GB\": \"United Kingdom\",
-		\"USA\": \"United States of America\"		
+		\"USA\": \"United States of America\"
 	};
 	const regions = [
 		\"Africa\",
