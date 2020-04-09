@@ -42,11 +42,19 @@ VALUES
 		0,
 		'(() => {
 	const special = {
+		\"AU\": \"Australia\",
 		\"CAR\": \"Central African Republic\",
 		\"DRC\": \"Democratic Republic of the Congo\",
+		\"FR\": \"France\",
+		\"HK\": \"Hong Kong\",
+		\"JP\": \"Japan\",
+		\"NC\": \"New Caledonia\",
+		\"NZ\": \"New Zealand\",
+		\"KR\": \"South Korea\",
 		\"UAE\": \"United Arab Emirates\",
 		\"UK\": \"United Kingdom\",
-		\"USA\": \"United States of America\"
+		\"GB\": \"United Kingdom\",
+		\"USA\": \"United States of America\"		
 	};
 	const regions = [
 		\"Africa\",
