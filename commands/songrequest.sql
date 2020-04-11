@@ -4,6 +4,7 @@ INSERT INTO
 		ID,
 		Name,
 		Aliases,
+		Flags,
 		Description,
 		Cooldown,
 		Rollbackable,
@@ -16,6 +17,7 @@ INSERT INTO
 		Blockable,
 		Ping,
 		Pipeable,
+		Owner_Override,
 		Archived,
 		Static_Data,
 		Code,
@@ -27,6 +29,7 @@ VALUES
 		56,
 		'songrequest',
 		'[\"sr\"]',
+		NULL,
 		'Requests a song to play on supinic stream. Uses a local VLC API to enqueue songs to the playlist, or links to Cytube, or uses the necrodancer command to download a song. This all depends on the song request status.',
 		5000,
 		0,
@@ -39,6 +42,7 @@ VALUES
 		0,
 		1,
 		1,
+		0,
 		0,
 		'({
 	videoLimit: 5
@@ -60,15 +64,14 @@ VALUES
 		return { reply: \"You must search for a link or a video description!\" };
 	}
 
-	const userRequests = await sb.Query.getRecordset(rs => rs
-		.select(\"COUNT(*) AS Amount\")
+	const queue = await sb.Query.getRecordset(rs => rs
+		.select(\"Length\", \"Status\", \"User_Alias\", \"VLC_ID\")
 		.from(\"chat_data\", \"Song_Request\")
 		.where(\"Status IN %s+\", [\"Current\", \"Queued\"])
-		.where(\"User_Alias = %n\", context.user.ID)
-		.single()
 	);
 
-	if (userRequests.Amount >= this.staticData.videoLimit) {
+	const userRequests = queue.filter(i => i.User_Alias === context.user.ID);
+	if (userRequests.length >= this.staticData.videoLimit) {
 		return {
 			reply: `Can only request up to ${this.staticData.videoLimit} videos in the queue!`
 		}
@@ -87,26 +90,64 @@ VALUES
 	const parsedURL = require(\"url\").parse(url);
 
 	if (parsedURL.host === \"supinic.com\" && parsedURL.path.includes(\"/track/detail\")) {
+		const videoTypePrefix = sb.Config.get(\"VIDEO_TYPE_REPLACE_PREFIX\");
 		const songID = Number(parsedURL.path.match(/(\\d+)/)[1]);
 		if (!songID) {
 			return { reply: \"Invalid link!\" };
 		}
 
-		const songData = await sb.Query.getRecordset(rs => rs
-			.select(\"Link\", \"Name\", \"Duration\")
+		let songData = await sb.Query.getRecordset(rs => rs
+			.select(\"Available\", \"Link\", \"Name\", \"Duration\")
 			.select(\"Video_Type.Link_Prefix AS Prefix\")
 			.from(\"music\", \"Track\")
 			.join(\"data\", \"Video_Type\")
 			.where(\"Track.ID = %n\", songID)
+			.where(\"Available = %b\", true)
 			.single()
 		);
 
 		if (!songData) {
-			return { reply: \"Track does not exist in the list!\" };
+			let targetID = null;
+			const main = await sb.Query.getRecordset(rs => rs
+				.select(\"Track.ID\", \"Available\", \"Link\", \"Name\", \"Duration\")
+				.select(\"Video_Type.Link_Prefix AS Prefix\")
+				.from(\"music\", \"Track\")
+				.join(\"data\", \"Video_Type\")
+				.join({
+					toTable: \"Track_Relationship\",
+					on: \"Track_Relationship.Track_To = Track.ID\"
+				})
+				.where(\"Relationship = %s\", \"Reupload of\")
+				.where(\"Track_From = %n\", songID)
+				.single()
+			);
+
+			targetID = main?.ID ?? songID;
+
+			songData = await sb.Query.getRecordset(rs => rs
+				.select(\"Track.ID\", \"Available\", \"Link\", \"Name\", \"Duration\")
+				.select(\"Video_Type.Link_Prefix AS Prefix\")
+				.from(\"music\", \"Track\")
+				.join(\"data\", \"Video_Type\")
+				.join({
+					toTable: \"Track_Relationship\",
+					on: \"Track_Relationship.Track_From = Track.ID\"
+				})
+				.where(\"Video_Type = %n\", 1)
+				.where(\"Available = %b\", true)
+				.where(\"Relationship IN %s+\", [\"Archive of\", \"Reupload of\"])
+				.where(\"Track_To = %n\", targetID)
+				.limit(1)
+				.single()
+			);
+
+		}
+
+		if (songData) {
+			url = songData.Prefix.replace(videoTypePrefix, songData.Link);
 		}
 		else {
-			const videoTypePrefix = sb.Config.get(\"VIDEO_TYPE_REPLACE_PREFIX\");
-			url = songData.Prefix.replace(videoTypePrefix, songData.Link);
+			url = null;
 		}
 	}
 	else if (parsedURL.host) {
@@ -152,16 +193,25 @@ VALUES
 	if (!data) {
 		let lookup = null;
 		if (type === \"vimeo\") {
-			const { data } = await sb.Got.instances.Vimeo({
+			const { body, statusCode } = await sb.Got.instances.Vimeo({
 				url: \"videos\",
+				throwHttpErrors: false,
 				searchParams: new sb.URLParams()
 					.set(\"query\", args.join(\" \"))
 					.set(\"per_page\", \"1\")
+					.set(\"sort\", \"relevance\")
+					.set(\"direction\", \"desc\")
 					.toString()
-			}).json();
+			});
 
-			if (data.length > 0) {
-				lookup = data[0];
+			if (statusCode !== 200 || body.error) {
+				return {
+					success: false,
+					reply: `Vimeo API returned error ${statusCode}: ${body.error}`
+				};
+			}
+			else if (body.data.length > 0) {
+				lookup = body.data[0].link;
 			}
 		}
 		else if (type === \"youtube\") {
@@ -211,14 +261,12 @@ VALUES
 		let started = new sb.Date();
 		const status = await sb.VideoLANConnector.status();
 
-		if (status.currentplid !== -1 && status.currentplid !== id && status.time !== 0) {
-			const currentlyPlaying = await sb.VideoLANConnector.currentlyPlayingData();
-			const nowID = currentlyPlaying?.vlcID ?? Infinity;
+		if (queue.length > 0) {
 			const { time, length } = status;
-
 			const playingDate = new sb.Date().addSeconds(length - time);
-			const inQueue = sb.VideoLANConnector.videoQueue.filter(i => i.vlcID > nowID && i.vlcID < id);
-			for (const { length } of inQueue) {
+			const inQueue = queue.filter(i => i.Status === \"Queued\");
+
+			for (const { Length: length } of inQueue) {
 				playingDate.addSeconds(length ?? 0);
 			}
 
@@ -275,15 +323,14 @@ ON DUPLICATE KEY UPDATE
 		return { reply: \"You must search for a link or a video description!\" };
 	}
 
-	const userRequests = await sb.Query.getRecordset(rs => rs
-		.select(\"COUNT(*) AS Amount\")
+	const queue = await sb.Query.getRecordset(rs => rs
+		.select(\"Length\", \"Status\", \"User_Alias\", \"VLC_ID\")
 		.from(\"chat_data\", \"Song_Request\")
 		.where(\"Status IN %s+\", [\"Current\", \"Queued\"])
-		.where(\"User_Alias = %n\", context.user.ID)
-		.single()
 	);
 
-	if (userRequests.Amount >= this.staticData.videoLimit) {
+	const userRequests = queue.filter(i => i.User_Alias === context.user.ID);
+	if (userRequests.length >= this.staticData.videoLimit) {
 		return {
 			reply: `Can only request up to ${this.staticData.videoLimit} videos in the queue!`
 		}
@@ -302,26 +349,64 @@ ON DUPLICATE KEY UPDATE
 	const parsedURL = require(\"url\").parse(url);
 
 	if (parsedURL.host === \"supinic.com\" && parsedURL.path.includes(\"/track/detail\")) {
+		const videoTypePrefix = sb.Config.get(\"VIDEO_TYPE_REPLACE_PREFIX\");
 		const songID = Number(parsedURL.path.match(/(\\d+)/)[1]);
 		if (!songID) {
 			return { reply: \"Invalid link!\" };
 		}
 
-		const songData = await sb.Query.getRecordset(rs => rs
-			.select(\"Link\", \"Name\", \"Duration\")
+		let songData = await sb.Query.getRecordset(rs => rs
+			.select(\"Available\", \"Link\", \"Name\", \"Duration\")
 			.select(\"Video_Type.Link_Prefix AS Prefix\")
 			.from(\"music\", \"Track\")
 			.join(\"data\", \"Video_Type\")
 			.where(\"Track.ID = %n\", songID)
+			.where(\"Available = %b\", true)
 			.single()
 		);
 
 		if (!songData) {
-			return { reply: \"Track does not exist in the list!\" };
+			let targetID = null;
+			const main = await sb.Query.getRecordset(rs => rs
+				.select(\"Track.ID\", \"Available\", \"Link\", \"Name\", \"Duration\")
+				.select(\"Video_Type.Link_Prefix AS Prefix\")
+				.from(\"music\", \"Track\")
+				.join(\"data\", \"Video_Type\")
+				.join({
+					toTable: \"Track_Relationship\",
+					on: \"Track_Relationship.Track_To = Track.ID\"
+				})
+				.where(\"Relationship = %s\", \"Reupload of\")
+				.where(\"Track_From = %n\", songID)
+				.single()
+			);
+
+			targetID = main?.ID ?? songID;
+
+			songData = await sb.Query.getRecordset(rs => rs
+				.select(\"Track.ID\", \"Available\", \"Link\", \"Name\", \"Duration\")
+				.select(\"Video_Type.Link_Prefix AS Prefix\")
+				.from(\"music\", \"Track\")
+				.join(\"data\", \"Video_Type\")
+				.join({
+					toTable: \"Track_Relationship\",
+					on: \"Track_Relationship.Track_From = Track.ID\"
+				})
+				.where(\"Video_Type = %n\", 1)
+				.where(\"Available = %b\", true)
+				.where(\"Relationship IN %s+\", [\"Archive of\", \"Reupload of\"])
+				.where(\"Track_To = %n\", targetID)
+				.limit(1)
+				.single()
+			);
+
+		}
+
+		if (songData) {
+			url = songData.Prefix.replace(videoTypePrefix, songData.Link);
 		}
 		else {
-			const videoTypePrefix = sb.Config.get(\"VIDEO_TYPE_REPLACE_PREFIX\");
-			url = songData.Prefix.replace(videoTypePrefix, songData.Link);
+			url = null;
 		}
 	}
 	else if (parsedURL.host) {
@@ -367,16 +452,25 @@ ON DUPLICATE KEY UPDATE
 	if (!data) {
 		let lookup = null;
 		if (type === \"vimeo\") {
-			const { data } = await sb.Got.instances.Vimeo({
+			const { body, statusCode } = await sb.Got.instances.Vimeo({
 				url: \"videos\",
+				throwHttpErrors: false,
 				searchParams: new sb.URLParams()
 					.set(\"query\", args.join(\" \"))
 					.set(\"per_page\", \"1\")
+					.set(\"sort\", \"relevance\")
+					.set(\"direction\", \"desc\")
 					.toString()
-			}).json();
+			});
 
-			if (data.length > 0) {
-				lookup = data[0];
+			if (statusCode !== 200 || body.error) {
+				return {
+					success: false,
+					reply: `Vimeo API returned error ${statusCode}: ${body.error}`
+				};
+			}
+			else if (body.data.length > 0) {
+				lookup = body.data[0].link;
 			}
 		}
 		else if (type === \"youtube\") {
@@ -426,14 +520,12 @@ ON DUPLICATE KEY UPDATE
 		let started = new sb.Date();
 		const status = await sb.VideoLANConnector.status();
 
-		if (status.currentplid !== -1 && status.currentplid !== id && status.time !== 0) {
-			const currentlyPlaying = await sb.VideoLANConnector.currentlyPlayingData();
-			const nowID = currentlyPlaying?.vlcID ?? Infinity;
+		if (queue.length > 0) {
 			const { time, length } = status;
-
 			const playingDate = new sb.Date().addSeconds(length - time);
-			const inQueue = sb.VideoLANConnector.videoQueue.filter(i => i.vlcID > nowID && i.vlcID < id);
-			for (const { length } of inQueue) {
+			const inQueue = queue.filter(i => i.Status === \"Queued\");
+
+			for (const { Length: length } of inQueue) {
 				playingDate.addSeconds(length ?? 0);
 			}
 
