@@ -4,6 +4,7 @@ INSERT INTO
 		ID,
 		Name,
 		Aliases,
+		Flags,
 		Description,
 		Cooldown,
 		Rollbackable,
@@ -16,6 +17,7 @@ INSERT INTO
 		Blockable,
 		Ping,
 		Pipeable,
+		Owner_Override,
 		Archived,
 		Static_Data,
 		Code,
@@ -26,6 +28,7 @@ VALUES
 	(
 		3,
 		'math',
+		NULL,
 		NULL,
 		'Does math. For more info, check the documentation for math.js',
 		5000,
@@ -39,6 +42,7 @@ VALUES
 		0,
 		1,
 		1,
+		0,
 		0,
 		NULL,
 		'(async function math (context, ...args) {

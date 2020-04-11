@@ -4,6 +4,7 @@ INSERT INTO
 		ID,
 		Name,
 		Aliases,
+		Flags,
 		Description,
 		Cooldown,
 		Rollbackable,
@@ -16,6 +17,7 @@ INSERT INTO
 		Blockable,
 		Ping,
 		Pipeable,
+		Owner_Override,
 		Archived,
 		Static_Data,
 		Code,
@@ -26,6 +28,7 @@ VALUES
 	(
 		54,
 		'ban',
+		NULL,
 		NULL,
 		'Bans any combination of channel, user, and command from being executed.',
 		0,
@@ -39,6 +42,7 @@ VALUES
 		0,
 		1,
 		1,
+		0,
 		0,
 		NULL,
 		'(async function ban (context, ...args) {

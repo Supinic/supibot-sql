@@ -4,6 +4,7 @@ INSERT INTO
 		ID,
 		Name,
 		Aliases,
+		Flags,
 		Description,
 		Cooldown,
 		Rollbackable,
@@ -16,6 +17,7 @@ INSERT INTO
 		Blockable,
 		Ping,
 		Pipeable,
+		Owner_Override,
 		Archived,
 		Static_Data,
 		Code,
@@ -26,6 +28,7 @@ VALUES
 	(
 		21,
 		'reload',
+		NULL,
 		NULL,
 		'Reloads a database definition or hotloads an updated script',
 		0,
@@ -39,6 +42,7 @@ VALUES
 		0,
 		0,
 		1,
+		0,
 		0,
 		NULL,
 		'(async function reload (context, target, ...rest) {

@@ -4,6 +4,7 @@ INSERT INTO
 		ID,
 		Name,
 		Aliases,
+		Flags,
 		Description,
 		Cooldown,
 		Rollbackable,
@@ -16,6 +17,7 @@ INSERT INTO
 		Blockable,
 		Ping,
 		Pipeable,
+		Owner_Override,
 		Archived,
 		Static_Data,
 		Code,
@@ -26,6 +28,7 @@ VALUES
 	(
 		121,
 		'kiss',
+		NULL,
 		NULL,
 		'Kisses target user.',
 		10000,
@@ -39,6 +42,7 @@ VALUES
 		0,
 		0,
 		1,
+		0,
 		0,
 		'({
 	emojis: [\"👩‍❤️‍💋‍👨\", \"💋\", \"😗\", \"👩‍❤️‍💋‍👨\", \"😙\", \"😚\", \"😽\", \"💋😳\", \"👨‍❤️‍💋‍👨\"]

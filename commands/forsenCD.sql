@@ -4,6 +4,7 @@ INSERT INTO
 		ID,
 		Name,
 		Aliases,
+		Flags,
 		Description,
 		Cooldown,
 		Rollbackable,
@@ -16,6 +17,7 @@ INSERT INTO
 		Blockable,
 		Ping,
 		Pipeable,
+		Owner_Override,
 		Archived,
 		Static_Data,
 		Code,
@@ -27,6 +29,7 @@ VALUES
 		130,
 		'forsenCD',
 		'[\"pajaCD\"]',
+		NULL,
 		'A random quote from the two time! 1993, 1994 back to back blockbuster video game champion!',
 		5000,
 		0,
@@ -39,6 +42,7 @@ VALUES
 		0,
 		0,
 		1,
+		0,
 		0,
 		'(() => {
 	this.data.previousPosts = [];	

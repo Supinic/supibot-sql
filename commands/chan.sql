@@ -4,6 +4,7 @@ INSERT INTO
 		ID,
 		Name,
 		Aliases,
+		Flags,
 		Description,
 		Cooldown,
 		Rollbackable,
@@ -16,6 +17,7 @@ INSERT INTO
 		Blockable,
 		Ping,
 		Pipeable,
+		Owner_Override,
 		Archived,
 		Static_Data,
 		Code,
@@ -27,6 +29,7 @@ VALUES
 		204,
 		'chan',
 		'[\"4chan\", \"textchan\", \"filechan\", \"imagechan\"]',
+		NULL,
 		'Pulls a random post from a random board, or a specified one, if you provide it.',
 		10000,
 		0,
@@ -39,6 +42,7 @@ VALUES
 		0,
 		1,
 		1,
+		0,
 		0,
 		'({
 	replacements: [

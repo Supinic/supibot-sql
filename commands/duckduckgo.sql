@@ -4,6 +4,7 @@ INSERT INTO
 		ID,
 		Name,
 		Aliases,
+		Flags,
 		Description,
 		Cooldown,
 		Rollbackable,
@@ -16,6 +17,7 @@ INSERT INTO
 		Blockable,
 		Ping,
 		Pipeable,
+		Owner_Override,
 		Archived,
 		Static_Data,
 		Code,
@@ -27,6 +29,7 @@ VALUES
 		209,
 		'duckduckgo',
 		'[\"ddg\"]',
+		NULL,
 		'Try the DuckDuckGo Instant Answer API to answer your questions!',
 		15000,
 		0,
@@ -40,6 +43,7 @@ VALUES
 		1,
 		1,
 		0,
+		1,
 		NULL,
 		'(async function duckDuckGo (context, ...args) {
 	const data = await sb.Got({

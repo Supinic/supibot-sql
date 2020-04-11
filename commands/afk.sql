@@ -4,6 +4,7 @@ INSERT INTO
 		ID,
 		Name,
 		Aliases,
+		Flags,
 		Description,
 		Cooldown,
 		Rollbackable,
@@ -16,6 +17,7 @@ INSERT INTO
 		Blockable,
 		Ping,
 		Pipeable,
+		Owner_Override,
 		Archived,
 		Static_Data,
 		Code,
@@ -27,6 +29,7 @@ VALUES
 		6,
 		'afk',
 		'[\"gn\", \"brb\", \"shower\", \"food\", \"lurk\", \"poop\", \"💩\", \"ppPoof\", \"work\", \"study\"]',
+		NULL,
 		'Flags you as AFK. Supports a custom AFK message.',
 		10000,
 		0,
@@ -39,6 +42,7 @@ VALUES
 		0,
 		0,
 		1,
+		0,
 		0,
 		'({
 	foodEmojis: [

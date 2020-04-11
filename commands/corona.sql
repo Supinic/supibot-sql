@@ -4,6 +4,7 @@ INSERT INTO
 		ID,
 		Name,
 		Aliases,
+		Flags,
 		Description,
 		Cooldown,
 		Rollbackable,
@@ -16,6 +17,7 @@ INSERT INTO
 		Blockable,
 		Ping,
 		Pipeable,
+		Owner_Override,
 		Archived,
 		Static_Data,
 		Code,
@@ -26,6 +28,7 @@ VALUES
 	(
 		200,
 		'corona',
+		NULL,
 		NULL,
 		'Checks the current amount of infected/deceased people from the Corona Virus spread started in October-December 2019.',
 		7500,
@@ -39,6 +42,7 @@ VALUES
 		0,
 		1,
 		1,
+		0,
 		0,
 		'(() => {
 	const special = {
@@ -93,7 +97,7 @@ VALUES
 				})
 				.where(\"Latest = %b\", true)
 				.where({ condition: region === null }, \"Place.Parent IS NULL\")
-				.where({ condition: typeof region === \"string\" }, \"Place.Region = %s\", region)
+				.where({ condition: typeof region === \"string\" }, \"Place.Parent IS NULL AND Place.Region = %s\", region)
 				.groupBy(\"Status.Place\")
 				.orderBy(\"Status.Date DESC\")
 			),

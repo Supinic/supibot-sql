@@ -4,6 +4,7 @@ INSERT INTO
 		ID,
 		Name,
 		Aliases,
+		Flags,
 		Description,
 		Cooldown,
 		Rollbackable,
@@ -16,6 +17,7 @@ INSERT INTO
 		Blockable,
 		Ping,
 		Pipeable,
+		Owner_Override,
 		Archived,
 		Static_Data,
 		Code,
@@ -27,6 +29,7 @@ VALUES
 		161,
 		'songrequestqueue',
 		'[\"srq\", \"queue\"]',
+		NULL,
 		'Posts the summary of song request queue. EXPERIMENTAL monkaS',
 		30000,
 		0,
@@ -39,6 +42,7 @@ VALUES
 		0,
 		1,
 		1,
+		0,
 		0,
 		'({
 	isCustom: (string) => (string.endsWith(\".mp3\") || string.endsWith(\".ogg\") || string.endsWith(\".mp4\"))
