@@ -4,6 +4,7 @@ INSERT INTO
 		ID,
 		Name,
 		Aliases,
+		Flags,
 		Description,
 		Cooldown,
 		Rollbackable,
@@ -16,6 +17,7 @@ INSERT INTO
 		Blockable,
 		Ping,
 		Pipeable,
+		Owner_Override,
 		Archived,
 		Static_Data,
 		Code,
@@ -27,6 +29,7 @@ VALUES
 		167,
 		'wrongsong',
 		'[\"ws\"]',
+		NULL,
 		'If you have requested at least one song, this command is going to skip the first one. Use when you accidentally requested something you didn\'t mean to.',
 		5000,
 		0,
@@ -40,11 +43,12 @@ VALUES
 		1,
 		1,
 		0,
+		0,
 		NULL,
 		'(async function wrongSong (context, target) {
 	const targetID = Number(target) || null;
 	const userRequest = await sb.Query.getRecordset(rs => rs
-		.select(\"Link\", \"VLC_ID\", \"Status\")
+		.select(\"Song_Request.ID\", \"Link\", \"VLC_ID\", \"Status\")
 		.select(\"Video_Type.Link_Prefix AS Prefix\")
 		.from(\"chat_data\", \"Song_Request\")
 		.join({
@@ -70,8 +74,23 @@ VALUES
 
 	let action = \"\";
 	if (userRequest.Status === \"Current\") {
-		action = \"skipped\";
-		await sb.VideoLANConnector.client.playlistNext();
+		const requestsAhead = await sb.Query.getRecordset(rs => rs
+			.select(\"COUNT(*) AS Amount\")
+			.from(\"chat_data\", \"Song_Request\")
+			.where(\"Status = %s\",  \"Queued\")
+			.where(\"ID > %n\", userRequest.ID)
+			.limit(1)
+			.single()
+		);
+
+		if (requestsAhead.Amount > 0) {
+			action = \"skipped\";
+			await sb.VideoLANConnector.client.playlistNext();
+		}
+		else {
+			action = \"skipped, and the playlist stopped\";
+			await sb.VideoLANConnector.actions.stop();
+		}
 	}
 	else if (userRequest.Status === \"Queued\") {
 		action = \"deleted from the playlist\";
@@ -94,7 +113,7 @@ ON DUPLICATE KEY UPDATE
 	Code = '(async function wrongSong (context, target) {
 	const targetID = Number(target) || null;
 	const userRequest = await sb.Query.getRecordset(rs => rs
-		.select(\"Link\", \"VLC_ID\", \"Status\")
+		.select(\"Song_Request.ID\", \"Link\", \"VLC_ID\", \"Status\")
 		.select(\"Video_Type.Link_Prefix AS Prefix\")
 		.from(\"chat_data\", \"Song_Request\")
 		.join({
@@ -120,8 +139,23 @@ ON DUPLICATE KEY UPDATE
 
 	let action = \"\";
 	if (userRequest.Status === \"Current\") {
-		action = \"skipped\";
-		await sb.VideoLANConnector.client.playlistNext();
+		const requestsAhead = await sb.Query.getRecordset(rs => rs
+			.select(\"COUNT(*) AS Amount\")
+			.from(\"chat_data\", \"Song_Request\")
+			.where(\"Status = %s\",  \"Queued\")
+			.where(\"ID > %n\", userRequest.ID)
+			.limit(1)
+			.single()
+		);
+
+		if (requestsAhead.Amount > 0) {
+			action = \"skipped\";
+			await sb.VideoLANConnector.client.playlistNext();
+		}
+		else {
+			action = \"skipped, and the playlist stopped\";
+			await sb.VideoLANConnector.actions.stop();
+		}
 	}
 	else if (userRequest.Status === \"Queued\") {
 		action = \"deleted from the playlist\";
