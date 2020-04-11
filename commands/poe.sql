@@ -4,6 +4,7 @@ INSERT INTO
 		ID,
 		Name,
 		Aliases,
+		Flags,
 		Description,
 		Cooldown,
 		Rollbackable,
@@ -16,6 +17,7 @@ INSERT INTO
 		Blockable,
 		Ping,
 		Pipeable,
+		Owner_Override,
 		Archived,
 		Static_Data,
 		Code,
@@ -27,10 +29,11 @@ VALUES
 		117,
 		'poe',
 		NULL,
+		NULL,
 		'Checks the current price of any recently traded item. $poe <league> <item>',
 		7500,
 		0,
-		1,
+		0,
 		0,
 		0,
 		NULL,
@@ -40,16 +43,32 @@ VALUES
 		1,
 		1,
 		0,
+		0,
 		'(() => {
-	this.data.labyrinth = {
-		date: null,
-		normal: null,
-		cruel: null,
-		merciless: null,
-		uber: null
-	};
+	if (this?.data) {
+		this.data.labyrinth = {
+			date: null,
+			normal: null,
+			cruel: null,
+			merciless: null,
+			uber: null
+		};
+	}
 
-	return {};
+	return {
+		commands: [
+			{
+				name: \"labyrinth\",
+				aliases: [\"lab\"],
+				description: \"Fetches the current overview picture of today\'s labyrinth. Use a difficulty (normal, cruel, merciless, uber) to see each one separately.\"
+			},
+			{
+				name: \"uniques\",
+				aliases: [],
+				description: \"If a user has requested to have their unique stash tab available on supibot, you can get its link by invoking this sub-command.\"
+			}
+		]
+	};
 })();',
 		'(async function poe (context, commandType, ...args) {
 	if (!commandType) {
@@ -57,7 +76,7 @@ VALUES
 			reply: `No query type provided! Currently supported: \"lab\".`
 		};
 	}
-	
+
 	commandType = commandType.toLowerCase();
 
 	switch (commandType) {
@@ -97,18 +116,54 @@ VALUES
 		}
 
 		case \"uniques\": {
+			let [user, type] = args;
+			if (!user) {
+				if (!context.channel) {
+					return {
+						success: false,
+						reply: \"Must provide a user name - no channel is available!\"
+					}
+				}
+
+				user = context.channel.Name;
+			}
+
+			const userData = await sb.User.get(user);
+			const link = userData.Data?.pathOfExile?.uniqueTabs?.dhcssf ?? null;
+			if (!link) {
+				return {
+					success: false,
+					reply: `User ${userData.Name} has no unique stash tabs set up!`
+				};
+			}
+
 			return {
-				reply: \"https://www.pathofexile.com/account/view-stash/Supinic/67dd5d58434a0f9bedde7b6604113198638f7b9338629b7dc514c39893b14fb6\"
+				reply: `${userData.Name}\'s DHCSSF unique tab: ${link}`
 			};
 		}
-		
+
 		default: return {
-			reply: `Invalid query type provided! Currently supported: \"lab\".`
+			reply: `Invalid query type provided! Currently supported: \"lab <difficulty>\", \"uniques <user>\".`
 		}
 	}
 })',
 		NULL,
-		NULL
+		'async (prefix) => {
+	const row = await sb.Query.getRow(\"chat_data\", \"Command\");
+	await row.load(117);
+	const { commands } = eval(row.values.Static_Data);	
+
+	return [
+		\"Multiple commands related to Path of Exile.\",
+		\"\",
+
+		...commands.flatMap(command => [
+			`<code>${prefix}poe ${command.name}</code>`,
+			command.description,
+			\"\"
+		])
+	];
+}'
 	)
 
 ON DUPLICATE KEY UPDATE
@@ -118,7 +173,7 @@ ON DUPLICATE KEY UPDATE
 			reply: `No query type provided! Currently supported: \"lab\".`
 		};
 	}
-	
+
 	commandType = commandType.toLowerCase();
 
 	switch (commandType) {
@@ -158,13 +213,34 @@ ON DUPLICATE KEY UPDATE
 		}
 
 		case \"uniques\": {
+			let [user, type] = args;
+			if (!user) {
+				if (!context.channel) {
+					return {
+						success: false,
+						reply: \"Must provide a user name - no channel is available!\"
+					}
+				}
+
+				user = context.channel.Name;
+			}
+
+			const userData = await sb.User.get(user);
+			const link = userData.Data?.pathOfExile?.uniqueTabs?.dhcssf ?? null;
+			if (!link) {
+				return {
+					success: false,
+					reply: `User ${userData.Name} has no unique stash tabs set up!`
+				};
+			}
+
 			return {
-				reply: \"https://www.pathofexile.com/account/view-stash/Supinic/67dd5d58434a0f9bedde7b6604113198638f7b9338629b7dc514c39893b14fb6\"
+				reply: `${userData.Name}\'s DHCSSF unique tab: ${link}`
 			};
 		}
-		
+
 		default: return {
-			reply: `Invalid query type provided! Currently supported: \"lab\".`
+			reply: `Invalid query type provided! Currently supported: \"lab <difficulty>\", \"uniques <user>\".`
 		}
 	}
 })'
