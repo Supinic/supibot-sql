@@ -4,6 +4,7 @@ INSERT INTO
 		ID,
 		Name,
 		Aliases,
+		Flags,
 		Description,
 		Cooldown,
 		Rollbackable,
@@ -16,6 +17,7 @@ INSERT INTO
 		Blockable,
 		Ping,
 		Pipeable,
+		Owner_Override,
 		Archived,
 		Static_Data,
 		Code,
@@ -27,6 +29,7 @@ VALUES
 		68,
 		'current',
 		'[\"song\"]',
+		NULL,
 		'Fetches the current song playing on stream.',
 		5000,
 		0,
@@ -39,6 +42,7 @@ VALUES
 		0,
 		1,
 		1,
+		0,
 		0,
 		'({
 	types: [\"current\", \"previous\"]
@@ -112,9 +116,17 @@ VALUES
 		const link = playing.Prefix.replace(linkSymbol, playing.Link);
 		const { name } = await sb.Utils.linkParser.fetchData(link);
 		const userData = await sb.User.get(playing.User);
+		const { length, time } = await sb.VideoLANConnector.status();
 
 		return {
-			reply: `Currently playing: ${name} (ID ${playing.VLC_ID}) - requested by ${userData.Name}. ${link}`
+			reply: sb.Utils.tag.trim `
+				Currently playing: ${name} 
+				(ID ${playing.VLC_ID}) 
+				- 
+				requested by ${userData.Name}.
+				Current position: ${time}/${length}s.
+				${link}
+			`
 		};
 	}
 	else {
@@ -197,9 +209,17 @@ ON DUPLICATE KEY UPDATE
 		const link = playing.Prefix.replace(linkSymbol, playing.Link);
 		const { name } = await sb.Utils.linkParser.fetchData(link);
 		const userData = await sb.User.get(playing.User);
+		const { length, time } = await sb.VideoLANConnector.status();
 
 		return {
-			reply: `Currently playing: ${name} (ID ${playing.VLC_ID}) - requested by ${userData.Name}. ${link}`
+			reply: sb.Utils.tag.trim `
+				Currently playing: ${name} 
+				(ID ${playing.VLC_ID}) 
+				- 
+				requested by ${userData.Name}.
+				Current position: ${time}/${length}s.
+				${link}
+			`
 		};
 	}
 	else {
