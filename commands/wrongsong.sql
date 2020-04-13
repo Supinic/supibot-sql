@@ -56,7 +56,7 @@ VALUES
 			toTable: \"Video_Type\",
 			on: \"Video_Type.ID = Song_Request.Video_Type\"
 		})
-		.where({ condition: Boolean(targetID) }, \"Song_Request.ID = %n\", targetID)
+		.where({ condition: Boolean(targetID) }, \"Song_Request.VLC_ID = %n\", targetID)
 		.where(\"User_Alias = %n\", context.user.ID)
 		.where(\"Status IN %s+\", [\"Current\", \"Queued\"])
 		.orderBy(\"Song_Request.ID ASC\")
@@ -121,7 +121,7 @@ ON DUPLICATE KEY UPDATE
 			toTable: \"Video_Type\",
 			on: \"Video_Type.ID = Song_Request.Video_Type\"
 		})
-		.where({ condition: Boolean(targetID) }, \"Song_Request.ID = %n\", targetID)
+		.where({ condition: Boolean(targetID) }, \"Song_Request.VLC_ID = %n\", targetID)
 		.where(\"User_Alias = %n\", context.user.ID)
 		.where(\"Status IN %s+\", [\"Current\", \"Queued\"])
 		.orderBy(\"Song_Request.ID ASC\")
