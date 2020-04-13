@@ -100,7 +100,7 @@ VALUES
 
 	if (context.platform.Name === \"twitch\") {
 		const ping = await this.staticData.checkLatency(
-			async () => sb.Master.clients.twitch.client.ping()
+			async () => context.platform.client.ping()
 		);
 
 		data[\"Latency to TMI\"] = (ping === null)
@@ -170,7 +170,7 @@ ON DUPLICATE KEY UPDATE
 
 	if (context.platform.Name === \"twitch\") {
 		const ping = await this.staticData.checkLatency(
-			async () => sb.Master.clients.twitch.client.ping()
+			async () => context.platform.client.ping()
 		);
 
 		data[\"Latency to TMI\"] = (ping === null)

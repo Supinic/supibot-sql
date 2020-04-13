@@ -58,7 +58,7 @@ VALUES
 		return { reply: \"We are on Dubtrack, check ?song for the currently playing song :)\" };
 	}
 	else if (state === \"cytube\") {
-		const playing = sb.Master.clients.cytube.currentlyPlaying;
+		const playing = sb.Platform.get(\"cytube\").controller.currentlyPlaying;
 		if (playing === null) {
 			return {
 				reply: \"Nothing is currently playing on Cytube.\"
@@ -151,7 +151,7 @@ ON DUPLICATE KEY UPDATE
 		return { reply: \"We are on Dubtrack, check ?song for the currently playing song :)\" };
 	}
 	else if (state === \"cytube\") {
-		const playing = sb.Master.clients.cytube.currentlyPlaying;
+		const playing = sb.Platform.get(\"cytube\").controller.currentlyPlaying;
 		if (playing === null) {
 			return {
 				reply: \"Nothing is currently playing on Cytube.\"

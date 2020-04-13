@@ -68,7 +68,7 @@ VALUES
 		return { reply: \"I cannot time Twitch administrators out! monkaS\" };
 	}
 
-	sb.Master.clients.twitch.client.privmsg(context.channel.Name, \"/timeout \" + context.user.Name + \" 1 vanished\");
+	context.platform.client.privmsg(context.channel.Name, \"/timeout \" + context.user.Name + \" 1 vanished\");
 })',
 		NULL,
 		NULL
@@ -98,5 +98,5 @@ ON DUPLICATE KEY UPDATE
 		return { reply: \"I cannot time Twitch administrators out! monkaS\" };
 	}
 
-	sb.Master.clients.twitch.client.privmsg(context.channel.Name, \"/timeout \" + context.user.Name + \" 1 vanished\");
+	context.platform.client.privmsg(context.channel.Name, \"/timeout \" + context.user.Name + \" 1 vanished\");
 })'

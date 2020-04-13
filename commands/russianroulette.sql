@@ -84,7 +84,7 @@ VALUES
 
 	const result = sb.Utils.random(1, 6);
 	if (result === 1) {
-		sb.Master.clients.twitch.client.privmsg(
+		context.platform.client.privmsg(
 			context.channel.Name, 
 			`/timeout ${context.user.Name} ${timeoutLength} Lost the roulette`
 		);
@@ -139,7 +139,7 @@ ON DUPLICATE KEY UPDATE
 
 	const result = sb.Utils.random(1, 6);
 	if (result === 1) {
-		sb.Master.clients.twitch.client.privmsg(
+		context.platform.client.privmsg(
 			context.channel.Name, 
 			`/timeout ${context.user.Name} ${timeoutLength} Lost the roulette`
 		);

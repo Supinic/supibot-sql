@@ -46,7 +46,11 @@ VALUES
 		0,
 		NULL,
 		'(async function botSubs () {
-	const sampleEmotes = Object.values(sb.Master.clients.twitch.availableEmotes).map(emotes => sb.Utils.randArray(emotes).id);
+	const controller = sb.Platform.get(\"twitch\").controller;
+	const sampleEmotes = Object.entries(controller.availableEmotes)
+ 		.filter(([id]) => Number(id) > 0)
+		.map(([id, emotes]) => sb.Utils.randArray(emotes).id);	
+	
 	const channelData = await sb.Got({
 		url: \"https://api.twitchemotes.com/api/v4/emotes\",
 		searchParams: \"id=\" + sampleEmotes.join(\",\")
@@ -66,7 +70,11 @@ VALUES
 
 ON DUPLICATE KEY UPDATE
 	Code = '(async function botSubs () {
-	const sampleEmotes = Object.values(sb.Master.clients.twitch.availableEmotes).map(emotes => sb.Utils.randArray(emotes).id);
+	const controller = sb.Platform.get(\"twitch\").controller;
+	const sampleEmotes = Object.entries(controller.availableEmotes)
+ 		.filter(([id]) => Number(id) > 0)
+		.map(([id, emotes]) => sb.Utils.randArray(emotes).id);	
+	
 	const channelData = await sb.Got({
 		url: \"https://api.twitchemotes.com/api/v4/emotes\",
 		searchParams: \"id=\" + sampleEmotes.join(\",\")
