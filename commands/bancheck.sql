@@ -93,7 +93,7 @@ VALUES
 		}
 
 		if (data.banned) {
-			console.warn(data);
+			console.warn(\"bancheck command\", { targetChannel, data });
 			
 			const { id, name, phrase, length, permanent, operator, case_sensitive: sensitive } = data.banphrase_data;
 			const punishment = (permanent)
@@ -175,7 +175,7 @@ ON DUPLICATE KEY UPDATE
 		}
 
 		if (data.banned) {
-			console.warn(data);
+			console.warn(\"bancheck command\", { targetChannel, data });
 			
 			const { id, name, phrase, length, permanent, operator, case_sensitive: sensitive } = data.banphrase_data;
 			const punishment = (permanent)
