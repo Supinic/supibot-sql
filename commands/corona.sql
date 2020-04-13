@@ -201,7 +201,7 @@ VALUES
 	}
 	else if (input === \"top\") {
 		const result = (await this.staticData.fetch.topData(10))
-			.map((i, ind) => `#${ind + 1}: ${i.Country} (${i.All_Cases})`)
+			.map((i, ind) => `#${ind + 1}: ${i.Country} (${Math.trunc(i.All_Cases / 1e3)}k)`)
 			.join(\"; \");
 
 		return {
@@ -424,7 +424,7 @@ ON DUPLICATE KEY UPDATE
 	}
 	else if (input === \"top\") {
 		const result = (await this.staticData.fetch.topData(10))
-			.map((i, ind) => `#${ind + 1}: ${i.Country} (${i.All_Cases})`)
+			.map((i, ind) => `#${ind + 1}: ${i.Country} (${Math.trunc(i.All_Cases / 1e3)}k)`)
 			.join(\"; \");
 
 		return {
