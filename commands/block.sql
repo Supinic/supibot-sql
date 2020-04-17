@@ -28,9 +28,9 @@ VALUES
 	(
 		176,
 		'block',
+		'[\"unblock\"]',
 		NULL,
-		NULL,
-		'Blocks a specified user from using a specified command with you as the target.',
+		'Blocks, or unblocks a specified user from using a specified command with you as the target. You can also set a channel, or platform for the block to be active on.',
 		5000,
 		0,
 		0,
@@ -45,122 +45,260 @@ VALUES
 		1,
 		0,
 		NULL,
-		'(async function block (context, user, command) {
-	if (!user || !command) {
+		'(async function block (context, ...args) {
+	const types = [\"user\", \"command\", \"platform\", \"channel\"];
+	const names = {};
+	const filterData = {
+		user: null,
+		command: null,
+		platform: null,
+		channel: null
+	};
+
+	// If the user is using \"simple\" mode, extract user and command.
+	if (args.every(i => !i.includes(\":\"))) {
+		[filterData.user, filterData.command] = args;
+	}
+	else {
+		for (let i = args.length - 1; i >= 0; i--) {
+			const token = args[i];
+			const [type, value] = token.split(\":\");
+			if (type && value && types.includes(type)) {
+				filterData[type] = value;
+				args.splice(i, 1);
+			}
+		}
+	}
+
+	for (const [type, value] of Object.entries(filterData)) {
+		if (value === null) {
+			continue;
+		}
+
+		const constructor = sb.Utils.capitalize(type);
+		const specificData = await sb[constructor].get(value);
+		if (!specificData) {
+			return {
+				success: false,
+				reply: `Provided ${type} was not found!`
+			};
+		}
+		else {
+			names[type] = specificData.Name;
+			filterData[type] = specificData.ID;
+		}
+	}
+
+	if (!filterData.user && !filterData.command) {
 		return {
+			success: false,
 			reply: \"Specify both the user and the command to block!\"
 		};
 	}
-
-	const commandData = sb.Command.get(command);
-	if (!commandData) {
+	else if (filterData.channel && filterData.platform) {
 		return {
-			reply: \"Invalid command specified!\"
-		};
-	}
-	else if (!commandData.Blockable) {
-		return {
-			reply: \"You cannot block users from targetting you with this command!\"
-		};
-	}
-
-	const userData = await sb.User.get(user, true);
-	if (!userData) {
-		return {
-			reply: \"Invalid user specified!\"
+			success: false,
+			reply: \"Cannot specify both the channel and platform!\"
 		};
 	}
 
 	const filter = sb.Filter.data.find(i => (
-		i.User_Alias === context.user.ID
-		&& i.Blocked_User === userData.ID
-		&& i.Type === \"Block\"
-		&& i.Command === commandData.ID
+		i.Type === \"Block\"
+		&& i.Blocked_User === filterData.user
+		&& i.Channel === filterData.channel
+		&& i.Command === filterData.command
+		&& i.Platform === filterData.platform
+		&& i.User_Alias === context.user.ID
 	));
 
-	let prefix = \"\";
+	const { invocation } = context;
 	if (filter) {
-		prefix = (filter.Active) ? \"un\" : \"\";
+		if (filter.Issued_By !== context.user.ID) {
+			return {
+				success: false,
+				reply: \"This command filter has not been created by you, so you cannot modify it!\"
+			};
+		}
+		else if ((filter.Active && invocation === \"block\") || (!filter.Active && invocation === \"unblock\")) {
+			return {
+				success: false,
+				reply: `That combination is already ${invocation}ed!`
+			};
+		}
+
+		const suffix = (filter.Active) ? \"\" : \" again\";
 		await filter.toggle();
+
+		return {
+			reply: `Succesfully ${invocation}ed${suffix}!`
+		}
 	}
 	else {
-		await sb.Filter.create({
+		if (invocation === \"unblock\") {
+			return {
+				success: false,
+				reply: \"This combination has not been blocked yet, so it cannot be unblocked!\"
+			};
+		}
+
+		const filter = await sb.Filter.create({
 			Active: true,
-			User_Alias: context.user.ID,
-			Blocked_User: userData.ID,
 			Type: \"Block\",
-			Command: commandData.ID,
-			Channel: null,
-			Platform: null,
+			User_Alias: context.user.ID,
+			Blocked_User: filterData.user,
+			Command: filterData.command,
+			Channel: filterData.channel,
+			Platform: filterData.platform,
 			Issued_By: context.user.ID
 		});
-	}
 
-	const commandPrefix = sb.Config.get(\"COMMAND_PREFIX\");
-	return {
-		reply: `You ${prefix}blocked ${userData.Name} from using the command ${commandPrefix}${commandData.Name} on you.`
-	};
-	
+		let location = \"\";
+		if (filterData.channel) {
+			location = ` in channel ${names.channel}`;
+		}
+		else if (filterData.platform) {
+			location = ` in platform ${names.platform}`;
+		}
+
+		const commandPrefix = sb.Config.get(\"COMMAND_PREFIX\");
+		return {
+			reply: sb.Utils.tag.trim `
+				You blocked ${names.user}
+				from using the command ${commandPrefix}${names.command}
+				on you${location}
+				(ID ${filter.ID}).
+			`
+		};
+	}
 })',
 		NULL,
 		NULL
 	)
 
 ON DUPLICATE KEY UPDATE
-	Code = '(async function block (context, user, command) {
-	if (!user || !command) {
+	Code = '(async function block (context, ...args) {
+	const types = [\"user\", \"command\", \"platform\", \"channel\"];
+	const names = {};
+	const filterData = {
+		user: null,
+		command: null,
+		platform: null,
+		channel: null
+	};
+
+	// If the user is using \"simple\" mode, extract user and command.
+	if (args.every(i => !i.includes(\":\"))) {
+		[filterData.user, filterData.command] = args;
+	}
+	else {
+		for (let i = args.length - 1; i >= 0; i--) {
+			const token = args[i];
+			const [type, value] = token.split(\":\");
+			if (type && value && types.includes(type)) {
+				filterData[type] = value;
+				args.splice(i, 1);
+			}
+		}
+	}
+
+	for (const [type, value] of Object.entries(filterData)) {
+		if (value === null) {
+			continue;
+		}
+
+		const constructor = sb.Utils.capitalize(type);
+		const specificData = await sb[constructor].get(value);
+		if (!specificData) {
+			return {
+				success: false,
+				reply: `Provided ${type} was not found!`
+			};
+		}
+		else {
+			names[type] = specificData.Name;
+			filterData[type] = specificData.ID;
+		}
+	}
+
+	if (!filterData.user && !filterData.command) {
 		return {
+			success: false,
 			reply: \"Specify both the user and the command to block!\"
 		};
 	}
-
-	const commandData = sb.Command.get(command);
-	if (!commandData) {
+	else if (filterData.channel && filterData.platform) {
 		return {
-			reply: \"Invalid command specified!\"
-		};
-	}
-	else if (!commandData.Blockable) {
-		return {
-			reply: \"You cannot block users from targetting you with this command!\"
-		};
-	}
-
-	const userData = await sb.User.get(user, true);
-	if (!userData) {
-		return {
-			reply: \"Invalid user specified!\"
+			success: false,
+			reply: \"Cannot specify both the channel and platform!\"
 		};
 	}
 
 	const filter = sb.Filter.data.find(i => (
-		i.User_Alias === context.user.ID
-		&& i.Blocked_User === userData.ID
-		&& i.Type === \"Block\"
-		&& i.Command === commandData.ID
+		i.Type === \"Block\"
+		&& i.Blocked_User === filterData.user
+		&& i.Channel === filterData.channel
+		&& i.Command === filterData.command
+		&& i.Platform === filterData.platform
+		&& i.User_Alias === context.user.ID
 	));
 
-	let prefix = \"\";
+	const { invocation } = context;
 	if (filter) {
-		prefix = (filter.Active) ? \"un\" : \"\";
+		if (filter.Issued_By !== context.user.ID) {
+			return {
+				success: false,
+				reply: \"This command filter has not been created by you, so you cannot modify it!\"
+			};
+		}
+		else if ((filter.Active && invocation === \"block\") || (!filter.Active && invocation === \"unblock\")) {
+			return {
+				success: false,
+				reply: `That combination is already ${invocation}ed!`
+			};
+		}
+
+		const suffix = (filter.Active) ? \"\" : \" again\";
 		await filter.toggle();
+
+		return {
+			reply: `Succesfully ${invocation}ed${suffix}!`
+		}
 	}
 	else {
-		await sb.Filter.create({
+		if (invocation === \"unblock\") {
+			return {
+				success: false,
+				reply: \"This combination has not been blocked yet, so it cannot be unblocked!\"
+			};
+		}
+
+		const filter = await sb.Filter.create({
 			Active: true,
-			User_Alias: context.user.ID,
-			Blocked_User: userData.ID,
 			Type: \"Block\",
-			Command: commandData.ID,
-			Channel: null,
-			Platform: null,
+			User_Alias: context.user.ID,
+			Blocked_User: filterData.user,
+			Command: filterData.command,
+			Channel: filterData.channel,
+			Platform: filterData.platform,
 			Issued_By: context.user.ID
 		});
-	}
 
-	const commandPrefix = sb.Config.get(\"COMMAND_PREFIX\");
-	return {
-		reply: `You ${prefix}blocked ${userData.Name} from using the command ${commandPrefix}${commandData.Name} on you.`
-	};
-	
+		let location = \"\";
+		if (filterData.channel) {
+			location = ` in channel ${names.channel}`;
+		}
+		else if (filterData.platform) {
+			location = ` in platform ${names.platform}`;
+		}
+
+		const commandPrefix = sb.Config.get(\"COMMAND_PREFIX\");
+		return {
+			reply: sb.Utils.tag.trim `
+				You blocked ${names.user}
+				from using the command ${commandPrefix}${names.command}
+				on you${location}
+				(ID ${filter.ID}).
+			`
+		};
+	}
 })'
