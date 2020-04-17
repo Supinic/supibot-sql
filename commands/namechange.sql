@@ -45,43 +45,9 @@ VALUES
 		0,
 		0,
 		NULL,
-		'(async function (context, user, index) {
-	if (!user) {
-		user = context.user.Name;
-	}
-
-	index = Number(index);
-	if (!Number.isFinite(index) || index < 0 || !index) {
-		index = 0;
-	}
-
-	const topData = await sb.Got.instances.CommanderRoot({
-		url: \"username_changelogs_search.php\",
-		searchParams: new sb.URLParams()
-			.set(\"format\", \"json\")
-			.set(\"q\", user)
-			.toString()
-	}).json();
-
-	const data = topData[index];
-	if (!data) {
-		const specificReply = (context.user.Name === user)
-			? \"No namechange found for you.\"
-			: \"No namechange found for that user.\";
-
-		return {
-			reply: (index === 0)
-				? specificReply
-				: \"Specified index is out of bounds.\"
-		};
-	}
-
-	const addendum = (index === 0 && topData.length !== 1)
-		? (topData.length - 1) + \" more change(s) found.\"
-		: \"\";
-	
+		'(async function nameChange () {
 	return {
-		reply:`Last name change for user ${data.userid}: ${data.username_old} -> ${data.username_new}. This was ${sb.Utils.timeDelta(new sb.Date(data.found_at))}. ${addendum}`
+		reply: \"Twitch Legal Team has forced CommanderRoot to remove this and many more APIs. https://twitch-tools.rootonline.de/twitch_legal_notice.php\"
 	};
 })',
 		NULL,
@@ -89,42 +55,8 @@ VALUES
 	)
 
 ON DUPLICATE KEY UPDATE
-	Code = '(async function (context, user, index) {
-	if (!user) {
-		user = context.user.Name;
-	}
-
-	index = Number(index);
-	if (!Number.isFinite(index) || index < 0 || !index) {
-		index = 0;
-	}
-
-	const topData = await sb.Got.instances.CommanderRoot({
-		url: \"username_changelogs_search.php\",
-		searchParams: new sb.URLParams()
-			.set(\"format\", \"json\")
-			.set(\"q\", user)
-			.toString()
-	}).json();
-
-	const data = topData[index];
-	if (!data) {
-		const specificReply = (context.user.Name === user)
-			? \"No namechange found for you.\"
-			: \"No namechange found for that user.\";
-
-		return {
-			reply: (index === 0)
-				? specificReply
-				: \"Specified index is out of bounds.\"
-		};
-	}
-
-	const addendum = (index === 0 && topData.length !== 1)
-		? (topData.length - 1) + \" more change(s) found.\"
-		: \"\";
-	
+	Code = '(async function nameChange () {
 	return {
-		reply:`Last name change for user ${data.userid}: ${data.username_old} -> ${data.username_new}. This was ${sb.Utils.timeDelta(new sb.Date(data.found_at))}. ${addendum}`
+		reply: \"Twitch Legal Team has forced CommanderRoot to remove this and many more APIs. https://twitch-tools.rootonline.de/twitch_legal_notice.php\"
 	};
 })'
