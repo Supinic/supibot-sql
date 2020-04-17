@@ -83,35 +83,41 @@ VALUES
 		case \"lab\":
 		case \"labyrinth\": {
 			const labType = (args[0] || \"\").toLowerCase();
-			const allowed = [\"normal\", \"cruel\", \"merciless\", \"uber\"];
-			if (!allowed.includes(labType)) {
+			const types = [\"uber\", \"merciless\", \"cruel\", \"normal\"];
+			if (!types.includes(labType)) {
 				return {
-					reply: \"Invalid labyrinth type provided! Supported types: \" + allowed.join(\", \")
+					reply: \"Invalid labyrinth type provided! Supported types: \" + types.join(\", \")
 				};
 			}
 
 			if (!this.data.labyrinth.date || this.data.labyrinth.date.day !== new sb.Date().day) {
 				this.data.labyrinth.date = new sb.Date().setTimezoneOffset(0);
-			}
+				this.data.details = {};
 
-			const dateString = this.data.labyrinth.date.format(\"Y-m-d\");
-			const url = `https://www.poelab.com/wp-content/labfiles/${dateString}_${labType}.jpg`;
-			if (!this.data.labyrinth[labType]) {
-				const { statusCode } = await sb.Got.instances.FakeAgent({
-					method: \"GET\",
-					throwHttpErrors: false,
-					url
-				});
+				const html = await sb.Got.instances.FakeAgent(\"https://poelab.com\").text();
+				const $ = sb.Utils.cheerio(html);
+				const links = Array.from($(\".redLink\").slice(0, 4).map((_, i) => i.attribs.href));
 
-				this.data.labyrinth[labType] = (statusCode === 200);
-				if (statusCode !== 200) {
-					return {
-						reply: `The ${labType} labyrinth has not been scouted yet!`
+				for (let i = 0; i < links.length; i++) {
+					const type = types[i];
+					this.data.details[type] = {
+						type,
+						link: links[i],
+						imageLink: null
 					};
 				}
 			}
+
+			const detail = this.data.details[labType];
+			if (detail.imageLink === null) {
+				const html = await sb.Got.instances.FakeAgent(detail.link).text();
+				const $ = sb.Utils.cheerio(html);
+
+				detail.imageLink = $(\"#notesImg\")[0].attribs.src;
+			}
+
 			return {
-				reply: `Today\'s ${labType} labyrinth map: ${url}`
+				reply: `Today\'s ${labType} labyrinth map: ${detail.imageLink}`
 			};
 		}
 
@@ -180,35 +186,41 @@ ON DUPLICATE KEY UPDATE
 		case \"lab\":
 		case \"labyrinth\": {
 			const labType = (args[0] || \"\").toLowerCase();
-			const allowed = [\"normal\", \"cruel\", \"merciless\", \"uber\"];
-			if (!allowed.includes(labType)) {
+			const types = [\"uber\", \"merciless\", \"cruel\", \"normal\"];
+			if (!types.includes(labType)) {
 				return {
-					reply: \"Invalid labyrinth type provided! Supported types: \" + allowed.join(\", \")
+					reply: \"Invalid labyrinth type provided! Supported types: \" + types.join(\", \")
 				};
 			}
 
 			if (!this.data.labyrinth.date || this.data.labyrinth.date.day !== new sb.Date().day) {
 				this.data.labyrinth.date = new sb.Date().setTimezoneOffset(0);
-			}
+				this.data.details = {};
 
-			const dateString = this.data.labyrinth.date.format(\"Y-m-d\");
-			const url = `https://www.poelab.com/wp-content/labfiles/${dateString}_${labType}.jpg`;
-			if (!this.data.labyrinth[labType]) {
-				const { statusCode } = await sb.Got.instances.FakeAgent({
-					method: \"GET\",
-					throwHttpErrors: false,
-					url
-				});
+				const html = await sb.Got.instances.FakeAgent(\"https://poelab.com\").text();
+				const $ = sb.Utils.cheerio(html);
+				const links = Array.from($(\".redLink\").slice(0, 4).map((_, i) => i.attribs.href));
 
-				this.data.labyrinth[labType] = (statusCode === 200);
-				if (statusCode !== 200) {
-					return {
-						reply: `The ${labType} labyrinth has not been scouted yet!`
+				for (let i = 0; i < links.length; i++) {
+					const type = types[i];
+					this.data.details[type] = {
+						type,
+						link: links[i],
+						imageLink: null
 					};
 				}
 			}
+
+			const detail = this.data.details[labType];
+			if (detail.imageLink === null) {
+				const html = await sb.Got.instances.FakeAgent(detail.link).text();
+				const $ = sb.Utils.cheerio(html);
+
+				detail.imageLink = $(\"#notesImg\")[0].attribs.src;
+			}
+
 			return {
-				reply: `Today\'s ${labType} labyrinth map: ${url}`
+				reply: `Today\'s ${labType} labyrinth map: ${detail.imageLink}`
 			};
 		}
 
