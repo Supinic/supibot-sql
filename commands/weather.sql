@@ -227,34 +227,27 @@ VALUES
 })',
 		NULL,
 		'(prefix) => [
-	\"Checks for current weather or forecast\",
+	\"Checks for current weather, or for hourly/daily/weekly forecast in a given location.\",
+	\"If you, or a given user have set their location with the <code>set</code> command, this command supports that.\",
 	\"\",
 
-	`<code>${prefix}weather New York</code>`,
-	\"(current weather in New York)\",
+	`<code>${prefix}weather (place)</code>`,
+	\"current weather in given location\",
 	\"\",
 
-	`<code>${prefix}weather New York hour+1</code>`,
-	\"(weather forecast in one hour)\",
+	`<code>${prefix}weather (place) <b>hour+X</b></code>`,
+	\"weather forecast in X hour(s) - accepts 1 through 48\",
 	\"\",
 
-	`<code>${prefix}weather New York day+1</code>`,
-	\"(weather forecast for tomorrow)\",
+	`<code>${prefix}weather (place) <b>day+X</b></code>`,
+	\"weather forecast in X day(s) - accepts 1 through 7\",
 	\"\",
 
-	`<code>${prefix}weather New York day+1</code>`,
-	\"(weather summary for the upcoming week)\",
+	`<code>${prefix}weather (place) <b>week</b></code>`,
+	\"weather summary for the upcoming week\",
 	
 	\"\",
 	\"=\".repeat(20),
-	\"\",
-
-	`<code>${prefix}weather set (location)</code>`,
-	\"Sets your own weather location. Its name will show up in chat.\",
-	\"\",
-
-	`<code>${prefix}weather set private (location)</code>`,
-	\"Sets your own weather location. Its name will NOT show up in chat.\",
 	\"\",
 
 	`<code>${prefix}weather</code>`,
@@ -263,6 +256,10 @@ VALUES
 
 	`<code>${prefix}weather @User</code>`,
 	\"If that user has set their own weather location, show its weather. The <code>@</code> symbol is mandatory.\",
+	\"\",	
+
+	`<code>${prefix}weather @User <b>(hour+X/day+X/week)</b></code>`,
+	\"Similar to above, shows the user\'s weather, but uses the hour/day/week specifier.\",
 ]'
 	)
 
