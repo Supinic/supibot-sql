@@ -200,31 +200,31 @@ VALUES
 		\"All following examples assume the command is executed by a channel owner.\",
 		\"\",
 
-		`<code>${prefix}ban user:test command:rl</code>`,
-		\"Bans user <b>test</b> from executing the command <b>rl</b> in the current channel.\",
+		`<code>${prefix}ban user:test command:remind</code>`,
+		\"Bans user <u>test</u> from executing the command <u>remind</u> in the current channel.\",
 		\"\",
 
-		`<code>${prefix}ban command:rl</code>`,
-		\"Bans everyone from executing the command <b>rl</b> in the current channel.\",
+		`<code>${prefix}ban command:remind</code>`,
+		\"Bans <u>everyone</u> from executing the command <u>remind</u> in the current channel.\",
 		\"\",
 
 		`<code>${prefix}ban user:test</code>`,
-		\"Bans user <b>test</b> from executing any commands in the current channel.\",
+		\"Bans user <u>test</u> from executing <u>any</u> commands in the current channel.\",
 		\"\",
 
 		\"---\",
 		\"\",
 
-		`<code>${prefix}unban user:test command:rl</code>`,
-		\"If banned before, user <b>test</b> will be unbanned from executing the command <b>rl</b> in the current channel.\",
+		`<code>${prefix}unban user:test command:remind</code>`,
+		\"If banned before, user <u>test</u> will be unbanned from executing the command <u>remind</u> in the current channel.\",
 		\"\",
 
-		`<code>${prefix}unban command:rl</code>`,
-		\"If banned before, everyone will be unbanned from executing the command <b>rl</b> in the current channel.\",
+		`<code>${prefix}unban command:remind</code>`,
+		\"If banned before, <u>everyone</u> will be unbanned from executing the command <u>remind</u> in the current channel.\",
 		\"\",
 
 		`<code>${prefix}unban user:test</code>`,
-		\"If banned before, user <b>test</b> will be unbanned from executing anu commands in the current channel.\"
+		\"If banned before, user <u>test</u> will be unbanned from executing <u>any</u> commands in the current channel.\"
 	];
 }'
 	)
