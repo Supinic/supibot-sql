@@ -314,29 +314,28 @@ VALUES
 		reply: sb.Utils.tag.trim `
 			${intro}
 			has ${cases.amount} confirmed ${cases.word}${(cases.plusAmount === null)
-			? \"\"
-			: ` (${cases.plusPrefix}${cases.plusAmount})`
-		},
+				? \"\"
+				: ` (${cases.plusPrefix}${cases.plusAmount})`
+			},
 
 			${deaths.amount} ${deaths.word}${(deaths.plusAmount === null)
-			? \"\"
-			: ` (${deaths.plusPrefix}${deaths.plusAmount})`
-		}
+				? \"\"
+				: ` (${deaths.plusPrefix}${deaths.plusAmount})`
+			}
 
 			and ${recoveries.amount} ${recoveries.word}.		
 
 			${(tests)
-			? `${group(tests)} tests have been performed so far.`
-			: \"\"
-		}
+				? `${group(tests)} tests have been performed so far.`
+				: \"\"
+			}
 
 			${(ratios.cpm)
 			? (ratios.tpm)
 				? `This is ${group(ratios.cpm)} cases, ${group(ratios.dpm)} deaths, and ${group(ratios.tpm)} tests per million.`
 				: `This is ${group(ratios.cpm)} cases, and ${group(ratios.dpm)} deaths per million.`
 			: \"\"
-		}	
-		`
+		}`
 	};
 })',
 		NULL,
@@ -537,28 +536,27 @@ ON DUPLICATE KEY UPDATE
 		reply: sb.Utils.tag.trim `
 			${intro}
 			has ${cases.amount} confirmed ${cases.word}${(cases.plusAmount === null)
-			? \"\"
-			: ` (${cases.plusPrefix}${cases.plusAmount})`
-		},
+				? \"\"
+				: ` (${cases.plusPrefix}${cases.plusAmount})`
+			},
 
 			${deaths.amount} ${deaths.word}${(deaths.plusAmount === null)
-			? \"\"
-			: ` (${deaths.plusPrefix}${deaths.plusAmount})`
-		}
+				? \"\"
+				: ` (${deaths.plusPrefix}${deaths.plusAmount})`
+			}
 
 			and ${recoveries.amount} ${recoveries.word}.		
 
 			${(tests)
-			? `${group(tests)} tests have been performed so far.`
-			: \"\"
-		}
+				? `${group(tests)} tests have been performed so far.`
+				: \"\"
+			}
 
 			${(ratios.cpm)
 			? (ratios.tpm)
 				? `This is ${group(ratios.cpm)} cases, ${group(ratios.dpm)} deaths, and ${group(ratios.tpm)} tests per million.`
 				: `This is ${group(ratios.cpm)} cases, and ${group(ratios.dpm)} deaths per million.`
 			: \"\"
-		}	
-		`
+		}`
 	};
 })'
