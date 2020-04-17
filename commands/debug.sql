@@ -59,9 +59,15 @@ VALUES
 	}
 
 	try {
-		const result = await script.runInNewContext({setTimeout, setInterval, require, context, sb}, { timeout: 2500 });
+		let result = await script.runInNewContext({setTimeout, setInterval, require, context, sb}, { timeout: 2500 });
 		if (typeof result !== \"undefined\") {
-			return { reply: String(result) };
+			if (result?.constructor === Object) {
+				result = JSON.stringify(result, null, 4);
+			}
+
+			return {
+				reply: String(result)
+			};
 		}
 		else {
 			return { 
@@ -114,9 +120,15 @@ ON DUPLICATE KEY UPDATE
 	}
 
 	try {
-		const result = await script.runInNewContext({setTimeout, setInterval, require, context, sb}, { timeout: 2500 });
+		let result = await script.runInNewContext({setTimeout, setInterval, require, context, sb}, { timeout: 2500 });
 		if (typeof result !== \"undefined\") {
-			return { reply: String(result) };
+			if (result?.constructor === Object) {
+				result = JSON.stringify(result, null, 4);
+			}
+
+			return {
+				reply: String(result)
+			};
 		}
 		else {
 			return { 
