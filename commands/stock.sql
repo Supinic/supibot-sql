@@ -45,35 +45,41 @@ VALUES
 		0,
 		0,
 		NULL,
-		'(async function stock (context, symbol) {
-	if (!symbol) {
+		'(async function stock (context, stockSymbol) {
+	if (!stockSymbol) {
 		return { reply: \"A stock symbol must be provided!\" };
 	}
 
-	const { \"Global Quote\": data } = await sb.Got({
+	const { \"Global Quote\": rawData } = await sb.Got({
 		retry: 0,
 		throwHttpErrors: false,
 		url: \"https://www.alphavantage.co/query\",
 		searchParams: new sb.URLParams()
 			.set(\"function\", \"GLOBAL_QUOTE\")
-			.set(\"symbol\", symbol)
+			.set(\"symbol\", stockSymbol)
 			.set(\"apikey\", sb.Config.get(\"API_ALPHA_AVANTAGE\"))
 			.toString()
 	}).json();
 
-	if (!data) {
-		return { 
+	if (!rawData) {
+		return {
 			reply: \"Stock symbol could not be found!\"
 		};
 	}
 
-	const identifier = (Number(data[\"10. change percent\"].replace(\"%\", \"\")) >= 0) ? \"+\" : \"\";
+	const data = {};
+	for (const rawKey of Object.keys(rawData)) {
+		const key = sb.Utils.convertCase(rawKey.replace(/^\\d+\\.\\s+/, \"\"), \"text\", \"camel\");
+		data[key] = rawData[rawKey];
+	}
+
+	const changeSymbol = (Number(data.changePercent.replace(\"%\", \"\")) >= 0) ? \"+\" : \"\";
 	return {
-		reply: [
-			\"Latest price for \" + data[\"01. symbol\"] + \":\",
-			\"$\" + data[\"05. price\"] + \", \",
-			\"change: \" + identifier + data[\"10. change percent\"]
-		].join(\" \")
+		reply: sb.Utils.tag.trim `
+			${data.symbol}: Current price: $${data.price}, change: ${changeSymbol}${data.changePercent}.
+			Close price: $${data.previousClose}.
+			Open price: $${data.open}.
+		`
 	};
 })',
 		NULL,
@@ -81,34 +87,40 @@ VALUES
 	)
 
 ON DUPLICATE KEY UPDATE
-	Code = '(async function stock (context, symbol) {
-	if (!symbol) {
+	Code = '(async function stock (context, stockSymbol) {
+	if (!stockSymbol) {
 		return { reply: \"A stock symbol must be provided!\" };
 	}
 
-	const { \"Global Quote\": data } = await sb.Got({
+	const { \"Global Quote\": rawData } = await sb.Got({
 		retry: 0,
 		throwHttpErrors: false,
 		url: \"https://www.alphavantage.co/query\",
 		searchParams: new sb.URLParams()
 			.set(\"function\", \"GLOBAL_QUOTE\")
-			.set(\"symbol\", symbol)
+			.set(\"symbol\", stockSymbol)
 			.set(\"apikey\", sb.Config.get(\"API_ALPHA_AVANTAGE\"))
 			.toString()
 	}).json();
 
-	if (!data) {
-		return { 
+	if (!rawData) {
+		return {
 			reply: \"Stock symbol could not be found!\"
 		};
 	}
 
-	const identifier = (Number(data[\"10. change percent\"].replace(\"%\", \"\")) >= 0) ? \"+\" : \"\";
+	const data = {};
+	for (const rawKey of Object.keys(rawData)) {
+		const key = sb.Utils.convertCase(rawKey.replace(/^\\d+\\.\\s+/, \"\"), \"text\", \"camel\");
+		data[key] = rawData[rawKey];
+	}
+
+	const changeSymbol = (Number(data.changePercent.replace(\"%\", \"\")) >= 0) ? \"+\" : \"\";
 	return {
-		reply: [
-			\"Latest price for \" + data[\"01. symbol\"] + \":\",
-			\"$\" + data[\"05. price\"] + \", \",
-			\"change: \" + identifier + data[\"10. change percent\"]
-		].join(\" \")
+		reply: sb.Utils.tag.trim `
+			${data.symbol}: Current price: $${data.price}, change: ${changeSymbol}${data.changePercent}.
+			Close price: $${data.previousClose}.
+			Open price: $${data.open}.
+		`
 	};
 })'
