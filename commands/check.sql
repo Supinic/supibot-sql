@@ -55,7 +55,7 @@ VALUES
 	switch (type.toLowerCase()) {
 		case \"afk\": {
 			if (!identifier) {
-				return { reply: \"Using my advanced computing algorithms I have concluded that your are not AFK! (no user provided)\" };
+				return { reply: \"Using my advanced quantum processing, I have concluded that you are not AFK! (no user provided)\" };
 			}
 
 			const targetUser = await sb.User.get(identifier, true);
@@ -364,7 +364,7 @@ ON DUPLICATE KEY UPDATE
 	switch (type.toLowerCase()) {
 		case \"afk\": {
 			if (!identifier) {
-				return { reply: \"Using my advanced computing algorithms I have concluded that your are not AFK! (no user provided)\" };
+				return { reply: \"Using my advanced quantum processing, I have concluded that you are not AFK! (no user provided)\" };
 			}
 
 			const targetUser = await sb.User.get(identifier, true);
