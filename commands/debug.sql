@@ -59,9 +59,11 @@ VALUES
 	}
 
 	try {
-		let result = await script.runInNewContext({setTimeout, setInterval, require, context, sb}, { timeout: 2500 });
+		const scriptContext = vm.createContext({context, sb});
+		const ForeignObject = vm.runInContext(\"Object\", scriptContext);
+		let result = await script.runInNewContext(scriptContext, { timeout: 2500 });
 		if (typeof result !== \"undefined\") {
-			if (result?.constructor === Object) {
+			if (result?.constructor === ForeignObject) {
 				result = JSON.stringify(result, null, 4);
 			}
 
@@ -120,9 +122,11 @@ ON DUPLICATE KEY UPDATE
 	}
 
 	try {
-		let result = await script.runInNewContext({setTimeout, setInterval, require, context, sb}, { timeout: 2500 });
+		const scriptContext = vm.createContext({context, sb});
+		const ForeignObject = vm.runInContext(\"Object\", scriptContext);
+		let result = await script.runInNewContext(scriptContext, { timeout: 2500 });
 		if (typeof result !== \"undefined\") {
-			if (result?.constructor === Object) {
+			if (result?.constructor === ForeignObject) {
 				result = JSON.stringify(result, null, 4);
 			}
 
