@@ -72,7 +72,8 @@ VALUES
 			if (args.length === 0) {
 				return {
 					success: false,
-					reply: \"No location provided!\"
+					reply: \"No location provided!\",
+					cooldown: 2500
 				};
 			}
 			
@@ -152,7 +153,8 @@ ON DUPLICATE KEY UPDATE
 			if (args.length === 0) {
 				return {
 					success: false,
-					reply: \"No location provided!\"
+					reply: \"No location provided!\",
+					cooldown: 2500
 				};
 			}
 			
