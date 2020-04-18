@@ -28,9 +28,9 @@ VALUES
 	(
 		76,
 		'subscribe',
-		'[\"sub\"]',
+		'[\"unsubscribe\"]',
 		NULL,
-		'Subscribe to a database changing event. Events: Suggestion (when their status changes) or Gachi (for new tracks in the list). Only one channel per event per user. Use the command again to unsubscribe.',
+		'Subscribe or unscribe to a database changing event. Currently supported: \"Suggestion\".',
 		5000,
 		0,
 		0,
@@ -45,84 +45,140 @@ VALUES
 		0,
 		0,
 		NULL,
-		'async (extra, event) => {
-	const allowedEvents = [\"gachi\", \"suggestion\"];
-	if (!event || !allowedEvents.includes(event.toLowerCase())) {
-		return { reply: \"Incorrect event provided!\" };
+		'(async function subscribe (context, type) {
+	const allowedTypes = [\"suggestion\"];
+	if (!type || !allowedTypes.includes(type.toLowerCase())) {
+		return {
+			success: false,
+			reply: \"Incorrect event provided!\"
+		};
 	}
 
-	event = sb.Utils.capitalize(event);
-	const check = (await sb.Query.getRecordset(rs => rs
-		.select(\"ID\")
-		.from(\"chat_data\", \"Table_Update_Notification\")
-		.where(\"User_Alias = %n\", extra.user.ID)
-		.where(\"Event = %s\", event)
-	))[0];
+	type = sb.Utils.capitalize(type);
 
-	let reply = null;
-	const row = await sb.Query.getRow(\"chat_data\", \"Table_Update_Notification\");
-	if (check) {
-		await row.load(check.ID);
-		reply = \"You are now unsubscribed from the event \\\"\" + event + \"\\\" in channel \" + sb.Channel.get(row.values.Channel).Name;
-		await row.delete();
+	const { invocation } = context;
+	const subscription = await sb.Query.getRecordset(rs => rs
+		.select(\"ID\", \"Active\")
+		.from(\"chat_data\", \"Event_Subscription\")
+		.where(\"User_Alias = %n\", context.user.ID)
+		.where(\"Type = %s\", type)
+		.limit(1)
+		.single()
+	);
 
-		sb.InternalRequest.removeSubscription(check.ID);
+	if (subscription) {
+		if (
+			(invocation === \"subscribe\" && subscription.Active)
+			|| (invocation === \"unsubscribe\" && !subscription.Active)
+		) {
+			const preposition = (invocation === \"subscribe\") ? \"to\" : \"from\";
+			return {
+				success: false,
+				reply: `You are already ${invocation}d ${preposition} this event!`
+			};
+		}
+
+		await sb.Query.getRecordUpdater(rs => rs
+			.update(\"chat_data\", \"Event_Subscription\")
+			.set(\"Active\", !subscription.Active)
+			.where(\"ID = %n\", subscription.ID)
+		);
+
+		const prefix = (invocation === \"subscribe\") ? \"re\" : \"\";
+		return {
+			reply: `Sucessfully ${prefix}${invocation}d.`
+		};
 	}
 	else {
+		if (invocation === \"unsubscribe\") {
+			return {
+				success: false,
+				reply: `You are not subscribed to this event, so you cannot unsubscribe!`
+			};
+		}
+
+		const row = await sb.Query.getRow(\"chat_data\", \"Event_Subscription\");
 		row.setValues({
-			User_Alias: extra.user.ID,
-			Channel: extra.channel.ID,
-			Event: event
+			User_Alias: context.user.ID,
+			Platform: context.platform.ID,
+			Type: type,
+			Active: true
 		});
 
 		await row.save();
-		sb.InternalRequest.addSubscription(row.valuesObject);
-
-		reply = \"You are now subscribed to the event \\\"\" + event + \"\\\" in this channel.\";
+		return {
+			reply: `Sucessfully subscribed. You will now receive private reminders.`
+		};
 	}
-
-	return { reply: reply };
-}',
+})',
 		NULL,
 		NULL
 	)
 
 ON DUPLICATE KEY UPDATE
-	Code = 'async (extra, event) => {
-	const allowedEvents = [\"gachi\", \"suggestion\"];
-	if (!event || !allowedEvents.includes(event.toLowerCase())) {
-		return { reply: \"Incorrect event provided!\" };
+	Code = '(async function subscribe (context, type) {
+	const allowedTypes = [\"suggestion\"];
+	if (!type || !allowedTypes.includes(type.toLowerCase())) {
+		return {
+			success: false,
+			reply: \"Incorrect event provided!\"
+		};
 	}
 
-	event = sb.Utils.capitalize(event);
-	const check = (await sb.Query.getRecordset(rs => rs
-		.select(\"ID\")
-		.from(\"chat_data\", \"Table_Update_Notification\")
-		.where(\"User_Alias = %n\", extra.user.ID)
-		.where(\"Event = %s\", event)
-	))[0];
+	type = sb.Utils.capitalize(type);
 
-	let reply = null;
-	const row = await sb.Query.getRow(\"chat_data\", \"Table_Update_Notification\");
-	if (check) {
-		await row.load(check.ID);
-		reply = \"You are now unsubscribed from the event \\\"\" + event + \"\\\" in channel \" + sb.Channel.get(row.values.Channel).Name;
-		await row.delete();
+	const { invocation } = context;
+	const subscription = await sb.Query.getRecordset(rs => rs
+		.select(\"ID\", \"Active\")
+		.from(\"chat_data\", \"Event_Subscription\")
+		.where(\"User_Alias = %n\", context.user.ID)
+		.where(\"Type = %s\", type)
+		.limit(1)
+		.single()
+	);
 
-		sb.InternalRequest.removeSubscription(check.ID);
+	if (subscription) {
+		if (
+			(invocation === \"subscribe\" && subscription.Active)
+			|| (invocation === \"unsubscribe\" && !subscription.Active)
+		) {
+			const preposition = (invocation === \"subscribe\") ? \"to\" : \"from\";
+			return {
+				success: false,
+				reply: `You are already ${invocation}d ${preposition} this event!`
+			};
+		}
+
+		await sb.Query.getRecordUpdater(rs => rs
+			.update(\"chat_data\", \"Event_Subscription\")
+			.set(\"Active\", !subscription.Active)
+			.where(\"ID = %n\", subscription.ID)
+		);
+
+		const prefix = (invocation === \"subscribe\") ? \"re\" : \"\";
+		return {
+			reply: `Sucessfully ${prefix}${invocation}d.`
+		};
 	}
 	else {
+		if (invocation === \"unsubscribe\") {
+			return {
+				success: false,
+				reply: `You are not subscribed to this event, so you cannot unsubscribe!`
+			};
+		}
+
+		const row = await sb.Query.getRow(\"chat_data\", \"Event_Subscription\");
 		row.setValues({
-			User_Alias: extra.user.ID,
-			Channel: extra.channel.ID,
-			Event: event
+			User_Alias: context.user.ID,
+			Platform: context.platform.ID,
+			Type: type,
+			Active: true
 		});
 
 		await row.save();
-		sb.InternalRequest.addSubscription(row.valuesObject);
-
-		reply = \"You are now subscribed to the event \\\"\" + event + \"\\\" in this channel.\";
+		return {
+			reply: `Sucessfully subscribed. You will now receive private reminders.`
+		};
 	}
-
-	return { reply: reply };
-}'
+})'
