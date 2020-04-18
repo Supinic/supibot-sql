@@ -68,7 +68,8 @@ VALUES
 			\"So my power just died right after the Ouija board answered “stop now” . Guess we are not playing that shit anymore.\",
 			\"ISP being a cunt today. Ill be back tomorrow\",
 			\"Twitch seems to be having some issues right now, pressed go live twice but no one can watch. will be back if they fix it\",
-			\"oh and @AdmiralBulldog I\'m coming for your ass ;)\"
+			\"oh and @AdmiralBulldog I\'m coming for your ass ;)\",
+			\"People malding over rerun streamers. Meanwhile I wake up thinking about playing a game for the first time in a long time. Stop obsessing over twitch and viewcounts and just play the game.\"
 		],
 		notes: [
 			`Source for the \"b.\" tweet: https://twitter.com/Forsen/status/1057549668253659136`,
