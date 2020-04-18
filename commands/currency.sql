@@ -85,7 +85,7 @@ VALUES
 
 	const currencySymbol = first.toUpperCase() + \"_\" + second.toUpperCase();
 	if (!(/[A-Z]{3}_[A-Z]{3}/.test(currencySymbol))) {
-		return { 
+		return {
 			reply: \"Invalid syntax! Consult the command\'s help for more info.\",
 			cooldown: 2500
 		};
@@ -110,9 +110,10 @@ VALUES
 		});
 
 		if (statusCode !== 200) {
-			return {
-				reply: \"API is down eShrug\"
-			};
+			throw new sb.errors.APIError({
+				statusCode,
+				apiName: \"CurrencyConverterAPI\"
+			});
 		}
 
 		if (typeof data[currencySymbol] === \"number\") {
@@ -200,7 +201,7 @@ ON DUPLICATE KEY UPDATE
 
 	const currencySymbol = first.toUpperCase() + \"_\" + second.toUpperCase();
 	if (!(/[A-Z]{3}_[A-Z]{3}/.test(currencySymbol))) {
-		return { 
+		return {
 			reply: \"Invalid syntax! Consult the command\'s help for more info.\",
 			cooldown: 2500
 		};
@@ -225,9 +226,10 @@ ON DUPLICATE KEY UPDATE
 		});
 
 		if (statusCode !== 200) {
-			return {
-				reply: \"API is down eShrug\"
-			};
+			throw new sb.errors.APIError({
+				statusCode,
+				apiName: \"CurrencyConverterAPI\"
+			});
 		}
 
 		if (typeof data[currencySymbol] === \"number\") {
