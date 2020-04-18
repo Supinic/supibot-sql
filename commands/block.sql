@@ -75,8 +75,8 @@ VALUES
 			continue;
 		}
 
-		const constructor = sb.Utils.capitalize(type);
-		const specificData = await sb[constructor].get(value);
+		const module = sb[sb.Utils.capitalize(type)];
+		const specificData = await module.get(value);
 		if (!specificData) {
 			return {
 				success: false,
@@ -84,6 +84,13 @@ VALUES
 			};
 		}
 		else {
+			if (module === sb.Command && !specificData.Blockable) {
+				return {
+					success: false,
+					reply: `You cannot block people from this command!`
+				};
+			}
+
 			names[type] = specificData.Name;
 			filterData[type] = specificData.ID;
 		}
@@ -206,8 +213,8 @@ ON DUPLICATE KEY UPDATE
 			continue;
 		}
 
-		const constructor = sb.Utils.capitalize(type);
-		const specificData = await sb[constructor].get(value);
+		const module = sb[sb.Utils.capitalize(type)];
+		const specificData = await module.get(value);
 		if (!specificData) {
 			return {
 				success: false,
@@ -215,6 +222,13 @@ ON DUPLICATE KEY UPDATE
 			};
 		}
 		else {
+			if (module === sb.Command && !specificData.Blockable) {
+				return {
+					success: false,
+					reply: `You cannot block people from this command!`
+				};
+			}
+
 			names[type] = specificData.Name;
 			filterData[type] = specificData.ID;
 		}
