@@ -47,21 +47,48 @@ VALUES
 		NULL,
 		'(async function botSubs () {
 	const controller = sb.Platform.get(\"twitch\").controller;
-	const sampleEmotes = Object.entries(controller.availableEmotes)
- 		.filter(([id]) => Number(id) > 0)
-		.map(([id, emotes]) => sb.Utils.randArray(emotes).id);	
-	
-	const channelData = await sb.Got({
-		url: \"https://api.twitchemotes.com/api/v4/emotes\",
-		searchParams: \"id=\" + sampleEmotes.join(\",\")
-	}).json();
+	const emoteSets = controller.availableEmoteSets;
 
-	const channelList = channelData.filter(i => i.channel_name).sort((a, b) => a.channel_name.localeCompare(b.channel_name));
-	const channels = channelList.map(i => i.channel_name).join(\", \");
-	const emotes = channelList.map(i => i.code).join(\" \");
+	if (!this.data.emoteSets || emoteSets.join(\",\") === this.data.emoteSets.join(\",\")) {
+		const { body, statusCode } = await sb.Got({
+			throwHttpErrors: false,
+			url: \"https://api.twitchemotes.com/api/v4/sets\",
+			searchParams: \"id=\" + emoteSets.join(\",\"),
+			responseType: \"json\"
+		});
 
+		if (statusCode !== 200) {
+			throw new sb.errors.APIError({
+				statusCode,
+				apiName: \"TwitchEmotesAPI\"
+			});
+		}
+
+		this.data.emoteSets = body.map(i => i.set_id).sort();
+		this.data.emoteSetsData = body;
+	}
+
+	const result = [];
+	for (const set of controller.availableEmoteSets) {
+		const setData = this.data.emoteSetsData.find(i => i.set_id === set);
+		const emoteList = controller.availableEmotes[set];
+		if (!setData || setData.channel_name === \"Twitch\") {
+			continue;
+		}
+
+		const tier = (setData.tier !== 1) ? ` (T${setData.tier})` : \"\";
+		result.push({
+			channel: `${setData.channel_name}${tier}`,
+			emote: sb.Utils.randArray(emoteList).code
+		});
+	}
+
+	result.sort((a, b) => a.channel.localeCompare(b.channel));
+
+	const channels = result.map(i => i.channel);
+	const emotes = result.map(i => i.emote);
 	return {
-		reply: \"Supibot is currently subbed to: \" + channels + \" \" + emotes
+		reply: \"Supibot is currently subbed to: \" + channels.join(\", \") + \" \" + emotes.join(\" \")
 	};
 })',
 		NULL,
@@ -71,20 +98,47 @@ VALUES
 ON DUPLICATE KEY UPDATE
 	Code = '(async function botSubs () {
 	const controller = sb.Platform.get(\"twitch\").controller;
-	const sampleEmotes = Object.entries(controller.availableEmotes)
- 		.filter(([id]) => Number(id) > 0)
-		.map(([id, emotes]) => sb.Utils.randArray(emotes).id);	
-	
-	const channelData = await sb.Got({
-		url: \"https://api.twitchemotes.com/api/v4/emotes\",
-		searchParams: \"id=\" + sampleEmotes.join(\",\")
-	}).json();
+	const emoteSets = controller.availableEmoteSets;
 
-	const channelList = channelData.filter(i => i.channel_name).sort((a, b) => a.channel_name.localeCompare(b.channel_name));
-	const channels = channelList.map(i => i.channel_name).join(\", \");
-	const emotes = channelList.map(i => i.code).join(\" \");
+	if (!this.data.emoteSets || emoteSets.join(\",\") === this.data.emoteSets.join(\",\")) {
+		const { body, statusCode } = await sb.Got({
+			throwHttpErrors: false,
+			url: \"https://api.twitchemotes.com/api/v4/sets\",
+			searchParams: \"id=\" + emoteSets.join(\",\"),
+			responseType: \"json\"
+		});
 
+		if (statusCode !== 200) {
+			throw new sb.errors.APIError({
+				statusCode,
+				apiName: \"TwitchEmotesAPI\"
+			});
+		}
+
+		this.data.emoteSets = body.map(i => i.set_id).sort();
+		this.data.emoteSetsData = body;
+	}
+
+	const result = [];
+	for (const set of controller.availableEmoteSets) {
+		const setData = this.data.emoteSetsData.find(i => i.set_id === set);
+		const emoteList = controller.availableEmotes[set];
+		if (!setData || setData.channel_name === \"Twitch\") {
+			continue;
+		}
+
+		const tier = (setData.tier !== 1) ? ` (T${setData.tier})` : \"\";
+		result.push({
+			channel: `${setData.channel_name}${tier}`,
+			emote: sb.Utils.randArray(emoteList).code
+		});
+	}
+
+	result.sort((a, b) => a.channel.localeCompare(b.channel));
+
+	const channels = result.map(i => i.channel);
+	const emotes = result.map(i => i.emote);
 	return {
-		reply: \"Supibot is currently subbed to: \" + channels + \" \" + emotes
+		reply: \"Supibot is currently subbed to: \" + channels.join(\", \") + \" \" + emotes.join(\" \")
 	};
 })'
