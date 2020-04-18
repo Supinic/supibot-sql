@@ -28,7 +28,7 @@ VALUES
 	(
 		72,
 		'optout',
-		NULL,
+		'[\"unoptout\"]',
 		NULL,
 		'Makes it so you cannot be the target of a command. The command will not be executed. You can also append a message to explain why you opted out.',
 		5000,
@@ -45,65 +45,144 @@ VALUES
 		0,
 		0,
 		NULL,
-		'(async function optOut (context, command, ...args) {
-	if (!command) {
-		return { reply: \"No command provided!\" };
+		'(async function optOut (context, ...args) {
+	let deliberateGlobalOptout = false;
+	const types = [\"command\", \"platform\", \"channel\"];
+	const names = {};
+	const filterData = {
+		command: null,
+		platform: null,
+		channel: null
+	};
+
+	if (args[0] === \"all\") { // Opt out from everything
+		args.splice(0, 1);
+		deliberateGlobalOptout = true;
+	}
+	else if (args.every(i => !i.includes(\":\"))) { // Simple mode
+		[filterData.command] = args;
+		args.splice(0, 1);
+	}
+	else { // Advanced Mode
+		for (let i = args.length - 1; i >= 0; i--) {
+			const token = args[i];
+			const [type, value] = token.split(\":\");
+			if (type && value && types.includes(type)) {
+				filterData[type] = value;
+				args.splice(i, 1);
+			}
+		}
 	}
 
-	if (command === \"all\") {
-		context.user.Data.universalOptOut = !context.user.Data.universalOptOut;
-		await context.user.saveProperty(\"Data\", context.user.Data);
+	for (const [type, value] of Object.entries(filterData)) {
+		if (value === null) {
+			continue;
+		}
 
-		return { reply: \"Your universal opt-out flag is now set to \" + context.user.Data.universalOptOut };
+		const module = sb[sb.Utils.capitalize(type)];
+		const specificData = await module.get(value);
+		if (!specificData) {
+			return {
+				success: false,
+				reply: `Provided ${type} was not found!`
+			};
+		}
+		else {
+			if (module === sb.Command && !specificData.Opt_Outable) {
+				return {
+					success: false,
+					reply: `You cannot opt out from this command!`
+				};
+			}
+
+			names[type] = specificData.Name;
+			filterData[type] = specificData.ID;
+		}
 	}
 
-	command = sb.Command.get(command);
-	if (!command) {
-		return { reply: \"Invalid command provided!\" };
+	if (!deliberateGlobalOptout && filterData.command === null) {
+		return {
+			success: false,
+			reply: `A command (or \"all\" to optout globally) must be provided!`
+		};
 	}
-	else if (!command.Opt_Outable) {
-		return { reply: \"You cannot opt out from that command!\" };
-	}
-	
-	const customReason = args.join(\" \") || null;
-	const existingFilter = sb.Filter.data.find(i => (
-		i.User_Alias === context.user.ID
-		&& i.Command === command.ID
-		&& i.Type === \"Opt-out\"
-	));
-
-	const customLimit = sb.Config.get(\"CUSTOM_OPTOUT_LIMIT\");
-	if (customReason && customReason.length > customLimit) {
-		return { 
-			reply: `Custom opt-out message is too long! (${customReason.length}/${customLimit})`
+	else if (filterData.channel && filterData.platform) {
+		return {
+			success: false,
+			reply: \"Cannot specify both the channel and platform!\"
 		};
 	}
 
-	const paddedReason = (customReason)
-		? (\"Opted out: \" + customReason)
-		: null;
+	const filter = sb.Filter.data.find(i => (
+		i.Type === \"Opt-out\"
+		&& i.Channel === filterData.channel
+		&& i.Command === filterData.command
+		&& i.Platform === filterData.platform
+		&& i.User_Alias === context.user.ID
+	));
 
-	if (!existingFilter) {
+	const { invocation } = context;
+	if (filter) {
+		if (filter.Issued_By !== context.user.ID) {
+			return {
+				success: false,
+				reply: \"This command filter has not been created by you, so you cannot modify it!\"
+			};
+		}
+		else if ((filter.Active && invocation === \"optout\") || (!filter.Active && invocation === \"unoptout\")) {
+			return {
+				success: false,
+				reply: `You are already ${invocation}ed from that combination!`
+			};
+		}
+
+		const suffix = (filter.Active) ? \"\" : \" again\";
+		await filter.toggle();
+
+		return {
+			reply: `Succesfully ${invocation}ed${suffix}!`
+		}
+	}
+	else {
+		if (invocation === \"unoptout\") {
+			return {
+				success: false,
+				reply: \"You haven\'t opted out from this combination yet, so it cannot be reversed!\"
+			};
+		}
+
 		const filter = await sb.Filter.create({
-			User_Alias: context.user.ID,
-			Command: command.ID,
+			Active: true,
 			Type: \"Opt-out\",
-			Response: \"Auto\",
+			User_Alias: context.user.ID,
+			Command: filterData.command,
+			Channel: filterData.channel,
+			Platform: filterData.platform,
 			Issued_By: context.user.ID
 		});
 
-		await filter.setReason(paddedReason);		
+		const commandPrefix = sb.Config.get(\"COMMAND_PREFIX\");
+		let commandString = `command ${commandPrefix}${names.command}`;
 
-		return { reply: \"You are now opted out from command \" + sb.Master.commandPrefix + command.Name + \".\" };
-	}
-	else {
-		const filter = sb.Filter.get(existingFilter.ID);
-		const verb = (!filter.Active) ? \"again\" : \"no longer\";
+		if (filterData.command === null) {
+			commandString = \"all commands\";
+		}
 
-		await filter.toggle();
-		await filter.setReason(paddedReason);
+		let location = \"\";
+		if (filterData.channel) {
+			location = ` in channel ${names.channel}`;
+		}
+		else if (filterData.platform) {
+			location = ` in platform ${names.platform}`;
+		}
 
-		return { reply: \"You are now \" + verb + \" opted out from command \" + sb.Master.commandPrefix + command.Name + \".\" };
+		return {
+			reply: sb.Utils.tag.trim `
+				You opted out from ${commandString}
+				${location}
+				(ID ${filter.ID}).
+			`
+		};
 	}
 })',
 		NULL,
@@ -120,64 +199,143 @@ VALUES
 	)
 
 ON DUPLICATE KEY UPDATE
-	Code = '(async function optOut (context, command, ...args) {
-	if (!command) {
-		return { reply: \"No command provided!\" };
+	Code = '(async function optOut (context, ...args) {
+	let deliberateGlobalOptout = false;
+	const types = [\"command\", \"platform\", \"channel\"];
+	const names = {};
+	const filterData = {
+		command: null,
+		platform: null,
+		channel: null
+	};
+
+	if (args[0] === \"all\") { // Opt out from everything
+		args.splice(0, 1);
+		deliberateGlobalOptout = true;
+	}
+	else if (args.every(i => !i.includes(\":\"))) { // Simple mode
+		[filterData.command] = args;
+		args.splice(0, 1);
+	}
+	else { // Advanced Mode
+		for (let i = args.length - 1; i >= 0; i--) {
+			const token = args[i];
+			const [type, value] = token.split(\":\");
+			if (type && value && types.includes(type)) {
+				filterData[type] = value;
+				args.splice(i, 1);
+			}
+		}
 	}
 
-	if (command === \"all\") {
-		context.user.Data.universalOptOut = !context.user.Data.universalOptOut;
-		await context.user.saveProperty(\"Data\", context.user.Data);
+	for (const [type, value] of Object.entries(filterData)) {
+		if (value === null) {
+			continue;
+		}
 
-		return { reply: \"Your universal opt-out flag is now set to \" + context.user.Data.universalOptOut };
+		const module = sb[sb.Utils.capitalize(type)];
+		const specificData = await module.get(value);
+		if (!specificData) {
+			return {
+				success: false,
+				reply: `Provided ${type} was not found!`
+			};
+		}
+		else {
+			if (module === sb.Command && !specificData.Opt_Outable) {
+				return {
+					success: false,
+					reply: `You cannot opt out from this command!`
+				};
+			}
+
+			names[type] = specificData.Name;
+			filterData[type] = specificData.ID;
+		}
 	}
 
-	command = sb.Command.get(command);
-	if (!command) {
-		return { reply: \"Invalid command provided!\" };
+	if (!deliberateGlobalOptout && filterData.command === null) {
+		return {
+			success: false,
+			reply: `A command (or \"all\" to optout globally) must be provided!`
+		};
 	}
-	else if (!command.Opt_Outable) {
-		return { reply: \"You cannot opt out from that command!\" };
-	}
-	
-	const customReason = args.join(\" \") || null;
-	const existingFilter = sb.Filter.data.find(i => (
-		i.User_Alias === context.user.ID
-		&& i.Command === command.ID
-		&& i.Type === \"Opt-out\"
-	));
-
-	const customLimit = sb.Config.get(\"CUSTOM_OPTOUT_LIMIT\");
-	if (customReason && customReason.length > customLimit) {
-		return { 
-			reply: `Custom opt-out message is too long! (${customReason.length}/${customLimit})`
+	else if (filterData.channel && filterData.platform) {
+		return {
+			success: false,
+			reply: \"Cannot specify both the channel and platform!\"
 		};
 	}
 
-	const paddedReason = (customReason)
-		? (\"Opted out: \" + customReason)
-		: null;
+	const filter = sb.Filter.data.find(i => (
+		i.Type === \"Opt-out\"
+		&& i.Channel === filterData.channel
+		&& i.Command === filterData.command
+		&& i.Platform === filterData.platform
+		&& i.User_Alias === context.user.ID
+	));
 
-	if (!existingFilter) {
+	const { invocation } = context;
+	if (filter) {
+		if (filter.Issued_By !== context.user.ID) {
+			return {
+				success: false,
+				reply: \"This command filter has not been created by you, so you cannot modify it!\"
+			};
+		}
+		else if ((filter.Active && invocation === \"optout\") || (!filter.Active && invocation === \"unoptout\")) {
+			return {
+				success: false,
+				reply: `You are already ${invocation}ed from that combination!`
+			};
+		}
+
+		const suffix = (filter.Active) ? \"\" : \" again\";
+		await filter.toggle();
+
+		return {
+			reply: `Succesfully ${invocation}ed${suffix}!`
+		}
+	}
+	else {
+		if (invocation === \"unoptout\") {
+			return {
+				success: false,
+				reply: \"You haven\'t opted out from this combination yet, so it cannot be reversed!\"
+			};
+		}
+
 		const filter = await sb.Filter.create({
-			User_Alias: context.user.ID,
-			Command: command.ID,
+			Active: true,
 			Type: \"Opt-out\",
-			Response: \"Auto\",
+			User_Alias: context.user.ID,
+			Command: filterData.command,
+			Channel: filterData.channel,
+			Platform: filterData.platform,
 			Issued_By: context.user.ID
 		});
 
-		await filter.setReason(paddedReason);		
+		const commandPrefix = sb.Config.get(\"COMMAND_PREFIX\");
+		let commandString = `command ${commandPrefix}${names.command}`;
 
-		return { reply: \"You are now opted out from command \" + sb.Master.commandPrefix + command.Name + \".\" };
-	}
-	else {
-		const filter = sb.Filter.get(existingFilter.ID);
-		const verb = (!filter.Active) ? \"again\" : \"no longer\";
+		if (filterData.command === null) {
+			commandString = \"all commands\";
+		}
 
-		await filter.toggle();
-		await filter.setReason(paddedReason);
+		let location = \"\";
+		if (filterData.channel) {
+			location = ` in channel ${names.channel}`;
+		}
+		else if (filterData.platform) {
+			location = ` in platform ${names.platform}`;
+		}
 
-		return { reply: \"You are now \" + verb + \" opted out from command \" + sb.Master.commandPrefix + command.Name + \".\" };
+		return {
+			reply: sb.Utils.tag.trim `
+				You opted out from ${commandString}
+				${location}
+				(ID ${filter.ID}).
+			`
+		};
 	}
 })'
