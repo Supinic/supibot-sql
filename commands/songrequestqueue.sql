@@ -76,7 +76,7 @@ VALUES
 
 	if (data.Length === null) {
 		return {
-			reply: \"No songs are currently queued. Check history here: https://supinic.com/stream/video-queue\"
+			reply: \"No songs are currently queued. Check history here: https://supinic.com/stream/song-request/history\"
 		};
 	}
 
@@ -99,7 +99,7 @@ VALUES
 	const delta = sb.Utils.timeDelta(sb.Date.now() + length * 1000, true);
 
 	return {
-		reply: `There are ${data.Count} videos in the queue, with a total length of ${delta}. Check it out here: https://supinic.com/stream/video-queue`
+		reply: `There are ${data.Count} videos in the queue, with a total length of ${delta}. Check it out here: https://supinic.com/stream/song-request/queue`
 	}
 })',
 		NULL,
@@ -136,7 +136,7 @@ ON DUPLICATE KEY UPDATE
 
 	if (data.Length === null) {
 		return {
-			reply: \"No songs are currently queued. Check history here: https://supinic.com/stream/video-queue\"
+			reply: \"No songs are currently queued. Check history here: https://supinic.com/stream/song-request/history\"
 		};
 	}
 
@@ -159,6 +159,6 @@ ON DUPLICATE KEY UPDATE
 	const delta = sb.Utils.timeDelta(sb.Date.now() + length * 1000, true);
 
 	return {
-		reply: `There are ${data.Count} videos in the queue, with a total length of ${delta}. Check it out here: https://supinic.com/stream/video-queue`
+		reply: `There are ${data.Count} videos in the queue, with a total length of ${delta}. Check it out here: https://supinic.com/stream/song-request/queue`
 	}
 })'
