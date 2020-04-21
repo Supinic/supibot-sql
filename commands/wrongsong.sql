@@ -30,7 +30,7 @@ VALUES
 		'wrongsong',
 		'[\"ws\"]',
 		NULL,
-		'If you have requested at least one song, this command is going to skip the first one. Use when you accidentally requested something you didn\'t mean to.',
+		'If you have at least one song playing or in the queue, this command will skip the first one. You can also add an ID to skip a specific song.',
 		5000,
 		0,
 		0,
@@ -106,7 +106,20 @@ VALUES
 	};
 })',
 		NULL,
-		NULL
+		'async (prefix) => {
+	return [
+		\"Skips your current or queued song.\",
+		\"Can add an ID to skip/delete a specific song in the queue, queued by you only.\",
+		\"\",
+
+		`<code>${prefix}ws</code>`,
+		\"Skips the earliest request you have playing or in the queue.\",
+		\"\",
+
+		`<code>${prefix}ws (ID)</code>`,
+		\"Skips your request with given ID. Fails if it\'s not your request.\",
+	];
+}'
 	)
 
 ON DUPLICATE KEY UPDATE
