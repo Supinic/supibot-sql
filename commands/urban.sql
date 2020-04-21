@@ -48,10 +48,9 @@ VALUES
 		'(async function urban (context, ...args) {
 	if (args.length === 0) {
 		return {
+			success: false,
 			reply: \"No term has been provided!\",
-			cooldown: {
-				length: 2500
-			}
+			cooldown: 2500
 		};
 	}
 
@@ -70,14 +69,21 @@ VALUES
 			.set(\"term\", args.join(\" \"))
 			.toString()
 	}).json();
-	
+
 	if (!data.list || data.result_type === \"no_results\") {
-		return { reply: \"No results found!\" };
+		return {
+			success: false,
+			reply: \"No results found!\"
+		};
 	}
 
 	const items = data.list.filter(i => i.word.toLowerCase() === args.join(\" \").toLowerCase());
-	if (items.length === 0) {
-		return { reply: \"There is no definition with that index!\" };
+	const item = items[index ?? 0];
+	if (!item) {
+		return { 
+			success: false,
+			reply: `No definition with index ${index ?? 0}! Maximum available: ${items.length - 1}.`
+		};
 	}
 
 	let extra = \"\";
@@ -85,14 +91,14 @@ VALUES
 		extra = `(${items.length - 1} extra definitons)`
 	}
 
-	const item = items[index ?? 0];
 	const thumbs = \"(+\" + item.thumbs_up + \"/-\" + item.thumbs_down + \")\";
 	const example = (item.example)
-		? (\" - Example: \" + item.example)
+		? ` - Example: ${item.example}`
 		: \"\";
+	const content = (item.definition + example).replace(/[\\][]/g, \"\");
 
 	return {
-		reply: extra + \" \" + thumbs + \" \" + (item.definition + example).replace(/[\\][]/g, \"\")
+		reply: `${extra} ${thumbs} ${content}` 
 	};
 })',
 		NULL,
@@ -103,10 +109,9 @@ ON DUPLICATE KEY UPDATE
 	Code = '(async function urban (context, ...args) {
 	if (args.length === 0) {
 		return {
+			success: false,
 			reply: \"No term has been provided!\",
-			cooldown: {
-				length: 2500
-			}
+			cooldown: 2500
 		};
 	}
 
@@ -125,14 +130,21 @@ ON DUPLICATE KEY UPDATE
 			.set(\"term\", args.join(\" \"))
 			.toString()
 	}).json();
-	
+
 	if (!data.list || data.result_type === \"no_results\") {
-		return { reply: \"No results found!\" };
+		return {
+			success: false,
+			reply: \"No results found!\"
+		};
 	}
 
 	const items = data.list.filter(i => i.word.toLowerCase() === args.join(\" \").toLowerCase());
-	if (items.length === 0) {
-		return { reply: \"There is no definition with that index!\" };
+	const item = items[index ?? 0];
+	if (!item) {
+		return { 
+			success: false,
+			reply: `No definition with index ${index ?? 0}! Maximum available: ${items.length - 1}.`
+		};
 	}
 
 	let extra = \"\";
@@ -140,13 +152,13 @@ ON DUPLICATE KEY UPDATE
 		extra = `(${items.length - 1} extra definitons)`
 	}
 
-	const item = items[index ?? 0];
 	const thumbs = \"(+\" + item.thumbs_up + \"/-\" + item.thumbs_down + \")\";
 	const example = (item.example)
-		? (\" - Example: \" + item.example)
+		? ` - Example: ${item.example}`
 		: \"\";
+	const content = (item.definition + example).replace(/[\\][]/g, \"\");
 
 	return {
-		reply: extra + \" \" + thumbs + \" \" + (item.definition + example).replace(/[\\][]/g, \"\")
+		reply: `${extra} ${thumbs} ${content}` 
 	};
 })'
