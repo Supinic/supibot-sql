@@ -70,11 +70,14 @@ VALUES
 	else if (/^[A-Z]{2}$/i.test(rest[0])) {
 		params.unset(\"language\").set(\"country\", rest.shift().toLowerCase());
 	}
+	else if (/source:\\w+/i.test(rest[0])) {
+		params.unset(\"language\").set(\"sources\", rest.shift().split(\":\")[1]);
+	}
 
 	if (rest.length !== 0) {
 		params.set(\"q\", rest.join(\" \"));
 	}
-	else if (!params.has(\"country\")) {
+	else if (!params.has(\"country\") && !params.has(\"sources\")) {
 		params.set(\"country\", \"US\");
 	}
 
@@ -108,6 +111,13 @@ VALUES
 })',
 		NULL,
 		'async (prefix) => {
+	const { sources } = await sb.Got({
+		url: \"https://newsapi.org/v2/sources\",
+		headers: {
+			Authorization: \"Bearer \" + sb.Config.get(\"API_NEWSAPI_ORG\")
+		}
+	}).json();
+
 	const extraNews = (await sb.Query.getRecordset(rs => rs
 		.select(\"Code\", \"Language\", \"URL\", \"Helpers\")
 		.from(\"data\", \"Extra_News\")
@@ -133,6 +143,10 @@ VALUES
 		\"(country-specific news)\",
 		\"\",
 
+		`<code>${prefix}news source:(source)</code>`,
+		\"news from your selected news source. check the list of sources below.\",
+		\"\",
+
 		`<code>${prefix}news (two-letter country code) (text to search for)</code>`,
 		\"(country-specific news that contain the text you searched for)\",
 		\"\",
@@ -142,7 +156,11 @@ VALUES
 		\"\",
 
 		\"The following are special codes. Those were often \'helped\' by people.\",
-		\"<table><thead><th>Code</th><th>Language</th><th>Helpers</th></thead>\" + extraNews + \"</table>\"
+		\"<table><thead><th>Code</th><th>Language</th><th>Helpers</th></thead>\" + extraNews + \"</table>\",
+		\"\",
+
+		\"List of usable sources:\",
+		\"<ul>\" + sources.map(i => `<li><a href=\"${i.url}\">${i.id}</a></li>`).join(\"\") + \"</ul>\"
 	];
 }'
 	)
@@ -173,11 +191,14 @@ ON DUPLICATE KEY UPDATE
 	else if (/^[A-Z]{2}$/i.test(rest[0])) {
 		params.unset(\"language\").set(\"country\", rest.shift().toLowerCase());
 	}
+	else if (/source:\\w+/i.test(rest[0])) {
+		params.unset(\"language\").set(\"sources\", rest.shift().split(\":\")[1]);
+	}
 
 	if (rest.length !== 0) {
 		params.set(\"q\", rest.join(\" \"));
 	}
-	else if (!params.has(\"country\")) {
+	else if (!params.has(\"country\") && !params.has(\"sources\")) {
 		params.set(\"country\", \"US\");
 	}
 
