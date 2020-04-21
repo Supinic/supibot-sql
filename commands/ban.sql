@@ -90,7 +90,7 @@ VALUES
 		const value = token.split(\":\")[1];
 
 		if (token.includes(\"channel:\")) {
-			if (level === \"admin\") {
+			if (level === \"administrator\") {
 				const channelData = sb.Channel.get(value);
 				if (!channelData) {
 					return {
@@ -275,7 +275,7 @@ ON DUPLICATE KEY UPDATE
 		const value = token.split(\":\")[1];
 
 		if (token.includes(\"channel:\")) {
-			if (level === \"admin\") {
+			if (level === \"administrator\") {
 				const channelData = sb.Channel.get(value);
 				if (!channelData) {
 					return {
