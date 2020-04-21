@@ -91,6 +91,7 @@ VALUES
 
 	let url = args.join(\" \");
 	const parsedURL = require(\"url\").parse(url);
+	let data = null;
 
 	if (parsedURL.host === \"supinic.com\" && parsedURL.path.includes(\"/track/detail\")) {
 		const videoTypePrefix = sb.Config.get(\"VIDEO_TYPE_REPLACE_PREFIX\");
@@ -154,45 +155,30 @@ VALUES
 		}
 	}
 	else if (parsedURL.host) {
-		const data = await sb.Got({
-			url,
-			method: \"HEAD\",
-			throwHttpErrors: false
-		});
-
-		let passed = false;
-		if (data.statusCode === 200) {
-			const type = data.headers[\"content-type\"];
-			passed = type.startsWith(\"audio/\") || type.startsWith(\"video/\");
-		}
-		else {
-			passed = url.endsWith(\".mp3\") || url.endsWith(\".mp4\") || url.endsWith(\".ogg\");
-		}
-
-		if (passed) {
-			try {
-				const id = await sb.VideoLANConnector.add(url, context.user.ID, {name: url});
-				return {
-					reply: \"Your custom link request has been added to the queue with ID \" + id
-				};
-			}
-			catch (e) {
-				console.error(e);
-				return {
-					reply: \"VLC is not responding (probably not running or sr\'s are off), no link has been added!\"
-				};
-			}
+		const meta = await sb.Utils.getMediaFileData(url);
+		if (meta?.duration) {
+			const name = parsedURL.path.split(\"/\").pop();
+			data = {
+				name,
+				ID: url,
+				link: url,
+				duration: meta.duration,
+				videoType: { ID: 19 }
+			};
 		}
 	}
 
-	let data = null;
-	try {
-		data = await sb.Utils.linkParser.fetchData(url);
-	}
-	catch {
-		data = null;
+	// If no data has been filled, attempt to parse input as a link.
+	if (!data) {
+		try {
+			data = await sb.Utils.linkParser.fetchData(url);
+		}
+		catch {
+			data = null;
+		}
 	}
 
+	// If no data have been extracted from a link, attempt a search query on Youtube/Vimeo
 	if (!data) {
 		let lookup = null;
 		if (type === \"vimeo\") {
@@ -241,10 +227,11 @@ VALUES
 	}
 
 	const limit = sb.Config.get(\"MAX_SONG_REQUEST_LENGTH\");
-	const length = data.duration || data.length;
-	if (length > limit) {
+	const length = data.duration ?? data.length ?? null;
+	if (length !== null && length > limit) {
+		const author = (data.author) ? ` by ${data.author}` : \"\";
 		return {
-			reply: `Video \"${data.name}\" by ${data.author} is too long: ${length}s > ${limit}s`
+			reply: `Video \"${data.name}\"${author} is too long: ${length}s > ${limit}s`
 		};
 	}
 	else {
@@ -278,7 +265,7 @@ VALUES
 			when = sb.Utils.timeDelta(playingDate);
 		}
 
-		const videoType = await sb.Query.getRecordset(rs => rs
+		const videoType = data.videoType ?? await sb.Query.getRecordset(rs => rs
 			.select(\"ID\")
 			.from(\"data\", \"Video_Type\")
 			.where(\"Parser_Name = %s\", data.type)
@@ -292,7 +279,7 @@ VALUES
 			Link: data.ID,
 			Name: sb.Utils.wrapString(data.name, 100),
 			Video_Type: videoType.ID,
-			Length: data.duration,
+			Length: (data.duration) ? Math.ceil(data.duration) : null,
 			Status: videoStatus,
 			Started: started,
 			User_Alias: context.user.ID,
@@ -353,6 +340,7 @@ ON DUPLICATE KEY UPDATE
 
 	let url = args.join(\" \");
 	const parsedURL = require(\"url\").parse(url);
+	let data = null;
 
 	if (parsedURL.host === \"supinic.com\" && parsedURL.path.includes(\"/track/detail\")) {
 		const videoTypePrefix = sb.Config.get(\"VIDEO_TYPE_REPLACE_PREFIX\");
@@ -416,45 +404,30 @@ ON DUPLICATE KEY UPDATE
 		}
 	}
 	else if (parsedURL.host) {
-		const data = await sb.Got({
-			url,
-			method: \"HEAD\",
-			throwHttpErrors: false
-		});
-
-		let passed = false;
-		if (data.statusCode === 200) {
-			const type = data.headers[\"content-type\"];
-			passed = type.startsWith(\"audio/\") || type.startsWith(\"video/\");
-		}
-		else {
-			passed = url.endsWith(\".mp3\") || url.endsWith(\".mp4\") || url.endsWith(\".ogg\");
-		}
-
-		if (passed) {
-			try {
-				const id = await sb.VideoLANConnector.add(url, context.user.ID, {name: url});
-				return {
-					reply: \"Your custom link request has been added to the queue with ID \" + id
-				};
-			}
-			catch (e) {
-				console.error(e);
-				return {
-					reply: \"VLC is not responding (probably not running or sr\'s are off), no link has been added!\"
-				};
-			}
+		const meta = await sb.Utils.getMediaFileData(url);
+		if (meta?.duration) {
+			const name = parsedURL.path.split(\"/\").pop();
+			data = {
+				name,
+				ID: url,
+				link: url,
+				duration: meta.duration,
+				videoType: { ID: 19 }
+			};
 		}
 	}
 
-	let data = null;
-	try {
-		data = await sb.Utils.linkParser.fetchData(url);
-	}
-	catch {
-		data = null;
+	// If no data has been filled, attempt to parse input as a link.
+	if (!data) {
+		try {
+			data = await sb.Utils.linkParser.fetchData(url);
+		}
+		catch {
+			data = null;
+		}
 	}
 
+	// If no data have been extracted from a link, attempt a search query on Youtube/Vimeo
 	if (!data) {
 		let lookup = null;
 		if (type === \"vimeo\") {
@@ -503,10 +476,11 @@ ON DUPLICATE KEY UPDATE
 	}
 
 	const limit = sb.Config.get(\"MAX_SONG_REQUEST_LENGTH\");
-	const length = data.duration || data.length;
-	if (length > limit) {
+	const length = data.duration ?? data.length ?? null;
+	if (length !== null && length > limit) {
+		const author = (data.author) ? ` by ${data.author}` : \"\";
 		return {
-			reply: `Video \"${data.name}\" by ${data.author} is too long: ${length}s > ${limit}s`
+			reply: `Video \"${data.name}\"${author} is too long: ${length}s > ${limit}s`
 		};
 	}
 	else {
@@ -540,7 +514,7 @@ ON DUPLICATE KEY UPDATE
 			when = sb.Utils.timeDelta(playingDate);
 		}
 
-		const videoType = await sb.Query.getRecordset(rs => rs
+		const videoType = data.videoType ?? await sb.Query.getRecordset(rs => rs
 			.select(\"ID\")
 			.from(\"data\", \"Video_Type\")
 			.where(\"Parser_Name = %s\", data.type)
@@ -554,7 +528,7 @@ ON DUPLICATE KEY UPDATE
 			Link: data.ID,
 			Name: sb.Utils.wrapString(data.name, 100),
 			Video_Type: videoType.ID,
-			Length: data.duration,
+			Length: (data.duration) ? Math.ceil(data.duration) : null,
 			Status: videoStatus,
 			Started: started,
 			User_Alias: context.user.ID,
