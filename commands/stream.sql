@@ -135,7 +135,7 @@ VALUES
 
 		case \"sr\": {
 			const value = (rest.shift() || \"\").toLowerCase();
-			if (![\"off\", \"vlc\", \"cytube\", \"dubtrack\", \"necrodancer\"].includes(value)) {
+			if (![\"off\", \"vlc\", \"cytube\", \"dubtrack\", \"necrodancer\", \"vlc-read\"].includes(value)) {
 				return { reply: \"Invalid song request state!\" };
 			}
 
@@ -241,7 +241,7 @@ ON DUPLICATE KEY UPDATE
 
 		case \"sr\": {
 			const value = (rest.shift() || \"\").toLowerCase();
-			if (![\"off\", \"vlc\", \"cytube\", \"dubtrack\", \"necrodancer\"].includes(value)) {
+			if (![\"off\", \"vlc\", \"cytube\", \"dubtrack\", \"necrodancer\", \"vlc-read\"].includes(value)) {
 				return { reply: \"Invalid song request state!\" };
 			}
 

@@ -52,6 +52,9 @@ VALUES
 	if (state === \"off\") {
 		return { reply: \"Song requests are currently turned off.\" };
 	}
+	else if (state === \"vlc-read\") {
+		return { reply: `Song requests are currently read-only. You can check what\'s playing with the \"current\" command, but not queue anything.` };
+	}
 	else if (state === \"dubtrack\") {
 		const dubtrack = (await sb.Command.get(\"dubtrack\").execute(context)).reply;
 		return { reply: \"Song requests are currently using dubtrack. Join here: \" + dubtrack + \" :)\" };
@@ -310,6 +313,9 @@ ON DUPLICATE KEY UPDATE
 	const state = sb.Config.get(\"SONG_REQUESTS_STATE\");
 	if (state === \"off\") {
 		return { reply: \"Song requests are currently turned off.\" };
+	}
+	else if (state === \"vlc-read\") {
+		return { reply: `Song requests are currently read-only. You can check what\'s playing with the \"current\" command, but not queue anything.` };
 	}
 	else if (state === \"dubtrack\") {
 		const dubtrack = (await sb.Command.get(\"dubtrack\").execute(context)).reply;

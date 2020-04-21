@@ -54,6 +54,23 @@ VALUES
 	if (state === \"off\") {
 		return { reply: \"Song requests are currently turned off.\" };
 	}
+	else if (state === \"vlc-read\") {
+		const item = sb.VideoLANConnector.currentPlaylistItem;
+		if (!item) {
+			return {
+				reply: \"Nothing is currently playing.\"
+			};
+		}
+
+		let leaf = item;
+		while (leaf.type !== \"leaf\" && leaf.children.length > 0) {
+			leaf = leaf.children[0];
+		}
+
+		return {
+			reply: `Currently playing: ${leaf.name}`
+		};
+	}
 	else if (state === \"dubtrack\") {
 		return { reply: \"We are on Dubtrack, check ?song for the currently playing song :)\" };
 	}
@@ -146,6 +163,23 @@ ON DUPLICATE KEY UPDATE
 
 	if (state === \"off\") {
 		return { reply: \"Song requests are currently turned off.\" };
+	}
+	else if (state === \"vlc-read\") {
+		const item = sb.VideoLANConnector.currentPlaylistItem;
+		if (!item) {
+			return {
+				reply: \"Nothing is currently playing.\"
+			};
+		}
+
+		let leaf = item;
+		while (leaf.type !== \"leaf\" && leaf.children.length > 0) {
+			leaf = leaf.children[0];
+		}
+
+		return {
+			reply: `Currently playing: ${leaf.name}`
+		};
 	}
 	else if (state === \"dubtrack\") {
 		return { reply: \"We are on Dubtrack, check ?song for the currently playing song :)\" };
