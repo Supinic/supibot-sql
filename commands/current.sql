@@ -107,7 +107,7 @@ VALUES
 	}
 
 	const playing = await sb.Query.getRecordset(rs => {
-		rs.select(\"VLC_ID\", \"Link\", \"User_Alias AS User\")
+		rs.select(\"Name\", \"VLC_ID\", \"Link\", \"User_Alias AS User\")
 			.select(\"Video_Type.Link_Prefix AS Prefix\")
 			.from(\"chat_data\", \"Song_Request\")
 			.join({
@@ -131,15 +131,14 @@ VALUES
 
 	if (playing) {
 		const link = playing.Prefix.replace(linkSymbol, playing.Link);
-		const { name } = await sb.Utils.linkParser.fetchData(link);
 		const userData = await sb.User.get(playing.User);
 		const { length, time } = await sb.VideoLANConnector.status();
 
 		return {
 			reply: sb.Utils.tag.trim `
-				Currently playing: ${name} 
-				(ID ${playing.VLC_ID}) 
-				- 
+				Currently playing: ${playing.Name}
+				(ID ${playing.VLC_ID})
+				-
 				requested by ${userData.Name}.
 				Current position: ${time}/${length}s.
 				${link}
@@ -217,7 +216,7 @@ ON DUPLICATE KEY UPDATE
 	}
 
 	const playing = await sb.Query.getRecordset(rs => {
-		rs.select(\"VLC_ID\", \"Link\", \"User_Alias AS User\")
+		rs.select(\"Name\", \"VLC_ID\", \"Link\", \"User_Alias AS User\")
 			.select(\"Video_Type.Link_Prefix AS Prefix\")
 			.from(\"chat_data\", \"Song_Request\")
 			.join({
@@ -241,15 +240,14 @@ ON DUPLICATE KEY UPDATE
 
 	if (playing) {
 		const link = playing.Prefix.replace(linkSymbol, playing.Link);
-		const { name } = await sb.Utils.linkParser.fetchData(link);
 		const userData = await sb.User.get(playing.User);
 		const { length, time } = await sb.VideoLANConnector.status();
 
 		return {
 			reply: sb.Utils.tag.trim `
-				Currently playing: ${name} 
-				(ID ${playing.VLC_ID}) 
-				- 
+				Currently playing: ${playing.Name}
+				(ID ${playing.VLC_ID})
+				-
 				requested by ${userData.Name}.
 				Current position: ${time}/${length}s.
 				${link}
