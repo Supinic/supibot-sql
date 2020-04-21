@@ -53,25 +53,9 @@ VALUES
 		};
 	}
 
-	/** @type {string|null} */
-	let level = null;
-	if (context.user.Data.administrator) {
-		level = \"administrator\";
-	}
-	else if (context.channel.isUserChannelOwner(context.user)) {
-		level = \"channel-owner\";
-	}
-
-	if (level === null) {
-		return {
-			success: false,
-			reply: \"Must be an adminstrator or channel owner!\"
-		};
-	}
-
 	const { invocation } = context;
 	const options = {
-		Channel: (level === \"channel-owner\") ? context.channel.ID : null,
+		Channel: null,
 		User_Alias: null,
 		Command: null,
 		Type: \"Blacklist\",
@@ -80,46 +64,33 @@ VALUES
 		Issued_By: context.user.ID
 	};
 
-	if (level === \"channel-owner\") {
-		options.Response = \"Reason\";
-		options.Reason = \"Banned by channel owner.\";
-	}
-
 	for (let i = 0; i < args.length; i++) {
 		const token = args[i];
 		const value = token.split(\":\")[1];
 
 		if (token.includes(\"channel:\")) {
-			if (level === \"administrator\") {
-				const channelData = sb.Channel.get(value);
-				if (!channelData) {
-					return {
-						success: false,
-						reply: \"Channel was not found!\"
-					};
-				}
-
-				options.Channel = channelData.ID;
-			}
-			else {
+			const channelData = sb.Channel.get(value);
+			if (!channelData) {
 				return {
 					success: false,
-					reply: `You cannot ${invocation} outside of your channel!`
+					reply: \"Channel was not found!\"
 				};
 			}
+
+			options.Channel = channelData.ID;
 		}
 		else if (token.includes(\"command:\")) {
 			const commandData = sb.Command.get(value);
 			if (!commandData) {
 				return {
 					success: false,
-					reply: \"Channel was not found!\"
+					reply: \"Command does not exist!\"
 				};
 			}
 			else if (commandData === this) {
 				return {
 					success: false,
-					reply: \"Come on now... PepeLaugh\"
+					reply: `You can\'t ${invocation} the ${value} command!`
 				};
 			}
 
@@ -136,7 +107,7 @@ VALUES
 			else if (userData === context.user) {
 				return {
 					success: false,
-					reply: \"Come on now... PepeLaugh\"
+					reply: `You can\'t ${invocation} yourself!`
 				};
 			}
 
@@ -144,11 +115,54 @@ VALUES
 		}
 	}
 
-	if (!options.Channel && !options.User_Alias && !options.Command) {
+	/** @type {string|null} */
+	let level = null;
+	if (context.user.Data.administrator) {
+		level = \"administrator\";
+	}
+	else if (context.channel && context.channel.isUserChannelOwner(context.user)) {
+		level = \"channel-owner\";
+	}
+
+	if (!options.Channel) {
+		if (level === \"administrator\") {
+			// OK.
+		}
+		else if (level === \"channel-owner\") {
+			options.Channel = context.channel.ID;
+		}
+		else {
+			return { success: false, reply: \"Channel must be provided!\" }
+		}
+	}
+	else {
+		const channelData = sb.Channel.get(options.Channel);
+		if (level === \"administrator\") {
+			// OK.
+		}
+		else if (channelData.isUserChannelOwner(context.user)) {
+			level = \"channel-owner\";
+		}
+		else {
+			return { success: false, reply: \"Can\'t do that for provided channel\" }
+		}
+	}
+
+	// if a channel owner doesn\'t provide a user or a command, then fail
+	// if an admin doesn\'t provide user, command or a channel, then fail
+	if (
+		(!options.User_Alias && !options.Command)
+		&& (level === \"channel-owner\" || (level === \"administrator\" && !options.Channel))
+	) {
 		return {
 			success: false,
 			reply: \"Not enough data provided to create a ban!\"
 		};
+	}
+
+	if (level === \"channel-owner\") {
+		options.Response = \"Reason\";
+		options.Reason = \"Banned by channel owner.\";
 	}
 
 	const existing = sb.Filter.data.find(i =>
@@ -238,25 +252,9 @@ ON DUPLICATE KEY UPDATE
 		};
 	}
 
-	/** @type {string|null} */
-	let level = null;
-	if (context.user.Data.administrator) {
-		level = \"administrator\";
-	}
-	else if (context.channel.isUserChannelOwner(context.user)) {
-		level = \"channel-owner\";
-	}
-
-	if (level === null) {
-		return {
-			success: false,
-			reply: \"Must be an adminstrator or channel owner!\"
-		};
-	}
-
 	const { invocation } = context;
 	const options = {
-		Channel: (level === \"channel-owner\") ? context.channel.ID : null,
+		Channel: null,
 		User_Alias: null,
 		Command: null,
 		Type: \"Blacklist\",
@@ -265,46 +263,33 @@ ON DUPLICATE KEY UPDATE
 		Issued_By: context.user.ID
 	};
 
-	if (level === \"channel-owner\") {
-		options.Response = \"Reason\";
-		options.Reason = \"Banned by channel owner.\";
-	}
-
 	for (let i = 0; i < args.length; i++) {
 		const token = args[i];
 		const value = token.split(\":\")[1];
 
 		if (token.includes(\"channel:\")) {
-			if (level === \"administrator\") {
-				const channelData = sb.Channel.get(value);
-				if (!channelData) {
-					return {
-						success: false,
-						reply: \"Channel was not found!\"
-					};
-				}
-
-				options.Channel = channelData.ID;
-			}
-			else {
+			const channelData = sb.Channel.get(value);
+			if (!channelData) {
 				return {
 					success: false,
-					reply: `You cannot ${invocation} outside of your channel!`
+					reply: \"Channel was not found!\"
 				};
 			}
+
+			options.Channel = channelData.ID;
 		}
 		else if (token.includes(\"command:\")) {
 			const commandData = sb.Command.get(value);
 			if (!commandData) {
 				return {
 					success: false,
-					reply: \"Channel was not found!\"
+					reply: \"Command does not exist!\"
 				};
 			}
 			else if (commandData === this) {
 				return {
 					success: false,
-					reply: \"Come on now... PepeLaugh\"
+					reply: `You can\'t ${invocation} the ${value} command!`
 				};
 			}
 
@@ -321,7 +306,7 @@ ON DUPLICATE KEY UPDATE
 			else if (userData === context.user) {
 				return {
 					success: false,
-					reply: \"Come on now... PepeLaugh\"
+					reply: `You can\'t ${invocation} yourself!`
 				};
 			}
 
@@ -329,11 +314,54 @@ ON DUPLICATE KEY UPDATE
 		}
 	}
 
-	if (!options.Channel && !options.User_Alias && !options.Command) {
+	/** @type {string|null} */
+	let level = null;
+	if (context.user.Data.administrator) {
+		level = \"administrator\";
+	}
+	else if (context.channel && context.channel.isUserChannelOwner(context.user)) {
+		level = \"channel-owner\";
+	}
+
+	if (!options.Channel) {
+		if (level === \"administrator\") {
+			// OK.
+		}
+		else if (level === \"channel-owner\") {
+			options.Channel = context.channel.ID;
+		}
+		else {
+			return { success: false, reply: \"Channel must be provided!\" }
+		}
+	}
+	else {
+		const channelData = sb.Channel.get(options.Channel);
+		if (level === \"administrator\") {
+			// OK.
+		}
+		else if (channelData.isUserChannelOwner(context.user)) {
+			level = \"channel-owner\";
+		}
+		else {
+			return { success: false, reply: \"Can\'t do that for provided channel\" }
+		}
+	}
+
+	// if a channel owner doesn\'t provide a user or a command, then fail
+	// if an admin doesn\'t provide user, command or a channel, then fail
+	if (
+		(!options.User_Alias && !options.Command)
+		&& (level === \"channel-owner\" || (level === \"administrator\" && !options.Channel))
+	) {
 		return {
 			success: false,
 			reply: \"Not enough data provided to create a ban!\"
 		};
+	}
+
+	if (level === \"channel-owner\") {
+		options.Response = \"Reason\";
+		options.Reason = \"Banned by channel owner.\";
 	}
 
 	const existing = sb.Filter.data.find(i =>
