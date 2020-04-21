@@ -44,7 +44,9 @@ VALUES
 		1,
 		0,
 		0,
-		NULL,
+		'({
+	timeout: 10000
+})',
 		'(async function urban (context, ...args) {
 	if (args.length === 0) {
 		return {
@@ -63,12 +65,28 @@ VALUES
 		}
 	}
 
-	const data = await sb.Got({
-		url: \"https://api.urbandictionary.com/v0/define\",
-		searchParams: new sb.URLParams()
-			.set(\"term\", args.join(\" \"))
-			.toString()
-	}).json();
+	let data = null;
+	try {
+		data = await sb.Got({
+			retry: 0,
+			timeout: this.staticData.timeout,
+			url: \"https://api.urbandictionary.com/v0/define\",
+			searchParams: new sb.URLParams()
+				.set(\"term\", args.join(\" \"))
+				.toString()
+		}).json();
+	}
+	catch (e) {
+		if (e instanceof sb.Got.TimeoutError) {
+			return {
+				success: false,
+				reply: `Urban command timed out after ${this.staticData.timeout / 1000} seconds!`
+			};
+		}
+		else {
+			throw e;
+		}
+	}
 
 	if (!data.list || data.result_type === \"no_results\") {
 		return {
@@ -80,7 +98,7 @@ VALUES
 	const items = data.list.filter(i => i.word.toLowerCase() === args.join(\" \").toLowerCase());
 	const item = items[index ?? 0];
 	if (!item) {
-		return { 
+		return {
 			success: false,
 			reply: `No definition with index ${index ?? 0}! Maximum available: ${items.length - 1}.`
 		};
@@ -98,7 +116,7 @@ VALUES
 	const content = (item.definition + example).replace(/[\\][]/g, \"\");
 
 	return {
-		reply: `${extra} ${thumbs} ${content}` 
+		reply: `${extra} ${thumbs} ${content}`
 	};
 })',
 		NULL,
@@ -124,12 +142,28 @@ ON DUPLICATE KEY UPDATE
 		}
 	}
 
-	const data = await sb.Got({
-		url: \"https://api.urbandictionary.com/v0/define\",
-		searchParams: new sb.URLParams()
-			.set(\"term\", args.join(\" \"))
-			.toString()
-	}).json();
+	let data = null;
+	try {
+		data = await sb.Got({
+			retry: 0,
+			timeout: this.staticData.timeout,
+			url: \"https://api.urbandictionary.com/v0/define\",
+			searchParams: new sb.URLParams()
+				.set(\"term\", args.join(\" \"))
+				.toString()
+		}).json();
+	}
+	catch (e) {
+		if (e instanceof sb.Got.TimeoutError) {
+			return {
+				success: false,
+				reply: `Urban command timed out after ${this.staticData.timeout / 1000} seconds!`
+			};
+		}
+		else {
+			throw e;
+		}
+	}
 
 	if (!data.list || data.result_type === \"no_results\") {
 		return {
@@ -141,7 +175,7 @@ ON DUPLICATE KEY UPDATE
 	const items = data.list.filter(i => i.word.toLowerCase() === args.join(\" \").toLowerCase());
 	const item = items[index ?? 0];
 	if (!item) {
-		return { 
+		return {
 			success: false,
 			reply: `No definition with index ${index ?? 0}! Maximum available: ${items.length - 1}.`
 		};
@@ -159,6 +193,6 @@ ON DUPLICATE KEY UPDATE
 	const content = (item.definition + example).replace(/[\\][]/g, \"\");
 
 	return {
-		reply: `${extra} ${thumbs} ${content}` 
+		reply: `${extra} ${thumbs} ${content}`
 	};
 })'
