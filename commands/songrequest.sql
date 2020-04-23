@@ -158,13 +158,6 @@ VALUES
 		data = await sb.Utils.linkParser.fetchData(url);
 	}
 	else if (parsedURL.host) {
-		try {
-			data = await sb.Utils.linkParser.fetchData(url);
-		}
-		catch {
-			data = null;
-		}
-
 		const meta = await sb.Utils.getMediaFileData(url);
 		if (meta?.duration) {
 			const name = parsedURL.path.split(\"/\").pop();
@@ -407,13 +400,6 @@ ON DUPLICATE KEY UPDATE
 		data = await sb.Utils.linkParser.fetchData(url);
 	}
 	else if (parsedURL.host) {
-		try {
-			data = await sb.Utils.linkParser.fetchData(url);
-		}
-		catch {
-			data = null;
-		}
-
 		const meta = await sb.Utils.getMediaFileData(url);
 		if (meta?.duration) {
 			const name = parsedURL.path.split(\"/\").pop();

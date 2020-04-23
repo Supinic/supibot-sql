@@ -57,16 +57,14 @@ VALUES
 	else if (targetUser.ID === context.user.ID) {
 		return { reply: \"You\'re right here NaM\" };
 	}
-	else if (targetUser.Name === sb.Config.get(\"SELF\")) {
+	else if (targetUser.ID === sb.Config.get(\"SELF_ID\")) {
 		return { reply: \"I\'m right here MrDestructoid\" };
 	}
 
 	let liveString = \"\";
-	if (context.platform.Name === \"twitch\") {
-		const isLive = (await sb.Command.get(\"streaminfo\").execute(context, user)).reply;
-		if (isLive && !isLive.includes(\"not exist\") && !isLive.includes(\"offline\")) {
-			liveString = \"-- They are currently live! PogChamp\";
-		}
+	let checkChannel = sb.Channel.get(targetUser.Name, context.platform);
+	if (context.platform.Name === \"twitch\" && checkChannel?.sessionData?.live) {
+		liveString = \"-- They are currently live! PogChamp\";
 	}
 
 	const stalk = await sb.Query.getRecordset(rs => rs
@@ -131,16 +129,14 @@ ON DUPLICATE KEY UPDATE
 	else if (targetUser.ID === context.user.ID) {
 		return { reply: \"You\'re right here NaM\" };
 	}
-	else if (targetUser.Name === sb.Config.get(\"SELF\")) {
+	else if (targetUser.ID === sb.Config.get(\"SELF_ID\")) {
 		return { reply: \"I\'m right here MrDestructoid\" };
 	}
 
 	let liveString = \"\";
-	if (context.platform.Name === \"twitch\") {
-		const isLive = (await sb.Command.get(\"streaminfo\").execute(context, user)).reply;
-		if (isLive && !isLive.includes(\"not exist\") && !isLive.includes(\"offline\")) {
-			liveString = \"-- They are currently live! PogChamp\";
-		}
+	let checkChannel = sb.Channel.get(targetUser.Name, context.platform);
+	if (context.platform.Name === \"twitch\" && checkChannel?.sessionData?.live) {
+		liveString = \"-- They are currently live! PogChamp\";
 	}
 
 	const stalk = await sb.Query.getRecordset(rs => rs
