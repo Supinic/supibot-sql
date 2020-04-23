@@ -160,7 +160,7 @@ VALUES
 	else if (parsedURL.host) {
 		const meta = await sb.Utils.getMediaFileData(url);
 		if (meta?.duration) {
-			const name = parsedURL.path.split(\"/\").pop();
+			const name = unescape(parsedURL.path.split(\"/\").pop());
 			data = {
 				name,
 				ID: url,
@@ -402,7 +402,7 @@ ON DUPLICATE KEY UPDATE
 	else if (parsedURL.host) {
 		const meta = await sb.Utils.getMediaFileData(url);
 		if (meta?.duration) {
-			const name = parsedURL.path.split(\"/\").pop();
+			const name = unescape(parsedURL.path.split(\"/\").pop());
 			data = {
 				name,
 				ID: url,
