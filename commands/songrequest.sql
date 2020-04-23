@@ -154,7 +154,17 @@ VALUES
 			url = null;
 		}
 	}
+	else if (sb.Utils.linkParser.autoRecognize(url)) {
+		data = await sb.Utils.linkParser.fetchData(url);
+	}
 	else if (parsedURL.host) {
+		try {
+			data = await sb.Utils.linkParser.fetchData(url);
+		}
+		catch {
+			data = null;
+		}
+
 		const meta = await sb.Utils.getMediaFileData(url);
 		if (meta?.duration) {
 			const name = parsedURL.path.split(\"/\").pop();
@@ -165,16 +175,6 @@ VALUES
 				duration: meta.duration,
 				videoType: { ID: 19 }
 			};
-		}
-	}
-
-	// If no data has been filled, attempt to parse input as a link.
-	if (!data) {
-		try {
-			data = await sb.Utils.linkParser.fetchData(url);
-		}
-		catch {
-			data = null;
 		}
 	}
 
@@ -403,7 +403,17 @@ ON DUPLICATE KEY UPDATE
 			url = null;
 		}
 	}
+	else if (sb.Utils.linkParser.autoRecognize(url)) {
+		data = await sb.Utils.linkParser.fetchData(url);
+	}
 	else if (parsedURL.host) {
+		try {
+			data = await sb.Utils.linkParser.fetchData(url);
+		}
+		catch {
+			data = null;
+		}
+
 		const meta = await sb.Utils.getMediaFileData(url);
 		if (meta?.duration) {
 			const name = parsedURL.path.split(\"/\").pop();
@@ -414,16 +424,6 @@ ON DUPLICATE KEY UPDATE
 				duration: meta.duration,
 				videoType: { ID: 19 }
 			};
-		}
-	}
-
-	// If no data has been filled, attempt to parse input as a link.
-	if (!data) {
-		try {
-			data = await sb.Utils.linkParser.fetchData(url);
-		}
-		catch {
-			data = null;
 		}
 	}
 
