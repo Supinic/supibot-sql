@@ -100,7 +100,9 @@ VALUES
 	if (!item) {
 		return {
 			success: false,
-			reply: `No definition with index ${index ?? 0}! Maximum available: ${items.length - 1}.`
+			reply: (items.length === 0)
+				? `No such definition exists!`
+				: `No definition with index ${index ?? 0}! Maximum available: ${items.length - 1}.`
 		};
 	}
 
@@ -177,7 +179,9 @@ ON DUPLICATE KEY UPDATE
 	if (!item) {
 		return {
 			success: false,
-			reply: `No definition with index ${index ?? 0}! Maximum available: ${items.length - 1}.`
+			reply: (items.length === 0)
+				? `No such definition exists!`
+				: `No definition with index ${index ?? 0}! Maximum available: ${items.length - 1}.`
 		};
 	}
 
