@@ -62,8 +62,12 @@ VALUES
 
 	await row.save();
 
+	const emote = (context.platform.Name === \"twitch\")
+		? \"BroBalt\"
+		: \"👍\";
+
 	return { 
-		reply: \"Suggestion saved, and will eventually be processed (ID \" + row.values.ID + \")\"
+		reply: `Suggestion saved, and will eventually be processed (ID ${row.values.ID}) ${emote}`
 	};
 })',
 		NULL,
@@ -88,7 +92,11 @@ ON DUPLICATE KEY UPDATE
 
 	await row.save();
 
+	const emote = (context.platform.Name === \"twitch\")
+		? \"BroBalt\"
+		: \"👍\";
+
 	return { 
-		reply: \"Suggestion saved, and will eventually be processed (ID \" + row.values.ID + \")\"
+		reply: `Suggestion saved, and will eventually be processed (ID ${row.values.ID}) ${emote}`
 	};
 })'
