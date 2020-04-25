@@ -181,7 +181,7 @@ VALUES
 				searchParams: new sb.URLParams()
 					.set(\"query\", args.join(\" \"))
 					.set(\"per_page\", \"1\")
-					.set(\"sort\", \"relevance\")
+					.set(\"sort\", \"relevant\")
 					.set(\"direction\", \"desc\")
 					.toString()
 			});
@@ -193,7 +193,7 @@ VALUES
 				};
 			}
 			else if (body.data.length > 0) {
-				lookup = body.data[0].link;
+				lookup = { link: body.data[0].link };
 			}
 		}
 		else if (type === \"youtube\") {
@@ -423,7 +423,7 @@ ON DUPLICATE KEY UPDATE
 				searchParams: new sb.URLParams()
 					.set(\"query\", args.join(\" \"))
 					.set(\"per_page\", \"1\")
-					.set(\"sort\", \"relevance\")
+					.set(\"sort\", \"relevant\")
 					.set(\"direction\", \"desc\")
 					.toString()
 			});
@@ -435,7 +435,7 @@ ON DUPLICATE KEY UPDATE
 				};
 			}
 			else if (body.data.length > 0) {
-				lookup = body.data[0].link;
+				lookup = { link: body.data[0].link };
 			}
 		}
 		else if (type === \"youtube\") {
