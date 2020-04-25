@@ -247,8 +247,10 @@ VALUES
 		}
 	}
 
-	const data = await sb.Got.instances.FakeAgent({
+	const { statusCode, body: data } = await sb.Got.instances.FakeAgent({
 		method: \"POST\",
+		throwHttpErrors: false,
+		responseType: \"json\",
 		url: \"https://www.egirl.gg/api/web/home/random-recommend\",
 		searchParams: new sb.URLParams()
 			.set(\"pn\", \"1\") // Unknown param
@@ -256,7 +258,14 @@ VALUES
 			.set(\"productTypeId\", String(game.ID))
 			.set(\"sex\", selectedSex)
 			.toString()
-	}).json();
+	});
+
+	if (statusCode !== 200) {
+		throw new sb.errors.APIError({
+			apiName: \"EgirlAPI\",
+			statusCode
+		});
+	}
 
 	if (!data.content || data.content.length === 0) {
 		return {
@@ -370,8 +379,10 @@ ON DUPLICATE KEY UPDATE
 		}
 	}
 
-	const data = await sb.Got.instances.FakeAgent({
+	const { statusCode, body: data } = await sb.Got.instances.FakeAgent({
 		method: \"POST\",
+		throwHttpErrors: false,
+		responseType: \"json\",
 		url: \"https://www.egirl.gg/api/web/home/random-recommend\",
 		searchParams: new sb.URLParams()
 			.set(\"pn\", \"1\") // Unknown param
@@ -379,7 +390,14 @@ ON DUPLICATE KEY UPDATE
 			.set(\"productTypeId\", String(game.ID))
 			.set(\"sex\", selectedSex)
 			.toString()
-	}).json();
+	});
+
+	if (statusCode !== 200) {
+		throw new sb.errors.APIError({
+			apiName: \"EgirlAPI\",
+			statusCode
+		});
+	}
 
 	if (!data.content || data.content.length === 0) {
 		return {
