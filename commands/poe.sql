@@ -121,6 +121,37 @@ VALUES
 			};
 		}
 
+		case \"syndicate\": {
+			const person = args.shift();
+			if (!person) {
+				return {
+					reply: \"Check the Syndicate sheet here: https://poesyn.xyz/syndicate or the picture here: https://i.nuuls.com/huXFC.png\"
+				};
+			}
+			
+			const type = (args.shift()) ?? null;
+			const data = await sb.Query.getRecordset(rs => rs
+				.select(\"*\")
+				.from(\"poe\", \"Syndicate\")
+				.where(\"Name = %s\", person)
+				.limit(1)
+				.single()
+			);
+			
+			if (!data) {
+				return {
+					success: false,
+					reply: \"Syndicate member or type does not exist!\"
+				};
+			}
+
+			return {
+				reply: (type === null)
+					? Object.entries(data).map(([key, value]) => `${key}: ${value}`).join(\"; \")
+					: `${data.Name} at ${type}: ${data[sb.Utils.capitalize(type)]}`
+			};
+		}
+
 		case \"uniques\": {
 			let [user, type] = args;
 			if (!user) {
@@ -221,6 +252,37 @@ ON DUPLICATE KEY UPDATE
 
 			return {
 				reply: `Today\'s ${labType} labyrinth map: ${detail.imageLink}`
+			};
+		}
+
+		case \"syndicate\": {
+			const person = args.shift();
+			if (!person) {
+				return {
+					reply: \"Check the Syndicate sheet here: https://poesyn.xyz/syndicate or the picture here: https://i.nuuls.com/huXFC.png\"
+				};
+			}
+			
+			const type = (args.shift()) ?? null;
+			const data = await sb.Query.getRecordset(rs => rs
+				.select(\"*\")
+				.from(\"poe\", \"Syndicate\")
+				.where(\"Name = %s\", person)
+				.limit(1)
+				.single()
+			);
+			
+			if (!data) {
+				return {
+					success: false,
+					reply: \"Syndicate member or type does not exist!\"
+				};
+			}
+
+			return {
+				reply: (type === null)
+					? Object.entries(data).map(([key, value]) => `${key}: ${value}`).join(\"; \")
+					: `${data.Name} at ${type}: ${data[sb.Utils.capitalize(type)]}`
 			};
 		}
 
