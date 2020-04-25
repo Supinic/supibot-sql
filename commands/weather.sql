@@ -138,6 +138,13 @@ VALUES
 	}
 
 	if (!coords) {
+		if (args.length === 0) {
+			return {
+				reply: \"No place provided!\",
+				cooldown: 2500
+			};
+		}
+
 		const geoData = await sb.Got({
 			url: \"https://maps.googleapis.com/maps/api/geocode/json\",
 			searchParams: new sb.URLParams()
@@ -341,6 +348,13 @@ ON DUPLICATE KEY UPDATE
 	}
 
 	if (!coords) {
+		if (args.length === 0) {
+			return {
+				reply: \"No place provided!\",
+				cooldown: 2500
+			};
+		}
+
 		const geoData = await sb.Got({
 			url: \"https://maps.googleapis.com/maps/api/geocode/json\",
 			searchParams: new sb.URLParams()
