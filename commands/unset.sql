@@ -107,28 +107,91 @@ VALUES
 
 	ID = Number(ID);
 	switch (type) {
-		case \"notify\":
-		case \"reminder\": {
-			let row = await sb.Query.getRow(\"chat_data\", \"Reminder\");
+		case \"gc\": {
+			const row = await sb.Query.getRow(\"music\", \"Track\");
 			try {
 				await row.load(ID);
 			}
 			catch {
-				return { reply: \"ID does not exist!\" };
+				return {
+					success: false,
+					reply: \"ID does not exist!\"
+				};
+			}
+
+			if (!context.user.Data.administrator && row.values.Added_By !== context.user.ID) {
+				return {
+					success: false,
+					reply: \"This track was not added by you!\"
+				};
+			}
+			
+			const tags = (await sb.Query.getRecordset(rs => rs
+				.select(\"Tag\")
+				.from(\"music\", \"Track_Tag\")
+				.where(\"Track = %n\", ID)
+			)).map(i => i.Tag);
+
+			// If gachi tag is present already, there is no reason to unset it.
+			if (tags.includes(6)) {
+				return {
+					success: false,
+					reply: \"This track has already been categorized, and cannot be changed like this!\"
+				};
+			}
+
+			// Deletes TODO tag of given track.
+			await sb.Query.raw(`DELETE FROM music.Track_Tag WHERE (Track = ${ID} AND Tag = 20)`);
+
+			return {
+				reply: `Track ${ID} has been stripped of the TODO tag.`
+			};
+		}
+
+		case \"notify\":
+		case \"reminder\": {
+			const row = await sb.Query.getRow(\"chat_data\", \"Reminder\");
+			try {
+				await row.load(ID);
+			}
+			catch {
+				return {
+					success: false,
+					reply: \"ID does not exist!\"
+				};
 			}
 
 			if (row.values.User_From !== context.user.ID && row.values.User_To !== context.user.ID ) {
-				return { reply: \"That reminder was not created by you or set for you!\" };
+				return {
+					success: false,
+					reply: \"That reminder was not created by you or set for you!\"
+				};
 			}
 			else if (!row.values.Active) {
-				return { reply: \"That reminder is already deactivated!\" };
+				return {
+					success: false,
+					reply: \"That reminder is already deactivated!\"
+				};
 			}
 			else if (context.channel?.ID && !row.values.Schedule && row.values.User_To === context.user.ID) {
-				return { reply: \"Good job, trying to unset a reminder that just fired PepeLaugh\" };
+				return {
+					success: false,
+					reply: \"Good job, trying to unset a reminder that just fired PepeLaugh\"
+				};
 			}
 			else {
-				await sb.Reminder.get(ID).deactivate(true);
-				return { reply: \"Reminder ID \" + ID + \" unset successfully.\" };
+				const reminder = sb.Reminder.get(ID);
+				if (reminder) {
+					await reminder.deactivate(true);
+				}
+				else {
+					row.values.Active = false;
+					await row.save();
+				}
+
+				return {
+					reply: `Reminder ID ${ID} unset successfully.`
+				};
 			}
 		}
 
@@ -246,28 +309,91 @@ ON DUPLICATE KEY UPDATE
 
 	ID = Number(ID);
 	switch (type) {
-		case \"notify\":
-		case \"reminder\": {
-			let row = await sb.Query.getRow(\"chat_data\", \"Reminder\");
+		case \"gc\": {
+			const row = await sb.Query.getRow(\"music\", \"Track\");
 			try {
 				await row.load(ID);
 			}
 			catch {
-				return { reply: \"ID does not exist!\" };
+				return {
+					success: false,
+					reply: \"ID does not exist!\"
+				};
+			}
+
+			if (!context.user.Data.administrator && row.values.Added_By !== context.user.ID) {
+				return {
+					success: false,
+					reply: \"This track was not added by you!\"
+				};
+			}
+			
+			const tags = (await sb.Query.getRecordset(rs => rs
+				.select(\"Tag\")
+				.from(\"music\", \"Track_Tag\")
+				.where(\"Track = %n\", ID)
+			)).map(i => i.Tag);
+
+			// If gachi tag is present already, there is no reason to unset it.
+			if (tags.includes(6)) {
+				return {
+					success: false,
+					reply: \"This track has already been categorized, and cannot be changed like this!\"
+				};
+			}
+
+			// Deletes TODO tag of given track.
+			await sb.Query.raw(`DELETE FROM music.Track_Tag WHERE (Track = ${ID} AND Tag = 20)`);
+
+			return {
+				reply: `Track ${ID} has been stripped of the TODO tag.`
+			};
+		}
+
+		case \"notify\":
+		case \"reminder\": {
+			const row = await sb.Query.getRow(\"chat_data\", \"Reminder\");
+			try {
+				await row.load(ID);
+			}
+			catch {
+				return {
+					success: false,
+					reply: \"ID does not exist!\"
+				};
 			}
 
 			if (row.values.User_From !== context.user.ID && row.values.User_To !== context.user.ID ) {
-				return { reply: \"That reminder was not created by you or set for you!\" };
+				return {
+					success: false,
+					reply: \"That reminder was not created by you or set for you!\"
+				};
 			}
 			else if (!row.values.Active) {
-				return { reply: \"That reminder is already deactivated!\" };
+				return {
+					success: false,
+					reply: \"That reminder is already deactivated!\"
+				};
 			}
 			else if (context.channel?.ID && !row.values.Schedule && row.values.User_To === context.user.ID) {
-				return { reply: \"Good job, trying to unset a reminder that just fired PepeLaugh\" };
+				return {
+					success: false,
+					reply: \"Good job, trying to unset a reminder that just fired PepeLaugh\"
+				};
 			}
 			else {
-				await sb.Reminder.get(ID).deactivate(true);
-				return { reply: \"Reminder ID \" + ID + \" unset successfully.\" };
+				const reminder = sb.Reminder.get(ID);
+				if (reminder) {
+					await reminder.deactivate(true);
+				}
+				else {
+					row.values.Active = false;
+					await row.save();
+				}
+
+				return {
+					reply: `Reminder ID ${ID} unset successfully.`
+				};
 			}
 		}
 
