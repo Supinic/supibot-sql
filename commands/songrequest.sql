@@ -197,10 +197,14 @@ VALUES
 			}
 		}
 		else if (type === \"youtube\") {
-			lookup = await sb.Utils.fetchYoutubeVideo(
+			const data = await sb.Utils.searchYoutube(
 				args.join(\" \").replace(/-/g, \"\"),
 				sb.Config.get(\"API_GOOGLE_YOUTUBE\")
 			);
+
+			lookup = (data[0]) 
+				? { link: data[0].ID }
+				: null;
 		}
 		else {
 			return {
@@ -215,7 +219,7 @@ VALUES
 			};
 		}
 		else {
-			data = await sb.Utils.linkParser.fetchData(lookup.link);
+			data = await sb.Utils.linkParser.fetchData(lookup.link, type);
 		}
 	}
 
@@ -439,10 +443,14 @@ ON DUPLICATE KEY UPDATE
 			}
 		}
 		else if (type === \"youtube\") {
-			lookup = await sb.Utils.fetchYoutubeVideo(
+			const data = await sb.Utils.searchYoutube(
 				args.join(\" \").replace(/-/g, \"\"),
 				sb.Config.get(\"API_GOOGLE_YOUTUBE\")
 			);
+
+			lookup = (data[0]) 
+				? { link: data[0].ID }
+				: null;
 		}
 		else {
 			return {
@@ -457,7 +465,7 @@ ON DUPLICATE KEY UPDATE
 			};
 		}
 		else {
-			data = await sb.Utils.linkParser.fetchData(lookup.link);
+			data = await sb.Utils.linkParser.fetchData(lookup.link, type);
 		}
 	}
 
