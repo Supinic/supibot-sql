@@ -118,7 +118,8 @@ VALUES
 			\"https://i.imgur.com/H7cHzNo.jpg\",
 			\"https://i.imgur.com/QylmVQj.jpg\",
 			\"https://i.imgur.com/QjiutEj.jpg\",
-			\"https://i.imgur.com/rebC8Vn.jpg\"
+			\"https://i.imgur.com/rebC8Vn.jpg\",
+			\"https://i.imgur.com/d5bX9Em.jpg\"
 		]
 	};
 })()',
