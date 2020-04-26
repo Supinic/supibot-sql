@@ -45,30 +45,30 @@ VALUES
 		0,
 		0,
 		NULL,
-		'async (extra, user) => {
-	if (!user) {
-		return {  reply: \"You didn\'t want to hug anyone, so I\'ll hug you instead 🤗\" };
+		'(async function hug (context, target) {
+	if (!target) {
+		return { reply: \"You didn\'t want to hug anyone, so I\'ll hug you instead 🤗\" };
 	}
-	else if (user.toLowerCase() === sb.Config.get(\"TWITCH_SELF\")) {
-		return { reply: \"Thanks for the hug supiniOkay <3\" };
+	else if (target.toLowerCase() === context.platform.Self_Name.toLowerCase()) {
+		return { reply: \"Thanks for the hug 🙂 <3\" };
 	}
 	else {
-		return { reply: extra.user.Name + \" hugs \" + user + \" 🤗\" };
+		return { reply: context.user.Name + \" hugs \" + target + \" 🤗\" };
 	}
-}',
+})',
 		'No arguments.',
 		NULL
 	)
 
 ON DUPLICATE KEY UPDATE
-	Code = 'async (extra, user) => {
-	if (!user) {
-		return {  reply: \"You didn\'t want to hug anyone, so I\'ll hug you instead 🤗\" };
+	Code = '(async function hug (context, target) {
+	if (!target) {
+		return { reply: \"You didn\'t want to hug anyone, so I\'ll hug you instead 🤗\" };
 	}
-	else if (user.toLowerCase() === sb.Config.get(\"TWITCH_SELF\")) {
-		return { reply: \"Thanks for the hug supiniOkay <3\" };
+	else if (target.toLowerCase() === context.platform.Self_Name.toLowerCase()) {
+		return { reply: \"Thanks for the hug 🙂 <3\" };
 	}
 	else {
-		return { reply: extra.user.Name + \" hugs \" + user + \" 🤗\" };
+		return { reply: context.user.Name + \" hugs \" + target + \" 🤗\" };
 	}
-}'
+})'
