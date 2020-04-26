@@ -58,6 +58,7 @@ VALUES
 		return { reply: \"Provided user has not been found!\" };
 	}
 
+	type = type.toLowerCase();
 	switch (type) {
 		case \"cookie\": {
 			if (targetUserData.ID === sb.Config.get(\"SELF_ID\")) {
@@ -147,6 +148,7 @@ ON DUPLICATE KEY UPDATE
 		return { reply: \"Provided user has not been found!\" };
 	}
 
+	type = type.toLowerCase();
 	switch (type) {
 		case \"cookie\": {
 			if (targetUserData.ID === sb.Config.get(\"SELF_ID\")) {
