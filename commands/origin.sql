@@ -48,6 +48,7 @@ VALUES
 		'(async function origin (context, ...args) {
 	if (args.length === 0) {
 		return {
+			success: false,
 			reply: \"No input provided!\"
 		};
 	}
@@ -65,43 +66,47 @@ VALUES
 	emote = args.join(\" \");
 	if (emote === null) {
 		return {
+			success: false,
 			reply: \"No emote provided!\"
 		};
 	}
 
 	const emoteData = await sb.Query.getRecordset(rs => rs
-		.select(\"Text\", \"Todo\", \"Approved\", \"Emote_Added\")
+		.select(\"Text\", \"Tier\", \"Type\", \"Todo\", \"Approved\", \"Emote_Added\")
 		.from(\"data\", \"Origin\")
 		.where(\"Name COLLATE utf8mb4_bin LIKE %s\", emote)
 	);
 
 	if (emoteData.length === 0) {
-		return { reply: \"No definition found for given emote!\" };
+		return {
+			success: false,
+			reply: \"No definition found for given emote!\"
+		};
 	}
-	if (emoteData.length > 1 && customIndex === null) {
+	else if (emoteData.length > 1 && customIndex === null) {
 		return {
 			reply: `Multiple emotes found for this name! Use \"index:0\" through \"index:${emoteData.length-1}\" to access each one.`,
 			cooldown: { length: 2500 }
 		};
 	}
 
-	const specificEmoteData = emoteData[customIndex ?? 0];
-	if (!specificEmoteData) {
+	const data = emoteData[customIndex ?? 0];
+	if (!data) {
 		return {
 			reply: \"No emote definition exists for that index!\"
 		};
 	}
-	else if (!specificEmoteData.Approved) {
+	else if (!data.Approved) {
 		return { reply: \"A definition exists, but has not been approved yet!\" };
 	}
 	else {
-		let string = specificEmoteData.Text;
+		const type = (data.Tier) ? `T${data.Tier}` : \"\";
+		let string = `${type} ${data.Type} emote: ${data.Text}`;
 
-		if (specificEmoteData.Emote_Added) {
-			string += \" (added on \" + specificEmoteData.Emote_Added.sqlDate() + \")\";
+		if (data.Emote_Added) {
+			string += \" (added on \" + data.Emote_Added.sqlDate() + \")\";
 		}
-
-		if (specificEmoteData.Todo) {
+		if (data.Todo) {
 			string = \"(TODO) \" + string;
 		}
 
@@ -118,6 +123,7 @@ ON DUPLICATE KEY UPDATE
 	Code = '(async function origin (context, ...args) {
 	if (args.length === 0) {
 		return {
+			success: false,
 			reply: \"No input provided!\"
 		};
 	}
@@ -135,43 +141,47 @@ ON DUPLICATE KEY UPDATE
 	emote = args.join(\" \");
 	if (emote === null) {
 		return {
+			success: false,
 			reply: \"No emote provided!\"
 		};
 	}
 
 	const emoteData = await sb.Query.getRecordset(rs => rs
-		.select(\"Text\", \"Todo\", \"Approved\", \"Emote_Added\")
+		.select(\"Text\", \"Tier\", \"Type\", \"Todo\", \"Approved\", \"Emote_Added\")
 		.from(\"data\", \"Origin\")
 		.where(\"Name COLLATE utf8mb4_bin LIKE %s\", emote)
 	);
 
 	if (emoteData.length === 0) {
-		return { reply: \"No definition found for given emote!\" };
+		return {
+			success: false,
+			reply: \"No definition found for given emote!\"
+		};
 	}
-	if (emoteData.length > 1 && customIndex === null) {
+	else if (emoteData.length > 1 && customIndex === null) {
 		return {
 			reply: `Multiple emotes found for this name! Use \"index:0\" through \"index:${emoteData.length-1}\" to access each one.`,
 			cooldown: { length: 2500 }
 		};
 	}
 
-	const specificEmoteData = emoteData[customIndex ?? 0];
-	if (!specificEmoteData) {
+	const data = emoteData[customIndex ?? 0];
+	if (!data) {
 		return {
 			reply: \"No emote definition exists for that index!\"
 		};
 	}
-	else if (!specificEmoteData.Approved) {
+	else if (!data.Approved) {
 		return { reply: \"A definition exists, but has not been approved yet!\" };
 	}
 	else {
-		let string = specificEmoteData.Text;
+		const type = (data.Tier) ? `T${data.Tier}` : \"\";
+		let string = `${type} ${data.Type} emote: ${data.Text}`;
 
-		if (specificEmoteData.Emote_Added) {
-			string += \" (added on \" + specificEmoteData.Emote_Added.sqlDate() + \")\";
+		if (data.Emote_Added) {
+			string += \" (added on \" + data.Emote_Added.sqlDate() + \")\";
 		}
-
-		if (specificEmoteData.Todo) {
+		if (data.Todo) {
 			string = \"(TODO) \" + string;
 		}
 
