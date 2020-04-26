@@ -35,8 +35,8 @@ VALUES
 		0,
 		0,
 		1,
-		0,
-		NULL,
+		1,
+		'Only available on Twitch (for now)!',
 		0,
 		0,
 		0,
@@ -45,15 +45,17 @@ VALUES
 		0,
 		0,
 		NULL,
-		'(async function activity (context) {
-	if (!context.channel) {
+		'(async function activity (context, target) {
+	const channel = sb.Channel.get(target ?? context.channel, context.platform);
+	if (!channel) {
 		return {
-			reply: \"There is no channel activity available here!\" 
+			success: false,
+			reply: \"Channel does not exist or has no activity available!\" 
 		};
 	}
 
 	return {
-		reply: \"https://supinic.com/bot/channels/\" + context.channel.Name + \"-\" + context.channel.ID + \"/activity\"
+		reply: `Check channel\'s recent activity here: https://supinic.com/bot/channel/${channel.ID}/activity`
 	};
 })',
 		'No arguments.
@@ -63,14 +65,16 @@ $activity',
 	)
 
 ON DUPLICATE KEY UPDATE
-	Code = '(async function activity (context) {
-	if (!context.channel) {
+	Code = '(async function activity (context, target) {
+	const channel = sb.Channel.get(target ?? context.channel, context.platform);
+	if (!channel) {
 		return {
-			reply: \"There is no channel activity available here!\" 
+			success: false,
+			reply: \"Channel does not exist or has no activity available!\" 
 		};
 	}
 
 	return {
-		reply: \"https://supinic.com/bot/channels/\" + context.channel.Name + \"-\" + context.channel.ID + \"/activity\"
+		reply: `Check channel\'s recent activity here: https://supinic.com/bot/channel/${channel.ID}/activity`
 	};
 })'
