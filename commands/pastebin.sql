@@ -45,26 +45,32 @@ VALUES
 		0,
 		0,
 		NULL,
-		'async (extra, ...args) => {
+		'(async function pastebin (context, ...args) {
 	if (args.length === 0) {
-		return { reply: \"No input provided!\" };
+		return {
+			success: false,
+			reply: \"No input provided!\"
+		};
 	}
 
 	return {
 		reply: await sb.Pastebin.post(args.join(\" \"))
 	};
-}',
+})',
 		NULL,
 		NULL
 	)
 
 ON DUPLICATE KEY UPDATE
-	Code = 'async (extra, ...args) => {
+	Code = '(async function pastebin (context, ...args) {
 	if (args.length === 0) {
-		return { reply: \"No input provided!\" };
+		return {
+			success: false,
+			reply: \"No input provided!\"
+		};
 	}
 
 	return {
 		reply: await sb.Pastebin.post(args.join(\" \"))
 	};
-}'
+})'
