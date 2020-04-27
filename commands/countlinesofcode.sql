@@ -43,7 +43,7 @@ VALUES
 		1,
 		1,
 		0,
-		0,
+		1,
 		NULL,
 		'async () => {
 	const files = sb.Config.get(\"SUPIBOT_FILES\");
