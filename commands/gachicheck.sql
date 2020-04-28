@@ -275,10 +275,28 @@ $gc <link <...description> => Checks the link, and adds it to the todo list if n
 
 $gc https://youtu.be/OI8gy-AHgJg
 $gc https://www.nicovideo.jp/watch/sm6140534 ',
-		'async (prefix) => {
+		'async (prefix, commandData) => {
+	const { limit } = eval(commandData.Static_Data);
 
+	return [
+		\"Checks if a video is already in the gachi list.\",
+		\"If it isn\'t, it is added with the Todo tag.\",
+		\"\",
+	
+		`<code>${prefix}gc (link)</code>`,
+		\"Check for a single link. If it exists already, it is also checked for availability and updated accordingly.\",
+		\"\",
 
+		`<code>${prefix}gc (link1) (link2) ...</code>`,
+		\"Checks multiple links in one command. Availability will not be updated.\",
 
+		\"\",
+
+		`<code>${prefix}gc playlist (playlistID)</code>`,
+		\"Checks all videos in a single Youtube playlist. Summary will be posted in a Pastebin paste.\",
+		`Does not check playlists that have more than <b>${limit}</b> videos.`,
+		\"As with multiple videos, availability will also not be checked.\"
+	];
 }'
 	)
 
