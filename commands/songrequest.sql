@@ -160,11 +160,12 @@ VALUES
 	else if (parsedURL.host) {
 		const meta = await sb.Utils.getMediaFileData(url);
 		if (meta?.duration) {
-			const name = unescape(parsedURL.path.split(\"/\").pop());
+			const name = decodeURIComponent(parsedURL.path.split(\"/\").pop());
+			const encoded = encodeURI(url);
 			data = {
 				name,
-				ID: url,
-				link: url,
+				ID: encoded,
+				link: encoded,
 				duration: meta.duration,
 				videoType: { ID: 19 }
 			};
@@ -406,11 +407,12 @@ ON DUPLICATE KEY UPDATE
 	else if (parsedURL.host) {
 		const meta = await sb.Utils.getMediaFileData(url);
 		if (meta?.duration) {
-			const name = unescape(parsedURL.path.split(\"/\").pop());
+			const name = decodeURIComponent(parsedURL.path.split(\"/\").pop());
+			const encoded = encodeURI(url);
 			data = {
 				name,
-				ID: url,
-				link: url,
+				ID: encoded,
+				link: encoded,
 				duration: meta.duration,
 				videoType: { ID: 19 }
 			};
