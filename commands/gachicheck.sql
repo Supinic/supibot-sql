@@ -110,8 +110,29 @@ VALUES
 			.where(\"Track_Tag.Track = %n\", check.ID)
 		)).map(i => i.Tag_Name).join(\", \");
 
+		const row = await sb.Query.getRow(\"music\", \"Track\");
+		await row.load(check.ID);
+		const videoData = await sb.Utils.linkParser.fetchData(originalLink, type);
+
+		if (row.values.Available && videoData === null) {
+			row.values.Available = false;
+		}
+		else if (row.values.Available && videoData !== null) {
+			row.values.Available = true;
+		}
+		
+		let addendum = \"\";
+		if (row.values.Available !== row.originalValues.Available) {
+			addendum = `Track updated: ${row.values.Available ? \"now\" : \"no longer\"} available!`;
+			await row.save();
+		}
+
 		return {
-			reply: \"Link is in the list already: \" + trackToLink(check.ID) + \" with tags: \" + tags
+			reply: sb.Utils.tag.trim `
+				Link is in the list already: 
+				${trackToLink(check.ID)}
+				with tags: ${tags}.
+				${addendum}`
 		};
 	}
 	else {
@@ -258,8 +279,29 @@ ON DUPLICATE KEY UPDATE
 			.where(\"Track_Tag.Track = %n\", check.ID)
 		)).map(i => i.Tag_Name).join(\", \");
 
+		const row = await sb.Query.getRow(\"music\", \"Track\");
+		await row.load(check.ID);
+		const videoData = await sb.Utils.linkParser.fetchData(originalLink, type);
+
+		if (row.values.Available && videoData === null) {
+			row.values.Available = false;
+		}
+		else if (row.values.Available && videoData !== null) {
+			row.values.Available = true;
+		}
+		
+		let addendum = \"\";
+		if (row.values.Available !== row.originalValues.Available) {
+			addendum = `Track updated: ${row.values.Available ? \"now\" : \"no longer\"} available!`;
+			await row.save();
+		}
+
 		return {
-			reply: \"Link is in the list already: \" + trackToLink(check.ID) + \" with tags: \" + tags
+			reply: sb.Utils.tag.trim `
+				Link is in the list already: 
+				${trackToLink(check.ID)}
+				with tags: ${tags}.
+				${addendum}`
 		};
 	}
 	else {
