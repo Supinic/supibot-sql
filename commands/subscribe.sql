@@ -44,28 +44,56 @@ VALUES
 		1,
 		0,
 		0,
-		NULL,
+		'({
+	types: [
+		{
+			name: \"Suggestion\",
+			aliases: [\"suggest\", \"suggestion\", \"suggestions\"],
+			notes: \"Whenever a suggestion you\'ve made is updated, you will receive a private system reminder about it. Changes are detected every minute.\",
+			response: {
+				added: \"You will now receive private system reminders whenever a suggestion you made changes.\",
+				removed: \"You will no longer receive suggestion reminders.\"
+			}
+		},
+		{
+			name: \"Node.js updates\",
+			aliases: [\"node\", \"nodejs\", \"node.js\"],
+			notes: \"Every hour, supibot checks for new versions of Node.js. If a change is detected, you will be notified in #supinic.\",
+			response: {
+				added: \"You will now be pinged whenever a new version of Node.js is detected.\",
+				removed: \"You will no longer receive pings when Node.js is updated.\"
+			}
+		}
+	]
+})',
 		'(async function subscribe (context, type) {
-	const allowedTypes = [\"suggestion\"];
-	if (!type || !allowedTypes.includes(type.toLowerCase())) {
+	type = type.toLowerCase();
+	if (!type) {
 		return {
 			success: false,
-			reply: \"Incorrect event provided!\"
+			reply: \"No event provided! Check the command\'s extended help for a list.\"
 		};
 	}
 
-	type = sb.Utils.capitalize(type);
+	const event = this.staticData.types.find(i => i.name === type || i.aliases.includes(type));
+	if (!event) {
+		return {
+			success: false,
+			reply: \"Incorrect event provided! Check the extended command\'s help for a list.\"
+		};
+	}
 
 	const { invocation } = context;
 	const subscription = await sb.Query.getRecordset(rs => rs
 		.select(\"ID\", \"Active\")
 		.from(\"chat_data\", \"Event_Subscription\")
 		.where(\"User_Alias = %n\", context.user.ID)
-		.where(\"Type = %s\", type)
+		.where(\"Type = %s\", event.name)
 		.limit(1)
 		.single()
 	);
 
+	const response = (invocation === \"subscribe\") ? event.response.added : event.response.removed;
 	if (subscription) {
 		if (
 			(invocation === \"subscribe\" && subscription.Active)
@@ -84,9 +112,8 @@ VALUES
 			.where(\"ID = %n\", subscription.ID)
 		);
 
-		const prefix = (invocation === \"subscribe\") ? \"re\" : \"\";
 		return {
-			reply: `Sucessfully ${prefix}${invocation}d.`
+			reply: `Sucessfully ${invocation}d. ${response}`
 		};
 	}
 	else {
@@ -101,42 +128,78 @@ VALUES
 		row.setValues({
 			User_Alias: context.user.ID,
 			Platform: context.platform.ID,
-			Type: type,
+			Type: event.name,
 			Active: true
 		});
 
 		await row.save();
 		return {
-			reply: `Sucessfully subscribed. You will now receive private reminders.`
+			reply: `Sucessfully subscribed. ${response}`
 		};
 	}
 })',
 		NULL,
-		NULL
+		'async (prefix) => {
+	const row = await sb.Query.getRow(\"chat_data\", \"Command\");
+	await row.load(76);
+
+	const { types } = eval(row.values.Static_Data);
+	const typesList = types.map(i => sb.Utils.tag.trim `
+		<li>
+			<code>${i.name}</code>
+			<br>Aliases: ${i.aliases.map(j => `<code>${j}</code>`).join(\", \") || \"(none)\"}
+			<br>${i.notes}			
+		</li>
+	`).join(\"\");
+
+	return [
+		\"Subscribes or unsubscribes your account from an event in Supibot\'s database.\",
+		\"Depending on the event, you will be notified in different ways.\",
+		\"\",
+
+		`<code>${prefix}subscribe (type)</code>`,
+		\"You will be subscribed to a given event.\",
+		\"\",
+
+		`<code>${prefix}unsubscribe (type)</code>`,
+		\"You will be unsubscribed from a given event.\",
+		\"\",
+
+		\"List of available events:\",
+		`<ul>${typesList}</ul>`
+	];
+}'
 	)
 
 ON DUPLICATE KEY UPDATE
 	Code = '(async function subscribe (context, type) {
-	const allowedTypes = [\"suggestion\"];
-	if (!type || !allowedTypes.includes(type.toLowerCase())) {
+	type = type.toLowerCase();
+	if (!type) {
 		return {
 			success: false,
-			reply: \"Incorrect event provided!\"
+			reply: \"No event provided! Check the command\'s extended help for a list.\"
 		};
 	}
 
-	type = sb.Utils.capitalize(type);
+	const event = this.staticData.types.find(i => i.name === type || i.aliases.includes(type));
+	if (!event) {
+		return {
+			success: false,
+			reply: \"Incorrect event provided! Check the extended command\'s help for a list.\"
+		};
+	}
 
 	const { invocation } = context;
 	const subscription = await sb.Query.getRecordset(rs => rs
 		.select(\"ID\", \"Active\")
 		.from(\"chat_data\", \"Event_Subscription\")
 		.where(\"User_Alias = %n\", context.user.ID)
-		.where(\"Type = %s\", type)
+		.where(\"Type = %s\", event.name)
 		.limit(1)
 		.single()
 	);
 
+	const response = (invocation === \"subscribe\") ? event.response.added : event.response.removed;
 	if (subscription) {
 		if (
 			(invocation === \"subscribe\" && subscription.Active)
@@ -155,9 +218,8 @@ ON DUPLICATE KEY UPDATE
 			.where(\"ID = %n\", subscription.ID)
 		);
 
-		const prefix = (invocation === \"subscribe\") ? \"re\" : \"\";
 		return {
-			reply: `Sucessfully ${prefix}${invocation}d.`
+			reply: `Sucessfully ${invocation}d. ${response}`
 		};
 	}
 	else {
@@ -172,13 +234,13 @@ ON DUPLICATE KEY UPDATE
 		row.setValues({
 			User_Alias: context.user.ID,
 			Platform: context.platform.ID,
-			Type: type,
+			Type: event.name,
 			Active: true
 		});
 
 		await row.save();
 		return {
-			reply: `Sucessfully subscribed. You will now receive private reminders.`
+			reply: `Sucessfully subscribed. ${response}`
 		};
 	}
 })'
