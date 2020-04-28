@@ -154,7 +154,8 @@ VALUES
 			url = null;
 		}
 	}
-	else if (sb.Utils.linkParser.autoRecognize(url)) {
+
+	if (sb.Utils.linkParser.autoRecognize(url)) {
 		data = await sb.Utils.linkParser.fetchData(url);
 	}
 	else if (parsedURL.host) {
@@ -401,7 +402,8 @@ ON DUPLICATE KEY UPDATE
 			url = null;
 		}
 	}
-	else if (sb.Utils.linkParser.autoRecognize(url)) {
+
+	if (sb.Utils.linkParser.autoRecognize(url)) {
 		data = await sb.Utils.linkParser.fetchData(url);
 	}
 	else if (parsedURL.host) {
