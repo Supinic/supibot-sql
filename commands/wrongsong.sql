@@ -48,7 +48,7 @@ VALUES
 		'(async function wrongSong (context, target) {
 	const targetID = Number(target) || null;
 	const userRequest = await sb.Query.getRecordset(rs => rs
-		.select(\"Song_Request.ID\", \"Link\", \"VLC_ID\", \"Status\")
+		.select(\"Song_Request.ID\", \"Name\", \"VLC_ID\", \"Status\")
 		.select(\"Video_Type.Link_Prefix AS Prefix\")
 		.from(\"chat_data\", \"Song_Request\")
 		.join({
@@ -96,13 +96,9 @@ VALUES
 		action = \"deleted from the playlist\";
 		await sb.VideoLANConnector.client.playlistDelete(userRequest.VLC_ID);
 	}
-
-	const char = sb.Config.get(\"VIDEO_TYPE_REPLACE_PREFIX\");
-	const link = userRequest.Prefix.replace(char, userRequest.Link);
-	const linkData = await sb.Utils.linkParser.fetchData(link);
-
+;
 	return {
-		reply: `Your request \"${linkData.name}\" (ID ${userRequest.VLC_ID}) has been successfully ${action}.`
+		reply: `Your request \"${userRequest.Name}\" (ID ${userRequest.VLC_ID}) has been successfully ${action}.`
 	};
 })',
 		NULL,
@@ -126,7 +122,7 @@ ON DUPLICATE KEY UPDATE
 	Code = '(async function wrongSong (context, target) {
 	const targetID = Number(target) || null;
 	const userRequest = await sb.Query.getRecordset(rs => rs
-		.select(\"Song_Request.ID\", \"Link\", \"VLC_ID\", \"Status\")
+		.select(\"Song_Request.ID\", \"Name\", \"VLC_ID\", \"Status\")
 		.select(\"Video_Type.Link_Prefix AS Prefix\")
 		.from(\"chat_data\", \"Song_Request\")
 		.join({
@@ -174,12 +170,8 @@ ON DUPLICATE KEY UPDATE
 		action = \"deleted from the playlist\";
 		await sb.VideoLANConnector.client.playlistDelete(userRequest.VLC_ID);
 	}
-
-	const char = sb.Config.get(\"VIDEO_TYPE_REPLACE_PREFIX\");
-	const link = userRequest.Prefix.replace(char, userRequest.Link);
-	const linkData = await sb.Utils.linkParser.fetchData(link);
-
+;
 	return {
-		reply: `Your request \"${linkData.name}\" (ID ${userRequest.VLC_ID}) has been successfully ${action}.`
+		reply: `Your request \"${userRequest.Name}\" (ID ${userRequest.VLC_ID}) has been successfully ${action}.`
 	};
 })'
