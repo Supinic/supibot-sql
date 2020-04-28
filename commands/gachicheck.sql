@@ -44,7 +44,9 @@ VALUES
 		1,
 		0,
 		0,
-		NULL,
+		'({
+	limit: 100
+})',
 		'(async function gachiCheck (context, ...args) {
 	if (args.length === 0) {
 		return {
@@ -53,14 +55,60 @@ VALUES
 		};
 	}
 
+	let updateExisting = true;
 	const links = [];
-	for (const word of args) {
-		const type = sb.Utils.linkParser.autoRecognize(word);
-		if (type) {
-			links.push({
-				type,
-				link: sb.Utils.linkParser.parseLink(word)
-			});
+	if (args[0] === \"playlist\") {
+		args.shift();
+		const playlistID = args.shift();
+		if (!playlistID) {
+			return {
+				success: false,
+				reply: `No playlist ID provided!`
+			};
+		}
+
+		const { amount, limit, reason, result, success } = await sb.Utils.fetchYoutubePlaylist({
+			playlistID,
+			key: sb.Config.get(\"API_GOOGLE_YOUTUBE\"),
+			limit: this.staticData.limit,
+			limitAction: \"return\"
+		});
+
+		console.log( { amount, limit, reason, result, success } );
+
+		if (!success) {
+			if (reason === \"limit-exceeded\") {
+				return {
+					success: false,
+					reply: `Playlist has too many videos! ${amount} videos fetched, limit is ${limit}.`
+				};
+			}
+			else {
+				return {
+					success: false,
+					reply: `Could not fetch the playlist! Reason: ${reason}`
+				};
+			}
+		}
+		else {
+			updateExisting = false;
+			const items = result.map(i => ({
+				link: i.ID,
+				type: \"youtube\"
+			}));
+
+			links.push(...items);
+		}
+	}
+	else {
+		for (const word of args) {
+			const type = sb.Utils.linkParser.autoRecognize(word);
+			if (type) {
+				links.push({
+					type,
+					link: sb.Utils.linkParser.parseLink(word)
+				});
+			}
 		}
 	}
 
@@ -70,15 +118,7 @@ VALUES
 			cooldown: { length: 2500 }
 		};
 	}
-	else if (links.length > 1) {
-		return {
-			reply: \"Multiple links detected, cannot proceed! Links: \" + links.join(\", \"),
-			cooldown: { length: 2500 }
-		};
-	}
 
-	const { link, type } = links[0];
-	const originalLink = link;
 	const trackToLink = (id) => (!context.channel || context.channel.Links_Allowed)
 		? `https://supinic.com/track/detail/${id}`
 		: `track list ID ${id}`;
@@ -87,119 +127,144 @@ VALUES
 		const typeData = await sb.Query.getRecordset(rs => rs
 			.select(\"ID\", \"Parser_Name\")
 			.from(\"data\", \"Video_Type\")
-			.where(\"Parser_Name IS NOT NULL\")
-		);
+			.where(\"Parser_Name IS NOT NULL\"));
 
 		this.data.typeMap = Object.fromEntries(typeData.map(i => [i.Parser_Name, i.ID]));
 	}
 
-	const check = (await sb.Query.getRecordset(rs => rs
-		.select(\"ID\")
-		.from(\"music\", \"Track\")
-		.where(\"Link = %s\", link)
-		.single()
-	));
+	const results = [];
+	for (const { link, type } of links) {
+		const check = await sb.Query.getRecordset(rs => rs
+			.select(\"ID\")
+			.from(\"music\", \"Track\")
+			.where(\"Link = %s\", link)
+			.single()
+		);
 
-	if (check) {
-		const tags = (await sb.Query.getRecordset(rs => rs
-			.select(\"Tag.Name AS Tag_Name\")
-			.from(\"music\", \"Track_Tag\")
-			.join(\"music\", {
-				raw: \"music.Tag ON Tag.ID = Track_Tag.Tag\"
-			})
-			.where(\"Track_Tag.Track = %n\", check.ID)
-		)).map(i => i.Tag_Name).join(\", \");
+		if (check) {
+			const tagData = (await sb.Query.getRecordset(rs => rs
+				.select(\"Tag.Name AS Tag_Name\")
+				.from(\"music\", \"Track_Tag\")
+				.join(\"music\", {
+					raw: \"music.Tag ON Tag.ID = Track_Tag.Tag\"
+				})
+				.where(\"Track_Tag.Track = %n\", check.ID)
+				.flat(\"Tag_Name\")
+			));
 
-		const row = await sb.Query.getRow(\"music\", \"Track\");
-		await row.load(check.ID);
-		const videoData = await sb.Utils.linkParser.fetchData(originalLink, type);
+			const tags = tagData.join(\", \");
+			const row = await sb.Query.getRow(\"music\", \"Track\");
+			await row.load(check.ID);
 
-		if (row.values.Available && videoData === null) {
-			row.values.Available = false;
+			let addendum = \"\";
+			if (updateExisting) {
+				const videoData = await sb.Utils.linkParser.fetchData(link, type);
+
+				if (row.values.Available && videoData === null) {
+					row.values.Available = false;
+				}
+				else if (row.values.Available && videoData !== null) {
+					row.values.Available = true;
+				}
+
+				if (row.values.Available !== row.originalValues.Available) {
+					addendum = `Track updated: ${row.values.Available ? \"now\" : \"no longer\"} available!`;
+					await row.save();
+				}
+			}
+
+			results.push({
+				link,
+				existing: true,
+				ID: check.ID,
+				formatted: sb.Utils.tag.trim`
+					Link is in the list already:
+					${trackToLink(check.ID)}
+					with tags: ${tags}.
+					${addendum}`
+			});
 		}
-		else if (row.values.Available && videoData !== null) {
-			row.values.Available = true;
-		}
-		
-		let addendum = \"\";
-		if (row.values.Available !== row.originalValues.Available) {
-			addendum = `Track updated: ${row.values.Available ? \"now\" : \"no longer\"} available!`;
-			await row.save();
-		}
+		else {
+			const tag = { todo: 20 };
+			const videoData = await sb.Utils.linkParser.fetchData(link, type);
+			const row = await sb.Query.getRow(\"music\", \"Track\");
 
+			row.setValues({
+				Link: link,
+				Name: (videoData && videoData.name) || null,
+				Added_By: context.user.ID,
+				Video_Type: this.data.typeMap[type],
+				Available: Boolean(videoData),
+				Published: (videoData?.created) ? new sb.Date(videoData.created) : null,
+				Duration: (videoData && videoData.duration) || null,
+				Track_Type: null,
+				Notes: videoData?.description ?? null
+			});
+
+			const { insertId: trackID } = await row.save();
+			const tagRow = await sb.Query.getRow(\"music\", \"Track_Tag\");
+			tagRow.setValues({
+				Track: trackID,
+				Tag: tag.todo,
+				Added_By: context.user.ID,
+				Notes: JSON.stringify(videoData)
+			});
+
+			await tagRow.save();
+
+			if (videoData?.author) {
+				let authorID = null;
+				const normal = videoData.author.toLowerCase().replace(/\\s+/g, \"_\");
+				const authorExists = await sb.Query.getRecordset(rs => rs
+					.select(\"ID\")
+					.from(\"music\", \"Author\")
+					.where(\"Normalized_Name = %s\", normal)
+					.single()
+				);
+				if (authorExists && authorExists.ID) {
+					authorID = authorExists.ID;
+				}
+				else {
+					const authorRow = await sb.Query.getRow(\"music\", \"Author\");
+					authorRow.setValues({
+						Name: videoData.author,
+						Normalized_Name: normal,
+						Added_By: context.user.ID
+					});
+
+					authorID = (await authorRow.save()).insertId;
+				}
+
+				const authorRow = await sb.Query.getRow(\"music\", \"Track_Author\");
+				authorRow.setValues({
+					Track: trackID,
+					Author: authorID,
+					Role: \"Uploader\",
+					Added_By: context.user.ID
+				});
+				await authorRow.save();
+			}
+
+			results.push({
+				link,
+				existing: false,
+				ID: row.values.ID,
+				formatted: `Saved as ${trackToLink(row.values.ID)} and marked as TODO.`
+			});
+		}
+	}
+
+	if (results.length === 1) {
 		return {
-			reply: sb.Utils.tag.trim `
-				Link is in the list already: 
-				${trackToLink(check.ID)}
-				with tags: ${tags}.
-				${addendum}`
+			reply: resuls[0].formatted
 		};
 	}
 	else {
-		const tag = { todo: 20 };
-		const videoData = await sb.Utils.linkParser.fetchData(originalLink, type);
-		const row = await sb.Query.getRow(\"music\", \"Track\");
-
-		row.setValues({
-			Link: link,
-			Name: (videoData && videoData.name) || null,
-			Added_By: context.user.ID,
-			Video_Type: this.data.typeMap[type],
-			Available: Boolean(videoData),
-			Published: (videoData?.created)
-				? new sb.Date(videoData.created)
-				: null,
-			Duration: (videoData && videoData.duration) || null,
-			Track_Type: null,
-			Notes: videoData?.description ?? null
-		});
-
-		const {insertId: trackID} = await row.save();
-		const tagRow = await sb.Query.getRow(\"music\", \"Track_Tag\");
-		tagRow.setValues({
-			Track: trackID,
-			Tag: tag.todo,
-			Added_By: context.user.ID,
-			Notes: JSON.stringify(videoData)
-		});
-
-		await tagRow.save();
-
-		if (videoData?.author) {
-			let authorID = null;
-			const normal = videoData.author.toLowerCase().replace(/\\s+/g, \"_\");
-			const authorExists = await sb.Query.getRecordset(rs => rs
-				.select(\"ID\")
-				.from(\"music\", \"Author\")
-				.where(\"Normalized_Name = %s\", normal)
-				.single()
-			);
-			if (authorExists && authorExists.ID) {
-				authorID = authorExists.ID;
-			}
-			else {
-				const authorRow = await sb.Query.getRow(\"music\", \"Author\");
-				authorRow.setValues({
-					Name: videoData.author,
-					Normalized_Name: normal,
-					Added_By: context.user.ID
-				});
-
-				authorID = (await authorRow.save()).insertId;
-			}
-
-			const authorRow = await sb.Query.getRow(\"music\", \"Track_Author\");
-			authorRow.setValues({
-				Track: trackID,
-				Author: authorID,
-				Role: \"Uploader\",
-				Added_By: context.user.ID
-			});
-			await authorRow.save();
-		}
+		const summary = results.map(i => `${i.link}\\n${i.formatted}`).join(\"\\n\\n\");
+		const pastebinLink = await sb.Pastebin.post(summary);
 
 		return {
-			reply: \"Saved as \" + trackToLink(row.values.ID) + \" and marked as TODO.\"
+			reply: `${results.length} videos processed. Summary: ${pastebinLink}`
 		};
 	}
 })',
@@ -210,7 +275,11 @@ $gc <link <...description> => Checks the link, and adds it to the todo list if n
 
 $gc https://youtu.be/OI8gy-AHgJg
 $gc https://www.nicovideo.jp/watch/sm6140534 ',
-		NULL
+		'async (prefix) => {
+
+
+
+}'
 	)
 
 ON DUPLICATE KEY UPDATE
@@ -222,14 +291,60 @@ ON DUPLICATE KEY UPDATE
 		};
 	}
 
+	let updateExisting = true;
 	const links = [];
-	for (const word of args) {
-		const type = sb.Utils.linkParser.autoRecognize(word);
-		if (type) {
-			links.push({
-				type,
-				link: sb.Utils.linkParser.parseLink(word)
-			});
+	if (args[0] === \"playlist\") {
+		args.shift();
+		const playlistID = args.shift();
+		if (!playlistID) {
+			return {
+				success: false,
+				reply: `No playlist ID provided!`
+			};
+		}
+
+		const { amount, limit, reason, result, success } = await sb.Utils.fetchYoutubePlaylist({
+			playlistID,
+			key: sb.Config.get(\"API_GOOGLE_YOUTUBE\"),
+			limit: this.staticData.limit,
+			limitAction: \"return\"
+		});
+
+		console.log( { amount, limit, reason, result, success } );
+
+		if (!success) {
+			if (reason === \"limit-exceeded\") {
+				return {
+					success: false,
+					reply: `Playlist has too many videos! ${amount} videos fetched, limit is ${limit}.`
+				};
+			}
+			else {
+				return {
+					success: false,
+					reply: `Could not fetch the playlist! Reason: ${reason}`
+				};
+			}
+		}
+		else {
+			updateExisting = false;
+			const items = result.map(i => ({
+				link: i.ID,
+				type: \"youtube\"
+			}));
+
+			links.push(...items);
+		}
+	}
+	else {
+		for (const word of args) {
+			const type = sb.Utils.linkParser.autoRecognize(word);
+			if (type) {
+				links.push({
+					type,
+					link: sb.Utils.linkParser.parseLink(word)
+				});
+			}
 		}
 	}
 
@@ -239,15 +354,7 @@ ON DUPLICATE KEY UPDATE
 			cooldown: { length: 2500 }
 		};
 	}
-	else if (links.length > 1) {
-		return {
-			reply: \"Multiple links detected, cannot proceed! Links: \" + links.join(\", \"),
-			cooldown: { length: 2500 }
-		};
-	}
 
-	const { link, type } = links[0];
-	const originalLink = link;
 	const trackToLink = (id) => (!context.channel || context.channel.Links_Allowed)
 		? `https://supinic.com/track/detail/${id}`
 		: `track list ID ${id}`;
@@ -256,119 +363,144 @@ ON DUPLICATE KEY UPDATE
 		const typeData = await sb.Query.getRecordset(rs => rs
 			.select(\"ID\", \"Parser_Name\")
 			.from(\"data\", \"Video_Type\")
-			.where(\"Parser_Name IS NOT NULL\")
-		);
+			.where(\"Parser_Name IS NOT NULL\"));
 
 		this.data.typeMap = Object.fromEntries(typeData.map(i => [i.Parser_Name, i.ID]));
 	}
 
-	const check = (await sb.Query.getRecordset(rs => rs
-		.select(\"ID\")
-		.from(\"music\", \"Track\")
-		.where(\"Link = %s\", link)
-		.single()
-	));
+	const results = [];
+	for (const { link, type } of links) {
+		const check = await sb.Query.getRecordset(rs => rs
+			.select(\"ID\")
+			.from(\"music\", \"Track\")
+			.where(\"Link = %s\", link)
+			.single()
+		);
 
-	if (check) {
-		const tags = (await sb.Query.getRecordset(rs => rs
-			.select(\"Tag.Name AS Tag_Name\")
-			.from(\"music\", \"Track_Tag\")
-			.join(\"music\", {
-				raw: \"music.Tag ON Tag.ID = Track_Tag.Tag\"
-			})
-			.where(\"Track_Tag.Track = %n\", check.ID)
-		)).map(i => i.Tag_Name).join(\", \");
+		if (check) {
+			const tagData = (await sb.Query.getRecordset(rs => rs
+				.select(\"Tag.Name AS Tag_Name\")
+				.from(\"music\", \"Track_Tag\")
+				.join(\"music\", {
+					raw: \"music.Tag ON Tag.ID = Track_Tag.Tag\"
+				})
+				.where(\"Track_Tag.Track = %n\", check.ID)
+				.flat(\"Tag_Name\")
+			));
 
-		const row = await sb.Query.getRow(\"music\", \"Track\");
-		await row.load(check.ID);
-		const videoData = await sb.Utils.linkParser.fetchData(originalLink, type);
+			const tags = tagData.join(\", \");
+			const row = await sb.Query.getRow(\"music\", \"Track\");
+			await row.load(check.ID);
 
-		if (row.values.Available && videoData === null) {
-			row.values.Available = false;
+			let addendum = \"\";
+			if (updateExisting) {
+				const videoData = await sb.Utils.linkParser.fetchData(link, type);
+
+				if (row.values.Available && videoData === null) {
+					row.values.Available = false;
+				}
+				else if (row.values.Available && videoData !== null) {
+					row.values.Available = true;
+				}
+
+				if (row.values.Available !== row.originalValues.Available) {
+					addendum = `Track updated: ${row.values.Available ? \"now\" : \"no longer\"} available!`;
+					await row.save();
+				}
+			}
+
+			results.push({
+				link,
+				existing: true,
+				ID: check.ID,
+				formatted: sb.Utils.tag.trim`
+					Link is in the list already:
+					${trackToLink(check.ID)}
+					with tags: ${tags}.
+					${addendum}`
+			});
 		}
-		else if (row.values.Available && videoData !== null) {
-			row.values.Available = true;
-		}
-		
-		let addendum = \"\";
-		if (row.values.Available !== row.originalValues.Available) {
-			addendum = `Track updated: ${row.values.Available ? \"now\" : \"no longer\"} available!`;
-			await row.save();
-		}
+		else {
+			const tag = { todo: 20 };
+			const videoData = await sb.Utils.linkParser.fetchData(link, type);
+			const row = await sb.Query.getRow(\"music\", \"Track\");
 
+			row.setValues({
+				Link: link,
+				Name: (videoData && videoData.name) || null,
+				Added_By: context.user.ID,
+				Video_Type: this.data.typeMap[type],
+				Available: Boolean(videoData),
+				Published: (videoData?.created) ? new sb.Date(videoData.created) : null,
+				Duration: (videoData && videoData.duration) || null,
+				Track_Type: null,
+				Notes: videoData?.description ?? null
+			});
+
+			const { insertId: trackID } = await row.save();
+			const tagRow = await sb.Query.getRow(\"music\", \"Track_Tag\");
+			tagRow.setValues({
+				Track: trackID,
+				Tag: tag.todo,
+				Added_By: context.user.ID,
+				Notes: JSON.stringify(videoData)
+			});
+
+			await tagRow.save();
+
+			if (videoData?.author) {
+				let authorID = null;
+				const normal = videoData.author.toLowerCase().replace(/\\s+/g, \"_\");
+				const authorExists = await sb.Query.getRecordset(rs => rs
+					.select(\"ID\")
+					.from(\"music\", \"Author\")
+					.where(\"Normalized_Name = %s\", normal)
+					.single()
+				);
+				if (authorExists && authorExists.ID) {
+					authorID = authorExists.ID;
+				}
+				else {
+					const authorRow = await sb.Query.getRow(\"music\", \"Author\");
+					authorRow.setValues({
+						Name: videoData.author,
+						Normalized_Name: normal,
+						Added_By: context.user.ID
+					});
+
+					authorID = (await authorRow.save()).insertId;
+				}
+
+				const authorRow = await sb.Query.getRow(\"music\", \"Track_Author\");
+				authorRow.setValues({
+					Track: trackID,
+					Author: authorID,
+					Role: \"Uploader\",
+					Added_By: context.user.ID
+				});
+				await authorRow.save();
+			}
+
+			results.push({
+				link,
+				existing: false,
+				ID: row.values.ID,
+				formatted: `Saved as ${trackToLink(row.values.ID)} and marked as TODO.`
+			});
+		}
+	}
+
+	if (results.length === 1) {
 		return {
-			reply: sb.Utils.tag.trim `
-				Link is in the list already: 
-				${trackToLink(check.ID)}
-				with tags: ${tags}.
-				${addendum}`
+			reply: resuls[0].formatted
 		};
 	}
 	else {
-		const tag = { todo: 20 };
-		const videoData = await sb.Utils.linkParser.fetchData(originalLink, type);
-		const row = await sb.Query.getRow(\"music\", \"Track\");
-
-		row.setValues({
-			Link: link,
-			Name: (videoData && videoData.name) || null,
-			Added_By: context.user.ID,
-			Video_Type: this.data.typeMap[type],
-			Available: Boolean(videoData),
-			Published: (videoData?.created)
-				? new sb.Date(videoData.created)
-				: null,
-			Duration: (videoData && videoData.duration) || null,
-			Track_Type: null,
-			Notes: videoData?.description ?? null
-		});
-
-		const {insertId: trackID} = await row.save();
-		const tagRow = await sb.Query.getRow(\"music\", \"Track_Tag\");
-		tagRow.setValues({
-			Track: trackID,
-			Tag: tag.todo,
-			Added_By: context.user.ID,
-			Notes: JSON.stringify(videoData)
-		});
-
-		await tagRow.save();
-
-		if (videoData?.author) {
-			let authorID = null;
-			const normal = videoData.author.toLowerCase().replace(/\\s+/g, \"_\");
-			const authorExists = await sb.Query.getRecordset(rs => rs
-				.select(\"ID\")
-				.from(\"music\", \"Author\")
-				.where(\"Normalized_Name = %s\", normal)
-				.single()
-			);
-			if (authorExists && authorExists.ID) {
-				authorID = authorExists.ID;
-			}
-			else {
-				const authorRow = await sb.Query.getRow(\"music\", \"Author\");
-				authorRow.setValues({
-					Name: videoData.author,
-					Normalized_Name: normal,
-					Added_By: context.user.ID
-				});
-
-				authorID = (await authorRow.save()).insertId;
-			}
-
-			const authorRow = await sb.Query.getRow(\"music\", \"Track_Author\");
-			authorRow.setValues({
-				Track: trackID,
-				Author: authorID,
-				Role: \"Uploader\",
-				Added_By: context.user.ID
-			});
-			await authorRow.save();
-		}
+		const summary = results.map(i => `${i.link}\\n${i.formatted}`).join(\"\\n\\n\");
+		const pastebinLink = await sb.Pastebin.post(summary);
 
 		return {
-			reply: \"Saved as \" + trackToLink(row.values.ID) + \" and marked as TODO.\"
+			reply: `${results.length} videos processed. Summary: ${pastebinLink}`
 		};
 	}
 })'
