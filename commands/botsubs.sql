@@ -49,7 +49,7 @@ VALUES
 	const controller = sb.Platform.get(\"twitch\").controller;
 	const emoteSets = controller.availableEmoteSets;
 
-	if (!this.data.emoteSets || emoteSets.join(\",\") === this.data.emoteSets.join(\",\")) {
+	if (!this.data.emoteSets || emoteSets.join(\",\") !== this.data.emoteSets.join(\",\")) {
 		const { body, statusCode } = await sb.Got({
 			throwHttpErrors: false,
 			url: \"https://api.twitchemotes.com/api/v4/sets\",
@@ -64,6 +64,7 @@ VALUES
 			});
 		}
 
+		this.data.fetched = new sb.Date();
 		this.data.emoteSets = body.map(i => i.set_id).sort();
 		this.data.emoteSetsData = body;
 	}
@@ -100,7 +101,7 @@ ON DUPLICATE KEY UPDATE
 	const controller = sb.Platform.get(\"twitch\").controller;
 	const emoteSets = controller.availableEmoteSets;
 
-	if (!this.data.emoteSets || emoteSets.join(\",\") === this.data.emoteSets.join(\",\")) {
+	if (!this.data.emoteSets || emoteSets.join(\",\") !== this.data.emoteSets.join(\",\")) {
 		const { body, statusCode } = await sb.Got({
 			throwHttpErrors: false,
 			url: \"https://api.twitchemotes.com/api/v4/sets\",
@@ -115,6 +116,7 @@ ON DUPLICATE KEY UPDATE
 			});
 		}
 
+		this.data.fetched = new sb.Date();
 		this.data.emoteSets = body.map(i => i.set_id).sort();
 		this.data.emoteSetsData = body;
 	}
