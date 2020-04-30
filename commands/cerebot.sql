@@ -57,14 +57,3 @@ VALUES
 		NULL,
 		NULL
 	)
-
-ON DUPLICATE KEY UPDATE
-	Code = 'async (extra, ...args) => {
-	let message = args.join(\" \").trim();
-	if (message[0] !== \"!\") {
-		message = \"!\" + message;
-	}
-
-	sb.Master.send(message, 7);
-	return { reply: null };
-}'

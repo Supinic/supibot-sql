@@ -49,6 +49,3 @@ VALUES
 		NULL,
 		NULL
 	)
-
-ON DUPLICATE KEY UPDATE
-	Code = 'async () => ({ reply: \"use $emotecheck pride instead :)\" })'

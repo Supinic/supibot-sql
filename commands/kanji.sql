@@ -72,29 +72,3 @@ VALUES
 		NULL,
 		NULL
 	)
-
-ON DUPLICATE KEY UPDATE
-	Code = '(async function kanji (context, character) {
-	if (!character) {
-		return { 
-			success: false,
-			reply: \"Pepega\"
-		};
-	}
-
-	const data = await sb.Got({
-		prefixUrl: \"https://app.kanjialive.com/api\",
-		url: \"kanji/\" + character
-	}).json();
-
-	if (data.Error) {
-		return {
-			success: false,
-			reply: \"Error: \" + data.Error
-		};
-	}
-
-	return {
-		reply: `${data.ka_utf} (${data.kunyomi}; ${data.onyomi}): ${data.meaning}.`
-	};
-})'

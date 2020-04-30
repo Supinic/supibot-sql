@@ -53,10 +53,3 @@ VALUES
 		NULL,
 		NULL
 	)
-
-ON DUPLICATE KEY UPDATE
-	Code = '(async function github () { 
-	return {
-		reply: \"Supibot: https://github.com/Supinic/supibot - Website: https://github.com/Supinic/supinic.com\"
-	};
-})'

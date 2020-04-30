@@ -54,11 +54,3 @@ VALUES
 		NULL,
 		NULL
 	)
-
-ON DUPLICATE KEY UPDATE
-	Code = '(async function randomGondola () {
-	const { url } = await sb.Got(\"https://gondola.stravers.net/random\");
-	return {
-		reply: `nymnH ${url} nymnH`
-	};
-})'

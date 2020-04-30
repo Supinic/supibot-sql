@@ -73,27 +73,3 @@ $crypto <cryptocurrency code> => Posts that currency\' current price.
 $crypto DOGE',
 		NULL
 	)
-
-ON DUPLICATE KEY UPDATE
-	Code = '(async function crypto (context, symbol = \"BTC\") {
-	symbol = symbol.toUpperCase();
-
-	const data = await sb.Got({
-		url: \"https://min-api.cryptocompare.com/data/price\",
-		searchParams: new sb.URLParams().set(\"fsym\", symbol).set(\"tsyms\", \"USD,EUR\").toString(),
-		headers: {
-			Authorization: \"Apikey \" + sb.Config.get(\"API_CRYPTO_COMPARE\")
-		}
-	}).json();
-
-	if (data.Response === \"Error\") {
-		return {
-			reply: data.Message
-		};
-	}
-	else {
-		return {
-			reply: `Current price of ${symbol}: $${data.USD}, €${data.EUR}`
-		};
-	}
-})'

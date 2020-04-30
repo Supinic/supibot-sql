@@ -78,35 +78,3 @@ VALUES
 		NULL,
 		NULL
 	)
-
-ON DUPLICATE KEY UPDATE
-	Code = '(async function gachiSearch (context, ...args) {
-	const query = args.join(\" \");
-	if (!query) {
-		return { reply: \"Pepega\" };
-	}
-
-	const searchParams = new sb.URLParams()
-		.set(\"name\", query)
-		.set(\"includeTags\", \"6\")
-		.toString();
-
-	const { data } = await sb.Got.instances.Supinic({
-		url: \"track/search\",
-		searchParams
-	}).json();
-
-	if (!data || data.length === 0) {
-		return {
-			reply: \"No tracks matching that query have been found!\"
-		};
-	}
-
-	const extra = (data.length > 1)
-		? `${data.length - 1} more tracks found! JSON: https://supinic.com/api/track/search?${searchParams}`
-		: \"\";
-
-	return {
-		reply: `${data[0].name} - https://supinic.com/track/detail/${data[0].ID} ${extra}`
-	};
-})'

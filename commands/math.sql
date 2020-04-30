@@ -80,27 +80,3 @@ VALUES
 	];
 }'
 	)
-
-ON DUPLICATE KEY UPDATE
-	Code = '(async function math (context, ...args) {
-	const { response, status } = await sb.Got.instances.Leppunen({
-		url: \"math\",
-		searchParams: new sb.URLParams()
-			.set(\"expr\", args.join(\" \"))
-			.toString()
-	}).json();
-	
-	if (status === 200 || status === 503) {
-		const string = response.replace(/\\bNaN\\b/g, \"NaM\").replace(/\\btrue\\b/g, \"TRUE LULW\");
-		return {
-			reply: (context.platform.Name === \"discord\")
-				? `\\`${string}\\``
-				: string
-		};
-	}
-	else {
-		return {
-			reply: \"@Leppunen $math failed monkaS\"
-		};
-	}
-})'

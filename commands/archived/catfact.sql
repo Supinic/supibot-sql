@@ -66,13 +66,3 @@ $catfact',
 	];
 }'
 	)
-
-ON DUPLICATE KEY UPDATE
-	Code = '(async function randomCatFact () {
-	const url = \"https://catfact.ninja/fact\";
-	const data = JSON.parse(await sb.Utils.request(url));
-	
-	return {
-		reply: data.fact
-	};
-})'

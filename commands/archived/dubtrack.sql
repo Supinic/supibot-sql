@@ -49,6 +49,3 @@ VALUES
 		NULL,
 		NULL
 	)
-
-ON DUPLICATE KEY UPDATE
-	Code = 'async (context) => ({ reply: \"https://www.dubtrack.fm/join/\" + context.channel.Name })'

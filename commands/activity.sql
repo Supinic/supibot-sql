@@ -63,18 +63,3 @@ VALUES
 $activity',
 		NULL
 	)
-
-ON DUPLICATE KEY UPDATE
-	Code = '(async function activity (context, target) {
-	const channel = sb.Channel.get(target ?? context.channel, context.platform);
-	if (!channel) {
-		return {
-			success: false,
-			reply: \"Channel does not exist or has no activity available!\" 
-		};
-	}
-
-	return {
-		reply: `Check channel\'s recent activity here: https://supinic.com/bot/channel/${channel.ID}/activity`
-	};
-})'

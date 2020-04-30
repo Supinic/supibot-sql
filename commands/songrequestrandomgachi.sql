@@ -54,11 +54,3 @@ VALUES
 		NULL,
 		NULL
 	)
-
-ON DUPLICATE KEY UPDATE
-	Code = '(async function streamElementsGachi (context) {
-	const rg = sb.Command.get(\"rg\");
-	return {
-		reply: \"!sr \" + (await rg.execute({}, \"linkOnly:true\")).reply
-	}
-})'

@@ -63,20 +63,3 @@ VALUES
 		NULL,
 		NULL
 	)
-
-ON DUPLICATE KEY UPDATE
-	Code = '(async function content () {
-	const data = await sb.Query.getRecordset(rs => rs
-		.select(\"ID\", \"Category\", \"Status\")
-		.from(\"data\", \"Suggestion\")
-	);
-
-	const count = {
-		new: data.filter(i => i.Category === \"Uncategorized\" && i.Status === \"New\").length,
-		approved: data.filter(i => i.Status === \"Approved\").length
-	};	
-
-	return {
-		reply: `Content status: ${count.new} new suggestions, ${count.approved} are approved and waiting!`
-	};
-})'

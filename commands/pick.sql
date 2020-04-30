@@ -62,19 +62,3 @@ VALUES
 		NULL,
 		NULL
 	)
-
-ON DUPLICATE KEY UPDATE
-	Code = '(async function pick (context, ...words) {
-	if (words.length === 0) {
-		return {
-			reply: \"No input provided!\"
-		}
-	}
-
-	return {
-		reply: sb.Utils.randArray(words),
-		cooldown: (context.append.pipe)
-			? 0
-			: this.Cooldown
-	}
-})'

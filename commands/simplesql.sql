@@ -63,20 +63,3 @@ VALUES
 		NULL,
 		NULL
 	)
-
-ON DUPLICATE KEY UPDATE
-	Code = '(async function simpleSQL (context, ...args) {
-	let query = args.join(\" \");
-	try {
-		if (!query.includes(\"AVG\") && !query.includes(\"LIMIT 1\")) {
-			query += \" LIMIT 1\";
-		}
-
-		const result = await sb.Query.raw(query);
-		return { reply: String(result[0][Object.keys(result[0])[0]]) };
-	}
-	catch (e) {
-		console.warn(e);
-		return { reply: \"An error occured!\" };
-	}
-})'

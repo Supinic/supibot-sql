@@ -81,31 +81,3 @@ VALUES
 	];
 }'
 	)
-
-ON DUPLICATE KEY UPDATE
-	Code = '(async function mdn (context, ...args) {
-	const query = args.join(\" \");
-	if (!query) {
-		return {
-			reply: \"No input provided!\"
-		};
-	}
-
-	const data = await sb.Got({
-		url: \"https://developer.mozilla.org/api/v1/search/en-US\",
-		searchParams: new sb.URLParams()
-			.set(\"q\", query)
-			.toString()
-	}).json();
-
-	if (data.documents.length === 0) {
-		return {
-			reply: \"No articles found!\"
-		};
-	}
-
-	const { title, slug } = data.documents[0];
-	return {
-		reply: `${title}: https://developer.mozilla.org/en-US/docs/${slug}`
-	};
-})'

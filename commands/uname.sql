@@ -58,15 +58,3 @@ VALUES
 		NULL,
 		NULL
 	)
-
-ON DUPLICATE KEY UPDATE
-	Code = '(async function uname () {
-	const data = await sb.Got.instances.GitHub(\"repos/supinic/supibot/commits\").json();
-	const commits = data.sort((a, b) => new sb.Date(b.commit.author.date) - new sb.Date(a.commit.author.date));
-
-	const {sha, commit} = commits[0];
-	const message = commit.message.split(\"\\n\")[0];
-	return {
-		reply: `Last commit: ${sha.slice(0, 7)} - ${message}`
-	};
-})'

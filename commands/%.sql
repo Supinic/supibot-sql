@@ -60,9 +60,3 @@ $%',
 	(sb.Utils.random(0, 10000) / 100) + \"%\"
 ]	'
 	)
-
-ON DUPLICATE KEY UPDATE
-	Code = '(async function _percent () {
-	const number = (sb.Utils.random(0, 10000) / 100);
-	return { reply: number + \"%\" };
-})'

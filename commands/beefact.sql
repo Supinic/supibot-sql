@@ -62,17 +62,3 @@ VALUES
 $beefact',
 		NULL
 	)
-
-ON DUPLICATE KEY UPDATE
-	Code = '(async function beeFact () {
-	const fact = await sb.Query.getRecordset(rs => rs
-		.select(\"Text\")
-		.from(\"data\", \"Fun_Fact\")
-		.where(\"Tag = %s\", \"Bees\")
-		.orderBy(\"RAND()\")
-		.limit(1)
-		.single()
-	);
-
-	return { reply: fact.Text };
-})'

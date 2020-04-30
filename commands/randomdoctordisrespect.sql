@@ -54,11 +54,3 @@ VALUES
 		NULL,
 		NULL
 	)
-
-ON DUPLICATE KEY UPDATE
-	Code = '(async function () { 
-	const model = await sb.MarkovChain.get(\"disrespect\");
-	return {
-		reply: model.sentences(3)
-	};
-});'

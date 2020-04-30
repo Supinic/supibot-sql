@@ -87,22 +87,3 @@ VALUES
 		NULL,
 		NULL
 	)
-
-ON DUPLICATE KEY UPDATE
-	Code = '(async function randomName (context, type) {
-	if (!type) {
-		type = sb.Utils.randArray(this.staticData.types);
-	}
-
-	const name = await sb.Got({
-	  	url: \"https://donjon.bin.sh/name/rpc-name.fcgi\",
-		searchParams: new sb.URLParams()
-			.set(\"type\", type)
-			.set(\"n\", \"1\")
-			.toString()
-	}).text();
-
-	return {
-		reply: `Your random ${type} name is: ${name}`
-	};
-})'

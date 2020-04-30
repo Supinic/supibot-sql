@@ -79,24 +79,3 @@ VALUES
 		NULL,
 		NULL
 	)
-
-ON DUPLICATE KEY UPDATE
-	Code = '(async function randomLineExtra () {
-	const [channel, emoji] = sb.Utils.randArray(Object.entries(this.staticData.channels));
-	const max = (await sb.Query.getRecordset(rs => rs
-		.select(\"MAX(ID) AS ID\")
-		.from(\"chat_line\", channel)
-		.single()
-	));
-
-	const line = (await sb.Query.getRecordset(rs => rs
-		.select(\"Text\")
-		.from(\"chat_line\", channel)
-		.where(\"ID = %n\", sb.Utils.random(1, max.ID))
-		.single()
-	));
-
-	return {
-		reply: `${emoji} ${line.Text}`
-	};
-})'

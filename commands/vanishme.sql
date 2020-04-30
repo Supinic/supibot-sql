@@ -53,10 +53,3 @@ VALUES
 		NULL,
 		NULL
 	)
-
-ON DUPLICATE KEY UPDATE
-	Code = '(async function vanishMe (context) {
-	return {
-		reply: \"!vanish monkaS\"
-	};
-})'

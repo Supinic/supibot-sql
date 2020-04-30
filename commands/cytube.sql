@@ -53,10 +53,3 @@ VALUES
 		NULL,
 		NULL
 	)
-
-ON DUPLICATE KEY UPDATE
-	Code = '(async function cytube () {
-	return {
-		reply: \"Check it out here: https://cytu.be/r/forsenoffline\"
-	};
-})'

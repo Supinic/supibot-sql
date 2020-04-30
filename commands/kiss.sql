@@ -71,26 +71,3 @@ VALUES
 		NULL,
 		NULL
 	)
-
-ON DUPLICATE KEY UPDATE
-	Code = '(async function kiss (context, user, emote) {
-	if (!user || user.toLowerCase() === context.user.Name) {
-		return {
-			reply: \"You can\'t really kiss yourself 😕\"
-		};
-	}
-	else if (user === sb.Config.get(\"SELF\")) {
-		return {
-			reply: \"😊\"
-		};
-	}
-	else {
-		const string = (emote)
-			? emote + \" 💋\"
-			: sb.Utils.randArray(this.staticData.emojis);
-
-		return { 
-			reply: `${context.user.Name} kisses ${user} ${string}` 
-		};
-	}
-})'

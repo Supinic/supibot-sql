@@ -64,21 +64,3 @@ VALUES
 		NULL,
 		NULL
 	)
-
-ON DUPLICATE KEY UPDATE
-	Code = '(async function topGames () {
-	const data = await sb.Got.instances.Twitch.Kraken(\"games/top\").json();
-	if (!Array.isArray(data.top)) {
-		return {
-			reply: \"No data retrieved...\"
-		};
-	}
-
-	const games = data.top.map(i => (
-		i.game.name + \" (\" + sb.Utils.round(i.viewers / 1000, 1) + \"k)\"
-	));
-	
-	return {
-		reply: \"Most popular games on Twitch by viewers right now: \" + games.join(\", \")
-	};
-})'

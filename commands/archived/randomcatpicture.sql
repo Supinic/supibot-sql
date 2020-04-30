@@ -54,11 +54,3 @@ VALUES
 		NULL,
 		NULL
 	)
-
-ON DUPLICATE KEY UPDATE
-	Code = 'async () => {
-	const url = \"https://api.thecatapi.com/v1/images/search\";
-	const data = JSON.parse(await sb.Utils.request(url));
-
-	return { reply: data[0].url };
-}'

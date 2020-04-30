@@ -59,16 +59,3 @@ VALUES
 		NULL,
 		NULL
 	)
-
-ON DUPLICATE KEY UPDATE
-	Code = '(async function gachiCheckSongRequest (context, link) {
-	if (sb.Config.get(\"SONG_REQUESTS_STATE\") !== \"vlc\") {
-		return {
-			reply: \"Song requests are currently not on VLC, so no data could be fetched!\"
-		};
-	}
-
-	return {
-		reply: (await (sb.Command.get(\"gc\").execute({}, (await sb.VideoLANConnector.currentlyPlaying()).category.meta.url))).reply
-	};
-})'

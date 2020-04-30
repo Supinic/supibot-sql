@@ -59,16 +59,3 @@ VALUES
 		'No arguments.',
 		NULL
 	)
-
-ON DUPLICATE KEY UPDATE
-	Code = '(async function copypasta () {
-	const html = await sb.Got(\"https://www.twitchquotes.com/random\").text();
-	const $ = sb.Utils.cheerio(html);
-	const copypasta = $(\"#quote_display_content_0\").text();
-
-	return {
-		reply: (copypasta)
-			? sb.Utils.removeHTML(copypasta).trim()
-			: \"No copypasta found.\"
-	};
-})'

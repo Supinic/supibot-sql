@@ -49,6 +49,3 @@ VALUES
 		'No arguments.',
 		NULL
 	)
-
-ON DUPLICATE KEY UPDATE
-	Code = 'async () => ({ reply: \"https://supinic.com/gachi/list\" })'

@@ -115,14 +115,3 @@ VALUES
 		'No arguments.',
 		NULL
 	)
-
-ON DUPLICATE KEY UPDATE
-	Code = '(async function forsenCD (context) {
-	const post = sb.Utils.randArray(this.staticData.forsenCD.filter(i => !this.data.previousPosts.includes(i)));
-	this.data.previousPosts.unshift(post);
-	this.data.previousPosts.splice(this.staticData.repeats);
-
-	return {
-		reply: post + \" \" + context.invocation
-	};
-})'

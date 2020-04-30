@@ -90,14 +90,3 @@ VALUES
 		'No arguments.',
 		NULL
 	)
-
-ON DUPLICATE KEY UPDATE
-	Code = '(async function forsenE (context) {
-	const post = sb.Utils.randArray(this.staticData.forsenE.filter(i => !this.data.previousPosts.includes(i)));
-	this.data.previousPosts.unshift(post);
-	this.data.previousPosts.splice(this.staticData.repeats);
-
-	return {
-		reply: post + \" forsenE\"
-	};
-})'

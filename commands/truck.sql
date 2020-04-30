@@ -59,16 +59,3 @@ VALUES
 		NULL,
 		NULL
 	)
-
-ON DUPLICATE KEY UPDATE
-	Code = 'async (extra, target) => {
-	if (target && target.toLowerCase() === sb.Config.get(\"SELF\")) {
-		return { reply: \"KKonaW I\'M DRIVING THE TRUCK KKonaW GET OUT OF THE WAY KKonaW\" };
-	}
-	else if (target && target.toLowerCase() !== extra.user.Name) {
-		return { reply: `You truck ${target} into bed with the power of a V8 engine KKonaW 👉🛏🚚` };
-	}
-	else {
-		return { reply: \"The truck ran you over KKoooona\" };
-	}
-}'

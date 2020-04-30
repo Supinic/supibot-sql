@@ -69,15 +69,3 @@ VALUES
 	];
 }'
 	)
-
-ON DUPLICATE KEY UPDATE
-	Code = '(async function randomWord (context, number = 1) {
-	const repeats = Number(number);
-	if (!repeats || repeats > 10 || repeats < 1 || Math.trunc(repeats) !== repeats) {
-		return { reply: \"Invalid or too high amount of words!\" };
-	}
-
-	return {
-		reply: [...Array(repeats)].map(() => sb.Utils.randArray(sb.Config.get(\"WORD_LIST\"))).join(\" \")
-	};
-})'

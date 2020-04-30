@@ -58,15 +58,3 @@ VALUES
 		NULL,
 		NULL
 	)
-
-ON DUPLICATE KEY UPDATE
-	Code = 'async (extra, ID) => {
-	if (!ID  || !Number(ID)) {
-		return { reply: \"No or invalid ID provided\" };
-	}
-
-	const ban = sb.Filter.get(Number(ID));
-	await ban.toggle();
-
-	return { reply: \"Ban ID \" + ban.ID + \" is now \" + (ban.Active ? \"\" : \"in\") + \"active.\" };
-}'

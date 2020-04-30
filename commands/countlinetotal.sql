@@ -76,33 +76,3 @@ VALUES
 		NULL,
 		NULL
 	)
-
-ON DUPLICATE KEY UPDATE
-	Code = '(async function countLineTotal () {
-	let preciseLines = 0;
-	for (const channel of sb.Channel.data.filter(i => i.Type !== \"Inactive\")) {
-		const rs = await sb.Query.getRecordset(rs => rs
-			.select(\"MAX(ID) AS Total\")
-			.from(\"chat_line\", channel.getDatabaseName())
-			.single()
-		);
-
-		if (!rs) {
-			console.warn(\"countlinetotal: No ID found\", channel.Name);
-			continue;
-		}
-
-		preciseLines += rs.Total;
-	}
-
-	const data = await sb.Query.getRecordset(rs => rs
-		.select(\"(SUM(DATA_LENGTH) + SUM(INDEX_LENGTH)) AS Bytes\")
-		.from(\"INFORMATION_SCHEMA\", \"TABLES\")
-		.where(\"TABLE_SCHEMA = %s\", \"chat_line\")
-		.single()
-	);
-
-	return {
-		reply: \"Currently logging \" + preciseLines + \" lines in total across all channels, taking up approximately \" + sb.Utils.round(data.Bytes / 1073741824, 3) + \" GB of space.\"
-	};
-})'

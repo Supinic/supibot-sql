@@ -54,11 +54,3 @@ VALUES
 		NULL,
 		NULL
 	)
-
-ON DUPLICATE KEY UPDATE
-	Code = '(async function inspireMe () {
-	const link = await sb.Got(\"https://inspirobot.me/api?generate=true\").text();
-	return {
-		reply: link
-	};
-})'

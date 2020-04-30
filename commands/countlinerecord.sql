@@ -80,37 +80,3 @@ VALUES
 		NULL,
 		NULL
 	)
-
-ON DUPLICATE KEY UPDATE
-	Code = '(async function countLineRecord (context) {
-	const [amountData, lengthData] = await Promise.all([
-		sb.Query.getRecordset(rs => rs
-			.select(\"Amount\", \"Timestamp\")
-			.from(\"chat_data\", \"Message_Meta_Channel\")
-			.where(\"Channel = %n\", context.channel.ID)
-			.orderBy(\"Amount DESC\")
-			.limit(1)
-			.single()
-		),
-
-		sb.Query.getRecordset(rs => rs
-			.select(\"Length\", \"Timestamp\")		
-			.from(\"chat_data\", \"Message_Meta_Channel\")
-			.where(\"Channel = %n\", context.channel.ID)
-			.orderBy(\"Length DESC\")
-			.limit(1)
-			.single()
-		)
-	]);
-
-	return {
-		reply: [
-			\"This channel\'s records are\",
-			amountData.Amount + \" messages/min\",
-			\"(\" + amountData.Timestamp.format(\"Y-m-d H:i\") + \");\",
-			\"and\",
-			sb.Utils.round(lengthData.Length / 1000, 2) + \" kB/min\",
-			\"(\" + lengthData.Timestamp.format(\"Y-m-d H:i\") + \")\"
-		].join(\" \")
-	};		
-})'

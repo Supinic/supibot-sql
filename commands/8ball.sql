@@ -91,10 +91,3 @@ VALUES
 }
 '
 	)
-
-ON DUPLICATE KEY UPDATE
-	Code = '(async function _8ball () {
-	return {
-		reply: sb.Utils.randArray(this.staticData.responses)
-	};
-})'

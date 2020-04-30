@@ -135,14 +135,3 @@ VALUES
 		NULL,
 		NULL
 	)
-
-ON DUPLICATE KEY UPDATE
-	Code = '(async function randomSadCat () {
-	const post = sb.Utils.randArray(this.staticData.links.filter(i => !this.data.previousPosts.includes(i)));
-	this.data.previousPosts.unshift(post);
-	this.data.previousPosts.splice(this.staticData.repeats);
-	
-	return {
-		reply: \"SadCat \" + post
-	};
-})'

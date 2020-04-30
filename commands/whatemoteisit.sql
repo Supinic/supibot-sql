@@ -60,17 +60,3 @@ VALUES
 		NULL,
 		NULL
 	)
-
-ON DUPLICATE KEY UPDATE
-	Code = '(async function whatEmoteIsIt (context, emote) {
-	const data = await sb.Got.instances.Leppunen(\"twitch/emotes/\" + emote).json();
-	const {error, channel, channelid, emoteid, emotecode, tier} = data;
-	if (error) {
-		return { reply: error + \"!\" };
-	}
-
-	const emoteLink = \"https://twitchemotes.com/emotes/\" + emoteid;
-	return {
-		reply: `${emotecode} (ID ${emoteid}) - tier ${tier} sub emote to channel ${channel}. ${emoteLink}`
-	};
-})'

@@ -227,17 +227,3 @@ VALUES
 		NULL,
 		NULL
 	)
-
-ON DUPLICATE KEY UPDATE
-	Code = '(async function emoteCheck (context, type) {
-	if (!type) {
-		return { reply: \"No type provided\" };
-	}
-
-	const result = this.staticData.emotes[type];
-	return {
-		reply: (result)
-			? result.join(\" \")
-			: \"No emote set available for that type\"
-	};
-})'

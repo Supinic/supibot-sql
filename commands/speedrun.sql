@@ -57,14 +57,3 @@ VALUES
 		NULL,
 		NULL
 	)
-
-ON DUPLICATE KEY UPDATE
-	Code = '(async function speedrun () {
-	const { comment } = await sb.Got.instances.Leppunen(\"gdq\").json();
-	return {
-		reply: comment
-	};
-
-	// const model = await sb.MarkovChain.get(\"gdq-final\");
-	// return { reply: model.sentences(2) };
-})'

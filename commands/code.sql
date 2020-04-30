@@ -66,23 +66,3 @@ VALUES
 		NULL,
 		NULL
 	)
-
-ON DUPLICATE KEY UPDATE
-	Code = '(async function code (context, commandString) {
-	if (!commandString) {
-		return {
-			reply: \"No command provided!\"
-		};
-	}
-
-	const command = sb.Command.get(commandString);
-	if (!command) {
-		return {
-			reply: \"Provided command does not exist!\"
-		};
-	}
-
-	return {
-		reply: `Website: https://supinic.com/bot/command/${command.ID}/code`
-	};	
-})'

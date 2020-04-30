@@ -77,10 +77,3 @@ VALUES
 		NULL,
 		NULL
 	)
-
-ON DUPLICATE KEY UPDATE
-	Code = '(async function pajaWTH () {
-	return {
-		reply: sb.Utils.randArray(this.staticData.quotes)
-	};
-})'

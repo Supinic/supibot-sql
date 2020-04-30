@@ -51,8 +51,3 @@ VALUES
 		NULL,
 		NULL
 	)
-
-ON DUPLICATE KEY UPDATE
-	Code = 'async () => ({
-	reply: \"This command is deprecated, please use $check afk <user>\"	
-})'

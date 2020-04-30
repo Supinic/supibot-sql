@@ -64,17 +64,3 @@ $atop
 $atop <someone> => still shows your lines, not theirs.',
 		NULL
 	)
-
-ON DUPLICATE KEY UPDATE
-	Code = '(async function atop () {
-	const top = (await sb.Query.getRecordset(rs => rs
-		.select(\"Name\", \"SUM(Message_Count) AS Total\")
-		.from(\"chat_data\", \"Message_Meta_User_Alias\")
-		.join(\"chat_data\", \"User_Alias\")
-		.groupBy(\"User_Alias\")
-		.orderBy(\"SUM(Message_Count) DESC\")
-		.limit(10)
-	)).map(i => i.Name + \": \" + i.Total).join(\"; \")
-
-	return { reply: \"Top users by total chat lines across all channels: \" + top };
-})'

@@ -54,11 +54,3 @@ VALUES
 		NULL,
 		NULL
 	)
-
-ON DUPLICATE KEY UPDATE
-	Code = 'async () => {
-	const url = \"https://dog.ceo/api/breeds/image/random\";
-	const data = JSON.parse(await sb.Utils.request(url));
-
-	return { reply: data.message };
-}'

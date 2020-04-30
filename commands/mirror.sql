@@ -68,25 +68,3 @@ VALUES
 		NULL,
 		NULL
 	)
-
-ON DUPLICATE KEY UPDATE
-	Code = 'async (extra) => {
-	const cytube = sb.Channel.get(\"forsenoffline\");
-	const twitch = sb.Channel.get(\"vohvlei\");
-
-	let response = null;
-	if (cytube.Mirror && twitch.Mirror) {
-		cytube.Mirror = null;
-		twitch.Mirror = null;
-		response = \"Turned Cytube <=> Twitch mirroring off.\";
-	}
-	else {
-		cytube.Mirror = twitch.ID;
-		twitch.Mirror = cytube.ID;
-		response = \"Turned Cytube <=> Twitch mirroring on.\";
-	}
-	
-	return { 
-		reply: response
-	};
-}'

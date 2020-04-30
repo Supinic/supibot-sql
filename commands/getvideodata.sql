@@ -69,26 +69,3 @@ VALUES
 		NULL,
 		NULL
 	)
-
-ON DUPLICATE KEY UPDATE
-	Code = '(async function getVideoData (context, link) {
-	let data = null;
-	try {
-		data = await sb.Utils.linkParser.fetchData(link);
-	}
-	catch (e) {
-		return { reply: \"Unable to parse link.\" };
-	}
-
-	if (!data) {
-		return { reply: \"Link has been deleted or is otherwise not available.\" };
-	}
-	else {
-		const link = await sb.Pastebin.post(JSON.stringify(data, null, 4), {
-			name: data.name + \", requested by \" + context.user.Name,
-			format: \"json\"
-		});
-
-		return { reply: link };
-	}
-})'

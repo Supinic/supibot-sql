@@ -60,17 +60,3 @@ VALUES
 		NULL,
 		NULL
 	)
-
-ON DUPLICATE KEY UPDATE
-	Code = '(async function pastebin (context, ...args) {
-	if (args.length === 0) {
-		return {
-			success: false,
-			reply: \"No input provided!\"
-		};
-	}
-
-	return {
-		reply: await sb.Pastebin.post(args.join(\" \"))
-	};
-})'

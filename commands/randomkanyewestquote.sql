@@ -54,11 +54,3 @@ VALUES
 		NULL,
 		NULL
 	)
-
-ON DUPLICATE KEY UPDATE
-	Code = '(async function randomKanyeWestQuote () {
-	const { quote } = await sb.Got(\"https://api.kanye.rest\").json();
-	return {
-		reply: quote
-	};
-})'

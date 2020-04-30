@@ -55,12 +55,3 @@ VALUES
 		NULL,
 		NULL
 	)
-
-ON DUPLICATE KEY UPDATE
-	Code = 'async (extra, ...args) => {
-	if (args.length === 0) {
-		return { reply: \"No input provided!\" };
-	}
-
-	return { reply: sb.Utils.transliterate(args.join(\" \")) };
-}'

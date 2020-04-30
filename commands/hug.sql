@@ -59,16 +59,3 @@ VALUES
 		'No arguments.',
 		NULL
 	)
-
-ON DUPLICATE KEY UPDATE
-	Code = '(async function hug (context, target) {
-	if (!target) {
-		return { reply: \"You didn\'t want to hug anyone, so I\'ll hug you instead 🤗\" };
-	}
-	else if (target.toLowerCase() === context.platform.Self_Name.toLowerCase()) {
-		return { reply: \"Thanks for the hug 🙂 <3\" };
-	}
-	else {
-		return { reply: context.user.Name + \" hugs \" + target + \" 🤗\" };
-	}
-})'

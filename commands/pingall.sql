@@ -60,17 +60,3 @@ VALUES
 		NULL,
 		NULL
 	)
-
-ON DUPLICATE KEY UPDATE
-	Code = '(async function pingAll (context) {
-	const bots = await sb.Query.getRecordset(rs => rs
-		.select(\"Bot_Alias\", \"Prefix\", \"Prefix_Space\")
-		.from(\"bot_data\", \"Bot\")
-		.where(\"Prefix IS NOT NULL\")
-		.where(\"Bot_Alias <> %n\", sb.Config.get(\"SELF_ID\"))
-	);
-
-	for (const bot of bots) {
-		sb.Master.send(bot.Prefix + (bot.Prefix_Space ? \" \" : \"\") + \"ping\", context.channel);
-	}
-})'

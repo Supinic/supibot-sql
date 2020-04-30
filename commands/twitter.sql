@@ -64,21 +64,3 @@ VALUES
 		NULL,
 		NULL
 	)
-
-ON DUPLICATE KEY UPDATE
-	Code = 'async (extra, user) => {
-	if (!user) {
-		return { reply: \"No user provided!\" };
-	}
-	
-	const data = await sb.Twitter.lastUserTweets(user);
-	if (data.success) {
-		return {
-			reply: data.text + \" (\" + sb.Utils.timeDelta(data.date) + \")\"
-		};
-	}
-	else {
-		return { reply: data.text };
-	}
-
-}'

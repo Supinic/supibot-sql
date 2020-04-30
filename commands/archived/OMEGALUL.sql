@@ -61,18 +61,3 @@ VALUES
 		NULL,
 		NULL
 	)
-
-ON DUPLICATE KEY UPDATE
-	Code = 'async (extra, ...args) => {
-	return {
-		reply: \"Command is deprecated. Use $texttransform OMEGALUL (or $tt OMEGALUL for short)\"
-	};
-
-	if (args.length === 0) {
-		return { reply: \"Pepega\" };
-	}
-
-	return { 
-		reply: args.join(\" \").replace(/[oOｏＯоО]/g, \" OMEGALUL \")
-	};
-}'

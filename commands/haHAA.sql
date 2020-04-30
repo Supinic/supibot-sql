@@ -63,11 +63,3 @@ VALUES
 	];
 }'
 	)
-
-ON DUPLICATE KEY UPDATE
-	Code = '(async function _4head (context) {
-	const data = await sb.Got(\"https://icanhazdadjoke.com/\").json();
-	return {
-		reply: data.joke + \" \" + context.invocation
-	};
-})'

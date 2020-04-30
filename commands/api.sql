@@ -53,10 +53,3 @@ VALUES
 		NULL,
 		NULL
 	)
-
-ON DUPLICATE KEY UPDATE
-	Code = '(async function api () {
-	return {
-		reply: \"https://supinic.com/api\"
-	}
-})'

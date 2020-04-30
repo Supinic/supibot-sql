@@ -73,30 +73,3 @@ VALUES
 		NULL,
 		NULL
 	)
-
-ON DUPLICATE KEY UPDATE
-	Code = '(async function suggest (context, ...args) {
-	if (args.length === 0) {
-		return { 
-			reply: \"All suggestions: https://supinic.com/bot/suggestions/list || Your suggestions (requires login): https://supinic.com/bot/suggestions/mine || Statistics (requires login): https://supinic.com/bot/suggestions/stats\",
-			cooldown: 5000
-		};
-	}
-
-	const row = await sb.Query.getRow(\"data\", \"Suggestion\")
-	row.setValues({
-		Text: args.join(\" \"),
-		User_Alias: context.user.ID,
-		Priority: 255
-	});
-
-	await row.save();
-
-	const emote = (context.platform.Name === \"twitch\")
-		? \"BroBalt\"
-		: \"👍\";
-
-	return { 
-		reply: `Suggestion saved, and will eventually be processed (ID ${row.values.ID}) ${emote}`
-	};
-})'

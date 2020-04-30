@@ -57,14 +57,3 @@ VALUES
 		NULL,
 		NULL
 	)
-
-ON DUPLICATE KEY UPDATE
-	Code = '(async function devnull (context) {
-	if (!context.append.pipe) {
-		return {
-			reply: \"This command cannot be used outside of pipe!\"
-		};
-	}
-
-	return null;
-})'

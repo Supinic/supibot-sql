@@ -52,9 +52,3 @@ VALUES
 		NULL,
 		NULL
 	)
-
-ON DUPLICATE KEY UPDATE
-	Code = 'async () => {
-	const free = new sb.Date(\"2020-12-11\");
-	return { reply: \"Our boy might be free \" + sb.Utils.timeDelta(free) + \" if he gets his parole TriHard\" };
-}'

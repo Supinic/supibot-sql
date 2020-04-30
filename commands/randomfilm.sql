@@ -63,20 +63,3 @@ VALUES
 		NULL,
 		NULL
 	)
-
-ON DUPLICATE KEY UPDATE
-	Code = '(async function randomFilm () {
-	const html = await sb.Got.instances.FakeAgent({
-		url: \"https://www.bestrandoms.com/random-movie-generator\"
-	}).text();
-
-	const $ = sb.Utils.cheerio(html);
-	const movies = $(\".list-unstyled.content li\").map((ind, i) => {
-		const name = $($(i).children()[0]);
-		return name.text().replace(/\\s+/g, \" \");		
-	});
-
-	return {
-		reply: `Your random movie is: ${sb.Utils.randArray(movies)}.`
-	};
-})'

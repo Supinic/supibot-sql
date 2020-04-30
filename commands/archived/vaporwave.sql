@@ -53,10 +53,3 @@ VALUES
 		NULL,
 		NULL
 	)
-
-ON DUPLICATE KEY UPDATE
-	Code = '(async function vaporwave () { 
-	return {
-		reply: \"Command deprecated. Use \\\"$texttransform vaporwave\\\" instead, or $tt vw for short.\"
-	};
-})'

@@ -75,32 +75,3 @@ VALUES
 		NULL,
 		NULL
 	)
-
-ON DUPLICATE KEY UPDATE
-	Code = '(async function lastCommand (context) {
-	const data = await sb.Query.getRecordset(rs => {
-		rs.select(\"Result\")
-			.from(\"chat_data\", \"Command_Execution\")
-			.where(\"Command <> %n\", this.ID)
-			.where(\"User_Alias = %n\", context.user.ID)
-			.where(\"Executed > DATE_ADD(NOW(), INTERVAL -1 MINUTE)\")
-			.orderBy(\"Executed DESC\")
-			.limit(1)
-			.single();
-
-		if (context.channel) {
-			rs.where(\"Channel = %n\", context.channel.ID)
-		}
-		else {
-			rs.where(\"Channel IS NULL\").where(\"Platform = %n\", context.platform.ID);
-		}
-
-		return rs;
-	});
-
-	return {
-		reply: (data?.Result)
-			? String(data.Result)
-			: \"No recent command execution found!\"
-	};
-})'

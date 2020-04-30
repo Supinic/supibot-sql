@@ -55,12 +55,3 @@ VALUES
 		'No arguments.',
 		NULL
 	)
-
-ON DUPLICATE KEY UPDATE
-	Code = 'async () => {
-	const url = \"https://dog-api.kinduff.com/api/facts\";
-	const data = JSON.parse(await sb.Utils.request(url));
-	return {
-		reply: (data.success) ? data.facts[0] : \"The API returned an internal error!\" 
-	};
-}'

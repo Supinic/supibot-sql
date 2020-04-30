@@ -52,9 +52,3 @@ VALUES
 		NULL,
 		NULL
 	)
-
-ON DUPLICATE KEY UPDATE
-	Code = '(async function restart () {
-	setTimeout(() => process.abort(), 1000);
-	return { reply: \"Restarting...\" };
-})'

@@ -75,32 +75,3 @@ VALUES
 		'No arguments.',
 		NULL
 	)
-
-ON DUPLICATE KEY UPDATE
-	Code = '(async function funFact () {
-	const { year, month } = new sb.Date();
-	const randomDate = new sb.Date(
-		sb.Utils.random(2017, year),
-		sb.Utils.random(1, 12)
-	);
-
-	const rawData = await sb.Got({
-		prefixUrl: \"https://uselessfacts.net/api\",
-		url: \"posts\",
-		searchParams: \"d=\" + randomDate.toJSON()
-	}).json();
-
-	const data = rawData.filter(i => i._id !== this.data.previousFactID);
-	if (data.length === 0) {
-		return {
-			reply: \"No fun facts found :(\"
-		};
-	}
-
-	const randomFact = sb.Utils.randArray(data);
-	this.data.previousFactID = randomFact._id;
-
-	return {
-		reply: randomFact.title
-	};
-})'
