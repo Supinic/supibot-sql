@@ -66,8 +66,7 @@ VALUES
 		}
 	]
 })',
-		'(async function subscribe (context, type) {
-	type = type.toLowerCase();
+		'(async function subscribe (context, type) {	
 	if (!type) {
 		return {
 			success: false,
@@ -75,6 +74,7 @@ VALUES
 		};
 	}
 
+	type = type.toLowerCase();
 	const event = this.staticData.types.find(i => i.name === type || i.aliases.includes(type));
 	if (!event) {
 		return {
@@ -172,8 +172,7 @@ VALUES
 	)
 
 ON DUPLICATE KEY UPDATE
-	Code = '(async function subscribe (context, type) {
-	type = type.toLowerCase();
+	Code = '(async function subscribe (context, type) {	
 	if (!type) {
 		return {
 			success: false,
@@ -181,6 +180,7 @@ ON DUPLICATE KEY UPDATE
 		};
 	}
 
+	type = type.toLowerCase();
 	const event = this.staticData.types.find(i => i.name === type || i.aliases.includes(type));
 	if (!event) {
 		return {
