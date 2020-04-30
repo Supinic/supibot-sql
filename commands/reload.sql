@@ -76,7 +76,19 @@ VALUES
 			await sb.Command.initialize();
 			break;
 		case \"commands\": await sb.Command.reloadData(); break;
-		case \"command\": await sb.Command.reloadSpecific(target, ...rest); break;
+		case \"command\": {
+			try {
+				await sb.Command.reloadSpecific(target, ...rest);
+			}
+			catch {
+				return {
+					success: false,
+					reply: \"No valid commands provided!\"
+				};
+			}
+
+			break;
+		}
 
 		case \"Config\":
 		case \"config\": await sb.Config.reloadData(); break;
@@ -153,7 +165,19 @@ ON DUPLICATE KEY UPDATE
 			await sb.Command.initialize();
 			break;
 		case \"commands\": await sb.Command.reloadData(); break;
-		case \"command\": await sb.Command.reloadSpecific(target, ...rest); break;
+		case \"command\": {
+			try {
+				await sb.Command.reloadSpecific(target, ...rest);
+			}
+			catch {
+				return {
+					success: false,
+					reply: \"No valid commands provided!\"
+				};
+			}
+
+			break;
+		}
 
 		case \"Config\":
 		case \"config\": await sb.Config.reloadData(); break;
