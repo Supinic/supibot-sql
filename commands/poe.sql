@@ -212,11 +212,8 @@ VALUES
 	}
 })',
 		NULL,
-		'async (prefix) => {
-	const row = await sb.Query.getRow(\"chat_data\", \"Command\");
-	await row.load(117);
-	const { commands } = eval(row.values.Static_Data);	
-
+		'async (prefix, commandValues) => {
+	const { commands } = eval(commandValues.Static_Data);	
 	return [
 		\"Multiple commands related to Path of Exile.\",
 		\"\",
