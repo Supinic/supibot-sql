@@ -1,0 +1,30 @@
+INSERT INTO
+	`data`.`Slots_Pattern`
+	(
+		ID,
+		Name,
+		Pattern,
+		Type,
+		Notes
+	)
+VALUES
+	(
+		2,
+		'#gachi',
+		'[
+	\"gachiCOOL\",
+	\"gachiJAM\",
+	\"gachiHop\",
+	\"gachiANGEL\",
+	\"gachiBOP\",
+	\"gachiBASS\",
+	\"gachiHYPER\",
+	\"GachiPls\",
+	\"gachiVICTORY\",
+	\"gachiOnFIRE\",
+	\"gachiGold\",
+	\"gachiPRIDE\"
+]',
+		'Array',
+		'Has most gachi emotes. Based on pajlada\'s selection in his channel.'
+	)
