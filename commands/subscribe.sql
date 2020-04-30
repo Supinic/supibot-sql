@@ -30,7 +30,7 @@ VALUES
 		'subscribe',
 		'[\"unsubscribe\"]',
 		NULL,
-		'Subscribe or unscribe to a database changing event. Currently supported: \"Suggestion\".',
+		'Subscribe or unscribe to a database changing event. Check the extended help for detailed info on each subscription event.',
 		5000,
 		0,
 		0,
@@ -139,11 +139,8 @@ VALUES
 	}
 })',
 		NULL,
-		'async (prefix) => {
-	const row = await sb.Query.getRow(\"chat_data\", \"Command\");
-	await row.load(76);
-
-	const { types } = eval(row.values.Static_Data);
+		'async (prefix, commandValues) => {
+	const { types } = eval(commandValues.Static_Data);
 	const typesList = types.map(i => sb.Utils.tag.trim `
 		<li>
 			<code>${i.name}</code>
