@@ -1,0 +1,25 @@
+INSERT INTO
+	`data`.`Extra_News`
+	(
+		ID,
+		Code,
+		Language,
+		URL,
+		Endpoints,
+		Type
+	)
+VALUES
+	(
+		8,
+		'rs',
+		'serbian',
+		'https://www.republika.rs/rss/',
+		'[
+	\"najnovije-vesti\",
+	\"vesti/srbija\",
+	\"vesti/beograd\",
+	\"vesti/tema-dana\",
+	\"lifestyle/zena\"
+]',
+		'RSS'
+	)

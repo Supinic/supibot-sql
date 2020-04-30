@@ -1,0 +1,21 @@
+INSERT INTO
+	`data`.`Extra_News`
+	(
+		ID,
+		Code,
+		Language,
+		URL,
+		Endpoints,
+		Type
+	)
+VALUES
+	(
+		6,
+		'cl',
+		'spanish',
+		'https://www.cooperativa.cl/noticias/site/tax/port/',
+		'[
+	\"all/rss____1.xml\"
+]',
+		'RSS'
+	)

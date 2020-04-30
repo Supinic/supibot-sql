@@ -1,0 +1,23 @@
+INSERT INTO
+	`data`.`Extra_News`
+	(
+		ID,
+		Code,
+		Language,
+		URL,
+		Endpoints,
+		Type
+	)
+VALUES
+	(
+		7,
+		'is',
+		'icelandic',
+		'https://www.ruv.is/rss/',
+		'[
+	\"frettir\",
+	\"innlent\",
+	\"erlent\"
+]',
+		'RSS'
+	)

@@ -1,0 +1,19 @@
+INSERT INTO
+	`data`.`Extra_News`
+	(
+		ID,
+		Code,
+		Language,
+		URL,
+		Endpoints,
+		Type
+	)
+VALUES
+	(
+		10,
+		'et',
+		'estonian',
+		'https://www.postimees.ee/',
+		'[\"rss\"]',
+		'RSS'
+	)

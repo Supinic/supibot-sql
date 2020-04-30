@@ -1,0 +1,21 @@
+INSERT INTO
+	`data`.`Extra_News`
+	(
+		ID,
+		Code,
+		Language,
+		URL,
+		Endpoints,
+		Type
+	)
+VALUES
+	(
+		1,
+		'fi',
+		'finnish',
+		'https://high.fi/kotimaa/',
+		'[
+	\"rss\"
+]',
+		'RSS'
+	)

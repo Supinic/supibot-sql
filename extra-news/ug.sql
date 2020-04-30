@@ -1,0 +1,21 @@
+INSERT INTO
+	`data`.`Extra_News`
+	(
+		ID,
+		Code,
+		Language,
+		URL,
+		Endpoints,
+		Type
+	)
+VALUES
+	(
+		4,
+		'ug',
+		'swahili',
+		'https://www.bukedde.co.ug/feed/rss/category/',
+		'[
+	\"ssanyu\"
+]',
+		'RSS'
+	)

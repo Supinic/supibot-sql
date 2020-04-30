@@ -1,0 +1,19 @@
+INSERT INTO
+	`data`.`Extra_News`
+	(
+		ID,
+		Code,
+		Language,
+		URL,
+		Endpoints,
+		Type
+	)
+VALUES
+	(
+		15,
+		'vz',
+		'spanish',
+		'https://www.voanoticias.com/api/',
+		'[\"zvirqoeojrqi\"]',
+		'RSS'
+	)

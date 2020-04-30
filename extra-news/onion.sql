@@ -1,0 +1,19 @@
+INSERT INTO
+	`data`.`Extra_News`
+	(
+		ID,
+		Code,
+		Language,
+		URL,
+		Endpoints,
+		Type
+	)
+VALUES
+	(
+		14,
+		'onion',
+		'english',
+		'https://www.theonion.com/',
+		'[\"rss\"]',
+		'RSS'
+	)

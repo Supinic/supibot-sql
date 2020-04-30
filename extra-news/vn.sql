@@ -1,0 +1,22 @@
+INSERT INTO
+	`data`.`Extra_News`
+	(
+		ID,
+		Code,
+		Language,
+		URL,
+		Endpoints,
+		Type
+	)
+VALUES
+	(
+		3,
+		'vn',
+		'vietnamese',
+		'https://vietnamnet.vn/rss/',
+		'[
+	\"thoi-su.rss\",
+	\"tuanvietnam.rss\"
+]',
+		'RSS'
+	)

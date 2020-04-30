@@ -1,0 +1,19 @@
+INSERT INTO
+	`data`.`Extra_News`
+	(
+		ID,
+		Code,
+		Language,
+		URL,
+		Endpoints,
+		Type
+	)
+VALUES
+	(
+		16,
+		'vice',
+		'english',
+		'https://www.vice.com/en_ca/',
+		'[\"rss\"]',
+		'RSS'
+	)
