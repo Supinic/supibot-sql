@@ -44,11 +44,42 @@ VALUES
 		0,
 		0,
 		0,
-		NULL,
-		'(async function streamElementsGachi (context) {
+		'({
+	repeatLimit: 5
+})',
+		'(async function songRequestRandomGachi () {
+	let link = null;
+	let counter = 0;
 	const rg = sb.Command.get(\"rg\");
+
+	while (!link && counter < this.staticData.repeatLimit) {
+		const { reply } = await rg.execute({}, \"linkOnly:true\");
+		const data = await sb.Utils.linkParser.fetchData(reply);
+
+		if (data === null) {
+			counter++;
+
+			const videoID = sb.Utils.linkParser.parseLink(reply);
+			await sb.Query.getRecordUpdater(ru => ru
+				.update(\"music\", \"Track\")
+				.set(\"Available\", false)
+				.where(\"Link = %s\", videoID)
+			);
+		}
+		else {
+			link = reply;
+		}
+	}
+
+	if (counter >= this.staticData.repeatLimit) {
+		return {
+			success: false,
+			reply: `Video fetching failed ${this.staticData.repeatLimit} times! Aborting request...`
+		};
+	}
+
 	return {
-		reply: \"!sr \" + (await rg.execute({}, \"linkOnly:true\")).reply
+		reply: `!sr ${link}`
 	}
 })',
 		NULL,
