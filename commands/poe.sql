@@ -55,12 +55,31 @@ VALUES
 		};
 	}
 
+	const trials = {
+		normal: \"A1: Lower Prison; A2: Crypt lvl 1, Chamber of Sins lvl 2; A3: Crematorium, Catacombs, Imperial Gardens\",
+		cruel: \"A6: Prison; A7: Crypt; A7: Chamber of Sins lvl 2\",
+		merciless: \"A8: Bath House; A9: Tunnel; A10: Ossuary\"
+	};
+
+	trials.all = Object.values(trials).join(\" -- \");
+
 	return {
+		trials,
 		commands: [
 			{
 				name: \"labyrinth\",
 				aliases: [\"lab\"],
-				description: \"Fetches the current overview picture of today\'s labyrinth. Use a difficulty (normal, cruel, merciless, uber) to see each one separately.\"
+				description: \"Fetches the current overview picture of today\'s Labyrinth. Use a difficulty (normal, cruel, merciless, uber) to see each one separately.\"
+			},
+			{
+				name: \"syndicate\",
+				aliases: [],
+				description: \"Fetches info about the Syndicate. If nothing is specified, you get a chart. You can also specify a Syndicate member to get their overview, or add a position to be even more specific.\"
+			},
+			{
+				name: \"trial\",
+				aliases: [\"trials\"],
+				description: \"Fetches info about the Labyrinth trials for specified difficulty, or overall if not specified.\"
 			},
 			{
 				name: \"uniques\",
@@ -128,7 +147,7 @@ VALUES
 					reply: \"Check the Syndicate sheet here: https://poesyn.xyz/syndicate or the picture here: https://i.nuuls.com/huXFC.png\"
 				};
 			}
-			
+
 			const type = (args.shift()) ?? null;
 			const data = await sb.Query.getRecordset(rs => rs
 				.select(\"*\")
@@ -137,7 +156,7 @@ VALUES
 				.limit(1)
 				.single()
 			);
-			
+
 			if (!data) {
 				return {
 					success: false,
@@ -149,6 +168,14 @@ VALUES
 				reply: (type === null)
 					? Object.entries(data).map(([key, value]) => `${key}: ${value}`).join(\"; \")
 					: `${data.Name} at ${type}: ${data[sb.Utils.capitalize(type)]}`
+			};
+		}
+
+		case \"trial\":
+		case \"trials\": {
+			const trialType = args.shift() ?? \"all\";
+			return { 
+				reply: this.staticData.trials[trialType] ?? \"Invalid trial type provided!\"
 			};
 		}
 
