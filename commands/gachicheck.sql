@@ -256,7 +256,7 @@ VALUES
 
 	if (results.length === 1) {
 		return {
-			reply: resuls[0].formatted
+			reply: results[0].formatted
 		};
 	}
 	else {
@@ -510,7 +510,7 @@ ON DUPLICATE KEY UPDATE
 
 	if (results.length === 1) {
 		return {
-			reply: resuls[0].formatted
+			reply: results[0].formatted
 		};
 	}
 	else {
