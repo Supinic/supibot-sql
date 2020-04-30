@@ -299,7 +299,11 @@ VALUES
 		case \"suggestions\": {
 			if (!identifier) {
 				return {
-					reply: \"Check all suggestions: https://supinic.com/bot/suggestions/list || Your suggestions (requires login): https://supinic.com/bot/suggestions/mine\"
+					reply: sb.Utils.tag.trim `
+						Check all suggestions: https://supinic.com/bot/suggestions/list
+						||
+						Your suggestions (requires login): https://supinic.com/bot/suggestions/mine
+					`
 				};
 			}
 
@@ -311,16 +315,34 @@ VALUES
 				return { reply: \"No such suggestion exists!\" };
 			}
 
-			const {ID, Date: date, Text: text, Status: status, User_Alias: user} = row.values;
+			const {
+				ID,
+				Date: date, 
+				Last_Update: update,
+				Status: status,
+				Text: text,
+				User_Alias: user
+			} = row.values;
+			
 			if (status === \"Quarantined\") {
 				return {
 					reply: \"This suggestion has been quarantined.\"
 				};
 			}
 
-			const {Name: username} = await sb.User.get(user, true);
+			const updated = (update)
+				? `, last updated ${sb.Utils.timeDelta(update)}`
+				: \"\";
+			
+			const userData = await sb.User.get(user, true);
 			return {
-				reply: `Suggestion ID ${ID} from ${username}, status ${status} (posted ${sb.Utils.timeDelta(date)}): ${text}`
+				reply: sb.Utils.tag.trim `
+					Suggestion ID ${ID}
+					from ${userData.Name}: 
+					status ${status}
+					(posted ${sb.Utils.timeDelta(date)}${updated}):
+					${text}
+				`
 			};
 		}
 
