@@ -52,6 +52,12 @@ VALUES
 			reply: `You cannot use this command outside of private messages!`
 		};
 	}
+	else if (!challengeString) {
+		return {
+			success: false,
+			reply: \"If you have a challenge string, use it. If you don\'t have one, don\'t use this command.\"
+		};
+	}
 
 	const challengeID = await sb.Query.getRecordset(rs => rs
 		.select(\"ID\")
@@ -61,10 +67,11 @@ VALUES
 		.where(\"Challenge = %s\", challengeString)
 		.where(\"Status = %s\", \"Active\")
 		.limit(1)
+		.single()
 		.flat(\"ID\")
 	);
 
-	if (!challengeID) {
+	if (typeof challengeID !== \"number\") {
 		return {
 			success: false,
 			reply: `No active verification found!`
