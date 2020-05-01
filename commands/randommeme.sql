@@ -31,7 +31,7 @@ VALUES
 		'[\"rm\"]',
 		NULL,
 		'If no parameters are provided, posts a random reddit meme. If you provide a subreddit, a post will be chosen randomly. NSFW subreddits and posts are only available on NSFW Discord channels!',
-		20000,
+		15000,
 		0,
 		0,
 		0,
@@ -45,10 +45,100 @@ VALUES
 		0,
 		0,
 		'(() => {
-	this.data.meta = {};
-	this.data.posts = {};
+	const expiration = 3_600_000; // 1 hour
+	this.data.subreddits = {};
+	
+	class Subreddit {
+		#name;
+		#error = null;
+		#errorMessage = null;
+		#exists = false;
+		#reason = null;	
+		#quarantine = null;
+		#nsfw = null;	
+		#expiration = -Infinity;
+		posts = [];
+		repeatedPosts = [];
+	
+		constructor (meta) {
+			this.#errorMessage = meta.message ?? null;	
+			this.#error = meta.error ?? null;
+			this.#reason = meta.reason ?? null;	
 
+			if (meta.data && typeof meta.data.dist === \"undefined\") {
+				const { data } = meta;
+				this.#name = data.title;
+				this.#exists = (!data.children || data.children !== 0);
+				this.#quarantine = Boolean(data.quarantine);
+				this.#nsfw = Boolean(data.over_18);	
+			}
+			else {
+				this.#exists = false;
+				this.#expiration = Infinity;
+			}
+		}	
+
+		setExpiration () {
+			this.#expiration = new sb.Date().addMilliseconds(expiration);
+		}
+	
+		get expiration () { return this.#expiration; }
+		get error () { return this.#error; }
+		get exists () { return this.#exists; }
+		get name () { return this.#name; }
+		get nsfw () { return this.#nsfw; }
+		get quarantine () { return this.#quarantine; }	
+		get reason () { return this.#reason; }
+	}
+
+	class RedditPost {
+		#author;
+		#created;
+		#id;
+		#title;
+		#url;
+
+		#isTextPost = false;
+		#nsfw = false;
+		#stickied = false;
+
+		#upvotes = 0;
+		#downvotes = 0;
+
+		constructor (data) {
+			this.#author = data.author;
+			this.#created = new sb.Date(data.created_utc * 1000);
+			this.#id = data.id;
+			this.#title = data.title;
+			this.#url = data.url;
+
+			this.#isTextPost = Boolean(data.selftext && data.selftext_html);
+			this.#nsfw = Boolean(data.over_18);
+			this.#stickied = Boolean(data.stickied);
+
+			this.#upvotes = data.ups ?? 0;
+			this.#downvotes = data.downs ?? 0;
+		}
+
+		get id () { return this.#id; }
+		get nsfw () { return this.#nsfw; }
+		get stickied () { return this.#stickied; }
+		get isTextPost () { return this.#isTextPost; }
+
+		get posted () {
+			return sb.Utils.timeDelta(this.#created);
+		}
+
+		toString () {
+			return `(+${this.#upvotes}/-${this.#downvotes}) ${this.#title} ${this.#url} (posted ${this.posted})`;
+		}
+	}
+	
 	return {
+		expiration,
+		RedditPost,
+		Subreddit,
+		
 		banned: [
 			\"moobs\",
 			\"feetpics\",
@@ -61,7 +151,8 @@ VALUES
 			\"pewdiepiesubmissions\"
 		]
 	};
-})()',
+})()
+',
 		'(async function randomMeme (context, subreddit) {
 	if (!subreddit) {
 		subreddit = sb.Utils.randArray(this.staticData.defaultMemeSubreddits);
@@ -70,59 +161,54 @@ VALUES
 	const safeSpace = Boolean(!context.privateMessage && !context.channel?.NSFW);
 	subreddit = subreddit.toLowerCase();
 
-	if (!this.data.meta[subreddit]) {
-		this.data.meta[subreddit] = await sb.Got.instances.Reddit(subreddit + \"/about.json\").json();
+	if (!this.data.subreddits[subreddit]) {
+		const data = await sb.Got.instances.Reddit(subreddit + \"/about.json\").json();
+		this.data.subreddits[subreddit] = new this.staticData.Subreddit(data);
 	}
 
-	const check = this.data.meta[subreddit];
-	if (!check) {
+	const forum = this.data.subreddits[subreddit];
+	if (forum.error) {
 		return {
-			reply: \"No data obtained...\"
+			success: false,
+			reply: `That subreddit is ${forum.reason}!`
 		};
 	}
-	else if (check.error === 403) {
+	else if (!forum.exists) {
 		return {
-			reply: \"That subreddit is \" + check.reason + \"!\"
-		};
-	}
-	else if (!check.data || (Array.isArray(check.data.children) && check.data.children.length === 0)) {
-		return {
+			success: false,
 			reply: \"That subreddit does not exist!\"
 		};
 	}
-	else if (safeSpace && (this.staticData.banned.includes(subreddit) || check.data.over18)) {
+	else if (safeSpace && (this.staticData.banned.includes(forum.name) || forum.nsfw)) {
 		return {
 			reply: \"That subreddit is flagged as 18+, and thus not safe to post here!\"
 		};
 	}
 
-	if (!this.data.posts[subreddit] || sb.Date.now() > this.data.posts[subreddit].expiry) {
+	if (forum.posts.length === 0 || sb.Date.now() > forum.expiration) {
 		const { data } = await sb.Got.instances.Reddit(subreddit + \"/hot.json\").json();
-		this.data.posts[subreddit] = {
-			repeatedPosts: [],
-			list: data.children,
-			expiry: new sb.Date().addHours(1).valueOf()
-		};
+
+		forum.setExpiration();
+		forum.posts = data.children.map(i => new this.staticData.RedditPost(i.data));
 	}
 
-	const { list, repeatedPosts } = this.data.posts[subreddit];
-	const children = list.filter(i => (
-		(!safeSpace || !i.data.over_18)
+	const { posts, repeatedPosts } = forum;
+	const validPosts = posts.filter(i => (
+		(!safeSpace || !i.nsfw)
 		&& !i.stickied
-		&& !i.data.selftext
-		&& !i.data.selftext_html
-		&& !repeatedPosts.includes(i.data.id)
+		&& !i.isSelftext
+		&& !i.isTextPost
+		&& !repeatedPosts.includes(i.id)
 	));
 
-	const quarantine = (check.data.quarantine) ? \"⚠\" : \"\";
-	const post = sb.Utils.randArray(children);
+	const post = sb.Utils.randArray(validPosts);
 	if (!post) {
 		return {
 			reply: \"No suitable posts found!\"
 		}
 	}
 	else {
-		if (post.data.over_18 && context.append.pipe) {
+		if (post.nsfw && context.append.pipe) {
 			return {
 				success: false,
 				reason: \"pipe-nsfw\"
@@ -130,13 +216,13 @@ VALUES
 		}
 
 		// Add the currently used post ID at the beginning of the array
-		repeatedPosts.unshift(post.data.id);
+		repeatedPosts.unshift(post.id);
 		// And then splice off everything over the length of 3.
 		repeatedPosts.splice(3);
 
-		const delta = sb.Utils.timeDelta(post.data.created_utc * 1000);
+		const symbol = (forum.quarantine) ? \"⚠\" : \"\";
 		return {
-			reply: `${quarantine} ${post.data.title} ${post.data.url} (posted ${delta})`
+			reply: `${symbol} ${post}`
 		}
 	}
 })',
