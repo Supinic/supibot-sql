@@ -193,7 +193,7 @@ VALUES
 			}
 
 			const userData = await sb.User.get(user);
-			const link = userData.Data?.pathOfExile?.uniqueTabs?.dhcssf ?? null;
+			const link = userData.Data?.pathOfExile?.uniqueTabs ?? null;
 			if (!link) {
 				return {
 					success: false,
@@ -202,7 +202,7 @@ VALUES
 			}
 
 			return {
-				reply: `${userData.Name}\'s DHCSSF unique tab: ${link}`
+				reply: `${userData.Name}\'s unique tab(s): ${link}`
 			};
 		}
 
