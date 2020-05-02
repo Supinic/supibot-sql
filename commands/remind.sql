@@ -102,12 +102,14 @@ VALUES
 		};
 	}
 
+/*
 	const blocked = await sb.Filter.checkBlocks(targetUser, context.user, context.command.ID);
 	if (blocked) {
 		return {
 			reply: blocked
 		};
 	}
+*/
 
 	let delta = 0;
 	let reminderText = args.join(\" \");
