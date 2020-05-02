@@ -47,8 +47,12 @@ VALUES
 		NULL,
 		'(async function suggest (context, ...args) {
 	if (args.length === 0) {
-		return { 
-			reply: \"All suggestions: https://supinic.com/bot/suggestions/list || Your suggestions (requires login): https://supinic.com/bot/suggestions/mine || Statistics (requires login): https://supinic.com/bot/suggestions/stats\",
+		return {
+			reply: sb.Utils.tag.trim `
+				All suggestions: https://supinic.com/bot/suggestions/list
+				||
+				Your suggestions (requires login): https://supinic.com/bot/suggestions/list?columnName=${context.user.Name}
+			`,
 			cooldown: 5000
 		};
 	}
@@ -66,7 +70,7 @@ VALUES
 		? \"BroBalt\"
 		: \"👍\";
 
-	return { 
+	return {
 		reply: `Suggestion saved, and will eventually be processed (ID ${row.values.ID}) ${emote}`
 	};
 })',
