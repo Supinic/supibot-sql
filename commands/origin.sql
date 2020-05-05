@@ -104,7 +104,7 @@ VALUES
 		let string = `${type} ${data.Type} emote: ${data.Text}`;
 
 		if (data.Emote_Added) {
-			string += \" (added on \" + data.Emote_Added.sqlDate() + \")\";
+			string += \" (emote added on \" + data.Emote_Added.sqlDate() + \")\";
 		}
 		if (data.Todo) {
 			string = \"(TODO) \" + string;
