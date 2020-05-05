@@ -86,7 +86,7 @@ VALUES
 
 	result.sort((a, b) => a.channel.localeCompare(b.channel));
 
-	const channels = result.map(i => i.channel);
+	const channels = result.map(i => `#${i.channel}`);
 	const emotes = result.map(i => i.emote);
 	return {
 		reply: \"Supibot is currently subbed to: \" + channels.join(\", \") + \" \" + emotes.join(\" \")
