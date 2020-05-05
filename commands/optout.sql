@@ -30,7 +30,7 @@ VALUES
 		'optout',
 		'[\"unoptout\"]',
 		NULL,
-		'Makes it so you cannot be the target of a command. The command will not be executed. You can also append a message to explain why you opted out.',
+		'Makes it so you cannot be the target of a command - the command will not be executed at all. For detailed usage, please check the extended help.',
 		5000,
 		0,
 		0,
@@ -189,11 +189,37 @@ VALUES
 		'async (prefix) => {
 	return [
 		\"Opts you out of a specific command.\",
-		\"While opted out, nobody can used that command with you as the parameter.\",
-		\"You can also use a custom message to explain why you opted out or the reasoning.\",
+		\"While opted out from command, nobody can use it with you as the parameter.\",
 		\"\",
-		`${prefix}optout rl => You are now opted out from rl`,
-		`${prefix}optout rl Just because. => You are now opted out from rl`
+	
+		`<code><u>Simple mode</u></code>`,
+		`<code>${prefix}optout (command)</code>`,
+		`Will opt you out from a given command`,
+		\"\",
+
+		`<code><u>Total mode</u></code>`,
+		`<code>${prefix}optout all</code>`,
+		`Will opt you out from all current and future opt-outable commands, everywhere.`,
+		\"\",
+
+		`<code><u>Advanced mode</u></code>`,
+		`<code>${prefix}optout channel:(chn) command:(cmd) platform:(p)</code>`,
+		`Will opt you out from a specified combination of channel/command/platform.`,
+		\"E.g.:\",
+		`<ul>
+			<li> 
+				<code>${prefix}optout command:rl channel:supibot</code>
+				Will opt you out from command rl only in channel \"supibot\".
+			</li>
+			<li> 
+				<code>${prefix}optout command:rl platform:twitch</code>
+				Will opt you out from command rl only in Twitch.
+			</li>
+			<li> 
+				<code>${prefix}optout channel:supibot</code>
+				Will opt you out from all opt-outable commands, only in channel \"supibot\".
+			</li>
+		</ul>`,
 	];
 }'
 	)
