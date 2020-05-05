@@ -46,6 +46,7 @@ VALUES
 		0,
 		'(() => {
 	const special = {
+		\"AU\": \"Australia\",
 		\"CAR\": \"Central African Republic\",
 		\"DRC\": \"Democratic Republic of the Congo\",
 		\"UAE\": \"United Arab Emirates\",
