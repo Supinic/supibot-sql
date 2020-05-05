@@ -104,6 +104,12 @@ VALUES
 
 	return {
 		reply: \"Your AFK status has been resumed.\"
+		cooldown: { // Turns the cooldown into a global one (all channels)
+			user: context.user.ID,
+			command: this.ID,
+			channel: null,
+			length: this.Cooldown
+		}
 	}
 })',
 		NULL,
