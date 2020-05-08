@@ -53,7 +53,7 @@ VALUES
 
 $%',
 		'async (prefix) => [
-	\"Rolls a random percentage number between 0 and 100.\",
+	\"Rolls a random percentage number between 0% and 100%.\",
 	\"\",
 
 	`<code>${prefix}%</code>`,

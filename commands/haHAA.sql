@@ -54,12 +54,12 @@ VALUES
 		NULL,
 		'async (prefix) => {
 	return [
-		\"Posts a random 100% hilarious dad joke.\",
-		\"No arguments.\",
+		\"Posts a random, 100% hilarious dad joke.\",
+		\"Guaranteed to make you grimace\",
 		\"\",
-		prefix + \"haHAA => <random joke> haHAA\",
-		prefix + \"4Head => <random joke> 4Head\",
-		prefix + \"4HEad => <random joke> 4HEad\"
+
+		`<code>${prefix}4Head</code>`,
+		\"(random joke)\"
 	];
 }'
 	)

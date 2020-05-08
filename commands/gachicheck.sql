@@ -275,8 +275,8 @@ $gc <link <...description> => Checks the link, and adds it to the todo list if n
 
 $gc https://youtu.be/OI8gy-AHgJg
 $gc https://www.nicovideo.jp/watch/sm6140534 ',
-		'async (prefix, commandData) => {
-	const { limit } = eval(commandData.Static_Data);
+		'async (prefix, values) => {
+	const { limit } = values.getStaticData();
 
 	return [
 		\"Checks if a video is already in the gachi list.\",

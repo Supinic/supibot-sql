@@ -235,11 +235,8 @@ VALUES
 	}
 })',
 		NULL,
-		'async (prefix) => {
-	const row = await sb.Query.getRow(\"chat_data\", \"Command\");
-	await row.load(63);
-	
-	const { variables } = eval(row.values.Static_Data);
+		'async (prefix, values) => {	
+	const { variables } = values.getStaticData();
 	const list = variables.map(i => `<li><code>${i.names.join(\"/\")}</code> ${i.description}</li>`).join(\"\");
 
 	return [

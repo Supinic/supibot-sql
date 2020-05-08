@@ -246,11 +246,20 @@ VALUES
 })',
 		NULL,
 		'async (prefix) => [
-	\"Fetches a random chat line, in the context of the current channel.\",
-	\"If you specify a user, fetches lines from that user only.\",
+	\"Fetches a random chat line from the current channel.\",
+	\"If you specify a user, the line will be from that user only.\",
 	\"\",
-	prefix + \"rl => random message from anyone\",
-	prefix + \"rl [user] => random message from \\\"user\\\"\",
-	prefix + \"rq => random message from yourself\"
+
+	`<code>${prefix}rl</code>`,
+	\"Random message from anyone\",
+	\"\",
+
+	`<code>${prefix}rl (user)</code>`,
+	\"Random message from specified user only\",
+	\"\",
+
+	`<code>${prefix}rq</code>`,
+	\"Random message from yourself only\",
+	\"\"
 ]'
 	)

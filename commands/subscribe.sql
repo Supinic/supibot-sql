@@ -139,8 +139,8 @@ VALUES
 	}
 })',
 		NULL,
-		'async (prefix, commandValues) => {
-	const { types } = eval(commandValues.Static_Data);
+		'async (prefix, values) => {
+	const { types } = values.getStaticData();
 	const typesList = types.map(i => sb.Utils.tag.trim `
 		<li>
 			<code>${i.name}</code>

@@ -45,15 +45,13 @@ VALUES
 		0,
 		0,
 		'(() => {
-	if (this?.data) {
-		this.data.labyrinth = {
-			date: null,
-			normal: null,
-			cruel: null,
-			merciless: null,
-			uber: null
-		};
-	}
+	this.data.labyrinth = {
+		date: null,
+		normal: null,
+		cruel: null,
+		merciless: null,
+		uber: null
+	};
 
 	const trials = {
 		normal: \"A1: Lower Prison; A2: Crypt lvl 1, Chamber of Sins lvl 2; A3: Crematorium, Catacombs, Imperial Gardens\",
@@ -212,8 +210,9 @@ VALUES
 	}
 })',
 		NULL,
-		'async (prefix, commandValues) => {
-	const { commands } = eval(commandValues.Static_Data);	
+		'async (prefix, values) => {
+	const { commands } = values.getStaticData();
+
 	return [
 		\"Multiple commands related to Path of Exile.\",
 		\"\",

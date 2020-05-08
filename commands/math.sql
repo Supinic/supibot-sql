@@ -71,12 +71,20 @@ VALUES
 		'async (prefix) => {
 	return [
 		\"Calculates advanced maths. You can use functions, derivatives, integrals, methods, ...\",
-		\"Look here for more info: <a href=\'https://mathjs.org/\'>mathjs documentation</a>\",
-		\"Arguments are the mathematical expression you want to calculate.\",
+		`Look here for more info: <a href=\"https://mathjs.org/\">mathjs documentation</a>`,
 		\"\",
-		prefix + \"math e^(i*pi) + 1 => 0\",
-		prefix + \"math 1+1 => 2\",
-		prefix + \"math sin(pi/2) => 1\" 
+		
+		`<code>${prefix}math 1+1</code>`,
+		\"2\",
+		\"\",
+
+		`<code>${prefix}math e^(i*pi)</code>`,
+		\"0\",
+		\"\",
+
+		`<code>${prefix}math 100 inches to cm</code>`,
+		\"25.4 cm\",
+		\"\"
 	];
 }'
 	)

@@ -116,12 +116,10 @@ VALUES
 		'async (prefix) => {
 	return [
 		\"Pings the bot, checking if it\'s alive, and a bunch of other data, like latency and commands used this session\",
-		\"No arguments.\",
 		\"\",
-		prefix + \"ping => Pong! Latency: ..., Commands used: ...\",
-		prefix + \"pong => Peng! Latency: ..., Commands used: ...\",
-		prefix + \"pung => Pyng! Latency: ..., Commands used: ...\",
-		\"...\"
+
+		`<code>${prefix}ping</code>`,
+		\"Pong! Latency: ..., Commands used: ...\"
 	];
 }'
 	)

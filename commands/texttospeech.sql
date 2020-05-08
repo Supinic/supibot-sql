@@ -46,8 +46,11 @@ VALUES
 		0,
 		'(() => {
 	const limit = 30_000;
+	const partsLimit = 5;
+
 	return {
 		limit,
+		partsLimit,
 		maxCooldown: (this.Cooldown + (limit - 10000) * 10)
 	};
 })()',
@@ -77,7 +80,8 @@ VALUES
 	const voiceData = sb.Config.get(\"TTS_VOICE_DATA\");
 	const availableVoices = voiceData.map(i => i.name.toLowerCase());
 	const voiceMap = Object.fromEntries(voiceData.map(i => [i.name, i.id]));
-	const ttsData = [];
+	
+	let ttsData = [];
 	let currentVoice = \"Brian\";
 	let currentText = [];
 
@@ -144,11 +148,13 @@ VALUES
 		voice: currentVoice,
 		text: currentText.join(\" \")
 	});
+	
+	ttsData = ttsData.filter(i => i.text.length > 0);
 
-	if (ttsData.length > 3) {
+	if (ttsData.length > this.staticData.partsLimit) {
 		this.data.pending = false;
 		return {
-			reply: `Your TTS was refused! You used too many voices - ${ttsData.length}, but the maximum is 3.`,
+			reply: `Your TTS was refused! You used too many voices - ${ttsData.length}, but the maximum is ${this.staticData.partsLimit}.`,
 			cooldown: { length: 5000 }
 		};
 	}
@@ -204,5 +210,37 @@ VALUES
 	};
 })',
 		NULL,
-		NULL
+		'(async (prefix, values) => {
+	const { partsLimit } = values.getStaticData();
+
+	return [
+		\"Plays your messages as TTS on supinic\'s stream, if enabled.\",
+		\"You can specify a voice to have it say your message. If you don\'t specify, Brian is used by default\",
+		\"You can also specify a language (full name, or ISO code), in which case a random voice for the given language will be chosen for you.\",
+		\"If you use multiple voices, each part of the message will be read out by different voices.\",
+		\"\",
+
+		`<code>${prefix}tts This is a message.</code>`,
+		\"Plays the TTS using Brian.\",
+		\"\",
+
+		`<code>${prefix}tts voice:Giorgio Questo è un messaggio.</code>`,
+		\"Plays the TTS using Giorgio.\",
+		\"\",
+
+		`<code>${prefix}tts lang:french Ceci est un message.</code>`,
+		\"Plays the TTS using a random French voice.\",
+		\"\",
+
+		`<code>${prefix}tts lang:fr Ceci est un message.</code>`,
+		\"Plays the TTS, same as above (uses ISO code for French \'fr\').\",
+		\"\",
+
+		`<code>${prefix}tts voice:Brian Hello there. voice:Emilie Comment ça va? voice:Jacek Co mówisz?</code>`,
+		\"Plays the TTS using three voices for each message part.\",
+		\"The voice name has to be specified before (!) the actual message.\",
+		\"Be warned - there is a limit of how many parts of tts you can use in one command!\",
+		`Current limit: ${partsLimit} voices per message`
+	];
+})'
 	)

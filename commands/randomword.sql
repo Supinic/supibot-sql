@@ -44,10 +44,12 @@ VALUES
 		1,
 		0,
 		0,
-		NULL,
+		'({
+	limit: 10
+})',
 		'(async function randomWord (context, number = 1) {
 	const repeats = Number(number);
-	if (!repeats || repeats > 10 || repeats < 1 || Math.trunc(repeats) !== repeats) {
+	if (!repeats || repeats > this.staticData.limit || repeats < 1 || Math.trunc(repeats) !== repeats) {
 		return { reply: \"Invalid or too high amount of words!\" };
 	}
 
@@ -56,15 +58,24 @@ VALUES
 	};
 })',
 		NULL,
-		'async (prefix) => {
+		'async (prefix, values) => {
+	const { limit } = values.getStaticData();
 	const list = sb.Config.get(\"WORD_LIST\");
+
 	return [
 		\"Returns a random word from a list of \" + list.length + \" pre-determined words.\",
 		\"Highly recommended for its usage in pipe, for example into urban or translate...\",
+		`Maximum amount of words: ${limit}`,
 		\"\",
-		prefix + \"rw => (one random word)\",
-		prefix + \"rw 10 => (ten random words)\",
+		
+		`<code>${prefix}rw</code>`,	
+		\"(one random word)\",
 		\"\",
+
+		`<code>${prefix}rw 10</code>`,	
+		\"(ten random words)\",
+		\"\",
+
 		\"Word list: <br>\" + list.join(\"<br>\")
 	];
 }'
