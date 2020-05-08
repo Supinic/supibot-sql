@@ -238,7 +238,8 @@ VALUES
 		try {
 			id = await sb.VideoLANConnector.add(data.link, context.user.ID, data);
 		}
-		catch {
+		catch (e) {
+			console.warn(\"sr error\", e);
 			await sb.Config.set(\"SONG_REQUESTS_STATE\", \"off\");
 			return {
 				reply: `The desktop listener is currently turned off. Turning song requests off.`
