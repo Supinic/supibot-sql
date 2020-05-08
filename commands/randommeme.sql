@@ -102,8 +102,7 @@ VALUES
 		#nsfw = false;
 		#stickied = false;
 
-		#upvotes = 0;
-		#downvotes = 0;
+		#score = 0;
 
 		constructor (data) {
 			this.#author = data.author;
@@ -116,8 +115,7 @@ VALUES
 			this.#nsfw = Boolean(data.over_18);
 			this.#stickied = Boolean(data.stickied);
 
-			this.#upvotes = data.ups ?? 0;
-			this.#downvotes = data.downs ?? 0;
+			this.#score = data.ups ?? 0;
 		}
 
 		get id () { return this.#id; }
@@ -130,7 +128,7 @@ VALUES
 		}
 
 		toString () {
-			return `(+${this.#upvotes}/-${this.#downvotes}) ${this.#title} ${this.#url} (posted ${this.posted})`;
+			return `(Score: ${this.#score}) ${this.#title} ${this.#url} (posted ${this.posted})`;
 		}
 	}
 	
