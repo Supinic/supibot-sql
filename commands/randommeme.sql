@@ -47,47 +47,47 @@ VALUES
 		'(() => {
 	const expiration = 3_600_000; // 1 hour
 	this.data.subreddits = {};
-	
+
 	class Subreddit {
 		#name;
 		#error = null;
 		#errorMessage = null;
 		#exists = false;
-		#reason = null;	
+		#reason = null;
 		#quarantine = null;
-		#nsfw = null;	
+		#nsfw = null;
 		#expiration = -Infinity;
 		posts = [];
 		repeatedPosts = [];
-	
+
 		constructor (meta) {
-			this.#errorMessage = meta.message ?? null;	
+			this.#errorMessage = meta.message ?? null;
 			this.#error = meta.error ?? null;
-			this.#reason = meta.reason ?? null;	
+			this.#reason = meta.reason ?? null;
 
 			if (meta.data && typeof meta.data.dist === \"undefined\") {
 				const { data } = meta;
 				this.#name = data.title;
 				this.#exists = (!data.children || data.children !== 0);
 				this.#quarantine = Boolean(data.quarantine);
-				this.#nsfw = Boolean(data.over_18);	
+				this.#nsfw = Boolean(data.over_18);
 			}
 			else {
 				this.#exists = false;
 				this.#expiration = Infinity;
 			}
-		}	
+		}
 
 		setExpiration () {
 			this.#expiration = new sb.Date().addMilliseconds(expiration);
 		}
-	
+
 		get expiration () { return this.#expiration; }
 		get error () { return this.#error; }
 		get exists () { return this.#exists; }
 		get name () { return this.#name; }
 		get nsfw () { return this.#nsfw; }
-		get quarantine () { return this.#quarantine; }	
+		get quarantine () { return this.#quarantine; }
 		get reason () { return this.#reason; }
 	}
 
@@ -128,15 +128,15 @@ VALUES
 		}
 
 		toString () {
-			return `(Score: ${this.#score}) ${this.#title} ${this.#url} (posted ${this.posted})`;
+			return `${this.#title} ${this.#url} (Score: ${this.#score}, posted ${this.posted})`;
 		}
 	}
-	
+
 	return {
 		expiration,
 		RedditPost,
 		Subreddit,
-		
+
 		banned: [
 			\"moobs\",
 			\"feetpics\",
