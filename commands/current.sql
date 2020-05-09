@@ -106,6 +106,9 @@ VALUES
 		};
 	}
 
+	let includePosition = false;
+	let introductionString = null;
+
 	const playing = await sb.Query.getRecordset(rs => {
 		rs.select(\"Name\", \"VLC_ID\", \"Link\", \"User_Alias AS User\")
 			.select(\"Video_Type.Link_Prefix AS Prefix\")
@@ -119,10 +122,13 @@ VALUES
 			.single();
 
 		if (type === \"previous\") {
+			introductionString = \"Previously played:\";
 			rs.where(\"Status = %s\", \"Inactive\");
 			rs.orderBy(\"Song_Request.ID DESC\");
 		}
 		else if (type === \"current\") {
+			includePosition = true;
+			introductionString = \"Currently playing:\";
 			rs.where(\"Status = %s\", \"Current\");
 		}
 
@@ -133,14 +139,18 @@ VALUES
 		const link = playing.Prefix.replace(linkSymbol, playing.Link);
 		const userData = await sb.User.get(playing.User);
 		const { length, time } = await sb.VideoLANConnector.status();
+		const position = (includePosition)
+			? `Current position: ${time}/${length}s.`
+			: \"\";
 
 		return {
 			reply: sb.Utils.tag.trim `
-				Currently playing: ${playing.Name}
+				${introductionString}
+				${playing.Name}
 				(ID ${playing.VLC_ID})
 				-
 				requested by ${userData.Name}.
-				Current position: ${time}/${length}s.
+				${position}
 				${link}
 			`
 		};
