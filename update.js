@@ -18,7 +18,7 @@
 			database: "chat_data",
 			table: "Command",
 			Query: sb.Query,
-			extraPathFunction: (row) => (row.Archived) ? "archived\\" : ""
+			extraPathFunction: (row) => (row.Flags?.includes("archived")) ? "archived\\" : ""
 		},
 		{
 			path: "C:\\Projects\\supibot-sql\\crons\\",
