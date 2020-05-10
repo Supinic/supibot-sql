@@ -53,7 +53,7 @@ VALUES
 			cmdArgs.push(\"linkOnly:true\");
 		}
 
-		const check = sb.Command.get(cmd.replace(sb.Config.get(\"COMMAND_PREFIX\"), \"\"));
+		const check = sb.Command.get(cmd.replace(sb.Command.prefix, \"\"));
 		if (check) {
 			if (!check.Flags.pipe) {
 				return { reply: \"Command \" + cmd + \" cannot be used in a pipe!\" };
