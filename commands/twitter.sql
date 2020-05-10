@@ -22,22 +22,25 @@ VALUES
 		10000,
 		NULL,
 		NULL,
-		'async (extra, user) => {
+		'(async function twitter (context, user) {
 	if (!user) {
-		return { reply: \"No user provided!\" };
-	}
-	
-	const data = await sb.Twitter.lastUserTweets(user);
-	if (data.success) {
 		return {
-			reply: data.text + \" (\" + sb.Utils.timeDelta(data.date) + \")\"
+			success: false,
+			reply: \"No user provided!\" 
 		};
 	}
-	else {
-		return { reply: data.text };
-	}
 
-}',
-		NULL,
+	const [data] = await sb.Twitter.fetchTweets({
+		username: user,
+		count: 1
+	});
+
+	const delta = sb.Utils.timeDelta(new sb.Date(data.created_at));
+	const fixedText = sb.Utils.fixHTML(data.text);
+
+	return {
+		reply: `${fixedText} (posted ${delta})`
+	};
+})',
 		NULL
 	)
