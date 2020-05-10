@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		41,
 		'countline',
 		'[\"cl\"]',
-		NULL,
+		'opt-out,ping,pipe',
 		'Fetches the amount of chat line you (or a specified user) have in the current channel.',
 		15000,
-		0,
-		0,
-		0,
-		0,
 		NULL,
-		0,
-		1,
-		0,
-		1,
-		1,
-		0,
-		0,
 		NULL,
 		'(async function countLine (context, user) {
 	if (user) {
@@ -86,7 +63,5 @@ VALUES
 		reply: `${who} sent ${lines.Total} chat lines in this channel so far.`
 	};
 })',
-		'$countline => Shows your line count in this channel
-$countline <person> => Shows their line count in this channel',
 		NULL
 	)

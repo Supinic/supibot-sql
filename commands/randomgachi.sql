@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		10,
 		'randomgachi',
 		'[\"rg\"]',
-		NULL,
+		'ping,pipe',
 		'Fetches a random gachi track from the gachi list, excluding Bilibili and Nicovideo videos with no Youtube reuploads',
 		5000,
-		0,
-		0,
-		0,
-		0,
 		NULL,
-		0,
-		0,
-		0,
-		1,
-		1,
-		0,
-		0,
 		NULL,
 		'(async function randomGachi (extra, ...args) {
 	const prefixRow = await sb.Query.getRow(\"data\", \"Video_Type\");
@@ -101,6 +78,5 @@ VALUES
 		};
 	}
 })',
-		NULL,
 		NULL
 	)

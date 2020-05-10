@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		169,
 		'gachisearch',
 		'[\"gs\"]',
-		NULL,
+		'ping,pipe',
 		'Searches for a given track in the gachi list, and attempts to post a link.',
 		15000,
-		0,
-		0,
-		0,
-		0,
 		NULL,
-		0,
-		0,
-		0,
-		1,
-		1,
-		0,
-		0,
 		NULL,
 		'(async function gachiSearch (context, ...args) {
 	const query = args.join(\" \");
@@ -75,6 +52,5 @@ VALUES
 		reply: `${data[0].name} - https://supinic.com/track/detail/${data[0].ID} ${extra}`
 	};
 })',
-		NULL,
 		NULL
 	)

@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		122,
 		'whatemoteisit',
 		'[\"weit\"]',
-		NULL,
+		'ping,pipe',
 		'What emote is it? Posts specifics about a given Twitch subscriber emote.',
 		10000,
-		0,
-		0,
-		0,
-		0,
 		NULL,
-		0,
-		0,
-		0,
-		1,
-		1,
-		0,
-		0,
 		NULL,
 		'(async function whatEmoteIsIt (context, emote) {
 	const data = await sb.Got.instances.Leppunen(\"twitch/emotes/\" + emote).json();
@@ -57,6 +34,5 @@ VALUES
 		reply: `${emotecode} (ID ${emoteid}) - tier ${tier} sub emote to channel ${channel}. ${emoteLink}`
 	};
 })',
-		NULL,
 		NULL
 	)

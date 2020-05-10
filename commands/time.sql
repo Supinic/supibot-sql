@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		28,
 		'time',
 		NULL,
-		NULL,
+		'ping,pipe',
 		'Fetches the current time and timezone for a given location',
 		10000,
-		0,
-		0,
-		0,
-		0,
 		NULL,
-		0,
-		0,
-		0,
-		1,
-		1,
-		0,
-		0,
 		'({
 	detectTimezone: async (...args) => {
 		const place = args.join(\" \");
@@ -178,6 +155,5 @@ VALUES
 		reply: `${replyPlace} is currently observing ${timeData.timeZoneName}, which is UTC${offset}, and it\'s ${time.format(\"H:i (Y-m-d)\")} there right now.`
 	};
 })',
-		NULL,
 		NULL
 	)

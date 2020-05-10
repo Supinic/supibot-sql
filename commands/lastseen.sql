@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		40,
 		'lastseen',
 		'[\"ls\", \"stalk\"]',
-		NULL,
+		'opt-out,ping,pipe',
 		'Posts the target user\'s last chat line in all chats combined (!) and the date they sent it.',
 		5000,
-		0,
-		0,
-		0,
-		0,
 		NULL,
-		0,
-		1,
-		0,
-		1,
-		1,
-		0,
-		0,
 		NULL,
 		'(async function lastSeen (context, user) {
 	if (!user) {
@@ -112,6 +89,5 @@ VALUES
 		]
 	};
 })',
-		NULL,
 		NULL
 	)

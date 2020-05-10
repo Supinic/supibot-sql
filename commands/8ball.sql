@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		133,
 		'8ball',
 		NULL,
-		NULL,
+		'ping,pipe',
 		'Checks your question against the fortune-telling 8-ball.',
 		30000,
-		0,
-		0,
-		0,
-		0,
 		NULL,
-		0,
-		0,
-		0,
-		1,
-		1,
-		0,
-		0,
 		'({
 	responses: [
 		\"😃 It is certain.\",
@@ -75,7 +52,6 @@ VALUES
 		reply: sb.Utils.randArray(this.staticData.responses)
 	};
 })',
-		NULL,
 		'async (prefix, values) => {
 	const { responses } = values.getStaticData();
 	const list = responses.map(i => `<li>${i}</li>`).join(\"\");

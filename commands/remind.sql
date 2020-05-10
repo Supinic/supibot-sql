@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		30,
 		'remind',
 		'[\"notify\", \"reminder\", \"remindme\", \"notifyme\", \"remindprivate\", \"notifyprivate\"]',
-		NULL,
+		'block,opt-out,ping,pipe',
 		'Sets a notify for a given user. Can also set a time to ping that user (or yourself) in given amount of time, but in that case you must use the word \"in\" and then a number specifying the amount days, hours, minutes, etc.',
 		10000,
-		0,
-		0,
-		0,
-		0,
 		NULL,
-		0,
-		1,
-		1,
-		1,
-		1,
-		0,
-		0,
 		'({
 	strings: {
 		\"public-incoming\": \"That person has too many public reminders pending!\",
@@ -203,6 +180,5 @@ VALUES
 		};
 	}
 })',
-		NULL,
 		NULL
 	)

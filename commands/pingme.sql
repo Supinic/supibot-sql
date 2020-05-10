@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		98,
 		'pingme',
 		NULL,
-		NULL,
+		'opt-out,ping,pipe',
 		'Sets a self-notification in the current channel when the target user is spotted in a different channel.',
 		15000,
-		0,
-		0,
-		0,
-		0,
 		NULL,
-		0,
-		1,
-		0,
-		1,
-		1,
-		0,
-		0,
 		'({
 	strings: {
 		\"public-incoming\": \"That person has too many public reminders pending!\",
@@ -90,6 +67,5 @@ VALUES
 		};
 	}
 })',
-		NULL,
 		NULL
 	)

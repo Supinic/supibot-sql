@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		99,
 		'cookiecount',
 		'[\"cc\", \"tcc\"]',
-		NULL,
+		'opt-out,ping,pipe,skip-banphrase',
 		'Fetches the amount of cookies you (or someone else) have eaten so far. If you use \"total\", then you will see the total amount of cookies eaten.',
 		10000,
-		0,
-		0,
-		1,
-		0,
 		NULL,
-		0,
-		1,
-		0,
-		1,
-		1,
-		0,
-		0,
 		NULL,
 		'(async function cookieCount (context, user) {
 	if (context.platform.Name === \"discord\" && user && user.includes(\"@\")) {
@@ -132,7 +109,6 @@ VALUES
 		};
 	}
 })',
-		NULL,
 		'async (prefix) =>  [
 	`Checks the amount of cookies a given person (or yourself) have eaten so far.`,
 	`You can use <code>${prefix}cc total</code> or <code>${prefix}tcc</code> to get total statistics.`,

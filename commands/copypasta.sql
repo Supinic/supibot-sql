@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		24,
 		'copypasta',
 		NULL,
-		NULL,
+		'ping,pipe',
 		'Fetches a random Twitch-related copypasta. The date of creation usually ranges from 2014-2015.',
 		15000,
-		0,
-		0,
-		0,
-		0,
 		NULL,
-		0,
-		0,
-		0,
-		1,
-		1,
-		0,
-		0,
 		NULL,
 		'(async function copypasta () {
 	const html = await sb.Got(\"https://www.twitchquotes.com/random\").text();
@@ -56,6 +33,5 @@ VALUES
 			: \"No copypasta found.\"
 	};
 })',
-		'No arguments.',
 		NULL
 	)

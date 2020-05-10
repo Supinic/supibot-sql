@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		66,
 		'bancheck',
 		NULL,
-		NULL,
+		'ping,pipe',
 		'Checks if a given message would be banphrased in a given channel. Checks the API banphrase (if it exists for given channel) and then the bot\'s banphrases as well.',
 		10000,
-		0,
-		0,
-		0,
-		0,
 		NULL,
-		0,
-		0,
-		0,
-		1,
-		1,
-		0,
-		0,
 		NULL,
 		'(async function banCheck (context, channel, ...rest) {
 	if (!channel) {
@@ -118,10 +95,5 @@ VALUES
 		};
 	}
 })',
-		'Argument 1: A Twitch channel, prefixed with \"#\". That channel must have the banphrase API set up.
-Other arguments make up the message to be checked.
-
-$bancheck #forsen FeelsWeirdMan
-$bancheck #nani waiting room',
 		NULL
 	)

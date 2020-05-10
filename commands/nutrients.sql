@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		155,
 		'nutrients',
 		NULL,
-		NULL,
+		'ping,pipe',
 		'Posts basic nutrients for a specified food query',
 		10000,
-		0,
-		0,
-		0,
-		0,
 		NULL,
-		0,
-		0,
-		0,
-		1,
-		1,
-		0,
-		0,
 		NULL,
 		'(async function nutrients (context, ...args) {
 	if (args.length === 0) {
@@ -86,6 +63,5 @@ VALUES
 		].join(\" \")
 	};
 })',
-		NULL,
 		NULL
 	)

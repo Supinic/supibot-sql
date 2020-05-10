@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		93,
 		'pyramid',
 		NULL,
-		NULL,
+		'ping,pipe,whitelist',
 		'Creates a pyramid in chat. Only usable in chats where Supibot is a VIP or a Moderator.',
 		60000,
-		0,
-		0,
-		0,
-		1,
 		NULL,
-		0,
-		0,
-		0,
-		1,
-		1,
-		0,
-		0,
 		NULL,
 		'async (extra, emote, size = 3, delay = 250) => {
 	if (extra.channel.Mode === \"Write\") {
@@ -65,6 +42,5 @@ VALUES
 		sb.Master.send(emote.repeat(i), extra.channel);
 	}
 }',
-		NULL,
 		NULL
 	)

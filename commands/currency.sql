@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		26,
 		'currency',
 		'[\"money\"]',
-		NULL,
+		'ping,pipe,skip-banphrase',
 		'Attempts to convert a specified amount of one currency to another. Only supports 3-letter ISO codes. Example: 100 USD to EUR.',
 		10000,
-		0,
-		0,
-		1,
-		0,
 		NULL,
-		0,
-		0,
-		0,
-		1,
-		1,
-		0,
-		0,
 		NULL,
 		'(async function currency (context, amount, first, separator, second)  {
 	if (!second) {
@@ -142,11 +119,6 @@ VALUES
 		};
 	}
 })',
-		'$currency <currency code> to <currency code> => Converts 1 of currency to the other
-$currency <amount> <currency code> to <currency code> => Converts that amount of currency to the other
-
-$currency USD to EUR
-$currency 5000 SEK to AUD',
 		'async (prefix) =>  [
 	`Converts an amount of currency (or 1, if not specified) to another currency`,
 	``,

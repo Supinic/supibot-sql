@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		113,
 		'probe',
 		NULL,
-		NULL,
+		'archived,ping,pipe,skip-banphrase,system,whitelist',
 		'Posts all possible data about a user. Admin only inspection',
 		0,
-		0,
-		1,
-		1,
-		1,
 		NULL,
-		0,
-		0,
-		0,
-		1,
-		1,
-		0,
-		1,
 		NULL,
 		'(async function probe (context, targetUser) {
 	if (!targetUser) {
@@ -139,6 +116,5 @@ VALUES
 		return { reply: \"The link has been private messaged to you miniDank\" };
 	}
 })',
-		NULL,
 		NULL
 	)

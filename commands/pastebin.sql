@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		146,
 		'pastebin',
 		NULL,
-		NULL,
+		'ping,pipe',
 		'Takes the result of a different command (pipe-only) and posts a Pastebin paste with it.',
 		20000,
-		0,
-		0,
-		0,
-		0,
 		NULL,
-		0,
-		0,
-		0,
-		1,
-		1,
-		0,
-		0,
 		NULL,
 		'(async function pastebin (context, ...args) {
 	if (args.length === 0) {
@@ -57,6 +34,5 @@ VALUES
 		reply: await sb.Pastebin.post(args.join(\" \"))
 	};
 })',
-		NULL,
 		NULL
 	)

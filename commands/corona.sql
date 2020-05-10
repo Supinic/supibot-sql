@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		200,
 		'corona',
 		NULL,
-		NULL,
+		'ping,pipe',
 		'Checks the current amount of infected/deceased people from the Corona Virus spread started in October-December 2019.',
 		7500,
-		0,
-		0,
-		0,
-		0,
 		NULL,
-		0,
-		0,
-		0,
-		1,
-		1,
-		0,
-		0,
 		'(() => {
 	const special = {
 		\"AU\": \"Australia\",
@@ -339,7 +316,6 @@ VALUES
 		}`
 	};
 })',
-		NULL,
 		'async (prefix) => {
 	const row = await sb.Query.getRow(\"chat_data\", \"Command\");
 	await row.load(200);

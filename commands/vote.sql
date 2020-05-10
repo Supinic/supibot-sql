@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		142,
 		'vote',
 		'[\"poll\"]',
-		NULL,
+		'ping,pipe',
 		'If there is poll running, you can vote \"yes\" or \"no\", if you don\'t post either you will get the currently running poll (or nothing if there\'s none)',
 		5000,
-		0,
-		0,
-		0,
-		0,
 		NULL,
-		0,
-		0,
-		0,
-		1,
-		1,
-		0,
-		0,
 		NULL,
 		'(async function vote (context, vote) {
 	const poll = await sb.Query.getRecordset(rs => rs
@@ -95,6 +72,5 @@ VALUES
 		return { reply: \"Successfully voted.\" };
 	}
 })',
-		NULL,
 		NULL
 	)

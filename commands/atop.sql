@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		62,
 		'atop',
 		NULL,
-		NULL,
+		'ping,pipe,system,whitelist',
 		'Fetches the top 10 users by total amount of chat lines across all channels. This is a very heavy operation on SQL, so please use it sparingly.',
 		0,
-		0,
-		1,
-		0,
-		1,
 		NULL,
-		0,
-		0,
-		0,
-		1,
-		1,
-		0,
-		0,
 		NULL,
 		'(async function atop () {
 	const top = (await sb.Query.getRecordset(rs => rs
@@ -57,10 +34,5 @@ VALUES
 
 	return { reply: \"Top users by total chat lines across all channels: \" + top };
 })',
-		'No arguments.
-Cannot be used on other people.
-
-$atop
-$atop <someone> => still shows your lines, not theirs.',
 		NULL
 	)

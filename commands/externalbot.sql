@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		202,
 		'externalbot',
 		'[\"ebot\"]',
+		'ping,pipe,whitelist',
 		NULL,
-		NULL,
 		0,
-		0,
-		0,
-		0,
-		1,
 		'Currently being tested, and only available to trusted developers',
-		0,
-		0,
-		0,
-		1,
-		1,
-		0,
-		0,
 		NULL,
 		'(async function externalBot (context, ...rest) {
 	if (!context.channel) {
@@ -119,6 +96,5 @@ VALUES
 		reply: resultMessage.replace(selfRegex, \"\")
 	};
 })',
-		NULL,
 		NULL
 	)

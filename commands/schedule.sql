@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		184,
 		'schedule',
 		NULL,
-		NULL,
+		'opt-out,ping,pipe',
 		'Posts the channel\'s stream schedule.',
 		30000,
-		0,
-		0,
-		0,
-		0,
 		NULL,
-		0,
-		1,
-		0,
-		1,
-		1,
-		1,
-		0,
 		NULL,
 		'(async function schedule (context, channel) {
 	const channelData = (channel)
@@ -69,6 +46,5 @@ VALUES
 		};
 	}
 })',
-		NULL,
 		NULL
 	)

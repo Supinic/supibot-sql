@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		52,
 		'pajaWTH',
 		'[\"obamaWTF\"]',
-		NULL,
+		'ping,pipe,skip-banphrase',
 		'Posts a random Anthony \"Obama Chavez\" Stone quote, mostly from Knaked Knights and the snippets from IWF 2017.',
 		5000,
-		0,
-		0,
-		1,
-		0,
 		NULL,
-		0,
-		0,
-		0,
-		1,
-		1,
-		0,
-		0,
 		'({
 	quotes: [
 		\"When the Lord rises, even the mighty are terrified (Hirata 8:10)\",
@@ -74,6 +51,5 @@ VALUES
 		reply: sb.Utils.randArray(this.staticData.quotes)
 	};
 })',
-		NULL,
 		NULL
 	)

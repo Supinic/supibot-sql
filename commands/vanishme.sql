@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,27 +17,15 @@ VALUES
 		14,
 		'vanishme',
 		NULL,
-		NULL,
+		'pipe,skip-banphrase,whitelist',
 		'Posts !vanish',
 		5000,
-		0,
-		0,
-		1,
-		1,
 		NULL,
-		0,
-		0,
-		0,
-		0,
-		1,
-		0,
-		0,
 		NULL,
 		'(async function vanishMe (context) {
 	return {
 		reply: \"!vanish monkaS\"
 	};
 })',
-		NULL,
 		NULL
 	)

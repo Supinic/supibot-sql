@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		139,
 		'russianroulette',
 		'[\"rr\"]',
-		NULL,
+		'ping,pipe',
 		'Play the roulette. If you win, nothing happens; if you lose, you get timed out. You can add a number 1-600 (default: 1) which says how long you will be timed out, should you lose. Only works in channels where Supibot is moderator.',
 		15000,
-		0,
-		0,
-		0,
-		0,
 		NULL,
-		0,
-		0,
-		0,
-		1,
-		1,
-		0,
-		0,
 		NULL,
 		'(async function russianRoulette (context, timeoutLength) {
 	if (context.channel === null || context.channel.Mode !== \"Moderator\") {
@@ -95,6 +72,5 @@ VALUES
 		return { reply: \"Click! You are safe.\" };
 	}
 })',
-		NULL,
 		NULL
 	)

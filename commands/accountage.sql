@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		102,
 		'accountage',
 		'[\"accage\"]',
-		NULL,
+		'ping,pipe',
 		'Fetches the Twitch account age of a given account. If none is given, checks yours.',
 		15000,
-		0,
-		0,
-		0,
-		0,
 		NULL,
-		0,
-		0,
-		0,
-		1,
-		1,
-		0,
-		0,
 		NULL,
 		'(async function accountAge (context, user) {
 	if (!user) {
@@ -82,10 +59,5 @@ VALUES
 		reply: `${pronoun} Twitch account was created ${delta}. ${anniversary}`
 	};
 })',
-		'No arguments: Shows your Twitch account\'s username.
-If given, the first argument is the username to check.
-
-$accage
-$accage supibot',
 		NULL
 	)

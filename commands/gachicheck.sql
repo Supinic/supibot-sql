@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		47,
 		'gachicheck',
 		'[\"gc\"]',
-		NULL,
+		'ping,pipe,skip-banphrase',
 		'Checks if a given gachi link exists in the database, if not, adds it to the todo list to be processed later.',
 		2500,
-		0,
-		0,
-		1,
-		0,
 		NULL,
-		0,
-		0,
-		0,
-		1,
-		1,
-		0,
-		0,
 		'({
 	limit: 100
 })',
@@ -268,13 +245,6 @@ VALUES
 		};
 	}
 })',
-		'Supports Youtube, Nicovideo, Bilibili, Soundcloud, VK, Vimeo
-
-$gc <link> => Checks the link, and adds it to the todo list if not found
-$gc <link <...description> => Checks the link, and adds it to the todo list if not found, with a custom description
-
-$gc https://youtu.be/OI8gy-AHgJg
-$gc https://www.nicovideo.jp/watch/sm6140534 ',
 		'async (prefix, values) => {
 	const { limit } = values.getStaticData();
 

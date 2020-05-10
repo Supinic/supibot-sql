@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		176,
 		'block',
 		'[\"unblock\"]',
-		NULL,
+		'ping,pipe,skip-banphrase',
 		'Blocks, or unblocks a specified user from using a specified command with you as the target. You can also set a channel, or platform for the block to be active on.',
 		5000,
-		0,
-		0,
-		1,
-		0,
 		NULL,
-		0,
-		0,
-		0,
-		1,
-		1,
-		1,
-		0,
 		NULL,
 		'(async function block (context, ...args) {
 	const types = [\"user\", \"command\", \"platform\", \"channel\"];
@@ -84,7 +61,7 @@ VALUES
 			};
 		}
 		else {
-			if (module === sb.Command && !specificData.Blockable) {
+			if (module === sb.Command && !specificData.Flags.block) {
 				return {
 					success: false,
 					reply: `You cannot block people from this command!`
@@ -178,6 +155,5 @@ VALUES
 		};
 	}
 })',
-		NULL,
 		NULL
 	)

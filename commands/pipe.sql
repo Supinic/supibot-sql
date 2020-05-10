@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		104,
 		'pipe',
 		NULL,
-		NULL,
+		'ping,system',
 		'Pipes the result of one command to another, and so forth. Each command will be used as if used separately, so each will be checked for cooldowns and banphrases. Use the character \"|\" or \">\" to separate each command.',
 		5000,
-		0,
-		1,
-		0,
-		0,
 		NULL,
-		0,
-		0,
-		0,
-		1,
-		0,
-		0,
-		0,
 		NULL,
 		'(async function pipe (context, ...args) {
 	const invocations = args.join(\" \").split(/[|>]/).map(i => i.trim());
@@ -78,7 +55,7 @@ VALUES
 
 		const check = sb.Command.get(cmd.replace(sb.Config.get(\"COMMAND_PREFIX\"), \"\"));
 		if (check) {
-			if (!check.Pipeable) {
+			if (!check.Flags.pipe) {
 				return { reply: \"Command \" + cmd + \" cannot be used in a pipe!\" };
 			}
 		}
@@ -147,7 +124,6 @@ VALUES
 		reply: currentArgs.join(\" \")
 	};
 })',
-		NULL,
 		'async (prefix) => {
 	return [
 		\"Pipes multiple commands together, where each command\'s result will become the input of another.\",

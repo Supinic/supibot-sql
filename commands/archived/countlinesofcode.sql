@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		151,
 		'countlinesofcode',
 		'[\"cloc\"]',
-		NULL,
+		'archived,ping,pipe,system',
 		'Counts the lines of supibot\'s code.',
 		60000,
-		0,
-		1,
-		0,
-		0,
 		NULL,
-		0,
-		0,
-		0,
-		1,
-		1,
-		0,
-		1,
 		NULL,
 		'async () => {
 	const files = sb.Config.get(\"SUPIBOT_FILES\");
@@ -69,6 +46,5 @@ VALUES
 		reply: `I consist of ${commandLines + backendLines} lines of code (backend: ${backendLines}, commands: ${commandLines}); for a total of ${backendLength + commandLength} characters.`
 	};
 }',
-		NULL,
 		NULL
 	)

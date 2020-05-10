@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		94,
 		'playsound',
 		'[\"ps\"]',
-		NULL,
+		'ping,pipe,whitelist',
 		'Plays a sound on supinic stream, if enabled. Use \"list\" as an argument to see the list of available playsounds.',
 		10000,
-		0,
-		0,
-		0,
-		1,
 		NULL,
-		0,
-		0,
-		0,
-		1,
-		1,
-		0,
-		0,
 		NULL,
 		'(async function playSound (context, playsound) {
 	if (!sb.Config.get(\"PLAYSOUNDS_ENABLED\")) {
@@ -91,6 +68,5 @@ VALUES
 		};
 	}
 })',
-		NULL,
 		NULL
 	)

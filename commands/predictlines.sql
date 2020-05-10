@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		158,
 		'predictlines',
 		'[\"pl\"]',
-		NULL,
+		'ping,pipe',
 		'Predicts the amount of lines a given user will have in some amount of time.',
 		60000,
-		0,
-		0,
-		0,
-		0,
 		NULL,
-		0,
-		0,
-		0,
-		1,
-		1,
-		0,
-		0,
 		NULL,
 		'(async function predictLines (context, user, ...args) {
 	if (!user) {
@@ -86,6 +63,5 @@ VALUES
 		reply: \"I predict that there will be \" + messages + \" extra lines \" + whenString
 	};
 })',
-		NULL,
 		NULL
 	)

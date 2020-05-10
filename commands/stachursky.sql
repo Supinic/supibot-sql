@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		199,
 		'stachursky',
 		'[\"FeelsStachurskyMan\"]',
-		NULL,
+		'ping,pipe',
 		'Posts a random excerpt from a Stachursky song.',
 		10000,
-		0,
-		0,
-		0,
-		0,
 		NULL,
-		0,
-		0,
-		0,
-		1,
-		1,
-		0,
-		0,
 		'({
 	quotes: [
 		\"W ogóle, centralnie, kamieniem go bez kitu.\",
@@ -107,6 +84,5 @@ VALUES
 		reply: sb.Utils.randArray(this.staticData.quotes)
 	};
 })',
-		NULL,
 		NULL
 	)

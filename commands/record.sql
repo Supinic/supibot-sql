@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		185,
 		'record',
 		NULL,
-		NULL,
+		'ping,pipe',
 		'Checks for various max/min records of various sources.',
 		10000,
-		0,
-		0,
-		0,
-		0,
 		NULL,
-		0,
-		0,
-		0,
-		1,
-		1,
-		0,
-		0,
 		NULL,
 		'(async function record (context, type, target) {
 	if (!type) {
@@ -105,6 +82,5 @@ VALUES
 		default: return { reply: \"Invalid type provided!\" };
 	};
 })',
-		NULL,
 		NULL
 	)

@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		78,
 		'catfact',
 		'[\"rcf\"]',
-		NULL,
+		'archived,pipe,whitelist',
 		'Fetches a random cat fact.',
 		10000,
-		0,
-		0,
-		0,
-		1,
 		'Only people who verified that they have a cat can use this command. You can verify by using the $suggest command with a picture of your cat.',
-		0,
-		0,
-		0,
-		0,
-		1,
-		0,
-		1,
 		NULL,
 		'(async function randomCatFact () {
 	const url = \"https://catfact.ninja/fact\";
@@ -53,9 +30,6 @@ VALUES
 		reply: data.fact
 	};
 })',
-		'No arguments.
-
-$catfact',
 		'async (prefix) => {
 	return [
 		\"Fetch a random cat-related fact!\",

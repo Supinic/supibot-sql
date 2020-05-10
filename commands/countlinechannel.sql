@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		50,
 		'countlinechannel',
 		'[\"clc\"]',
-		NULL,
+		'ping,pipe,skip-banphrase',
 		'Fetches the amount of chat lines in the current channel.',
 		60000,
-		0,
-		0,
-		1,
-		0,
 		NULL,
-		0,
-		0,
-		0,
-		1,
-		1,
-		0,
-		0,
 		NULL,
 		'(async function countLineChannel (context) {
 	if (!context.channel) {
@@ -90,6 +67,5 @@ VALUES
 		};
 	}
 })',
-		'No arguments.',
 		NULL
 	)

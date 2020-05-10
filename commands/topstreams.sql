@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		157,
 		'topstreams',
 		NULL,
-		NULL,
+		'ping,pipe',
 		'Checks the top 5 streams on twitch - if you add a game, will look for top 5 streams playing that game. Game must be provided verbatim',
 		30000,
-		0,
-		0,
-		0,
-		0,
 		NULL,
-		0,
-		0,
-		0,
-		1,
-		1,
-		0,
-		0,
 		NULL,
 		'(async function topStreams (context, ...args) {
 	const params = new sb.URLParams(\"%20\").set(\"limit\", 10);
@@ -75,6 +52,5 @@ VALUES
 		return { reply: \"These streamers \" + gameString + streamers.join(\"; \") };
 	}
 })',
-		NULL,
 		NULL
 	)

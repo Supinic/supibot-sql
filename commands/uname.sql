@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		152,
 		'uname',
 		'[\"version\"]',
-		NULL,
+		'ping,pipe',
 		'Posts the current supibot version, along with the latest \"patch notes\"',
 		10000,
-		0,
-		0,
-		0,
-		0,
 		NULL,
-		0,
-		0,
-		0,
-		1,
-		1,
-		0,
-		0,
 		NULL,
 		'(async function uname () {
 	const data = await sb.Got.instances.GitHub(\"repos/supinic/supibot/commits\").json();
@@ -55,6 +32,5 @@ VALUES
 		reply: `Last commit: ${sha.slice(0, 7)} - ${message}`
 	};
 })',
-		NULL,
 		NULL
 	)

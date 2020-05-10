@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		145,
 		'checkdeadchannels',
 		'[\"cdc\"]',
-		NULL,
+		'pipe,skip-banphrase,system,whitelist',
 		'Iterates over active channels, takes the last posted message in each, and prints the dates + messages into a Pastebin paste. This is useful to determine if and which channels could potentially be removed from the bot because of prolonged inactivity.',
 		0,
-		0,
-		1,
-		1,
-		1,
 		NULL,
-		0,
-		0,
-		0,
-		0,
-		1,
-		0,
-		0,
 		NULL,
 		'async () => {
 	const promises = [];
@@ -82,6 +59,5 @@ VALUES
 		reply: await sb.Pastebin.post(JSON.stringify(results, null, 4))
 	};
 }',
-		NULL,
 		NULL
 	)

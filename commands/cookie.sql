@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		5,
 		'cookie',
 		NULL,
-		NULL,
+		'ping,pipe,rollback',
 		'Open a random fortune cookie wisdom. Watch out - only one allowed per day, and no refunds! Daily reset occurs at midnight UTC.',
 		10000,
-		1,
-		0,
-		0,
-		0,
 		NULL,
-		0,
-		0,
-		0,
-		1,
-		1,
-		0,
-		0,
 		NULL,
 		'async (extra, check) => {
 	const data = (await sb.Query.getRecordset(rs => rs
@@ -90,7 +67,6 @@ VALUES
 
 	return { reply: cookie.Text };
 }',
-		NULL,
 		'async (prefix) => {
 	return [
 		\"Fetch a daily fortune cookie and read its wisdom!\",

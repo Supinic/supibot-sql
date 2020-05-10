@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		193,
 		'randomsadcat',
 		'[\"rsc\"]',
-		NULL,
+		'ping,pipe',
 		'Posts a random sad cat image SadCat',
 		15000,
-		0,
-		0,
-		0,
-		0,
 		NULL,
-		0,
-		0,
-		0,
-		1,
-		1,
-		0,
-		0,
 		'(() => {
 	this.data.previousPosts = [];
 	return {
@@ -132,6 +109,5 @@ VALUES
 		reply: \"SadCat \" + post
 	};
 })',
-		NULL,
 		NULL
 	)

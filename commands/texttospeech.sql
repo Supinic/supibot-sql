@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		86,
 		'texttospeech',
 		'[\"tts\"]',
-		NULL,
+		'ping,pipe,skip-banphrase',
 		'Plays TTS on stream, if enabled. You can specify voice by using \"voice:<name>\" or \"lang:<language>\" anywhere in your message. Available voices: https://supinic.com/stream/tts',
 		10000,
-		0,
-		0,
-		1,
-		0,
 		NULL,
-		0,
-		0,
-		0,
-		1,
-		1,
-		0,
-		0,
 		'(() => {
 	const limit = 30_000;
 	const partsLimit = 5;
@@ -209,7 +186,6 @@ VALUES
 		}
 	};
 })',
-		NULL,
 		'(async (prefix, values) => {
 	const { partsLimit } = values.getStaticData();
 

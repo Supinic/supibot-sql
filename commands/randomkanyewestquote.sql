@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		163,
 		'randomkanyewestquote',
 		'[\"rkwq\"]',
-		NULL,
+		'ping,pipe',
 		'Posts a random Kanye West quote.',
 		15000,
-		0,
-		0,
-		0,
-		0,
 		NULL,
-		0,
-		0,
-		0,
-		1,
-		1,
-		0,
-		0,
 		NULL,
 		'(async function randomKanyeWestQuote () {
 	const { quote } = await sb.Got(\"https://api.kanye.rest\").json();
@@ -51,6 +28,5 @@ VALUES
 		reply: quote
 	};
 })',
-		NULL,
 		NULL
 	)

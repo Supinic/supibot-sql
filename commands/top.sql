@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		42,
 		'top',
 		NULL,
-		NULL,
+		'pipe,whitelist',
 		'Posts the top X (implicitly 10) users by chat lines sent in the context of current channel.',
 		60000,
-		0,
-		0,
-		0,
-		1,
 		NULL,
-		0,
-		0,
-		0,
-		0,
-		1,
-		0,
-		0,
 		NULL,
 		'(async function top (extra, limit) {
 	if (!Number.isFinite(Number(limit))) {
@@ -77,6 +54,5 @@ VALUES
 		reply: `Top ${limit} chatters: ${chatters}`
 	};
 })',
-		NULL,
 		NULL
 	)

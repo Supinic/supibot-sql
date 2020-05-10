@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		189,
 		'pick',
 		NULL,
-		NULL,
+		'ping,pipe',
 		'Picks a single word from the provided list of words in a message.',
 		10000,
-		0,
-		0,
-		0,
-		0,
 		NULL,
-		0,
-		0,
-		0,
-		1,
-		1,
-		0,
-		0,
 		NULL,
 		'(async function pick (context, ...words) {
 	if (words.length === 0) {
@@ -59,6 +36,5 @@ VALUES
 			: this.Cooldown
 	}
 })',
-		NULL,
 		NULL
 	)

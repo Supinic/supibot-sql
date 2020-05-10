@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		204,
 		'chan',
 		'[\"4chan\", \"textchan\", \"filechan\", \"imagechan\"]',
-		NULL,
+		'ping,pipe',
 		'Pulls a random post from a random board, or a specified one, if you provide it.',
 		10000,
-		0,
-		0,
-		0,
-		0,
 		NULL,
-		0,
-		0,
-		0,
-		1,
-		1,
-		0,
-		0,
 		'({
 	replacements: [
 		{
@@ -233,6 +210,5 @@ VALUES
 		};
 	}
 })',
-		NULL,
 		NULL
 	)

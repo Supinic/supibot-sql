@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		186,
 		'thesaurus',
 		NULL,
-		NULL,
+		'ping,pipe',
 		'Attempts to re-created your sentence using random synonyms for each word. EXPERIMENTAL',
 		30000,
-		0,
-		0,
-		0,
-		0,
 		NULL,
-		0,
-		0,
-		0,
-		1,
-		1,
-		0,
-		0,
 		NULL,
 		'(async function thesaurus (context, ...words) {
 	if (words.length === 0) {
@@ -78,6 +55,5 @@ VALUES
 		reply: result.join(\" \")
 	};
 })',
-		NULL,
 		NULL
 	)

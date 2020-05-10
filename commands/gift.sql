@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		96,
 		'gift',
 		'[\"give\"]',
-		NULL,
+		'ping,pipe',
 		'Gifts a certain something to someone else. Right now, supported parameters are: \"cookie\" - gifts your cooldown for a cookie to someone else!',
 		5000,
-		0,
-		0,
-		0,
-		0,
 		NULL,
-		0,
-		0,
-		0,
-		1,
-		1,
-		0,
-		0,
 		NULL,
 		'(async function gift (context, type, target) {
 	if (!type) {
@@ -128,8 +105,5 @@ VALUES
 		default: return { reply: \"Target type cannot be gifted (yet, at least).\" };
 	}
 })',
-		'Gifts another user some item. Depends on the type chosen.
-
-$gift cookie <user> => Gifts your daily cookie to that user. They must have eaten their own for today first.',
 		NULL
 	)

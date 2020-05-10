@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		177,
 		'vod',
 		NULL,
-		NULL,
+		'ping',
 		'Posts the last VOD of a specified channel (for now)',
 		15000,
-		0,
-		0,
-		0,
-		0,
 		NULL,
-		0,
-		0,
-		0,
-		1,
-		0,
-		0,
-		0,
 		NULL,
 		'(async function vod (context, target) {
 	if (!target) {
@@ -89,6 +66,5 @@ VALUES
 		reply: `${data.title} (length: ${prettyDuration}) - published ${delta} ${data.url}${liveString}`
 	};
 })',
-		NULL,
 		NULL
 	)

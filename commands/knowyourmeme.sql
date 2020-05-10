@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		188,
 		'knowyourmeme',
 		'[\"kym\"]',
-		NULL,
+		'ping,pipe',
 		'Gets a smol description of a meme from KnowYourMeme, it\'s just the summary.',
 		30000,
-		0,
-		0,
-		0,
-		0,
 		NULL,
-		0,
-		0,
-		0,
-		1,
-		1,
-		0,
-		0,
 		NULL,
 		'(async function knowYourMeme (context, ...args) {
 	if (args.length === 0) {
@@ -82,6 +59,5 @@ VALUES
 		reply: summary
 	};
 })',
-		NULL,
 		NULL
 	)

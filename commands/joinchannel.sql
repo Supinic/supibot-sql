@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		59,
 		'joinchannel',
 		NULL,
-		NULL,
+		'ping,pipe,system,whitelist',
 		'Adds a new channel to database, sets its tables and events, and joins it. Only applicable for Twitch channels (for now, at least).',
 		0,
-		0,
-		1,
-		0,
-		1,
 		NULL,
-		0,
-		0,
-		0,
-		1,
-		1,
-		0,
-		0,
 		NULL,
 		'(async function joinChannel (context, channel, mode) {
 	if (context.platform.Name !== \"twitch\") {
@@ -79,6 +56,5 @@ VALUES
 
 	return { reply: \"Success.\" };
 })',
-		NULL,
 		NULL
 	)

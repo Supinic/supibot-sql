@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		128,
 		'case',
 		NULL,
-		NULL,
+		'archived,ping,pipe',
 		'Makes the input lower or uppercase. Only usable in pipe.',
 		0,
-		0,
-		0,
-		0,
-		0,
 		NULL,
-		0,
-		0,
-		0,
-		1,
-		1,
-		0,
-		1,
 		NULL,
 		'(async function _case (context, type, ...args) {
 	return {
@@ -68,6 +45,5 @@ VALUES
 		default: return { success: false, reason: \"no-type\" };
 	}
 })',
-		NULL,
 		NULL
 	)

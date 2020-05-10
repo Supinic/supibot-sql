@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		187,
 		'when',
 		NULL,
-		NULL,
+		'ping,pipe,whitelist',
 		'Tells you when your command is going to be played next, approximately.',
 		15000,
-		0,
-		0,
-		0,
-		1,
 		'Only available in channels with VLC API configured!',
-		0,
-		0,
-		0,
-		1,
-		1,
-		0,
-		0,
 		NULL,
 		'(async function when (context) {
 	if (sb.Config.get(\"SONG_REQUESTS_STATE\") !== \"vlc\") {
@@ -112,6 +89,5 @@ VALUES
 		reply: `${prepend} ${bridge} \"${target.Name}\" is playing in ${delta}.`
 	};
 })',
-		NULL,
 		NULL
 	)

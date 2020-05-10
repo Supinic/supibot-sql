@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		106,
 		'truck',
 		NULL,
-		NULL,
+		'opt-out,pipe,skip-banphrase',
 		'Trucks the target user into bed. KKona',
 		10000,
-		0,
-		0,
-		1,
-		0,
 		NULL,
-		0,
-		1,
-		0,
-		0,
-		1,
-		1,
-		0,
 		NULL,
 		'async (extra, target) => {
 	if (target && target.toLowerCase() === sb.Config.get(\"SELF\")) {
@@ -56,6 +33,5 @@ VALUES
 		return { reply: \"The truck ran you over KKoooona\" };
 	}
 }',
-		NULL,
 		NULL
 	)

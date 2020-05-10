@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		85,
 		'vanish',
 		NULL,
-		NULL,
+		'skip-banphrase',
 		'Times out the user for 1 second. Only works if Supibot is a Twitch moderator.',
 		60000,
-		0,
-		0,
-		1,
-		0,
 		NULL,
-		0,
-		0,
-		0,
-		0,
-		0,
-		0,
-		0,
 		NULL,
 		'(async function vanish (context) {
 	if (context.channel === null || context.channel.Mode !== \"Moderator\") {
@@ -70,6 +47,5 @@ VALUES
 
 	context.platform.client.privmsg(context.channel.Name, \"/timeout \" + context.user.Name + \" 1 vanished\");
 })',
-		NULL,
 		NULL
 	)

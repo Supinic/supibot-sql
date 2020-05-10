@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		154,
 		'streaminfo',
 		'[\"si\", \"uptime\"]',
-		NULL,
+		'ping,pipe',
 		'Posts stream info about a Twitch channel.',
 		10000,
-		0,
-		0,
-		0,
-		0,
 		NULL,
-		0,
-		0,
-		0,
-		1,
-		1,
-		0,
-		0,
 		NULL,
 		'(async function streamInfo (context, ...args) {
 	let platform = \"twitch\";
@@ -115,6 +92,5 @@ VALUES
 		}
 	}
 })',
-		NULL,
 		NULL
 	)

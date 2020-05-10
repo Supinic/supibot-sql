@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		172,
 		'pingall',
 		NULL,
-		NULL,
+		'pipe,skip-banphrase,system,whitelist',
 		'Attempts to check all channel bots by using their ping commands.',
 		0,
-		0,
-		1,
-		1,
-		1,
 		NULL,
-		0,
-		0,
-		0,
-		0,
-		1,
-		0,
-		0,
 		NULL,
 		'(async function pingAll (context) {
 	const bots = await sb.Query.getRecordset(rs => rs
@@ -57,6 +34,5 @@ VALUES
 		sb.Master.send(bot.Prefix + (bot.Prefix_Space ? \" \" : \"\") + \"ping\", context.channel);
 	}
 })',
-		NULL,
 		NULL
 	)

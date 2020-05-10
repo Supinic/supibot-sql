@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		37,
 		'news',
 		NULL,
-		NULL,
+		'ping,pipe',
 		'Fetches short articles. You can use a 2 character ISO code to get country specific news, or any other word as a search query.',
 		10000,
-		0,
-		0,
-		0,
-		0,
 		NULL,
-		0,
-		0,
-		0,
-		1,
-		1,
-		0,
-		0,
 		NULL,
 		'(async function news (context, ...rest) {
 	const params = new sb.URLParams().set(\"language\", \"en\");
@@ -109,7 +86,6 @@ VALUES
 		reply: sb.Utils.removeHTML(`${title} ${description ?? \"\"} ${delta}`)
 	};
 })',
-		NULL,
 		'async (prefix) => {
 	const { sources } = await sb.Got({
 		url: \"https://newsapi.org/v2/sources\",

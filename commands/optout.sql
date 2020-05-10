@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		72,
 		'optout',
 		'[\"unoptout\"]',
-		NULL,
+		'ping,skip-banphrase',
 		'Makes it so you cannot be the target of a command - the command will not be executed at all. For detailed usage, please check the extended help.',
 		5000,
-		0,
-		0,
-		1,
-		0,
 		NULL,
-		0,
-		0,
-		0,
-		1,
-		0,
-		0,
-		0,
 		NULL,
 		'(async function optOut (context, ...args) {
 	let deliberateGlobalOptout = false;
@@ -185,7 +162,6 @@ VALUES
 		};
 	}
 })',
-		NULL,
 		'async (prefix) => {
 	return [
 		\"Opts you out of a specific command.\",

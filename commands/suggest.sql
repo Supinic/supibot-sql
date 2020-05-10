@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		48,
 		'suggest',
 		NULL,
-		NULL,
+		'ping,skip-banphrase',
 		'Suggest a feature for Supinic, regarding Supibot, Discord/Cytube, or the website',
 		60000,
-		0,
-		0,
-		1,
-		0,
 		NULL,
-		0,
-		0,
-		0,
-		1,
-		0,
-		0,
-		0,
 		NULL,
 		'(async function suggest (context, ...args) {
 	if (args.length === 0) {
@@ -74,6 +51,5 @@ VALUES
 		reply: `Suggestion saved, and will eventually be processed (ID ${row.values.ID}) ${emote}`
 	};
 })',
-		NULL,
 		NULL
 	)

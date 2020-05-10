@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		127,
 		'downloadyoutubecaptions',
 		'[\"dytc\", \"dyts\"]',
-		NULL,
+		'archived,ping,pipe,whitelist',
 		'Downloads the subtitles (captions) of a video, posts them in a Pastebin paste and gives you the link.',
 		60000,
-		0,
-		0,
-		0,
-		1,
 		'Temporarily disabled',
-		0,
-		0,
-		0,
-		1,
-		1,
-		0,
-		1,
 		NULL,
 		'(async function downloadYoutubeCaptions (context, video) {
 	if (!video || !video.includes(\"youtu\")) { // @todo - put link parser verification here
@@ -80,6 +57,5 @@ VALUES
 		reply: \"Your subtitles are available for 10 minutes here: \" + link
 	};
 })',
-		NULL,
 		NULL
 	)

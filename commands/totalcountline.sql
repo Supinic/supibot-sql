@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		61,
 		'totalcountline',
 		'[\"acl\", \"tcl\"]',
-		NULL,
+		'ping,pipe,skip-banphrase',
 		'Fetches the total amount of a user\'s (or yours, if nobody was specified) chat lines in all tracked channels summed together.',
 		30000,
-		0,
-		0,
-		1,
-		0,
 		NULL,
-		0,
-		0,
-		0,
-		1,
-		1,
-		0,
-		0,
 		NULL,
 		'(async function totalCountLines (context, target) {
 	if (!target) {
@@ -75,6 +52,5 @@ VALUES
 		reply: `${who} sent ${data.Total} chat lines across all tracked channels so far.`
 	};
 })',
-		NULL,
 		NULL
 	)

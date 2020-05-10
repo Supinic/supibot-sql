@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		54,
 		'ban',
 		'[\"unban\"]',
-		NULL,
+		'ping,skip-banphrase,system',
 		'Bans/unbans any combination of channel, user, and command from being executed. Only usable by administrators, or Twitch channel owners.',
 		5000,
-		0,
-		1,
-		1,
-		0,
 		NULL,
-		0,
-		0,
-		0,
-		1,
-		0,
-		1,
-		0,
 		NULL,
 		'(async function ban (context, ...args) {
 	if (context.platform.Name !== \"twitch\") {
@@ -206,7 +183,6 @@ VALUES
 		};
 	}
 })',
-		NULL,
 		'async (prefix) => {
 	return [
 		\"Bans or unbans any combination of user/channel/command.\",

@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		206,
 		'lastcommand',
 		'[\"_\"]',
-		NULL,
+		'pipe',
 		'Posts your last command executed in the current channel. Only goes back up to 1 minute.',
 		5000,
-		0,
-		0,
-		0,
-		0,
 		NULL,
-		0,
-		0,
-		0,
-		0,
-		1,
-		0,
-		0,
 		NULL,
 		'(async function lastCommand (context) {
 	const data = await sb.Query.getRecordset(rs => {
@@ -72,6 +49,5 @@ VALUES
 			: \"No recent command execution found!\"
 	};
 })',
-		NULL,
 		NULL
 	)

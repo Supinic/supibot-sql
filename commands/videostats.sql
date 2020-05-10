@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		123,
 		'videostats',
 		NULL,
-		NULL,
+		'ping,pipe,whitelist',
 		'Post the statistics about a given bare video link (means, just the ID and not the entire link) in a given Cytube room.',
 		10000,
-		0,
-		0,
-		0,
-		1,
 		'Video statistics are only available in Cytube rooms.',
-		0,
-		0,
-		0,
-		1,
-		1,
-		0,
-		0,
 		NULL,
 		'async (extra, link) => {
 	if (!link) {
@@ -92,6 +69,5 @@ VALUES
 		reply: `That video was queued ${total} times before (mostly by: ${top5.join(\"; \")}). Last time it was queued ${sb.Utils.timeDelta(lastPlayedData.Posted)}, by ${lastPlayedData.Name}`
 	};
 }',
-		NULL,
 		NULL
 	)

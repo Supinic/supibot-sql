@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		180,
 		'songrequestrandomgachi',
 		'[\"gsr\", \"srg\", \"srrg\"]',
-		NULL,
+		'skip-banphrase,whitelist',
 		'Posts a random gachi in the format \"!sr <link>\" to use on other bots\' song request systems (such as StreamElements).',
 		60000,
-		0,
-		0,
-		1,
-		1,
 		'Only available in specific whitelisted channels (for instance, those that have a song request bot that replies to \"!sr\").',
-		0,
-		0,
-		0,
-		0,
-		0,
-		0,
-		0,
 		'({
 	repeatLimit: 5
 })',
@@ -82,6 +59,5 @@ VALUES
 		reply: `!sr ${link}`
 	}
 })',
-		NULL,
 		NULL
 	)

@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		80,
 		'randomword',
 		'[\"rw\"]',
-		NULL,
+		'pipe',
 		'Fetches a random word. If a number is provided, rolls that many words.',
 		5000,
-		0,
-		0,
-		0,
-		0,
 		NULL,
-		0,
-		0,
-		0,
-		0,
-		1,
-		0,
-		0,
 		'({
 	limit: 10
 })',
@@ -57,7 +34,6 @@ VALUES
 		reply: [...Array(repeats)].map(() => sb.Utils.randArray(sb.Config.get(\"WORD_LIST\"))).join(\" \")
 	};
 })',
-		NULL,
 		'async (prefix, values) => {
 	const { limit } = values.getStaticData();
 	const list = sb.Config.get(\"WORD_LIST\");

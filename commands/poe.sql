@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		117,
 		'poe',
 		NULL,
-		NULL,
+		'ping,pipe',
 		'Checks the current price of any recently traded item. $poe <league> <item>',
 		7500,
-		0,
-		0,
-		0,
-		0,
 		NULL,
-		0,
-		0,
-		0,
-		1,
-		1,
-		0,
-		0,
 		'(() => {
 	this.data.labyrinth = {
 		date: null,
@@ -209,7 +186,6 @@ VALUES
 		}
 	}
 })',
-		NULL,
 		'async (prefix, values) => {
 	const { commands } = values.getStaticData();
 

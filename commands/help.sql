@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		49,
 		'help',
 		'[\"commands\"]',
-		NULL,
+		'ping,pipe',
 		'Posts either: a short list of all commands, or a description of a specific command if you specify it.',
 		5000,
-		0,
-		0,
-		0,
-		0,
 		NULL,
-		0,
-		0,
-		0,
-		1,
-		1,
-		0,
-		0,
 		NULL,
 		'(async function help (context, commandString) {
 	const prefix = sb.Config.get(\"COMMAND_PREFIX\");
@@ -68,10 +45,9 @@ VALUES
 			return { reply: \"That command does not exist!\" };
 		}
 
-		const filteredResponse = (command.Whitelisted)
-			? \"(whitelisted)\"
-			: \"\";
+		const filteredResponse = (command.Flags.whitelist) ? \"(whitelisted)\" : \"\";
 		const aliases = (command.Aliases.length === 0) ? \"\" : (\" (\" + command.Aliases.map(i => prefix + i).join(\", \") + \")\");
+
 		const reply = [
 			prefix + command.Name + aliases + \":\",
 			command.Description || \"(no description)\",
@@ -83,7 +59,5 @@ VALUES
 		return { reply: reply.join(\" \") };
 	}
 })',
-		'$help => Posts the link to all commands
-$help <command> => Short summary of the command',
 		NULL
 	)

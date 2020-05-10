@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		23,
 		'dictionary',
 		'[\"define\", \"def\", \"dict\"]',
-		NULL,
+		'ping,pipe',
 		'Fetches the dictionary definition of a word. Add a number at the end to access specific definition index if the given word has multiple definitions.',
 		10000,
-		0,
-		0,
-		0,
-		0,
 		NULL,
-		0,
-		0,
-		0,
-		1,
-		1,
-		0,
-		0,
 		NULL,
 		'(async function dictionary (context, ...args) {
 	let specificIndex = 0;
@@ -102,9 +79,5 @@ VALUES
 		}
 	}
 })',
-		'Only supports one word.
-
-$dictionary overlord
-$define frog',
 		NULL
 	)

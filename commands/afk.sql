@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		6,
 		'afk',
 		'[\"gn\", \"brb\", \"shower\", \"food\", \"lurk\", \"poop\", \"💩\", \"ppPoof\", \"work\", \"study\"]',
-		NULL,
+		'pipe',
 		'Flags you as AFK. Supports a custom AFK message.',
 		10000,
-		0,
-		0,
-		0,
-		0,
 		NULL,
-		0,
-		0,
-		0,
-		0,
-		1,
-		0,
-		0,
 		'({
 	foodEmojis: [
 		\"🍋\",
@@ -155,14 +132,6 @@ VALUES
 		 reply: context.user.Name + \" is \" + status + \": \" + text
 	}
 })',
-		'No arguments: Sets the status with \"(no message)\"
-Any arguments given will make up the AFK message.
-
-$afk => AFK status
-$shower => Shower status
-$brb => Be right back status
-
-$afk I\'ll be back.',
 		'async (prefix) => [
 		\"Flags you as AFK (away from keyboard).\",
 		\"While you are AFK, others can check if you are AFK.\",

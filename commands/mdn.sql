@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		203,
 		'mdn',
 		NULL,
-		NULL,
+		'ping,pipe',
 		'Searches the MDN website for a given term, then returns the article link.',
 		10000,
-		0,
-		0,
-		0,
-		0,
 		NULL,
-		0,
-		0,
-		0,
-		1,
-		1,
-		0,
-		0,
 		NULL,
 		'(async function mdn (context, ...args) {
 	const query = args.join(\" \");
@@ -71,7 +48,6 @@ VALUES
 		reply: `${title}: https://developer.mozilla.org/en-US/docs/${slug}`
 	};
 })',
-		NULL,
 		'async (prefix) => {
 	const url = \"https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Operators/Nullish_coalescing_operator\";
 	

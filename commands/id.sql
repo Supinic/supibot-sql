@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		19,
 		'id',
 		NULL,
-		NULL,
+		'ping,pipe,skip-banphrase',
 		'Checks your (or someone else\'s) ID in the database of users - the lower the number, the earlier the user was first spotted',
 		10000,
-		0,
-		0,
-		1,
-		0,
 		NULL,
-		0,
-		0,
-		0,
-		1,
-		1,
-		0,
-		0,
 		NULL,
 		'(async function id (context, user) {
 	let targetUser = context.user;
@@ -91,7 +68,5 @@ VALUES
 		reply: `${idString} ${targetUser.ID} and ${pronoun} ${temporalReply} ${delta}. ${birthdayString}`
 	};
 })',
-		'$id => Posts your ID in supibot\'s user database.
-$id <user> => Posts their ID in supibot\'s user database.',
 		NULL
 	)

@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		129,
 		'getvideodata',
 		'[\"gvd\"]',
-		NULL,
+		'ping,pipe,system',
 		'Uses supinic\'s API to fetch general info about a link, which is then posted to a Pastebin post.',
 		5000,
-		0,
-		1,
-		0,
-		0,
 		NULL,
-		0,
-		0,
-		0,
-		1,
-		1,
-		0,
-		0,
 		NULL,
 		'(async function getVideoData (context, link) {
 	let data = null;
@@ -66,6 +43,5 @@ VALUES
 		return { reply: link };
 	}
 })',
-		NULL,
 		NULL
 	)

@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		38,
 		'translate',
 		NULL,
-		NULL,
+		'ping,pipe',
 		'Implicitly translates from auto-recognized language to English. Supports parameters \'from\' and \'to\'. Example: from:german to:french Guten Tag\",',
 		15000,
-		0,
-		0,
-		0,
-		0,
 		NULL,
-		0,
-		0,
-		0,
-		1,
-		1,
-		0,
-		0,
 		NULL,
 		'(async function translate (context, ...args) {
 	if (args.length === 0) {
@@ -114,6 +91,5 @@ VALUES
 
 	return { reply: reply };
 })',
-		NULL,
 		NULL
 	)

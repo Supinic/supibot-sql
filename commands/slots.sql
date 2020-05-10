@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		89,
 		'slots',
 		NULL,
-		NULL,
+		'ping,pipe',
 		'Once at least three unique emotes (or words) have been provided, rolls a pseudo slot machine to see if you get a flush.',
 		20000,
-		0,
-		0,
-		0,
-		0,
 		NULL,
-		0,
-		0,
-		0,
-		1,
-		1,
-		0,
-		0,
 		NULL,
 		'(async function slots (context, ...emotes) {
 	if (emotes[0] === \"leader\" || emotes[0] === \"leaders\") {
@@ -153,7 +130,6 @@ VALUES
 		reply: `[ ${rolledItems.join(\" \")} ]`
 	};
 })',
-		NULL,
 		'async (prefix) => {
 	const patterns = (await sb.Query.getRecordset(rs => rs
 		.select(\"Name\", \"Notes\")

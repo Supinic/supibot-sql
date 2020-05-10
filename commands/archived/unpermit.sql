@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		17,
 		'unpermit',
 		NULL,
-		NULL,
+		'archived,ping,pipe,skip-banphrase,system,whitelist',
 		'Revokes the right to execute a given command from a given user',
 		0,
-		0,
-		1,
-		1,
-		1,
 		NULL,
-		0,
-		0,
-		0,
-		1,
-		1,
-		0,
-		1,
 		NULL,
 		'async (extra, user, command) => {
 	if (!user || !command) {
@@ -74,6 +51,5 @@ VALUES
 
 	return { reply: targetUser.Name + \" has been granted successfully revoked permission.\" };
 }',
-		NULL,
 		NULL
 	)

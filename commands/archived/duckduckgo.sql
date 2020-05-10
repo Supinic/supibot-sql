@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		209,
 		'duckduckgo',
 		'[\"ddg\"]',
-		NULL,
+		'archived,ping,pipe',
 		'Try the DuckDuckGo Instant Answer API to answer your questions!',
 		15000,
-		0,
-		0,
-		0,
-		0,
 		NULL,
-		0,
-		0,
-		0,
-		1,
-		1,
-		0,
-		1,
 		NULL,
 		'(async function duckDuckGo (context, ...args) {
 	const data = await sb.Got({
@@ -76,6 +53,5 @@ VALUES
 		`
 	};	
 })',
-		NULL,
 		NULL
 	)

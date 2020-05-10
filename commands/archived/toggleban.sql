@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		55,
 		'toggleban',
 		NULL,
-		NULL,
+		'archived,ping,pipe,system,whitelist',
 		'Toggles the status of an existing ban based on the ID.',
 		0,
-		0,
-		1,
-		0,
-		1,
 		NULL,
-		0,
-		0,
-		0,
-		1,
-		1,
-		0,
-		1,
 		NULL,
 		'async (extra, ID) => {
 	if (!ID  || !Number(ID)) {
@@ -55,6 +32,5 @@ VALUES
 
 	return { reply: \"Ban ID \" + ban.ID + \" is now \" + (ban.Active ? \"\" : \"in\") + \"active.\" };
 }',
-		NULL,
 		NULL
 	)

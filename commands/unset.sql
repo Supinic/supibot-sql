@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		63,
 		'unset',
 		NULL,
-		NULL,
+		'ping,pipe',
 		'Unsets a certain variable that you have created (e.g. reminders)',
 		5000,
-		0,
-		0,
-		0,
-		0,
 		NULL,
-		0,
-		0,
-		0,
-		1,
-		1,
-		1,
-		0,
 		'({
 	variables: [
 		{
@@ -234,7 +211,6 @@ VALUES
 		};
 	}
 })',
-		NULL,
 		'async (prefix, values) => {	
 	const { variables } = values.getStaticData();
 	const list = variables.map(i => `<li><code>${i.names.join(\"/\")}</code> ${i.description}</li>`).join(\"\");

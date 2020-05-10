@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		33,
 		'randomline',
 		'[\"rl\", \"rq\"]',
-		NULL,
+		'block,opt-out,pipe',
 		'Fetches a random line from the current channel. If a user is specified, fetches a random line from that user only',
 		7500,
-		0,
-		0,
-		0,
-		0,
 		NULL,
-		0,
-		1,
-		1,
-		0,
-		1,
-		0,
-		0,
 		NULL,
 		'(async function randomLine (context, user) {
 	if (context.channel === null) {
@@ -244,7 +221,6 @@ VALUES
 		]
 	};
 })',
-		NULL,
 		'async (prefix) => [
 	\"Fetches a random chat line from the current channel.\",
 	\"If you specify a user, the line will be from that user only.\",

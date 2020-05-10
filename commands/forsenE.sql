@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		22,
 		'forsenE',
 		NULL,
-		NULL,
+		'pipe',
 		'Posts a random forsenE tweet.',
 		5000,
-		0,
-		0,
-		0,
-		0,
 		NULL,
-		0,
-		0,
-		0,
-		0,
-		1,
-		0,
-		0,
 		'(() => {
 	this.data.previousPosts = [];
 	return {
@@ -87,6 +64,5 @@ VALUES
 		reply: post + \" forsenE\"
 	};
 })',
-		'No arguments.',
 		NULL
 	)

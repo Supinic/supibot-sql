@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		114,
 		'verify',
 		NULL,
-		NULL,
+		'ping,pipe,system,whitelist',
 		'Verifies a user to be able to use a specific command based on some requirement.',
 		0,
-		0,
-		1,
-		0,
-		1,
 		NULL,
-		0,
-		0,
-		0,
-		1,
-		1,
-		0,
-		0,
 		NULL,
 		'(async function verify (context, type, user, ...rest) {
 	if (!type || !user || rest.length === 0) {
@@ -84,6 +61,5 @@ VALUES
 		reply: `Okay, they are now verified to use ${type}-related commands :)`
 	};
 })',
-		NULL,
 		NULL
 	)

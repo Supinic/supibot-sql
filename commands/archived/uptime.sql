@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		51,
 		'uptime',
 		NULL,
-		NULL,
+		'archived,ping,pipe,skip-banphrase',
 		'Posts the uptime of a given stream, or the channel you\'re in, if none is provided.',
 		10000,
-		0,
-		0,
-		1,
-		0,
 		NULL,
-		0,
-		0,
-		0,
-		1,
-		1,
-		0,
-		1,
 		NULL,
 		'(async function uptime (extra, channel) {
 	if (!channel) {
@@ -82,6 +59,5 @@ VALUES
 		};
 	};
 })',
-		NULL,
 		NULL
 	)

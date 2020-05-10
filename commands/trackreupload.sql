@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		143,
 		'trackreupload',
 		'[\"tr\"]',
-		NULL,
+		'ping,pipe,whitelist',
 		'Sets a track ID in the list already to have the next track as a reupload. The next track can be an existing ID (if it\'s not a reupload already) or a new link, in which case it gets added to list.',
 		10000,
-		0,
-		0,
-		0,
-		1,
 		'Only available for people who know what they\'re doing Kappa',
-		0,
-		0,
-		0,
-		1,
-		1,
-		0,
-		0,
 		NULL,
 		'(async function trackReload (extra, existingID, reuploadLink) {
 	existingID = Number(existingID);
@@ -86,6 +63,5 @@ VALUES
 		reply: \"Result: \" + result.data.message + \".\"
 	};
 })',
-		NULL,
 		NULL
 	)

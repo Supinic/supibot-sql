@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		175,
 		'fill',
 		NULL,
-		NULL,
+		'ping,pipe',
 		'Takes the input and scrambles it around randomly.',
 		20000,
-		0,
-		0,
-		0,
-		0,
 		NULL,
-		0,
-		0,
-		0,
-		1,
-		1,
-		0,
-		0,
 		NULL,
 		'(async function fill (context, ...words) {
 	if (words.length === 0) {
@@ -86,6 +63,5 @@ VALUES
 		cooldown
 	};
 })',
-		NULL,
 		NULL
 	)

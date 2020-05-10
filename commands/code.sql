@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		173,
 		'code',
 		NULL,
-		NULL,
+		'ping,pipe',
 		'Posts a link to a specific command\'s code definition on supinic.com website.',
 		10000,
-		0,
-		0,
-		0,
-		0,
 		NULL,
-		0,
-		0,
-		0,
-		1,
-		1,
-		0,
-		0,
 		NULL,
 		'(async function code (context, commandString) {
 	if (!commandString) {
@@ -63,6 +40,5 @@ VALUES
 		reply: `Website: https://supinic.com/bot/command/${command.ID}/code`
 	};	
 })',
-		NULL,
 		NULL
 	)

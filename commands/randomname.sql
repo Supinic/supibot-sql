@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		210,
 		'randomname',
 		'[\"rn\"]',
-		NULL,
+		'ping,pipe',
 		'Fetches a random name.',
 		10000,
-		0,
-		0,
-		0,
-		0,
 		NULL,
-		0,
-		0,
-		0,
-		1,
-		1,
-		0,
-		0,
 		'({
 	types: [
 		\"Human Male\",
@@ -84,6 +61,5 @@ VALUES
 		reply: `Your random ${type} name is: ${name}`
 	};
 })',
-		NULL,
 		NULL
 	)

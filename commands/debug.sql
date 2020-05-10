@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		9,
 		'debug',
 		NULL,
-		NULL,
+		'pipe,skip-banphrase,system,whitelist',
 		'supiniHack ',
 		0,
-		0,
-		1,
-		1,
-		1,
 		NULL,
-		0,
-		0,
-		0,
-		0,
-		1,
-		0,
-		0,
 		NULL,
 		'(async function debug (context, ...args) {
 	const vm = require(\"vm\");
@@ -103,6 +80,5 @@ async (extra, ...args) => {
 	}
 }
 */',
-		NULL,
 		NULL
 	)

@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		4,
 		'wiki',
 		NULL,
-		NULL,
+		'ping,pipe',
 		'Fetches the headline of the first article found according to user query. Watch out, articles might be case sensitive.',
 		15000,
-		0,
-		0,
-		0,
-		0,
 		NULL,
-		0,
-		0,
-		0,
-		1,
-		1,
-		0,
-		0,
 		NULL,
 		'(async function wiki (context, ...args) {
 	if (args.length === 0) {
@@ -97,7 +74,6 @@ VALUES
 		};
 	}
 })',
-		NULL,
 		'async (prefix) => {
 	return [
 		\"Finds the summary of a given Wikipedia article.\",

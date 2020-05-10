@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		1,
 		'ping',
 		'[\"pang\",\"peng\",\"pong\",\"pung\",\"pyng\"]',
-		NULL,
+		'pipe,skip-banphrase',
 		'Ping!',
 		5000,
-		0,
-		0,
-		1,
-		0,
 		NULL,
-		0,
-		0,
-		0,
-		0,
-		1,
-		0,
-		0,
 		'({
 	checkLatency: async (callback, ...args) => {
 		try {
@@ -112,7 +89,6 @@ VALUES
 		reply: pong + \" \" + Object.entries(data).map(([name, value]) => name + \": \" + value).join(\"; \")
 	};
 })',
-		NULL,
 		'async (prefix) => {
 	return [
 		\"Pings the bot, checking if it\'s alive, and a bunch of other data, like latency and commands used this session\",

@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		167,
 		'wrongsong',
 		'[\"ws\"]',
-		NULL,
+		'ping,pipe',
 		'If you have at least one song playing or in the queue, this command will skip the first one. You can also add an ID to skip a specific song.',
 		5000,
-		0,
-		0,
-		0,
-		0,
 		NULL,
-		0,
-		0,
-		0,
-		1,
-		1,
-		0,
-		0,
 		NULL,
 		'(async function wrongSong (context, target) {
 	const targetID = Number(target) || null;
@@ -101,7 +78,6 @@ VALUES
 		reply: `Your request \"${userRequest.Name}\" (ID ${userRequest.VLC_ID}) has been successfully ${action}.`
 	};
 })',
-		NULL,
 		'async (prefix) => {
 	return [
 		\"Skips your current or queued song.\",

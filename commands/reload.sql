@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		21,
 		'reload',
 		NULL,
-		NULL,
+		'pipe,skip-banphrase,system,whitelist',
 		'Reloads a database definition or hotloads an updated script',
 		0,
-		0,
-		1,
-		1,
-		1,
 		NULL,
-		0,
-		0,
-		0,
-		0,
-		1,
-		0,
-		0,
 		NULL,
 		'(async function reload (context, target, ...rest) {
 	const modulePath = \"../../supinic-globals\";
@@ -129,6 +106,5 @@ VALUES
 		reply: \"Reloaded successfully.\"
 	};
 })',
-		NULL,
 		NULL
 	)

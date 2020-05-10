@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		7,
 		'comment',
 		NULL,
-		NULL,
+		'ping,pipe',
 		'Fetches a random comment from a set of 10 thousand randomly generated Youtube videos.',
 		15000,
-		0,
-		0,
-		0,
-		0,
 		NULL,
-		0,
-		0,
-		0,
-		1,
-		1,
-		0,
-		0,
 		NULL,
 		'(async function comment () {
 	const html = await sb.Got(\"http://www.randomyoutubecomment.com\").text();
@@ -54,8 +31,5 @@ VALUES
 		reply: comment ?? \"No comment was available to fetch\"
 	};
 })',
-		'No arguments.
-
-$comment',
 		NULL
 	)

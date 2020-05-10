@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		181,
 		'dontpingme',
 		'[\"dpm\", \"pingoptout\", \"unping\"]',
-		NULL,
+		'ping,pipe',
 		'Sets/unsets a command pinging you when it\'s being invoked.',
 		5000,
-		0,
-		0,
-		0,
-		0,
 		'Only available for Twitch users on Twitch!',
-		0,
-		0,
-		0,
-		1,
-		1,
-		0,
-		0,
 		NULL,
 		'(async function dontPingMe (context, command) {
 	if (!command) {
@@ -93,6 +70,5 @@ VALUES
 		};
 	}	
 })',
-		NULL,
 		NULL
 	)

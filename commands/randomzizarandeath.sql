@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		201,
 		'randomzizarandeath',
 		'[\"rzd\"]',
-		NULL,
+		'ping,pipe',
 		'Posts a random video with Zizaran dying in Path of Exile.',
 		30000,
-		0,
-		0,
-		0,
-		0,
 		NULL,
-		0,
-		0,
-		0,
-		1,
-		1,
-		0,
-		0,
 		'({
 	playlist: \"PLbpExg9_Xax24tS9rNt8IP49VFFaDghAG\"
 })',
@@ -70,6 +47,5 @@ VALUES
 		reply: `PepeLaugh 👉 https://youtu.be/${video.ID}`
 	};
 })',
-		NULL,
 		NULL
 	)

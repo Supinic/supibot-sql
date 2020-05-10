@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		148,
 		'downloadclip',
 		'[\"dlclip\"]',
-		NULL,
+		'ping,pipe',
 		'Takes a Twitch clip name, and sends a download link to it into whispers.',
 		30000,
-		0,
-		0,
-		0,
-		0,
 		NULL,
-		0,
-		0,
-		0,
-		1,
-		1,
-		0,
-		0,
 		NULL,
 		'(async function downloadClip (context, rawSlug) {
 	if (!rawSlug) {
@@ -64,6 +41,5 @@ VALUES
 		reply: source
 	};
 })',
-		NULL,
 		NULL
 	)

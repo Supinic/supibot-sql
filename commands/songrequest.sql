@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		56,
 		'songrequest',
 		'[\"sr\"]',
-		NULL,
+		'ping,pipe,whitelist',
 		'Requests a song to play on supinic stream. Uses a local VLC API to enqueue songs to the playlist, or links to Cytube, or uses the necrodancer command to download a song. This all depends on the song request status.',
 		5000,
-		0,
-		0,
-		0,
-		1,
 		'Only available in supinic\'s channel.',
-		0,
-		0,
-		0,
-		1,
-		1,
-		0,
-		0,
 		'({
 	videoLimit: 5
 })',
@@ -291,6 +268,5 @@ VALUES
 		};
 	}
 })',
-		NULL,
 		NULL
 	)

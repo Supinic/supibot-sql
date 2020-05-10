@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		68,
 		'current',
 		'[\"song\"]',
-		NULL,
+		'ping,pipe,whitelist',
 		'Fetches the current song playing on stream.',
 		5000,
-		0,
-		0,
-		0,
-		1,
 		NULL,
-		0,
-		0,
-		0,
-		1,
-		1,
-		0,
-		0,
 		'({
 	types: [\"current\", \"previous\"]
 })',
@@ -161,6 +138,5 @@ VALUES
 		};
 	}
 })',
-		NULL,
 		NULL
 	)

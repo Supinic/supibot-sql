@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		205,
 		'devnull',
 		'[\"/dev/null\", \"null\"]',
-		NULL,
+		'ping,pipe',
 		'Discards all output. Only usable in pipes.',
 		0,
-		0,
-		0,
-		0,
-		0,
 		NULL,
-		0,
-		0,
-		0,
-		1,
-		1,
-		0,
-		0,
 		NULL,
 		'(async function devnull (context) {
 	if (!context.append.pipe) {
@@ -54,6 +31,5 @@ VALUES
 
 	return null;
 })',
-		NULL,
 		NULL
 	)

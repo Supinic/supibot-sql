@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		44,
 		'firstline',
 		'[\"fl\"]',
-		NULL,
+		'opt-out,ping,pipe',
 		'Posts the target user\'s first chat line in the context of the current channel, and the date they sent it.',
 		5000,
-		0,
-		0,
-		0,
-		0,
 		NULL,
-		0,
-		1,
-		0,
-		1,
-		1,
-		0,
-		0,
 		NULL,
 		'(async function firstLine (context, user) {
 	if (!context.channel) {
@@ -141,7 +118,5 @@ VALUES
 		]
 	};
 })',
-		'$fl => Shows your first line in the current channel (from the bot\'s logs)
-$fl <person> => Shows their frst line in the current channel (from the bot\'s logs)',
 		NULL
 	)

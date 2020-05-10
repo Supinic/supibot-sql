@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		170,
 		'texttransform',
 		'[\"tt\"]',
-		NULL,
+		'ping,pipe',
 		'Transforms provided text into one of provided types, such as \"vaporwave\", for example.',
 		10000,
-		0,
-		0,
-		0,
-		0,
 		NULL,
-		0,
-		0,
-		0,
-		1,
-		1,
-		0,
-		0,
 		'(() => {
 	const convert = {
 		method: (string, fn) => fn(string),
@@ -246,7 +223,6 @@ VALUES
 		}
 	};
 })',
-		NULL,
 		'async (prefix) => [
 	\"Transforms given text to different styles, according to type provided.\",
 	\"Types, their aliases and short-hands are listed below, separeted by slash\",

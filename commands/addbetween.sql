@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		174,
 		'addbetween',
 		'[\"ab\"]',
-		NULL,
+		'ping,pipe',
 		'Fills the message provided with the word (usually an emote) provided as the first argument.',
 		30000,
-		0,
-		0,
-		0,
-		0,
 		NULL,
-		0,
-		0,
-		0,
-		1,
-		1,
-		0,
-		0,
 		NULL,
 		'(async function addBetween (context, word, ...args) {
 	if (!word || args.length === 0) {
@@ -70,6 +47,5 @@ VALUES
 		}
 	};
 })',
-		NULL,
 		NULL
 	)

@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		71,
 		'roll',
 		NULL,
-		NULL,
+		'ping,pipe,skip-banphrase',
 		'Rolls a random number. If nothing is specified, rolls 1-100. You can also specify <number X>d<number Y> for X amount of dice rolls with Y sides each.',
 		5000,
-		0,
-		0,
-		1,
-		0,
 		NULL,
-		0,
-		0,
-		0,
-		1,
-		1,
-		1,
-		0,
 		NULL,
 		'(async function roll (context, first, second) {
 	let format = [1, 100];
@@ -111,6 +88,5 @@ VALUES
 		return { reply: \"Your roll is \" + sum + \".\" };
 	}
 })',
-		NULL,
 		NULL
 	)

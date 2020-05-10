@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		168,
 		'reset',
 		NULL,
-		NULL,
+		'ping,pipe,system',
 		'Tracks your last \"\"\"reset\"\"\".',
 		30000,
-		0,
-		1,
-		0,
-		0,
 		NULL,
-		0,
-		0,
-		0,
-		1,
-		1,
-		0,
-		0,
 		NULL,
 		'(async function reset (context, ...args) { 
 	const message = args.join(\" \") || null;
@@ -76,6 +53,5 @@ VALUES
 		};
 	}
 })',
-		NULL,
 		NULL
 	)

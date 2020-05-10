@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		107,
 		'stock',
 		NULL,
-		NULL,
+		'ping,pipe',
 		'Fetches the latest price and daily change for a stock.',
 		10000,
-		0,
-		0,
-		0,
-		0,
 		NULL,
-		0,
-		0,
-		0,
-		1,
-		1,
-		0,
-		0,
 		NULL,
 		'(async function stock (context, stockSymbol) {
 	if (!stockSymbol) {
@@ -82,6 +59,5 @@ VALUES
 		`
 	};
 })',
-		NULL,
 		NULL
 	)

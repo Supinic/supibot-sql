@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		8,
 		'countlinetotal',
 		'[\"clt\"]',
-		NULL,
+		'ping,pipe,skip-banphrase,system,whitelist',
 		'Fetches the amount of data lines from ALL the log tables, including the total size.',
 		0,
-		0,
-		1,
-		1,
-		1,
 		NULL,
-		0,
-		0,
-		0,
-		1,
-		1,
-		0,
-		0,
 		NULL,
 		'(async function countLineTotal () {
 	let preciseLines = 0;
@@ -73,6 +50,5 @@ VALUES
 		reply: \"Currently logging \" + preciseLines + \" lines in total across all channels, taking up approximately \" + sb.Utils.round(data.Bytes / 1073741824, 3) + \" GB of space.\"
 	};
 })',
-		NULL,
 		NULL
 	)

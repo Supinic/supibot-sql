@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		166,
 		'countlinerecord',
 		'[\"clr\"]',
-		NULL,
+		'ping,pipe',
 		'Posts the two records of each channel: The amount, and the total length of messages posted within each one minute.',
 		30000,
-		0,
-		0,
-		0,
-		0,
 		NULL,
-		0,
-		0,
-		0,
-		1,
-		1,
-		0,
-		0,
 		NULL,
 		'(async function countLineRecord (context) {
 	const [amountData, lengthData] = await Promise.all([
@@ -77,6 +54,5 @@ VALUES
 		].join(\" \")
 	};		
 })',
-		NULL,
 		NULL
 	)

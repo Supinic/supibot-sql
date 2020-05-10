@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		53,
 		'check',
 		NULL,
-		NULL,
+		'ping,pipe',
 		'Checks certain variables you have set. Currently supports \"reminder\", \"cookie\".',
 		10000,
-		0,
-		0,
-		0,
-		0,
 		NULL,
-		0,
-		0,
-		0,
-		1,
-		1,
-		0,
-		0,
 		NULL,
 		'(async function check (context, type, identifier) {
 	if (!type) {
@@ -351,7 +328,6 @@ VALUES
 		};
 	}
 })',
-		NULL,
 		'async (prefix) => {
 
 	return [

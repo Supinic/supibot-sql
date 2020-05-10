@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		190,
 		'randomfilm',
 		'[\"rf\"]',
-		NULL,
+		'ping,pipe',
 		'Fetches a random movie.',
 		15000,
-		0,
-		0,
-		0,
-		0,
 		NULL,
-		0,
-		0,
-		0,
-		1,
-		1,
-		0,
-		0,
 		NULL,
 		'(async function randomFilm () {
 	const html = await sb.Got.instances.FakeAgent({
@@ -60,6 +37,5 @@ VALUES
 		reply: `Your random movie is: ${sb.Utils.randArray(movies)}.`
 	};
 })',
-		NULL,
 		NULL
 	)

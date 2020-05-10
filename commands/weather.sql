@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		39,
 		'weather',
 		NULL,
-		NULL,
+		'ping,pipe',
 		'Fetches the current weather in a given location. You can add \"hour+#\" or \"day+#\" at the end for hourly/daily forecast, or \"week\" at the end for a weekly summary. Powered by Darksky.',
 		10000,
-		0,
-		0,
-		0,
-		0,
 		NULL,
-		0,
-		0,
-		0,
-		1,
-		1,
-		0,
-		0,
 		'({
 	icons: {
 		\"clear-day\": \"🌞\",
@@ -232,7 +209,6 @@ VALUES
 		reply: `${place} ${plusTime}: ${message}`
 	};
 })',
-		NULL,
 		'(prefix) => [
 	\"Checks for current weather, or for hourly/daily/weekly forecast in a given location.\",
 	\"If you, or a given user have set their location with the <code>set</code> command, this command supports that.\",

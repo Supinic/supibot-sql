@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		119,
 		'resumeafk',
 		'[\"rafk\", \"cafk\", \"continueafk\"]',
-		NULL,
+		'ping,pipe',
 		'Resumes your AFK status, if used within 5 minutes of coming back from AFK.',
 		120000,
-		0,
-		0,
-		0,
-		0,
 		NULL,
-		0,
-		0,
-		0,
-		1,
-		1,
-		0,
-		0,
 		NULL,
 		'(async function resumeAFK (context) {
 	if (context.privateMessage) {
@@ -112,6 +89,5 @@ VALUES
 		}
 	}
 })',
-		NULL,
 		NULL
 	)

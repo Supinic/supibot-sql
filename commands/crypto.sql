@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		84,
 		'crypto',
 		NULL,
-		NULL,
+		'ping,pipe',
 		'Fetches the latest price of a cryptocurrency.',
 		10000,
-		0,
-		0,
-		0,
-		0,
 		NULL,
-		0,
-		0,
-		0,
-		1,
-		1,
-		0,
-		0,
 		NULL,
 		'(async function crypto (context, symbol = \"BTC\") {
 	symbol = symbol.toUpperCase();
@@ -67,9 +44,5 @@ VALUES
 		};
 	}
 })',
-		'$crypto => Posts Bitcoin\'s current price.
-$crypto <cryptocurrency code> => Posts that currency\' current price.
-
-$crypto DOGE',
 		NULL
 	)

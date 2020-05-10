@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		161,
 		'songrequestqueue',
 		'[\"srq\", \"queue\"]',
-		NULL,
+		'ping,pipe,whitelist',
 		'Posts the summary of song request queue. EXPERIMENTAL monkaS',
 		30000,
-		0,
-		0,
-		0,
-		1,
 		'Only available in supinic\'s channel.',
-		0,
-		0,
-		0,
-		1,
-		1,
-		0,
-		0,
 		'({
 	isCustom: (string) => (string.endsWith(\".mp3\") || string.endsWith(\".ogg\") || string.endsWith(\".mp4\"))
 })',
@@ -102,6 +79,5 @@ VALUES
 		reply: `There are ${data.Count} videos in the queue, with a total length of ${delta}. Check it out here: https://supinic.com/stream/song-request/queue`
 	}
 })',
-		NULL,
 		NULL
 	)

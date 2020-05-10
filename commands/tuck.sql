@@ -7,21 +7,9 @@ INSERT INTO
 		Flags,
 		Description,
 		Cooldown,
-		Rollbackable,
-		System,
-		Skip_Banphrases,
-		Whitelisted,
 		Whitelist_Response,
-		Read_Only,
-		Opt_Outable,
-		Blockable,
-		Ping,
-		Pipeable,
-		Owner_Override,
-		Archived,
 		Static_Data,
 		Code,
-		Examples,
 		Dynamic_Description
 	)
 VALUES
@@ -29,21 +17,10 @@ VALUES
 		11,
 		'tuck',
 		'[\"gnkiss\", \"headpat\"]',
-		NULL,
+		'opt-out,pipe',
 		'Tucks target user to bed',
 		20000,
-		0,
-		0,
-		0,
-		0,
 		NULL,
-		0,
-		1,
-		0,
-		0,
-		1,
-		1,
-		0,
 		NULL,
 		'(async function tuck (context, user, emote) {
 	user = (user || \"\").toLowerCase().replace(/^@/, \"\");
@@ -104,6 +81,5 @@ VALUES
 		}
 	}
 })',
-		NULL,
 		NULL
 	)
