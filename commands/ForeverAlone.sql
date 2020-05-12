@@ -37,159 +37,209 @@ VALUES
 
 	games: [
 		{
-			ID: 1,
-			name: \"CS:GO\",
-			gameID: 656
+			\"ID\": 1,
+			\"name\": \"CS:GO\",
+			\"gameID\": 2102
 		},
 		{
-			ID: 2,
-			name: \"Dota 2\",
-			gameID: 129
+			\"ID\": 2,
+			\"name\": \"Dota 2\",
+			\"gameID\": 295
 		},
 		{
-			ID: 3,
-			name: \"PUBG\",
-			gameID: 65
+			\"ID\": 3,
+			\"name\": \"PUBG\",
+			\"gameID\": 139
 		},
 		{
-			ID: 4,
-			name: \"League of Legends\",
-			gameID: 5108
+			\"ID\": 4,
+			\"name\": \"League of Legends\",
+			\"gameID\": 9855
 		},
 		{
-			ID: 5,
-			name: \"Fortnite\",
-			gameID: 689
+			\"ID\": 5,
+			\"name\": \"Fortnite\",
+			\"gameID\": 1909
 		},
 		{
-			ID: 6,
-			name: \"Minecraft\",
-			gameID: 947
+			\"ID\": 6,
+			\"name\": \"Minecraft\",
+			\"gameID\": 2345
 		},
 		{
-			ID: 7,
-			name: \"Overwatch\",
-			gameID: 1308
+			\"ID\": 7,
+			\"name\": \"Overwatch\",
+			\"gameID\": 2467
 		},
 		{
-			ID: 8,
-			name: \"Hearthstone\",
-			gameID: 65
+			\"ID\": 8,
+			\"name\": \"Hearthstone\",
+			\"gameID\": 153
 		},
 		{
-			ID: 9,
-			name: \"Gwent\",
-			gameID: 13
+			\"ID\": 9,
+			\"name\": \"Gwent\",
+			\"gameID\": 16
 		},
 		{
-			ID: 10,
-			name: \"Heroes of the Storm\",
-			gameID: 59
+			\"ID\": 10,
+			\"name\": \"Heroes of the Storm\",
+			\"gameID\": 125
 		},
 		{
-			ID: 11,
-			name: \"World of Warcraft\",
-			gameID: 205
+			\"ID\": 11,
+			\"name\": \"World of Warcraft\",
+			\"gameID\": 499
 		},
 		{
-			ID: 12,
-			name: \"Apex Legends\",
-			gameID: 402
+			\"ID\": 12,
+			\"name\": \"Apex Legends\",
+			\"gameID\": 905
 		},
 		{
-			ID: 13,
-			name: \"VR Chat\",
-			gameID: 232
+			\"ID\": 13,
+			\"name\": \"VR Chat\",
+			\"gameID\": 543
 		},
 		{
-			ID: 14,
-			name: \"Dead by Daylight\",
-			gameID: 257
+			\"ID\": 14,
+			\"name\": \"Dead by Daylight\",
+			\"gameID\": 621
 		},
 		{
-			ID: 15,
-			name: \"Rocket League\",
-			gameID: 116
+			\"ID\": 15,
+			\"name\": \"Rocket League\",
+			\"gameID\": 372
 		},
 		{
-			ID: 16,
-			name: \"Smash bro\",
-			gameID: 127
+			\"ID\": 16,
+			\"name\": \"Super Smash bros\",
+			\"gameID\": 272
 		},
 		{
-			ID: 17,
-			name: \"Roblox\",
-			gameID: 182
+			\"ID\": 17,
+			\"name\": \"Roblox\",
+			\"gameID\": 509
 		},
 		{
-			ID: 18,
-			name: \"Call of Duty\",
-			gameID: 468
+			\"ID\": 18,
+			\"name\": \"Call of Duty\",
+			\"gameID\": 1210
 		},
 		{
-			ID: 19,
-			name: \"Animal Crossing: New Horizons\",
-			gameID: 48
+			\"ID\": 19,
+			\"name\": \"Animal Crossing: New Horizons\",
+			\"gameID\": 668
 		},
 		{
-			ID: 20,
-			name: \"Rainbow Six\",
-			gameID: 46
+			\"ID\": 20,
+			\"name\": \"Rainbow Six\",
+			\"gameID\": 681
 		},
 		{
-			ID: 21,
-			name: \"Grand Theft Auto V\",
-			gameID: 12
+			\"ID\": 21,
+			\"name\": \"Grand Theft Auto V\",
+			\"gameID\": 148
 		},
 		{
-			ID: 22,
-			name: \"Osu!\",
-			gameID: 36
+			\"ID\": 22,
+			\"name\": \"Osu!\",
+			\"gameID\": 449
 		},
 		{
-			ID: 23,
-			name: \"Destiny 2\",
-			gameID: 13
+			\"ID\": 23,
+			\"name\": \"Destiny 2\",
+			\"gameID\": 170
 		},
 		{
-			ID: 24,
-			name: \"Pokémon Sword/Shield\",
-			gameID: 2
+			\"ID\": 24,
+			\"name\": \"Pokémon Sword/Shield\",
+			\"gameID\": 65
 		},
 		{
-			ID: 25,
-			name: \"Monster Hunter World\",
-			gameID: 20
+			\"ID\": 25,
+			\"name\": \"Monster Hunter World\",
+			\"gameID\": 179
 		},
 		{
-			ID: 26,
-			name: \"Final Fantasy XIV Online\",
-			gameID: 15
+			\"ID\": 26,
+			\"name\": \"Final Fantasy XIV Online\",
+			\"gameID\": 142
 		},
 		{
-			ID: 27,
-			name: \"Borderlands 3\",
-			gameID: 4
+			\"ID\": 27,
+			\"name\": \"Borderlands 3\",
+			\"gameID\": 82
 		},
 		{
-			ID: 28,
-			name: \"Black Desert Online\",
-			gameID: 4
+			\"ID\": 28,
+			\"name\": \"Black Desert Online\",
+			\"gameID\": 100
 		},
 		{
-			ID: 29,
-			name: \"Legends of Runeterra\",
-			gameID: 6
+			\"ID\": 29,
+			\"name\": \"Legends of Runeterra\",
+			\"gameID\": 40
 		},
 		{
-			ID: 30,
-			name: \"Escape From Tarkov\",
-			gameID: 11
+			\"ID\": 30,
+			\"name\": \"Escape From Tarkov\",
+			\"gameID\": 145
 		},
 		{
-			ID: 31,
-			name: \"Slither io\",
-			gameID: 16
+			\"ID\": 31,
+			\"name\": \"Slither io\",
+			\"gameID\": 190
+		},
+		{
+			\"ID\": 33,
+			\"name\": \"PUBG: Mobile\",
+			\"gameID\": 32
+		},
+		{
+			\"ID\": 34,
+			\"name\": \"Call of Duty®: Mobile - Garena\",
+			\"gameID\": 57
+		},
+		{
+			\"ID\": 35,
+			\"name\": \"Arena of Valor\",
+			\"gameID\": 8
+		},
+		{
+			\"ID\": 36,
+			\"name\": \"Minecraft: Mobile\",
+			\"gameID\": 19
+		},
+		{
+			\"ID\": 37,
+			\"name\": \"Fortnite: Mobile\",
+			\"gameID\": 18
+		},
+		{
+			\"ID\": 38,
+			\"name\": \"Roblox: Mobile\",
+			\"gameID\": 22
+		},
+		{
+			\"ID\": 40,
+			\"name\": \"Teamfight Tactics\",
+			\"gameID\": 102
+		},
+		{
+			\"ID\": 41,
+			\"name\": \"E-Chat\",
+			\"gameID\": 193
+		},
+		{
+			\"ID\": 42,
+			\"name\": \"Smite\",
+			\"gameID\": 26
+		},
+		{
+			\"ID\": 43,
+			\"name\": \"Valorant\",
+			\"gameID\": 166
 		}
 	]
 })',
