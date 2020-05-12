@@ -30,17 +30,27 @@ VALUES
 		};
 	}
 
-	const [data] = await sb.Twitter.fetchTweets({
-		username: user,
-		count: 1
-	});
 
-	const delta = sb.Utils.timeDelta(new sb.Date(data.created_at));
-	const fixedText = sb.Utils.fixHTML(data.text);
+	try {
+		const [data] = await sb.Twitter.fetchTweets({
+			username: user,
+			count: 1
+		});
 
-	return {
-		reply: `${fixedText} (posted ${delta})`
-	};
+		const delta = sb.Utils.timeDelta(new sb.Date(data.created_at));
+		const fixedText = sb.Utils.fixHTML(data.text);
+
+		return {
+			reply: `${fixedText} (posted ${delta})`
+		};
+	}
+	catch (e) {
+		console.warn(\"Twitter error\", e);
+		return {
+			success: false,
+			reply: e.errors[0].message
+		};
+	}
 })',
 		NULL
 	)
