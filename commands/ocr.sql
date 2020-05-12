@@ -1,0 +1,108 @@
+INSERT INTO
+	`chat_data`.`Command`
+	(
+		ID,
+		Name,
+		Aliases,
+		Flags,
+		Description,
+		Cooldown,
+		Whitelist_Response,
+		Static_Data,
+		Code,
+		Dynamic_Description
+	)
+VALUES
+	(
+		216,
+		'ocr',
+		NULL,
+		'ping,pipe',
+		'Takes your link and attempts to find the text in it by using OCR.',
+		10000,
+		NULL,
+		'({
+	languages: {
+		ara: \"Arabic\",
+		bul: \"Bulgarian\",
+		chs: \"Chinese (Simplified)\",
+		cht: \"Chinese (Traditional)\",
+		hrv: \"Croatian\",
+		cze: \"Czech\",
+		dan: \"Danish\",
+		dut: \"Dutch\",
+		eng: \"English\",
+		fin: \"Finnish\",
+		fre: \"French\",
+		ger: \"German\",
+		gre: \"Greek\",
+		hun: \"Hungarian\",
+		kor: \"Korean\",
+		ita: \"Italian\",
+		jpn: \"Japanese\",
+		pol: \"Polish\",
+		por: \"Portuguese\",
+		rus: \"Russian\",
+		slv: \"Slovenian\",
+		spa: \"Spanish\",
+		swe: \"Swedish\",
+		tur: \"Turkish\"
+	}
+})',
+		'(async function ocr (context, ...args) {
+	let language = \"eng\";	
+	for (let i = 0; i < args.length; i++) {
+		const token = args[i];
+		if (token.includes(\"lang:\")) {
+			language = token.split(\":\")[1];
+			args.splice(i, 1);
+		}
+	}
+
+	if (!Object.keys(this.staticData.languages).includes(language)) {
+		return {
+			success: false,
+			reply: \"Language not supported, use one from the list in the help description\"
+		};
+	}
+
+	const link = args.shift();
+	if (!link) {
+		return {
+			success: false,
+			reply: \"No link provided!\"
+		};
+	}
+
+	const data = await sb.Got({
+		method: \"GET\",
+		url: \"https://api.ocr.space/parse/imageurl\",
+		headers: {
+			apikey: sb.Config.get(\"API_OCR_SPACE\")
+		},
+		searchParams: new sb.URLParams()
+			.set(\"url\", link)
+			.set(\"language\", language)
+			.set(\"scale\", \"true\")
+			.set(\"isTable\", \"true\")
+			.set(\"OCREngine\", \"1\")
+			.set(\"isOverlayRequired\", \"false\")
+			.toString()
+	}).json();
+
+	if (data.OCRExitCode !== 1) {
+		return {
+			success: false,
+			reply: data.ErrorMessage.join(\" \")
+		};
+	}
+
+	const result = data.ParsedResults[0].ParsedText;	
+	return {
+		reply: (result.length === 0)
+			? \"No text found.\"
+			: result
+	};
+})',
+		NULL
+	)
