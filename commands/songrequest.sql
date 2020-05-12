@@ -22,7 +22,29 @@ VALUES
 		5000,
 		'Only available in supinic\'s channel.',
 		'({
-	videoLimit: 5
+	videoLimit: 5,
+	blacklistedSites: [
+		\"grabify.link\",
+		\"leancoding.co\",
+		\"stopify.co\",
+		\"freegiftcards.co\",
+		\"joinmy.site\",
+		\"curiouscat.club\",
+		\"catsnthings.fun\",
+		\"catsnthing.com\",
+		\"iplogger.org\",
+		\"2no.co\",
+		\"iplogger.com\",	
+		\"iplogger.ru\",
+		\"yip.su\",
+		\"iplogger.co\",
+		\"iplogger.info\",
+		\"ipgrabber.ru\",
+		\"ipgraber.ru\",
+		\"iplis.ru\",
+		\"02ip.ru\",
+		\"ezstat.ru\"
+	]
 })',
 		'(async function songRequest (context, ...args) {
 	const state = sb.Config.get(\"SONG_REQUESTS_STATE\");
@@ -70,7 +92,13 @@ VALUES
 	const parsedURL = require(\"url\").parse(url);
 	let data = null;
 
-	if (parsedURL.host === \"supinic.com\" && parsedURL.path.includes(\"/track/detail\")) {
+	if (this.staticData.blacklistedSites.includes(parsedURL.host)) {
+		return {
+			success: false,
+			reply: \"Don\'t.\"
+		};
+	}
+	else if (parsedURL.host === \"supinic.com\" && parsedURL.path.includes(\"/track/detail\")) {
 		const videoTypePrefix = sb.Config.get(\"VIDEO_TYPE_REPLACE_PREFIX\");
 		const songID = Number(parsedURL.path.match(/(\\d+)/)[1]);
 		if (!songID) {
