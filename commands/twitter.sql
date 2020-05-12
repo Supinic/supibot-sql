@@ -26,31 +26,42 @@ VALUES
 	if (!user) {
 		return {
 			success: false,
-			reply: \"No user provided!\" 
+			reply: \"No user provided!\"
 		};
 	}
 
+	const { error, data } = await sb.Twitter.fetchTweets({
+		username: user,
+		count: 1
+	});
 
-	try {
-		const [data] = await sb.Twitter.fetchTweets({
-			username: user,
-			count: 1
-		});
+	if (error) {
+		let errorString = null;
+		if (error.error === \"Not authorized.\") {
+			errorString = \"This account is either suspended or private!\";
+		}
+		else if (error.errors?.[0].code === 34) {
+			errorString = \"This account does not exist!\";
+		}
 
-		const delta = sb.Utils.timeDelta(new sb.Date(data.created_at));
-		const fixedText = sb.Utils.fixHTML(data.text);
-
-		return {
-			reply: `${fixedText} (posted ${delta})`
-		};
-	}
-	catch (e) {
-		console.warn(\"Twitter error\", e);
 		return {
 			success: false,
-			reply: e.errors[0].message
+			reply: errorString
 		};
 	}
+
+	const [tweet] = data;
+	if (!tweet) {
+		return {
+			reply: `That account has not tweeted so far.`
+		};
+	}
+
+	const delta = sb.Utils.timeDelta(new sb.Date(tweet.created_at));
+	const fixedText = sb.Utils.fixHTML(tweet.text);
+	return {
+		reply: `${fixedText} (posted ${delta})`
+	};
 })',
 		NULL
 	)
