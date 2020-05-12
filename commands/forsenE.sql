@@ -46,12 +46,14 @@ VALUES
 			\"ISP being a cunt today. Ill be back tomorrow\",
 			\"Twitch seems to be having some issues right now, pressed go live twice but no one can watch. will be back if they fix it\",
 			\"oh and @AdmiralBulldog I\'m coming for your ass ;)\",
-			\"People malding over rerun streamers. Meanwhile I wake up thinking about playing a game for the first time in a long time. Stop obsessing over twitch and viewcounts and just play the game.\"
+			\"People malding over rerun streamers. Meanwhile I wake up thinking about playing a game for the first time in a long time. Stop obsessing over twitch and viewcounts and just play the game.\",
+			`Banned for 2 weeks for saying retarded russians instead of retarded \"people who cant participate in voice comms in valorant due to legal reasons\". I guess I have some more time to beat up my half russian siblings now. nice`
 		],
 		notes: [
 			`Source for the \"b.\" tweet: https://twitter.com/Forsen/status/1057549668253659136`,
 			`Source for the Cyborgmatt tweet (tweeted at DotA guy for access to league autochess) https://i.imgur.com/sILIqzj.png`,
-			`Source for the GFMB quote: https://i.nuuls.com/umDfs.png`
+			`Source for the GFMB quote: https://i.nuuls.com/umDfs.png`,
+			\"Source for the ban tweet: https://twitter.com/Forsen/status/1259936964272422917\"
 		]
 	};
 })()',
