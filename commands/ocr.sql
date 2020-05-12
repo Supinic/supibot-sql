@@ -104,5 +104,26 @@ VALUES
 			: result
 	};
 })',
-		NULL
+		'async (prefix, values) => {
+	const { languages } = values.getStaticData();
+	const list = Object.entries(languages).map(([code, name]) => `<li>${name} - <code>${code}</code></li>`).join(\"\");
+
+	return [
+		\"Attempts to read a provided image with OCR, and posts the found text in chat.\",
+		\"You can specify a language, and only 3-letter codes are supported, i.e. \'jpn\'.\",
+		\"By default, the language is English (eng).\",
+		\"\",
+
+		`<code>${prefix}ocr <a href=\"https://i.imgur.com/FutGrGV.png\">https://i.imgur.com/FutGrGV.png</a></code>`,
+		\"HELLO WORLD LOL NAM\",
+		\"\",
+		
+		`<code>${prefix}ocr lang:jpn <a href=\"https://i.imgur.com/4iK4ZHy.png\">https://i.imgur.com/4iK4ZHy.png</a></code>`,
+		\"ロ明寝マンRetweeted 蜜柑すい@mikansul・May11 ティフアに壁ドンされるだけ\",
+		\"\",
+
+		\"List of supported languages:\",
+		list
+	];
+}'
 	)
