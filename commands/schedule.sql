@@ -23,26 +23,44 @@ VALUES
 		NULL,
 		NULL,
 		'(async function schedule (context, channel) {
-	const channelData = (channel)
-		? sb.Channel.get(channel)
-		: context.channel;
+	let channelName =  null;
+	if (channel) {
+		channelName = channel;
+	}
+	else if (context.platform.Name === \"twitch\" && context.channel) {
+		channelName = context.channel.Name;
+	}
 
-	if (!channelData) {
+	if (!channelName) {
 		return {
-			reply: \"Invalid or unknown channel provided!\"
+			success: false,
+			reply: `No channel provided, and there is no default channel to be used!`
 		};
 	}
 
-	console.log(channelData);
+	const data = await sb.Got.instances.Leppunen(`twitch/streamschedule/${channelName}`).json();
+	if (data.status === 200 && data.nextStream) {
+		const {
+			game = \"(no category)\",
+			title,
+			startsAt
+		} = data.nextStream;
 
-	if (channelData.Data.schedule) {
+		const time = sb.Utils.timeDelta(new sb.Date(startsAt));
 		return {
-			reply: \"Schedule: \" + channelData.Data.schedule
+			reply: `${channelName}\'s next stream: ${game} - ${title}, starting ${time}.`
+		};
+	}
+	else if (data.error) {
+		return {
+			reply: `User has not set a stream schedule.`
 		};
 	}
 	else {
+		console.warn(\"Unespected schedule result\", data);
 		return {
-			reply: \"This channel has no schedule set up!\"
+			success: false,
+			reply: \"What? monkaS @leppunen @supinic\"
 		};
 	}
 })',
