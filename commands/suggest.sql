@@ -28,7 +28,7 @@ VALUES
 			reply: sb.Utils.tag.trim `
 				All suggestions: https://supinic.com/bot/suggestions/list
 				||
-				Your suggestions (requires login): https://supinic.com/bot/suggestions/list?columnName=${context.user.Name}
+				Your suggestions: https://supinic.com/bot/suggestions/list?columnName=${context.user.Name}
 			`,
 			cooldown: 5000
 		};
