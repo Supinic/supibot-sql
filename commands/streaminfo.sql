@@ -84,7 +84,7 @@ VALUES
 		else if (data.online) {
 			const delta = sb.Utils.timeDelta(new sb.Date(data.updatedAt));
 			return {
-				reply: `${data.token} is currently live, playing ${data.type.name} for ${data.viewersCurrent} since ${delta}. Title: ${data.name} https://mixer.com/${data.token}`
+				reply: `${data.token} is currently live, playing ${data.type.name} for ${data.viewersCurrent} viewers since ${delta}. Title: ${data.name} https://mixer.com/${data.token}`
 			};
 		}
 		else {
