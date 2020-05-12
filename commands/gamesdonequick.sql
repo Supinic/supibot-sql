@@ -15,7 +15,7 @@ INSERT INTO
 VALUES
 	(
 		12,
-		'speedrun',
+		'gamesdonequick',
 		'[\"gdq\"]',
 		'ping,pipe',
 		'Posts a Markov chain-generated GDQ speedrun donation message.',
