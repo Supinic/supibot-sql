@@ -70,7 +70,7 @@ VALUES
 	if (!category) {
 		return {
 			success: false,
-			reply: `No such category found!`
+			reply: `No such category found! Try one of thise: ${categoryData.map(i => i.name).join(\", \")}`
 		};
 	}
 
