@@ -77,6 +77,12 @@ VALUES
 		searchParam: \"top=1\"
 	}).json();
 
+	if (runsData.runs.length === 0) {
+		return {
+			reply: `${game.names.international} - ${category.name} has no runs.`
+		};
+	}
+
 	const { run } = runsData.runs[0];
 	const { data: runnerData } = await sb.Got.instances.Speedrun(`users/${run.players[0].id}`).json();
 
