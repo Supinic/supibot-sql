@@ -113,8 +113,8 @@ VALUES
 	if (delta === 0) {
 		if (targetUser === context.user) {
 			return {
-				reply: \"If you want to remind yourself, you must use a timed reminder!\",
-				cooldown: this.Cooldown / 2
+				reply: `To remind yourself, use a timed reminder that uses the keyword \"in\" - such as \"remindme something in 5 minutes\"`,
+				cooldown: 2500
 			};
 		}
 	}
