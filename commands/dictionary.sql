@@ -39,10 +39,21 @@ VALUES
 		throwHttpErrors: false
 	});
 
-	const data = JSON.parse(body);
 	if (statusCode !== 200) {
 		return {
-			reply: `Dictionary API returned ${statusCode}: ${data[0].message}`
+			success: false,
+			reply: `Dictionary API returned error ${statusCode}!`
+		};
+	}
+	
+	let data = null;
+	try {
+		data = JSON.parse(body);
+	}
+	catch (e) {
+		return {
+			success: false,
+			reply: `Dictionary API cannot return proper data! (asked for JSON, got HTML)`
 		};
 	}
 
