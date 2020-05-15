@@ -99,11 +99,11 @@ VALUES
 				case \"opt-out\": reply = \"That user has opted out from this command!\"; break;
 				case \"pipe-nsfw\": reply = \"You cannot pipe NSFW results!\"; break;
 
-				default: reply = `An unexpected pipe result (${result.reason}) has been encountered!`
+				default: reply = result.reson ?? result.reply;
 			}
 
 			return {
-				reply: `Command ${cmd} failed: ${reply}`
+				reply: `Pipe will not continue, because command ${cmd} failed: ${reply}`
 			};
 		}
 		else if (!result.reply) { // Command result: Failed (ban)
