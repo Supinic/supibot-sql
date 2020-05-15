@@ -65,7 +65,7 @@ VALUES
 			};
 		}
 		else {
-			if (module === sb.Command && !specificData.Opt_Outable) {
+			if (module === sb.Command && !specificData.Flags.optOut) {
 				return {
 					success: false,
 					reply: `You cannot opt out from this command!`
