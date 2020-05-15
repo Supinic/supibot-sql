@@ -71,6 +71,10 @@ VALUES
 	else if (context.platform.Name === \"twitch\" && context.channel?.Links_Allowed) {
 		enabled.file.sfw = true;
 	}
+	else {
+		enabled.content.nsfw = Boolean(context.channel?.NSFW);
+		enabled.file.nsfw = Boolean(context.channel?.NSFW);
+	}
 
 	let resultType = (context.channel?.NSFW)
 		? \"file\"
