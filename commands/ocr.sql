@@ -18,7 +18,7 @@ VALUES
 		'ocr',
 		NULL,
 		'ping,pipe',
-		'Takes your link and attempts to find the text in it by using OCR.',
+		'Takes your image link and attempts to find the text in it by using OCR.',
 		10000,
 		NULL,
 		'({
@@ -62,7 +62,8 @@ VALUES
 	if (!Object.keys(this.staticData.languages).includes(language)) {
 		return {
 			success: false,
-			reply: \"Language not supported, use one from the list in the help description\"
+			reply: \"Language not supported, use one from the list in the help description\",
+			cooldown: 2500
 		};
 	}
 
@@ -70,7 +71,8 @@ VALUES
 	if (!link) {
 		return {
 			success: false,
-			reply: \"No link provided!\"
+			reply: \"No link provided!\",
+			cooldown: 2500
 		};
 	}
 
