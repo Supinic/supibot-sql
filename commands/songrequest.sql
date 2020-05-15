@@ -22,6 +22,8 @@ VALUES
 		5000,
 		'Only available in supinic\'s channel.',
 		'({
+	limit: 605,
+	emptyQueueLimit: 905,
 	videoLimit: 5,
 	blacklistedSites: [
 		\"grabify.link\",
@@ -230,7 +232,10 @@ VALUES
 		}
 	}
 
-	const limit = sb.Config.get(\"MAX_SONG_REQUEST_LENGTH\");
+	const limit = (queue.length === 0) 
+		? this.staticData.emptyQueueLimit
+		: this.staticData.limit; 
+
 	const length = data.duration ?? data.length ?? null;
 	if (length !== null && length > limit) {
 		const author = (data.author) ? ` by ${data.author}` : \"\";
