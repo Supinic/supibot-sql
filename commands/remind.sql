@@ -23,6 +23,7 @@ VALUES
 		NULL,
 		'({
 	strings: {
+		\"scheduled-incoming\": \"That person has too many timed reminders pending for them on that day!\",
 		\"public-incoming\": \"That person has too many public reminders pending!\",
 		\"public-outgoing\":  \"You have too many public reminders pending!\",
 		\"private-incoming\": \"That person has too many private reminders pending!\",
@@ -85,7 +86,8 @@ VALUES
 	let targetReminderDate = null;
 	const chronoData = sb.Utils.parseChrono(reminderText);
 	if (chronoData !== null) {
-		if (targetUser?.Data.location) {
+		const isRelative = (Object.keys(chronoData.component.knownValues).length === 0);
+		if (targetUser?.Data.location && !isRelative) {
 			const location = targetUser.Data.location;
 			if (!location.timezone) {
 				const time = sb.Command.get(\"time\");
@@ -97,7 +99,7 @@ VALUES
 			targetReminderDate = new sb.Date(chronoData.component.date());
 		}
 		else {
-			targetReminderDate = chronoData.date;
+			targetReminderDate = new sb.Date(chronoData.date);
 		}
 
 		if (chronoData.text) {
@@ -175,8 +177,9 @@ VALUES
 		};
 	}
 	else {
+		console.warn(\"Reminder create failed\", result);
 		return {
-			reply: this.staticData.strings[result.cause]
+			reply: this.staticData.strings[result.cause] ?? `Reminder not created - result is ${result.cause}.`
 		};
 	}
 })',
