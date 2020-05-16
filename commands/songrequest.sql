@@ -236,11 +236,11 @@ VALUES
 		? this.staticData.emptyQueueLimit
 		: this.staticData.limit; 
 
+	const authorString = (data.author) ? ` by ${data.author}` : \"\";
 	const length = data.duration ?? data.length ?? null;
 	if (length !== null && length > limit) {
-		const author = (data.author) ? ` by ${data.author}` : \"\";
 		return {
-			reply: `Video \"${data.name}\"${author} is too long: ${length}s > ${limit}s`
+			reply: `Video \"${data.name}\"${authorString} is too long: ${length}s > ${limit}s`
 		};
 	}
 	else {
@@ -297,7 +297,7 @@ VALUES
 		await row.save();
 
 		return {
-			reply: `Video \"${data.name}\" by ${data.author} successfully added to queue with ID ${id}! It is playing ${when}`
+			reply: `Video \"${data.name}\"${authorString} successfully added to queue with ID ${id}! It is playing ${when}`
 		};
 	}
 })',
