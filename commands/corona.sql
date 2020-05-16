@@ -16,7 +16,7 @@ VALUES
 	(
 		200,
 		'corona',
-		NULL,
+		'[\"covid\"]',
 		'ping,pipe',
 		'Checks the current amount of infected/deceased people from the Corona Virus spread started in October-December 2019.',
 		7500,
