@@ -79,35 +79,35 @@ VALUES
 		};
 	}
 
-/*
-	const blocked = await sb.Filter.checkBlocks(targetUser, context.user, context.command.ID);
-	if (blocked) {
-		return {
-			reply: blocked
-		};
-	}
-*/
-
-	let delta = 0;
 	let reminderText = args.join(\" \");
 	const now = new sb.Date();
-	const timeData = sb.Utils.parseDuration(reminderText, { returnData: true });
 
-	let lastRange = 0;
-	for (const {start, string, end, time} of timeData.ranges) {
-		const prefix = reminderText.slice(start - 3, start);
-		if (prefix === \"in \" || ((start - lastRange) === 1)) {
-			lastRange = end;
-			delta += time;
+	let targetReminderDate = null;
+	const chronoData = sb.Utils.parseChrono(reminderText);
+	if (chronoData !== null) {
+		if (targetUser?.Data.location) {
+			const location = targetUser.Data.location;
+			if (!location.timezone) {
+				const time = sb.Command.get(\"time\");
+				await time.execute({}, \"@\" + targetUser.Name);
+			}
 
-			const shift = (prefix === \"in \") ? 3 : 0;
-			reminderText = reminderText.slice(0, start - shift) + \" \".repeat(end - start + shift) + reminderText.slice(end);
+			const { offset } = location.timezone;
+			chronoData.component.assign(\"timezoneOffset\", offset / 60);
+			targetReminderDate = new sb.Date(chronoData.component.date());
+		}
+		else {
+			targetReminderDate = chronoData.date;
+		}
+
+		if (chronoData.text) {
+			reminderText = reminderText.replace(chronoData.text, \"\");
 		}
 	}
 
-	if (reminderText) {
-		reminderText = reminderText.replace(/\\s{2,}/g, \" \").replace(/^ /, \"\");
-	}
+	const delta = (targetReminderDate !== null)
+		? (targetReminderDate - sb.Date.now())
+		: 0;
 
 	const comparison = new sb.Date(now.valueOf() + delta);
 	if (delta === 0) {
@@ -151,9 +151,8 @@ VALUES
 		}
 	}
 
-	const timestamp = (delta === 0) ? null : new sb.Date(now.valueOf() + delta);
-	const stringDelta = (timestamp)
-		? sb.Utils.timeDelta(timestamp)
+	const stringDelta = (targetReminderDate)
+		? sb.Utils.timeDelta(targetReminderDate)
 		: \"when they next type in chat\";
 
 	const result = await sb.Reminder.create({
@@ -162,7 +161,7 @@ VALUES
 		User_From: context.user.ID,
 		User_To: targetUser.ID,
 		Text: reminderText || \"(no message)\",
-		Schedule: timestamp,
+		Schedule: targetReminderDate ?? null,
 		Created: new sb.Date(),
 		Private_Message: isPrivate
 	});
@@ -170,6 +169,7 @@ VALUES
 	if (result.success) {
 		const who = (targetUser.ID === context.user.ID) ? \"you\" : targetUser.Name;
 		const method = (isPrivate) ? \"privately \" : \"\";
+
 		return {
 			reply: `${deprecationNotice}I will ${method}remind ${who} ${stringDelta} (ID ${result.ID})`
 		};
