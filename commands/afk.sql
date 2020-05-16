@@ -129,8 +129,21 @@ VALUES
 	
 	await sb.AwayFromKeyboard.set(context.user, text, context.invocation, false);
 	return {
-		 reply: context.user.Name + \" is \" + status + \": \" + text
-	}
+		partialReplies: [
+			{
+				bancheck: true,
+				message: context.user.Name
+			},
+			{
+				bancheck: false,
+				message: `is ${status}:`
+			},
+			{
+				bancheck: true,
+				message: text
+			}
+		]
+	};
 })',
 		'async (prefix) => [
 		\"Flags you as AFK (away from keyboard).\",
