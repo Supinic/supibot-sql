@@ -59,12 +59,14 @@ VALUES
 		};
 	}
 
+	let user = null;
 	let skipLocation = false;
 	let coordinates = null;
 	let place = args.join(\" \");
 
 	if (args.length === 0) {
 		if (context.user.Data.location) {
+			user = context.user;
 			coordinates = context.user.Data.location.coordinates;
 			skipLocation = context.user.Data.location.hidden;
 			place = context.user.Data.location.formatted;
@@ -99,6 +101,7 @@ VALUES
 			};
 		}
 		else {
+			user = targetUser;
 			coordinates = targetUser.Data.location.coordinates;
 			skipLocation = targetUser.Data.location.hidden;
 			place = targetUser.Data.location.formatted;
@@ -149,6 +152,16 @@ VALUES
 	const offset = `${symbol}${hours}:${minutes}`;
 	const time = new sb.Date();
 	time.setTimezoneOffset(totalOffset / 60);
+
+	if (user && user.Data.location && !user.Data.location.timezone) {
+		user.Data.location.timezone = {
+			stringOffset: offset,
+			offset: totalOffset,
+			name: timeData.timeZoneName
+		};
+
+		await user.saveProperty(\"Data\");
+	}
 
 	const replyPlace = (skipLocation) ? \"(location hidden)\" : place;
 	return {
