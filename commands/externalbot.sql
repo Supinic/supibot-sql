@@ -21,7 +21,9 @@ VALUES
 		NULL,
 		0,
 		'Currently being tested, and only available to trusted developers',
-		NULL,
+		'({
+	responseTimeout: 10_000
+})',
 		'(async function externalBot (context, ...rest) {
 	if (!context.channel) {
 		return {
@@ -81,13 +83,13 @@ VALUES
 	setTimeout(() => {
 		sb.Master.data.externalPipePromises.delete(key);
 		promise.resolve(null);
-	}, 5000);
+	}, this.staticData.responseTimeout);
 
 	const resultMessage = await promise;
 	if (resultMessage === null) {
 		return {
 			reason: \"bad_invocation\",
-			reply: \"No response from external bot after 5 seconds!\"
+			reply: `No response from external bot after ${this.staticData.responseTimeout / 1000} seconds!`
 		};
 	}
 
