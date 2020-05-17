@@ -44,7 +44,7 @@ VALUES
 
 			if (meta.data && typeof meta.data.dist === \"undefined\") {
 				const { data } = meta;
-				this.#name = data.title;
+				this.#name = data.display_name;
 				this.#exists = (!data.children || data.children !== 0);
 				this.#quarantine = Boolean(data.quarantine);
 				this.#nsfw = Boolean(data.over_18);
@@ -115,6 +115,9 @@ VALUES
 		Subreddit,
 
 		banned: [
+			\"bigpenis\",
+			\"cockcourt\",
+			\"cosplaygirls\",
 			\"moobs\",
 			\"feetpics\",
 			\"foot\"
@@ -133,7 +136,14 @@ VALUES
 		subreddit = sb.Utils.randArray(this.staticData.defaultMemeSubreddits);
 	}
 
-	const safeSpace = Boolean(!context.privateMessage && !context.channel?.NSFW);
+	let safeSpace = false;
+	if (context.platform.Name === \"twitch\") {
+		safeSpace = true;
+	}
+	else if (!context.channel?.NSFW && !context.privateMessage) {
+		safeSpace = true;
+	}
+
 	subreddit = subreddit.toLowerCase();
 
 	if (!this.data.subreddits[subreddit]) {
