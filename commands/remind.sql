@@ -81,37 +81,47 @@ VALUES
 	}
 
 	let reminderText = args.join(\" \");
-	const now = new sb.Date();
 
+	const timedRegex = /\\b(in|on|at)\\b/i;
 	let targetReminderDate = null;
-	const chronoData = sb.Utils.parseChrono(reminderText);
-	if (chronoData !== null) {
-		const isRelative = (Object.keys(chronoData.component.knownValues).length === 0);
-		if (targetUser?.Data.location && !isRelative) {
-			const location = targetUser.Data.location;
-			if (!location.timezone) {
-				const time = sb.Command.get(\"time\");
-				await time.execute({}, \"@\" + targetUser.Name);
+	let targetReminderDelta = \"when they next type in chat\";
+	let delta = 0;
+
+	const now = new sb.Date();
+	if (timedRegex.test(reminderText)) {
+		reminderText = reminderText.replace(/\\bhr\\b/g, \"hour\");
+		const chronoData = sb.Utils.parseChrono(reminderText, null, { forwardDate: true });
+
+		if (chronoData !== null) {
+			const isRelative = (Object.keys(chronoData.component.knownValues).length === 0);
+			if (targetUser?.Data.location && !isRelative) {
+				const location = targetUser.Data.location;
+				if (!location.timezone) {
+					const time = sb.Command.get(\"time\");
+					await time.execute({}, \"@\" + targetUser.Name);
+				}
+
+				const { offset } = location.timezone;
+				chronoData.component.assign(\"timezoneOffset\", offset / 60);
+				targetReminderDate = new sb.Date(chronoData.component.date());
+			}
+			else {
+				targetReminderDate = new sb.Date(chronoData.date);
 			}
 
-			const { offset } = location.timezone;
-			chronoData.component.assign(\"timezoneOffset\", offset / 60);
-			targetReminderDate = new sb.Date(chronoData.component.date());
-		}
-		else {
-			targetReminderDate = new sb.Date(chronoData.date);
-		}
+			if (chronoData.text) {
+				reminderText = reminderText.replace(chronoData.text, \"\");
+			}
 
-		if (chronoData.text) {
-			reminderText = reminderText.replace(chronoData.text, \"\");
+			targetReminderDate.milliseconds = now.milliseconds;			
+			delta = sb.Utils.round(targetReminderDate - sb.Date.now(), -3);
+
+			targetReminderDelta = sb.Utils.timeDelta(targetReminderDate);
 		}
 	}
 
-	const delta = (targetReminderDate !== null)
-		? (targetReminderDate - sb.Date.now())
-		: 0;
-
 	const comparison = new sb.Date(now.valueOf() + delta);
+
 	if (delta === 0) {
 		if (targetUser === context.user) {
 			return {
@@ -153,10 +163,6 @@ VALUES
 		}
 	}
 
-	const stringDelta = (targetReminderDate)
-		? sb.Utils.timeDelta(targetReminderDate)
-		: \"when they next type in chat\";
-
 	const result = await sb.Reminder.create({
 		Channel: context?.channel?.ID ?? null,
 		Platform: context.platform.ID,
@@ -173,7 +179,7 @@ VALUES
 		const method = (isPrivate) ? \"privately \" : \"\";
 
 		return {
-			reply: `${deprecationNotice}I will ${method}remind ${who} ${stringDelta} (ID ${result.ID})`
+			reply: `${deprecationNotice}I will ${method}remind ${who} ${targetReminderDelta} (ID ${result.ID})`
 		};
 	}
 	else {
