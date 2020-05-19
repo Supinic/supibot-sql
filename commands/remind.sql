@@ -90,9 +90,11 @@ VALUES
 	const now = new sb.Date();
 	if (timedRegex.test(reminderText)) {
 		reminderText = reminderText.replace(/\\bhr\\b/g, \"hour\");
-		const chronoData = sb.Utils.parseChrono(reminderText, null, { forwardDate: true });
 
-		if (chronoData !== null) {
+		const chronoData = sb.Utils.parseChrono(reminderText, null, { forwardDate: true });
+		const timeData = sb.Utils.parseDuration(reminderText, { returnData: true });
+
+		if (chronoData?.text?.includes(\"on\")) {
 			const isRelative = (Object.keys(chronoData.component.knownValues).length === 0);
 			if (targetUser?.Data.location && !isRelative) {
 				const location = targetUser.Data.location;
@@ -113,9 +115,49 @@ VALUES
 				reminderText = reminderText.replace(chronoData.text, \"\");
 			}
 
-			targetReminderDate.milliseconds = now.milliseconds;			
+			targetReminderDate.milliseconds = now.milliseconds;
 			delta = sb.Utils.round(targetReminderDate - sb.Date.now(), -3);
 
+		}
+		else if (timeData?.ranges) {
+			const continueRegex = /^and|[\\s\\W]+$/;
+			targetReminderDate = new sb.Date();
+
+			for (let i = 0; i < timeData.ranges.length; i++) {
+				const current = timeData.ranges[i];
+				const next = timeData.ranges[i + 1];
+
+				delta += current.time;
+				targetReminderDate.addMilliseconds(current.time);
+
+				// Parse out the text between ranges, ...
+				const between = (next)
+					? reminderText.slice(current.end, next.start)
+					: \"\";
+
+				// and only continue if it matches a \"time word separator\", such as the word \"and\", space, comma, ...
+				if (!continueRegex.test(between)) {
+					reminderText = reminderText.slice(0, current.start) + reminderText.slice(current.end);
+					break;
+				}
+				else {
+					const amount = next.start - current.start;
+					reminderText = reminderText.slice(0, current.start) + \"\\x00\".repeat(amount) + reminderText.slice(next.start);
+				}
+			}
+
+			if (timeData.ranges[0]?.start) {
+				const end = timeData.ranges[0].start;
+				const preceder = reminderText.slice(end - 3, end);
+				if (timedRegex.test(preceder)) {
+					reminderText = reminderText.slice(0, end - 3) + \"\\x00\".repeat(3) + reminderText.slice(end);
+				}
+			}
+
+			reminderText = reminderText.replace(/\\x00/g, \"\");
+		}
+
+		if (delta > 0) {
 			targetReminderDelta = sb.Utils.timeDelta(targetReminderDate);
 		}
 	}
