@@ -76,7 +76,8 @@ VALUES
 			\"Mixer literally has a total of about 5k viewers right now. Hahahaha. What happened? Coronavirus?\",
 			\"#Warzone is non stop fighting to the end. Winning a game feels very rewarding. On another note, my Lambo has 850hp. 12% increase with some modifications. It\'s fast.\",
 			\"Today was incredible.... I\'m in incredible. Tomorrow, even more incredible and let me tell you why. I\'m going to be the most watched stream on any platform. Why you ask? Cmon.... it\'s FARTNITE SEASON 2 CHAPTER 2 EPISODE 2 2nd EDITION TIME!\",
-			\"Listen, Champions Club. I know you just wanna relax and watch the greatest streamer ever dominate the gaming world in front of millions like usual. But this week we\'re changing up some things. No sub mode only..... Bring in these goofy loose gut fucks.\"
+			\"Listen, Champions Club. I know you just wanna relax and watch the greatest streamer ever dominate the gaming world in front of millions like usual. But this week we\'re changing up some things. No sub mode only..... Bring in these goofy loose gut fucks.\",
+			\"This is such a fluffy tweet. I\'m spammin my emotes on your channel now.  Hell, I throw in a ForsenCD here and there\"
 		]
 	};
 })()',
