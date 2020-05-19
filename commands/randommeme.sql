@@ -193,7 +193,7 @@ VALUES
 		}
 	}
 	else {
-		if (post.nsfw && context.append.pipe) {
+		if ((this.staticData.banned.includes(forum.name) || post.nsfw) && context.append.pipe) {
 			return {
 				success: false,
 				reason: \"pipe-nsfw\"
