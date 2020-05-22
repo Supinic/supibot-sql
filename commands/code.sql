@@ -19,20 +19,24 @@ VALUES
 		NULL,
 		'ping,pipe',
 		'Posts a link to a specific command\'s code definition on supinic.com website.',
-		10000,
+		5000,
 		NULL,
 		NULL,
 		'(async function code (context, commandString) {
 	if (!commandString) {
 		return {
-			reply: \"No command provided!\"
+			success: false,
+			reply: \"No command provided!\",
+			cooldown: 2500
 		};
 	}
 
 	const command = sb.Command.get(commandString);
 	if (!command) {
 		return {
+			success: false,
 			reply: \"Provided command does not exist!\"
+			cooldown: 2500
 		};
 	}
 
