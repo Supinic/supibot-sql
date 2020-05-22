@@ -91,10 +91,11 @@ VALUES
 	if (timedRegex.test(reminderText)) {
 		reminderText = reminderText.replace(/\\bhr\\b/g, \"hour\");
 
+		const chronoRegex = /\\bin\\b/;
 		const chronoData = sb.Utils.parseChrono(reminderText, null, { forwardDate: true });
 		const timeData = sb.Utils.parseDuration(reminderText, { returnData: true });
 
-		if (chronoData?.text?.includes(\"on\")) {
+		if (chronoRegex.test(chronoData?.text ?? \"\")) {
 			const isRelative = (Object.keys(chronoData.component.knownValues).length === 0);
 			if (targetUser?.Data.location && !isRelative) {
 				const location = targetUser.Data.location;
