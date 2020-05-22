@@ -121,14 +121,20 @@ VALUES
 
 		}
 		else if (timeData.ranges.length > 0) {
-			const continueRegex = /^and|[\\s\\W]+$/;
-			targetReminderDate = new sb.Date();
+			const continueRegex = /^(and|[\\s\\W]+)$/;
 
 			for (let i = 0; i < timeData.ranges.length; i++) {
+				// If the preceding text doesn\'t contain the word \"in\" right before the time range, skip it.
+				const precedingText = reminderText.slice(0, timeData.ranges[i].start);
+				if (!precedingText.match(/\\bin\\b\\s*$/)) {
+					continue;
+				}				
+				
 				const current = timeData.ranges[i];
 				const next = timeData.ranges[i + 1];
 
 				delta += current.time;
+				targetReminderDate = targetReminderDate ?? new sb.Date();
 				targetReminderDate.addMilliseconds(current.time);
 
 				// Parse out the text between ranges, ...
@@ -168,7 +174,7 @@ VALUES
 	if (delta === 0) {
 		if (targetUser === context.user) {
 			return {
-				reply: `To remind yourself, use a timed reminder that uses the keyword \"in\" - such as \"remindme something in 5 minutes\"`,
+				reply: `To remind yourself, your text must have the word \"in\" - such as \"check in 5 minutes\"`,
 				cooldown: 2500
 			};
 		}
