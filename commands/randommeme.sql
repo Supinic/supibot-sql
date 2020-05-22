@@ -120,7 +120,8 @@ VALUES
 			\"cosplaygirls\",
 			\"moobs\",
 			\"feetpics\",
-			\"foot\"
+			\"foot\",
+			\"russianbabes\"
 		],
 		defaultMemeSubreddits: [
 			\"okbuddyretard\",
