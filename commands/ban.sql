@@ -97,7 +97,10 @@ VALUES
 	if (context.user.Data.administrator) {
 		level = \"administrator\";
 	}
-	else if (context.channel && context.channel.isUserChannelOwner(context.user)) {
+	else if (
+		context.channel 
+		&& (context.channel.isUserChannelOwner(context.user) || context.channel.isUserAmbassador(context.user))
+	) {
 		level = \"channel-owner\";
 	}
 
@@ -117,7 +120,7 @@ VALUES
 		if (level === \"administrator\") {
 			// OK.
 		}
-		else if (channelData.isUserChannelOwner(context.user)) {
+		else if (channelData.isUserChannelOwner(context.user) || channelData.isUserAmbassador(context.user)) {
 			level = \"channel-owner\";
 		}
 		else {

@@ -84,6 +84,45 @@ VALUES
 
 	ID = Number(ID);
 	switch (type) {
+		case \"ambassador\": {
+			if (!context.user.Data.administrator) {
+				return {
+					success: false,
+					reply: `Only administrators can use this invocation!`
+				};
+			}
+
+			const [user, channel = context.channel?.Name] = args;
+			if (!user || !channel) {
+				return {
+					success: false,
+					reply: `Must provide a proper user and channel!`
+				};
+			}
+
+			const userData = await sb.User.get(user);
+			const channelData = sb.Channel.get(channel, context.platform);
+			if (!userData || !channelData) {
+				return {
+					success: false,
+					reply: `Either channel or user have not been found!`
+				};
+			}
+
+			if (!channelData.isUserAmbassador(userData)) {
+				return {
+					success: false,
+					reply: `That user is not an ambassador in #${channelData.Name}!`
+				};
+			}
+
+			await channelData.toggleAmbassador(userData);
+
+			return {
+				reply: `${userData.Name} is no longer an ambassador in #${channelData.Name}.`
+			};
+		}
+
 		case \"gc\": {
 			const row = await sb.Query.getRow(\"music\", \"Track\");
 			try {
@@ -102,7 +141,7 @@ VALUES
 					reply: \"This track was not added by you!\"
 				};
 			}
-			
+
 			const tags = (await sb.Query.getRecordset(rs => rs
 				.select(\"Tag\")
 				.from(\"music\", \"Track_Tag\")

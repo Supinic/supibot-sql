@@ -53,7 +53,7 @@ VALUES
 					cooldown: 2500
 				};
 			}
-			
+
 			const query = args.join(\" \");
 			const { components, coordinates, formatted, location, placeID, success } = await sb.Utils.fetchGeoLocationData(
 				sb.Config.get(\"API_GOOGLE_GEOCODING\"),
@@ -81,8 +81,47 @@ VALUES
 				reply: `Successfully set your ${hidden ? \"private\" : \"public\"} location!`
 			};
 		}
+
+		case \"ambassador\": {
+			if (!context.user.Data.administrator) {
+				return {
+					success: false,
+					reply: `Only administrators can use this invocation!`
+				};
+			}
+			
+			const [user, channel = context.channel?.Name] = args;
+			if (!user || !channel) {
+				return {
+					success: false,
+					reply: `Must provide a proper user and channel!`
+				};
+			}
+
+			const userData = await sb.User.get(user);
+			const channelData = sb.Channel.get(channel, context.platform);
+			if (!userData || !channelData) {
+				return {
+					success: false,
+					reply: `Either channel or user have not been found!`
+				};
+			}
+
+			if (channelData.isUserAmbassador(userData)) {
+				return {
+					success: false,
+					reply: `That user is already ambassador in #${channelData.Name}!`
+				};
+			}
+
+			await channelData.toggleAmbassador(userData);
+
+			return {
+				reply: `${userData.Name} is now an ambassador in #${channelData.Name}.`
+			};
+		}
 	}
-	
+
 	return {
 		reply: \"Invalid type provided!\"
 	};
