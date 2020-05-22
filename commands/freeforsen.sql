@@ -23,7 +23,8 @@ VALUES
 		NULL,
 		'({
 	ban: new sb.Date(\"2020-05-08 20:12:52\"),
-	expiry: new sb.Date(\"2020-05-08 20:12:52\").addDays(14)
+	supposedExpiry: new sb.Date(\"2020-05-08 20:12:52\").addDays(14),
+	expiry: new sb.Date(\"2020-05-22 21:11:12\")
 })',
 		'(async function () {
 	const { ban, expiry } = this.staticData;
@@ -31,7 +32,7 @@ VALUES
 	const expiryDelta = sb.Utils.timeDelta(expiry);
 
 	const string = (expiry <= new sb.Date()) 
-		? \"has probably been unbanned\"
+		? \"has been unbanned\"
 		: \"will most likely return\";
 
 	return {
