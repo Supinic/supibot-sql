@@ -14,7 +14,7 @@ VALUES
 		'() => {
 	const { controller } = sb.Platform.get(\"twitch\");
 
-	if (Object.keys(controller.availableEmotes).length === 0) {
+	if (Object.keys(controller?.availableEmotes ?? {}).length === 0) {
 		return \"Twitch messed up, no emotes available...\";
 	}
 
