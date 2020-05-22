@@ -91,7 +91,7 @@ VALUES
 	if (timedRegex.test(reminderText)) {
 		reminderText = reminderText.replace(/\\bhr\\b/g, \"hour\");
 
-		const chronoRegex = /\\bin\\b/;
+		const chronoRegex = /\\bon\\b/;
 		const chronoData = sb.Utils.parseChrono(reminderText, null, { forwardDate: true });
 		const timeData = sb.Utils.parseDuration(reminderText, { returnData: true });
 
