@@ -120,7 +120,7 @@ VALUES
 			delta = sb.Utils.round(targetReminderDate - sb.Date.now(), -3);
 
 		}
-		else if (timeData?.ranges) {
+		else if (timeData.ranges.length > 0) {
 			const continueRegex = /^and|[\\s\\W]+$/;
 			targetReminderDate = new sb.Date();
 
