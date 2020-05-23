@@ -18,7 +18,7 @@ VALUES
 		'poe',
 		NULL,
 		'ping,pipe',
-		'Checks the current price of any recently traded item. $poe <league> <item>',
+		'A collection of various Path of Exile related commands. Check the extended help on website for more info.',
 		7500,
 		NULL,
 		'(() => {
