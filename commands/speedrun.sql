@@ -23,13 +23,18 @@ VALUES
 		NULL,
 		NULL,
 		'(async function speedrun (context, ...args) {
+	let fetchCategories = false;
 	let categoryName = null;
 	for (let i = 0; i < args.length; i++) {
 		const token = args[i];
 		if (token.includes(\"category:\")) {
 			categoryName = token.split(\":\")[1]?.toLowerCase() ?? null;
 			args.splice(i, 1);
-		}		
+		}
+		else if (token.includes(\"categories\")) {
+			fetchCategories = true;
+			args.splice(i, 1);
+		}
 	}
 
 	const gameName = args.join(\" \");
@@ -56,6 +61,12 @@ VALUES
 
 	const [game] = gameData;
 	const { data: categoryData } = await sb.Got.instances.Speedrun(`games/${game.id}/categories`).json();
+
+	if (fetchCategories) {
+		return {
+			reply: `Available categories for ${game.names.international}: ${categoryData.map(i => i.name).join(\", \")}.`
+		};
+	}
 
 	let category = null;
 	if (categoryName === null) {
@@ -92,5 +103,22 @@ VALUES
 		reply: `Current WR for ${game.names.international}, ${category.name}: ${time} by ${runnerData.names.international}, run ${delta}.`
 	};
 })',
-		NULL
+		'async (prefix) => {
+	return [
+		`Searches <a href=\"//speedrun.com\">speedrun.com</a> for the world record run of a given game.`,
+		`You can also specify categories. If you don\'t, the \"default\" one will be used.`,
+		\"\",
+
+		`<code>${prefix}speedrun Doom II</code>`,
+		\"Searches for the world record run of Doom II\'s default category (Hell on Earth).\",
+		\"\",
+
+		`<code>${prefix}speedrun Doom II category:UV</code>`,
+		\"Searches for the world record run of Doom II\'s UV Speed category.\",
+		\"\",
+
+		`<code>${prefix}speedrun Doom II categories</code>`,
+		\"Posts a list of all tracked categories for Doom II.\",
+	];
+}'
 	)
