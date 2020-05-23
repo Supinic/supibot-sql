@@ -18,14 +18,47 @@ VALUES
 		'github',
 		NULL,
 		'ping,pipe',
-		'Posts the supibot GitHub link.',
+		'Posts GitHub repository links for Supibot and the website. If you add anything afterwards, a search will be executed for your query on the bot repository.',
 		5000,
 		NULL,
 		NULL,
-		'(async function github () { 
+		'(async function github (context, ...args) { 
+	const query = args.join(\"\");
+	if (!query) {
+		return {
+			reply: \"Supibot: https://github.com/Supinic/supibot - Website: https://github.com/Supinic/supinic.com\"
+		};
+	}
+
+	const { items } = await sb.Got.instances.GitHub({
+		url: `search/code?q=${query}+in:file+repo:supinic/supi-core+repo:supinic/supibot`
+	}).json();
+
+	const filtered = items.filter(i => i.name.endsWith(\".js\"));
+	if (filtered.length === 0) {
+		return {
+			success: false,
+			reply: \"No search results found!\"
+		};
+	}
+
+	const file = filtered.shift();
+	const link = `https://github.com/${file.repository.full_name}/blob/master/${file.path}`;
 	return {
-		reply: \"Supibot: https://github.com/Supinic/supibot - Website: https://github.com/Supinic/supinic.com\"
+		reply: `${file.name} - check here: ${link}`
 	};
 })',
-		NULL
+		'async (prefix) => {
+	return [
+		\"If nothing is specified, posts GitHub repo links; otherwise, will execute a search on Supibot\'s repositories.\",
+		\"\",
+
+		`<code>${prefix}github</code>`,
+		\"Supibot: https://github.com/Supinic/supibot - Website: https://github.com/Supinic/supinic.com\",
+		\"\",
+
+		`<code>${prefix}github (search query)</code>`,
+		\"Searches supibot\'s repositories for that query\",
+	];
+}'
 	)
