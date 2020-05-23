@@ -115,6 +115,13 @@ VALUES
 			if (![\"off\", \"vlc\", \"cytube\", \"dubtrack\", \"necrodancer\", \"vlc-read\"].includes(value)) {
 				return { reply: \"Invalid song request state!\" };
 			}
+		
+			if (value === \"vlc\") {
+				sb.VideoLANConnector.client.startRunning();
+			}
+			else {
+				sb.VideoLANConnector.client.stopRunning();
+			}
 
 			sb.Config.set(\"SONG_REQUESTS_STATE\", value);
 			return { reply: \"Song requests are now set to \" + value };
