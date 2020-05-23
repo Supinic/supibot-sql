@@ -35,7 +35,7 @@ VALUES
 	if (!command) {
 		return {
 			success: false,
-			reply: \"Provided command does not exist!\"
+			reply: \"Provided command does not exist!\",
 			cooldown: 2500
 		};
 	}
