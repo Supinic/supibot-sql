@@ -13,37 +13,42 @@
 	const save = require("./save.js");
 	const processes = [
 		{
-			path: "C:\\Projects\\supibot-sql\\commands\\",
+			path: "./commands/",
+			directories: ["./commands", "./commands/archived"],
 			filenameColumn: "Name",
 			database: "chat_data",
 			table: "Command",
 			Query: sb.Query,
-			extraPathFunction: (row) => (row.Flags?.includes("archived")) ? "archived\\" : ""
+			extraPathFunction: (row) => (row.Flags?.includes("archived")) ? "archived/" : ""
 		},
 		{
-			path: "C:\\Projects\\supibot-sql\\crons\\",
+			path: "./crons/",
+			directories: ["./crons", "./crons/inactive"],
 			filenameColumn: "Name",
 			database: "chat_data",
 			table: "Cron",
 			Query: sb.Query,
-			extraPathFunction: (row) => (row.Active) ? "" : "inactive\\"
+			extraPathFunction: (row) => (row.Active) ? "" : "inactive/"
 		},
 		{
-			path: "C:\\Projects\\supibot-sql\\got-instances\\",
+			path: "./got-instances/",
+			directories: ["./got-instances"],
 			filenameColumn: "Name",
 			database: "data",
 			table: "Got_Instance",
 			Query: sb.Query
 		},
 		{
-			path: "C:\\Projects\\supibot-sql\\slots-patterns\\",
+			path: "./slots-patterns/",
+			directories: ["./slots-patterns"],
 			filenameColumn: "Name",
 			database: "data",
 			table: "Slots_Pattern",
 			Query: sb.Query
 		},
 		{
-			path: "C:\\Projects\\supibot-sql\\extra-news\\",
+			path: "./extra-news/",
+			directories: ["./extra-news"],
 			filenameColumn: "Code",
 			database: "data",
 			table: "Extra_News",
@@ -55,6 +60,4 @@
 	await Promise.all(processes.map(i => save(i)));
 	console.log("All done!");
 	process.exit();
-	
-
 })();

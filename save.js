@@ -3,6 +3,16 @@ module.exports = async function save (options) {
 		throw new Error("Database access not initialized!");
 	}
 
+	const { access, mkdir } = require("fs/promises");
+	for (const path of options.directories) {
+		try {
+			await access(path);
+		}
+		catch {
+			await mkdir(path);
+		}
+	}	
+
 	const { ignoredColumns = [], Query } = options;
 	const columnData = await Query.getRecordset(rs => rs
 		.select("COLUMN_NAME AS `Column`", "DATA_TYPE AS `Type`")
