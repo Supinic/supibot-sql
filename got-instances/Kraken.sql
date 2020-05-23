@@ -20,7 +20,7 @@ VALUES
 	headers: {
 		\"Accept\": \"application/vnd.twitchtv.v5+json\",
 		\"Client-ID\": sb.Config.get(\"TWITCH_CLIENT_ID\"),
-		\"User-Agent\": \"twitch.tv/supibot @ github.com/supinic/supibot\"
+		\"User-Agent\": sb.Config.get(\"DEFAULT_USER_AGENT\")
 	},
 	mutableDefaults: true
 }))',

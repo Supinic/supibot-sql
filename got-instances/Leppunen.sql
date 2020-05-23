@@ -12,14 +12,15 @@ VALUES
 	(
 		7,
 		'Leppunen',
-		'JSON',
-		'{
-	\"prefixUrl\": \"https://api.ivr.fi\",
-	\"headers\": {
-		\"User-Agent\": \"Supibot @ github.com/supinic/supibot\"
+		'function',
+		'(() => ({
+	responseType: \"json\",
+	prefixUrl: \"https://api.ivr.fi\",
+	headers: {
+		\"User-Agent\": sb.Config.get(\"DEFAULT_USER_AGENT\")
 	},
-	\"throwHttpErrors\": false
-}',
+	throwHttpErrors: false
+}))',
 		NULL,
 		NULL
 	)

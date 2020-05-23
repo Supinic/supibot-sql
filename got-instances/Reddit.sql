@@ -12,15 +12,16 @@ VALUES
 	(
 		13,
 		'Reddit',
-		'JSON',
-		'{
-	\"prefixUrl\": \"https://www.reddit.com/r/\",
-	\"responseType\": \"json\",
-	\"throwHttpErrors\": false,
-	\"headers\": {
-		\"Cookie\": \"_options={%22pref_quarantine_optin%22:true};\"
+		'function',
+		'(() => ({
+	prefixUrl: \"https://www.reddit.com/r/\",
+	responseType: \"json\",
+	throwHttpErrors: false,
+	headers: {
+		\"Cookie\": \"_options={%22pref_quarantine_optin%22:true};\",
+		\"User-Agent\": sb.Config.get(\"DEFAULT_USER_AGENT\")
 	}
-}',
+}))',
 		NULL,
 		NULL
 	)

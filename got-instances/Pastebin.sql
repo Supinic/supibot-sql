@@ -12,13 +12,15 @@ VALUES
 	(
 		14,
 		'Pastebin',
-		'JSON',
-		'{
-	\"prefixUrl\": \"https://pastebin.com/\",
-	\"headers\": {
-		\"Content-Type\": \"application/x-www-form-urlencoded\"
+		'function',
+		'(() => ({
+	responseType: \"json\",
+	prefixUrl: \"https://pastebin.com/\",
+	headers: {
+		\"Content-Type\": \"application/x-www-form-urlencoded\",
+		\"User-Agent\": sb.Config.get(\"DEFAULT_USER_AGENT\")
 	}
-}',
+}))',
 		NULL,
 		NULL
 	)

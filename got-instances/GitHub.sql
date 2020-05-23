@@ -12,13 +12,14 @@ VALUES
 	(
 		6,
 		'GitHub',
-		'JSON',
-		'{
-	\"prefixUrl\": \"https://api.github.com\",
-	\"headers\": {
-		\"User-Agent\": \"supibot @ github.com/supinic/supibot\"
+		'function',
+		'(() => ({
+	responseType: \"json\",
+	prefixUrl: \"https://api.github.com\",
+	headers: {
+		\"User-Agent\": sb.Config.get(\"DEFAULT_USER_AGENT\")
 	}
-}',
+}))',
 		NULL,
 		NULL
 	)

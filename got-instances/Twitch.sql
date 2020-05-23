@@ -17,7 +17,7 @@ VALUES
 	prefixUrl: \"https://twitch.tv\",
 	headers: {
 		Authorization: sb.Config.get(\"TWITCH_OAUTH\"),
-		\"User-Agent\": \"twitch.tv/supibot @ github.com/supinic/supibot\"
+		\"User-Agent\": sb.Config.get(\"DEFAULT_USER_AGENT\")
 	}
 }))',
 		NULL,

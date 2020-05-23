@@ -12,11 +12,14 @@ VALUES
 	(
 		9,
 		'CommanderRoot',
-		'JSON',
-		'{
-	\"prefixUrl\": \"https://twitch-tools.rootonline.de\",
-	\"responseType\": \"json\"
-}',
+		'function',
+		'(() => ({
+	prefixUrl: \"https://twitch-tools.rootonline.de\",
+	responseType: \"json\",
+	headers: {		
+		\"User-Agent\": sb.Config.get(\"DEFAULT_USER_AGENT\")
+	}
+}))',
 		NULL,
 		NULL
 	)

@@ -12,16 +12,16 @@ VALUES
 	(
 		1,
 		'Supinic',
-		'JSON',
-		'{
-	\"prefixUrl\": \"http://192.168.0.101/api\",
-	\"responseType\": \"json\",
-	\"throwHttpErrors\": false,
-	\"mutableDefaults\": true,
-	\"headers\": {
-		\"User-Agent\": \"Supibot github.com/supinic/supibot\"
+		'function',
+		'(() => ({
+	prefixUrl: \"http://192.168.0.101/api\",
+	responseType: \"json\",
+	throwHttpErrors: false,
+	mutableDefaults: true,
+	headers: {
+		\"User-Agent\": sb.Config.get(\"DEFAULT_USER_AGENT\")
 	}
-}',
+}))',
 		NULL,
 		NULL
 	)

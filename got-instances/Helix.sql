@@ -19,7 +19,7 @@ VALUES
 	headers: {
 		\"Client-ID\": sb.Config.get(\"TWITCH_CLIENT_ID\"),
 		\"Authorization\": `Bearer ${sb.Config.get(\"TWITCH_APP_ACCESS_TOKEN\")}`,
-		\"User-Agent\": \"twitch.tv/supibot @ github.com/supinic/supibot\"
+		\"User-Agent\": sb.Config.get(\"DEFAULT_USER_AGENT\")
 	}
 }))',
 		2,

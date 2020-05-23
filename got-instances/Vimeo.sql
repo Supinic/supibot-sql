@@ -18,7 +18,7 @@ VALUES
 	responseType: \"json\",
 	headers: {
 		\"Authorization\": \"Bearer \" + sb.Config.get(\"VIMEO_API_KEY\"),
-		\"User-Agent\": \"twitch.tv/supibot @ github.com/supinic/supibot\"
+		\"User-Agent\": sb.Config.get(\"DEFAULT_USER_AGENT\")
 	}
 }))',
 		NULL,

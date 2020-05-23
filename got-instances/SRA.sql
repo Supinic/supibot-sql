@@ -12,10 +12,14 @@ VALUES
 	(
 		10,
 		'SRA',
-		'JSON',
-		'{
-	\"prefixUrl\": \"https://some-random-api.ml\"
-}',
+		'function',
+		'(() => ({
+	prefixUrl: \"https://some-random-api.ml\",
+	responseType: \"json\",
+	headers: {		
+		\"User-Agent\": sb.Config.get(\"DEFAULT_USER_AGENT\")
+	}
+}))',
 		NULL,
 		'SRA = Some Random API (https://some-random-api.ml/)'
 	)
