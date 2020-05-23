@@ -123,13 +123,15 @@ VALUES
 		else if (timeData.ranges.length > 0) {
 			const continueRegex = /^(and|[\\s\\W]+)$/;
 
+			let continues = false;
 			for (let i = 0; i < timeData.ranges.length; i++) {
 				// If the preceding text doesn\'t contain the word \"in\" right before the time range, skip it.
 				const precedingText = reminderText.slice(0, timeData.ranges[i].start);
-				if (!precedingText.match(/\\bin\\b\\s*$/)) {
+				if (!continues && !precedingText.match(/\\bin\\b\\s*$/)) {
 					continue;
 				}				
 				
+				continues = false;
 				const current = timeData.ranges[i];
 				const next = timeData.ranges[i + 1];
 
@@ -150,6 +152,7 @@ VALUES
 				else {
 					const amount = next.start - current.start;
 					reminderText = reminderText.slice(0, current.start) + \"\\x00\".repeat(amount) + reminderText.slice(next.start);
+					continues = true;
 				}
 			}
 
