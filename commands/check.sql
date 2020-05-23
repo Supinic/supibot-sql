@@ -21,7 +21,41 @@ VALUES
 		'Checks certain variables you have set. Currently supports \"reminder\", \"cookie\".',
 		10000,
 		NULL,
-		NULL,
+		'
+({
+	variables: [
+		{
+			name: \"afk\",
+			aliases: [],
+			description: \"Use this on a user to see if they are AFK or not.\"
+		},
+		{
+			name: \"cookie\",
+			aliases: [],
+			description: \"Checks if someone (or you, if not provided) has their fortune cookie available for today.\"
+		},
+		{
+			name: \"error\",
+			aliases: [],
+			description: \"If you are marked as a developer, you can check the full text of an error within Supibot, based on its ID.\"
+		},
+		{
+			name: \"reminder\",
+			aliases: [\"notify\", \"reminders\"],
+			description: \"Check the status and info of a reminder created by you or for you.\"
+		},
+		{
+			name: \"reset\",
+			aliases: [],
+			description: `Checks your last \"reset\".`
+		},
+		{
+			name: \"suggest\",
+			aliases: [\"suggestion\", \"suggestions\"],
+			description: \"Checks the status and info of a suggestion that you made.\"
+		}
+	]
+})',
 		'(async function check (context, type, identifier) {
 	if (!type) {
 		return {
@@ -328,25 +362,27 @@ VALUES
 		};
 	}
 })',
-		'async (prefix) => {
+		'async (prefix, values) => {
+	const { variables } = values.getStaticData();
+	const list = variables.map(i => {
+		const aliases = (i.aliases && i.aliases.length > 0)
+			? ` (${i.aliases.join(\", \")})`
+			: \"\";
+
+		return `<li><code>${i.name}${aliases}</code> - ${i.description}</li>`;
+	});
 
 	return [
-		\"Checks variables that have been set within supibot\",
+		\"Checks variables that you have been set within Supibot\",
 		\"\",
-		\"These are the same thing: \",
-		prefix + \"check notify (ID) => Reminder ID (ID) from (X) to (Y)\",
-		prefix + \"check notification (ID) => Reminder ID (ID) from (X) to (Y)\",
-		prefix + \"check notifications (ID) => Reminder ID (ID) from (X) to (Y)\",
-		prefix + \"check reminder (ID) => Reminder ID (ID) from (X) to (Y)\",
-		prefix + \"check reminders (ID) => Reminder ID (ID) from (X) to (Y)\",
+
+		`<code>${prefix}check (variable)</code>`,
+		\"Checks the status of a given variable.\",
 		\"\",
-		prefix + \"check afk (user) => Posts the AFK status of given user\",
-		\"\",
-		prefix + \"check suggest/suggestion (ID) => Posts info about a given suggestion, if you made it.\",
-		\"\",
-		prefix + \"check cookie => Checks if you have eaten your cookie today\",
-		prefix + \"check cookie (user) => Checks if given user has eaten their cookie today\"
-	
+
+		\"Supported types:\",
+		\"<ul>\" + list.join(\"\") + \"</ul>\"
 	];
+
 }'
 	)
