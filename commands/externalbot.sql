@@ -18,7 +18,7 @@ VALUES
 		'externalbot',
 		'[\"ebot\"]',
 		'ping,pipe,whitelist',
-		NULL,
+		'Makes supibot execute a command of a different bot, and then the result will be that bot\'s command response. As such, this command can only be used in a pipe.',
 		0,
 		'Currently being tested, and only available to trusted developers',
 		'({
@@ -93,7 +93,7 @@ VALUES
 		};
 	}
 
-	const selfRegex = new RegExp(\"^@?\" + sb.Config.get(\"SELF\") + \",?\", \"i\");
+	const selfRegex = new RegExp(\"^@?\" + context.platform.Self_Name + \",?\", \"i\");
 	return {
 		reply: resultMessage.replace(selfRegex, \"\")
 	};

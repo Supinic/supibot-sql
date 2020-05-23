@@ -30,7 +30,7 @@ VALUES
 			reply: \"You can\'t really kiss yourself 😕\"
 		};
 	}
-	else if (user === sb.Config.get(\"SELF\")) {
+	else if (user === context.platform.Self_Name) {
 		return {
 			reply: \"😊\"
 		};

@@ -31,7 +31,7 @@ VALUES
 				reply: \"You had nobody to tuck you in, so you tucked yourself in PepeHands\" 
 			};
 		}
-		else if (user === sb.Config.get(\"SELF\")) {
+		else if (user === context.platform.Self_Name) {
 			return { 
 				reply: \"Thanks for the kind gesture, but I gotta stay up :)\" 
 			};
@@ -48,7 +48,7 @@ VALUES
 				reply: \"You had nobody to kiss you good night, so you cry yourself to sleep PepeHands\" 
 			};
 		}
-		else if (user === sb.Config.get(\"SELF\")) {
+		else if (user === context.platform.Self_Name) {
 			return { 
 				reply: \"Thanks for the kiss, but I gotta stay up :)\"
 			};
@@ -69,7 +69,7 @@ VALUES
 				reply: \"You pat yourself on the head... okay?\" 
 			};
 		}
-		else if (user === sb.Config.get(\"SELF\")) {
+		else if (user === context.platform.Self_Name)) {
 			return { 
 				reply: \"Thank you 😳\"
 			};

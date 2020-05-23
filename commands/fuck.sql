@@ -34,7 +34,7 @@ VALUES
 			reply: \"There are toys made for that, you know...\"
 		};
 	}
-	else if (user === sb.Config.get(\"SELF\")) {
+	else if (user === context.platform.Self_Name) {
 		return {
 			reply: \"Hey buddy, I think you got the wrong door.\"
 		};
