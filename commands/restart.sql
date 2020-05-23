@@ -32,6 +32,7 @@ VALUES
 	if (types.includes(\"all\") || types.includes(\"pull\")) {
 		queue.push(async () => {
 			sb.Master.send(\"Pulling from master PogChamp 👉\", context.channel);
+			await shell(\"git checkout -- yarn.lock package.json\");
 			const result = await shell(\"git pull origin master\");
 			console.log(\"pull result\", result);
 		});
