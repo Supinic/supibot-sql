@@ -69,7 +69,7 @@ VALUES
 				reply: \"You pat yourself on the head... okay?\" 
 			};
 		}
-		else if (user === context.platform.Self_Name)) {
+		else if (user === context.platform.Self_Name) {
 			return { 
 				reply: \"Thank you 😳\"
 			};
