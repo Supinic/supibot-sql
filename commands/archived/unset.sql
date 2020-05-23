@@ -17,7 +17,7 @@ VALUES
 		63,
 		'unset',
 		NULL,
-		'ping,pipe',
+		'archived,ping,pipe',
 		'Unsets a certain variable that you have created (e.g. reminders)',
 		5000,
 		NULL,
