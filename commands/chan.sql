@@ -114,8 +114,9 @@ VALUES
 		};
 	}
 	else if (board.nsfw && !enabled[resultType].nsfw) {
+		const pretty = (resultType === \"content\") ? \"text\" : \"images\";
 		return {
-			reply: \"You can\'t query this NSFW board for that result type here!\"
+			reply: `You can\'t check 4chan for ${pretty} in here, because the board you used is marked as NSFW!`
 		};
 	}
 
