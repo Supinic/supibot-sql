@@ -34,6 +34,13 @@ VALUES
 
 	// If the user is using \"simple\" mode, extract user and command.
 	if (args.every(i => !i.includes(\":\"))) {
+		if (args.length < 2) {
+			return {
+				success: false,
+				reply: `No user/command provided! For simple mode, use ${sb.Command.prefix}block (user) (command). For advanced mode, check this command\'s help.`
+			};
+		}
+
 		[filterData.user, filterData.command] = args;
 	}
 	else {
