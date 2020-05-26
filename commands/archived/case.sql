@@ -10,7 +10,8 @@ INSERT INTO
 		Whitelist_Response,
 		Static_Data,
 		Code,
-		Dynamic_Description
+		Dynamic_Description,
+		Source
 	)
 VALUES
 	(
@@ -45,5 +46,6 @@ VALUES
 		default: return { success: false, reason: \"no-type\" };
 	}
 })',
-		NULL
+		NULL,
+		'supinic/supibot-sql'
 	)

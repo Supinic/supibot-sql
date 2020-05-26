@@ -10,7 +10,8 @@ INSERT INTO
 		Whitelist_Response,
 		Static_Data,
 		Code,
-		Dynamic_Description
+		Dynamic_Description,
+		Source
 	)
 VALUES
 	(
@@ -29,5 +30,6 @@ VALUES
 
 	return { reply: sb.Utils.transliterate(args.join(\" \")) };
 }',
-		NULL
+		NULL,
+		'supinic/supibot-sql'
 	)

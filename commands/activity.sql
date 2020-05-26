@@ -10,7 +10,8 @@ INSERT INTO
 		Whitelist_Response,
 		Static_Data,
 		Code,
-		Dynamic_Description
+		Dynamic_Description,
+		Source
 	)
 VALUES
 	(
@@ -35,5 +36,6 @@ VALUES
 		reply: `Check channel\'s recent activity here: https://supinic.com/bot/channel/${channel.ID}/activity`
 	};
 })',
-		NULL
+		NULL,
+		'supinic/supibot-sql'
 	)

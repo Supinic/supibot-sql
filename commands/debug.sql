@@ -10,7 +10,8 @@ INSERT INTO
 		Whitelist_Response,
 		Static_Data,
 		Code,
-		Dynamic_Description
+		Dynamic_Description,
+		Source
 	)
 VALUES
 	(
@@ -80,5 +81,6 @@ async (extra, ...args) => {
 	}
 }
 */',
-		NULL
+		NULL,
+		'supinic/supibot-sql'
 	)

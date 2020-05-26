@@ -10,7 +10,8 @@ INSERT INTO
 		Whitelist_Response,
 		Static_Data,
 		Code,
-		Dynamic_Description
+		Dynamic_Description,
+		Source
 	)
 VALUES
 	(
@@ -39,5 +40,6 @@ VALUES
 		reply: `forsenE got banned ${banDelta} and ${string} ${expiryDelta}. forsenW`
 	};
 })',
-		NULL
+		NULL,
+		'supinic/supibot-sql'
 	)

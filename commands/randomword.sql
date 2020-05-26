@@ -10,7 +10,8 @@ INSERT INTO
 		Whitelist_Response,
 		Static_Data,
 		Code,
-		Dynamic_Description
+		Dynamic_Description,
+		Source
 	)
 VALUES
 	(
@@ -54,5 +55,6 @@ VALUES
 
 		\"Word list: <br>\" + list.join(\"<br>\")
 	];
-}'
+}',
+		'supinic/supibot-sql'
 	)

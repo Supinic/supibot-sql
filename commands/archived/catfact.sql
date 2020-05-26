@@ -10,7 +10,8 @@ INSERT INTO
 		Whitelist_Response,
 		Static_Data,
 		Code,
-		Dynamic_Description
+		Dynamic_Description,
+		Source
 	)
 VALUES
 	(
@@ -38,5 +39,6 @@ VALUES
 		\"\",
 		prefix + \"catfact => Many Egyptians worshipped the goddess Bast, who had a woman’s body and a cat’s head.\"
 	];
-}'
+}',
+		'supinic/supibot-sql'
 	)

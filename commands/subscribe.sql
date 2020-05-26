@@ -10,7 +10,8 @@ INSERT INTO
 		Whitelist_Response,
 		Static_Data,
 		Code,
-		Dynamic_Description
+		Dynamic_Description,
+		Source
 	)
 VALUES
 	(
@@ -141,5 +142,6 @@ VALUES
 		\"List of available events:\",
 		`<ul>${typesList}</ul>`
 	];
-}'
+}',
+		'supinic/supibot-sql'
 	)

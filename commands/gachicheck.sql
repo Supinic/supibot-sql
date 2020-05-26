@@ -10,7 +10,8 @@ INSERT INTO
 		Whitelist_Response,
 		Static_Data,
 		Code,
-		Dynamic_Description
+		Dynamic_Description,
+		Source
 	)
 VALUES
 	(
@@ -267,5 +268,6 @@ VALUES
 		`Does not check playlists that have more than <b>${limit}</b> videos.`,
 		\"As with multiple videos, availability will also not be checked.\"
 	];
-}'
+}',
+		'supinic/supibot-sql'
 	)

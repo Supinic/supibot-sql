@@ -10,7 +10,8 @@ INSERT INTO
 		Whitelist_Response,
 		Static_Data,
 		Code,
-		Dynamic_Description
+		Dynamic_Description,
+		Source
 	)
 VALUES
 	(
@@ -120,5 +121,6 @@ VALUES
 		`<code>${prefix}speedrun Doom II categories</code>`,
 		\"Posts a list of all tracked categories for Doom II.\",
 	];
-}'
+}',
+		'supinic/supibot-sql'
 	)

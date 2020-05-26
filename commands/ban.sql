@@ -10,7 +10,8 @@ INSERT INTO
 		Whitelist_Response,
 		Static_Data,
 		Code,
-		Dynamic_Description
+		Dynamic_Description,
+		Source
 	)
 VALUES
 	(
@@ -219,5 +220,6 @@ VALUES
 		`<code>${prefix}unban user:test</code>`,
 		\"If banned before, user <u>test</u> will be unbanned from executing <u>any</u> commands in the current channel.\"
 	];
-}'
+}',
+		'supinic/supibot-sql'
 	)

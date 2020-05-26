@@ -10,7 +10,8 @@ INSERT INTO
 		Whitelist_Response,
 		Static_Data,
 		Code,
-		Dynamic_Description
+		Dynamic_Description,
+		Source
 	)
 VALUES
 	(
@@ -55,5 +56,6 @@ VALUES
 		`<code>${prefix}mdn Nullish coalescing</code>`,
 		`Nullish coalescing operator <a target=\"_blank\" href=\"${url}\">${url}</a>`
 	];
-}'
+}',
+		'supinic/supibot-sql'
 	)

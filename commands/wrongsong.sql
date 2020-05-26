@@ -10,7 +10,8 @@ INSERT INTO
 		Whitelist_Response,
 		Static_Data,
 		Code,
-		Dynamic_Description
+		Dynamic_Description,
+		Source
 	)
 VALUES
 	(
@@ -91,5 +92,6 @@ VALUES
 		`<code>${prefix}ws (ID)</code>`,
 		\"Skips your request with given ID. Fails if it\'s not your request.\",
 	];
-}'
+}',
+		'supinic/supibot-sql'
 	)

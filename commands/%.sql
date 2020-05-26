@@ -10,7 +10,8 @@ INSERT INTO
 		Whitelist_Response,
 		Static_Data,
 		Code,
-		Dynamic_Description
+		Dynamic_Description,
+		Source
 	)
 VALUES
 	(
@@ -32,5 +33,6 @@ VALUES
 
 	`<code>${prefix}%</code>`,
 	(sb.Utils.random(0, 10000) / 100) + \"%\"
-]	'
+]	',
+		'supinic/supibot-sql'
 	)

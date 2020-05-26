@@ -10,7 +10,8 @@ INSERT INTO
 		Whitelist_Response,
 		Static_Data,
 		Code,
-		Dynamic_Description
+		Dynamic_Description,
+		Source
 	)
 VALUES
 	(
@@ -82,5 +83,6 @@ VALUES
 		prefix + \"wiki uncanny valley => In aesthetics, the uncanny valley is a hypothesized relationship between the degree...\",
 		\"...\"
 	];
-}'
+}',
+		'supinic/supibot-sql'
 	)

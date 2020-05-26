@@ -10,7 +10,8 @@ INSERT INTO
 		Whitelist_Response,
 		Static_Data,
 		Code,
-		Dynamic_Description
+		Dynamic_Description,
+		Source
 	)
 VALUES
 	(
@@ -23,5 +24,6 @@ VALUES
 		'Only available on specific channels who have dubtrack.',
 		NULL,
 		'async (context) => ({ reply: \"https://www.dubtrack.fm/join/\" + context.channel.Name })',
-		NULL
+		NULL,
+		'supinic/supibot-sql'
 	)

@@ -10,7 +10,8 @@ INSERT INTO
 		Whitelist_Response,
 		Static_Data,
 		Code,
-		Dynamic_Description
+		Dynamic_Description,
+		Source
 	)
 VALUES
 	(
@@ -94,5 +95,6 @@ VALUES
 		`<code>${prefix}bot enable supinic</code>`,
 		\"Re-enables the bot in channel <u>supinic</u>\",
 	];
-}'
+}',
+		'supinic/supibot-sql'
 	)

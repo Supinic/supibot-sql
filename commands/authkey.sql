@@ -10,7 +10,8 @@ INSERT INTO
 		Whitelist_Response,
 		Static_Data,
 		Code,
-		Dynamic_Description
+		Dynamic_Description,
+		Source
 	)
 VALUES
 	(
@@ -60,5 +61,6 @@ VALUES
 		default: return { reply: \"You must supply a mode, one of: \\\"generate\\\", \\\"invalidate\\\"\" };
 	}
 })',
-		NULL
+		NULL,
+		'supinic/supibot-sql'
 	)

@@ -10,7 +10,8 @@ INSERT INTO
 		Whitelist_Response,
 		Static_Data,
 		Code,
-		Dynamic_Description
+		Dynamic_Description,
+		Source
 	)
 VALUES
 	(
@@ -370,5 +371,6 @@ VALUES
 		\"Random user, selected game only. Only uses the first word of the game you provide.\",
 		`List of games: <ul>${games}</ul>`
 	];
-}'
+}',
+		'supinic/supibot-sql'
 	)

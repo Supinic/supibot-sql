@@ -10,7 +10,8 @@ INSERT INTO
 		Whitelist_Response,
 		Static_Data,
 		Code,
-		Dynamic_Description
+		Dynamic_Description,
+		Source
 	)
 VALUES
 	(
@@ -57,5 +58,6 @@ VALUES
 		reply: \"Your subtitles are available for 10 minutes here: \" + link
 	};
 })',
-		NULL
+		NULL,
+		'supinic/supibot-sql'
 	)

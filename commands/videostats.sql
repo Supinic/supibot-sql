@@ -10,7 +10,8 @@ INSERT INTO
 		Whitelist_Response,
 		Static_Data,
 		Code,
-		Dynamic_Description
+		Dynamic_Description,
+		Source
 	)
 VALUES
 	(
@@ -69,5 +70,6 @@ VALUES
 		reply: `That video was queued ${total} times before (mostly by: ${top5.join(\"; \")}). Last time it was queued ${sb.Utils.timeDelta(lastPlayedData.Posted)}, by ${lastPlayedData.Name}`
 	};
 }',
-		NULL
+		NULL,
+		'supinic/supibot-sql'
 	)

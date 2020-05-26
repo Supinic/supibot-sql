@@ -10,7 +10,8 @@ INSERT INTO
 		Whitelist_Response,
 		Static_Data,
 		Code,
-		Dynamic_Description
+		Dynamic_Description,
+		Source
 	)
 VALUES
 	(
@@ -291,5 +292,6 @@ VALUES
 	`<code>${prefix}tt vw/vaporwave This is a test</code>`,
 	`Ｔｈｉｓ ｉｓ ａ ｔｅｓｔ`,
 	``
-]'
+]',
+		'supinic/supibot-sql'
 	)

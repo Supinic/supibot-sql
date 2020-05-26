@@ -10,7 +10,8 @@ INSERT INTO
 		Whitelist_Response,
 		Static_Data,
 		Code,
-		Dynamic_Description
+		Dynamic_Description,
+		Source
 	)
 VALUES
 	(
@@ -33,5 +34,6 @@ VALUES
 		reply: (await (sb.Command.get(\"gc\").execute({}, (await sb.VideoLANConnector.currentlyPlaying()).category.meta.url))).reply
 	};
 })',
-		NULL
+		NULL,
+		'supinic/supibot-sql'
 	)

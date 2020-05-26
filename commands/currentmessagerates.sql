@@ -10,7 +10,8 @@ INSERT INTO
 		Whitelist_Response,
 		Static_Data,
 		Code,
-		Dynamic_Description
+		Dynamic_Description,
+		Source
 	)
 VALUES
 	(
@@ -43,5 +44,6 @@ VALUES
 		reply: `Current message rates: ${rates?.Amount ?? 0} messages/minute.`
 	};
 })',
-		NULL
+		NULL,
+		'supinic/supibot-sql'
 	)

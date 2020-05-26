@@ -10,7 +10,8 @@ INSERT INTO
 		Whitelist_Response,
 		Static_Data,
 		Code,
-		Dynamic_Description
+		Dynamic_Description,
+		Source
 	)
 VALUES
 	(
@@ -168,5 +169,6 @@ VALUES
 		reply: `${replyPlace} is currently observing ${timeData.timeZoneName}, which is UTC${offset}, and it\'s ${time.format(\"H:i (Y-m-d)\")} there right now.`
 	};
 })',
-		NULL
+		NULL,
+		'supinic/supibot-sql'
 	)

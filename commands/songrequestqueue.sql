@@ -10,7 +10,8 @@ INSERT INTO
 		Whitelist_Response,
 		Static_Data,
 		Code,
-		Dynamic_Description
+		Dynamic_Description,
+		Source
 	)
 VALUES
 	(
@@ -79,5 +80,6 @@ VALUES
 		reply: `There are ${data.Count} videos in the queue, with a total length of ${delta}. Check it out here: https://supinic.com/stream/song-request/queue`
 	}
 })',
-		NULL
+		NULL,
+		'supinic/supibot-sql'
 	)

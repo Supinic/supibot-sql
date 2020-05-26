@@ -10,7 +10,8 @@ INSERT INTO
 		Whitelist_Response,
 		Static_Data,
 		Code,
-		Dynamic_Description
+		Dynamic_Description,
+		Source
 	)
 VALUES
 	(
@@ -69,5 +70,6 @@ VALUES
 		reply: \"Supibot is currently subbed to: \" + channels.join(\", \") + \" \" + emotes.join(\" \")
 	};
 })',
-		NULL
+		NULL,
+		'supinic/supibot-sql'
 	)

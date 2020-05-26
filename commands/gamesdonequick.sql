@@ -10,7 +10,8 @@ INSERT INTO
 		Whitelist_Response,
 		Static_Data,
 		Code,
-		Dynamic_Description
+		Dynamic_Description,
+		Source
 	)
 VALUES
 	(
@@ -31,5 +32,6 @@ VALUES
 	// const model = await sb.MarkovChain.get(\"gdq-final\");
 	// return { reply: model.sentences(2) };
 })',
-		NULL
+		NULL,
+		'supinic/supibot-sql'
 	)

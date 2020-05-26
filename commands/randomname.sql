@@ -10,7 +10,8 @@ INSERT INTO
 		Whitelist_Response,
 		Static_Data,
 		Code,
-		Dynamic_Description
+		Dynamic_Description,
+		Source
 	)
 VALUES
 	(
@@ -61,5 +62,6 @@ VALUES
 		reply: `Your random ${type} name is: ${name}`
 	};
 })',
-		NULL
+		NULL,
+		'supinic/supibot-sql'
 	)

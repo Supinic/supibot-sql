@@ -10,7 +10,8 @@ INSERT INTO
 		Whitelist_Response,
 		Static_Data,
 		Code,
-		Dynamic_Description
+		Dynamic_Description,
+		Source
 	)
 VALUES
 	(
@@ -130,5 +131,6 @@ VALUES
 		reply: sb.Utils.randArray(this.staticData.dongers)
 	};
 })',
-		NULL
+		NULL,
+		'supinic/supibot-sql'
 	)

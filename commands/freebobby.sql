@@ -10,7 +10,8 @@ INSERT INTO
 		Whitelist_Response,
 		Static_Data,
 		Code,
-		Dynamic_Description
+		Dynamic_Description,
+		Source
 	)
 VALUES
 	(
@@ -26,5 +27,6 @@ VALUES
 	const free = new sb.Date(\"2020-12-11\");
 	return { reply: \"Our boy might be free \" + sb.Utils.timeDelta(free) + \" if he gets his parole TriHard\" };
 }',
-		NULL
+		NULL,
+		'supinic/supibot-sql'
 	)

@@ -10,7 +10,8 @@ INSERT INTO
 		Whitelist_Response,
 		Static_Data,
 		Code,
-		Dynamic_Description
+		Dynamic_Description,
+		Source
 	)
 VALUES
 	(
@@ -50,5 +51,6 @@ VALUES
 		reply: \"Currently logging \" + preciseLines + \" lines in total across all channels, taking up approximately \" + sb.Utils.round(data.Bytes / 1073741824, 3) + \" GB of space.\"
 	};
 })',
-		NULL
+		NULL,
+		'supinic/supibot-sql'
 	)

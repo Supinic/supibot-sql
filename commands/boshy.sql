@@ -10,7 +10,8 @@ INSERT INTO
 		Whitelist_Response,
 		Static_Data,
 		Code,
-		Dynamic_Description
+		Dynamic_Description,
+		Source
 	)
 VALUES
 	(
@@ -56,5 +57,6 @@ VALUES
 			\"; for a complete total of \" + solgrynEnd + \". LOST TO OATMEAL OMEGALUL\"
 	};
 })',
-		NULL
+		NULL,
+		'supinic/supibot-sql'
 	)

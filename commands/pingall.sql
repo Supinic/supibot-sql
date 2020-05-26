@@ -10,7 +10,8 @@ INSERT INTO
 		Whitelist_Response,
 		Static_Data,
 		Code,
-		Dynamic_Description
+		Dynamic_Description,
+		Source
 	)
 VALUES
 	(
@@ -34,5 +35,6 @@ VALUES
 		sb.Master.send(bot.Prefix + (bot.Prefix_Space ? \" \" : \"\") + \"ping\", context.channel);
 	}
 })',
-		NULL
+		NULL,
+		'supinic/supibot-sql'
 	)

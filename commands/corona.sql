@@ -10,7 +10,8 @@ INSERT INTO
 		Whitelist_Response,
 		Static_Data,
 		Code,
-		Dynamic_Description
+		Dynamic_Description,
+		Source
 	)
 VALUES
 	(
@@ -354,5 +355,6 @@ VALUES
 		`<code>${prefix}corona @User</code>`,
 		\"If a given user has set their default location (and it is public), this will check their country\'s corona stats.\"
 	];
-}'
+}',
+		'supinic/supibot-sql'
 	)

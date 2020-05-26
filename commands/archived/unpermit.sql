@@ -10,7 +10,8 @@ INSERT INTO
 		Whitelist_Response,
 		Static_Data,
 		Code,
-		Dynamic_Description
+		Dynamic_Description,
+		Source
 	)
 VALUES
 	(
@@ -51,5 +52,6 @@ VALUES
 
 	return { reply: targetUser.Name + \" has been granted successfully revoked permission.\" };
 }',
-		NULL
+		NULL,
+		'supinic/supibot-sql'
 	)

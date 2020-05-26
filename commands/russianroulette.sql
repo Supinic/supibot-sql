@@ -10,7 +10,8 @@ INSERT INTO
 		Whitelist_Response,
 		Static_Data,
 		Code,
-		Dynamic_Description
+		Dynamic_Description,
+		Source
 	)
 VALUES
 	(
@@ -72,5 +73,6 @@ VALUES
 		return { reply: \"Click! You are safe.\" };
 	}
 })',
-		NULL
+		NULL,
+		'supinic/supibot-sql'
 	)

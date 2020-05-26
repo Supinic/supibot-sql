@@ -10,7 +10,8 @@ INSERT INTO
 		Whitelist_Response,
 		Static_Data,
 		Code,
-		Dynamic_Description
+		Dynamic_Description,
+		Source
 	)
 VALUES
 	(
@@ -51,5 +52,6 @@ VALUES
 		reply: `Suggestion saved, and will eventually be processed (ID ${row.values.ID}) ${emote}`
 	};
 })',
-		NULL
+		NULL,
+		'supinic/supibot-sql'
 	)

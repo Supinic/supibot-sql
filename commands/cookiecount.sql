@@ -10,7 +10,8 @@ INSERT INTO
 		Whitelist_Response,
 		Static_Data,
 		Code,
-		Dynamic_Description
+		Dynamic_Description,
+		Source
 	)
 VALUES
 	(
@@ -129,5 +130,6 @@ VALUES
 	`<code>${prefix}cc list</code>`,
 	`<a href=\'/bot/cookie/list\'>https://supinic.com/bot/cookie/list</a>`,
 	``
-];'
+];',
+		'supinic/supibot-sql'
 	)

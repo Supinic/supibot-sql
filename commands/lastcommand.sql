@@ -10,7 +10,8 @@ INSERT INTO
 		Whitelist_Response,
 		Static_Data,
 		Code,
-		Dynamic_Description
+		Dynamic_Description,
+		Source
 	)
 VALUES
 	(
@@ -49,5 +50,6 @@ VALUES
 			: \"No recent command execution found!\"
 	};
 })',
-		NULL
+		NULL,
+		'supinic/supibot-sql'
 	)

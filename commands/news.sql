@@ -10,7 +10,8 @@ INSERT INTO
 		Whitelist_Response,
 		Static_Data,
 		Code,
-		Dynamic_Description
+		Dynamic_Description,
+		Source
 	)
 VALUES
 	(
@@ -138,5 +139,6 @@ VALUES
 		\"List of usable sources:\",
 		\"<ul>\" + sources.map(i => `<li><a href=\"${i.url}\">${i.id}</a></li>`).join(\"\") + \"</ul>\"
 	];
-}'
+}',
+		'supinic/supibot-sql'
 	)

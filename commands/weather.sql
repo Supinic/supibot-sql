@@ -10,7 +10,8 @@ INSERT INTO
 		Whitelist_Response,
 		Static_Data,
 		Code,
-		Dynamic_Description
+		Dynamic_Description,
+		Source
 	)
 VALUES
 	(
@@ -243,5 +244,6 @@ VALUES
 
 	`<code>${prefix}weather @User <b>(hour+X/day+X/week)</b></code>`,
 	\"Similar to above, shows the user\'s weather, but uses the hour/day/week specifier.\",
-]'
+]',
+		'supinic/supibot-sql'
 	)

@@ -10,7 +10,8 @@ INSERT INTO
 		Whitelist_Response,
 		Static_Data,
 		Code,
-		Dynamic_Description
+		Dynamic_Description,
+		Source
 	)
 VALUES
 	(
@@ -29,5 +30,6 @@ VALUES
 		reply: (data.success) ? data.facts[0] : \"The API returned an internal error!\" 
 	};
 }',
-		NULL
+		NULL,
+		'supinic/supibot-sql'
 	)

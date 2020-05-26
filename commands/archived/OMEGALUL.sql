@@ -10,7 +10,8 @@ INSERT INTO
 		Whitelist_Response,
 		Static_Data,
 		Code,
-		Dynamic_Description
+		Dynamic_Description,
+		Source
 	)
 VALUES
 	(
@@ -35,5 +36,6 @@ VALUES
 		reply: args.join(\" \").replace(/[oOｏＯоО]/g, \" OMEGALUL \")
 	};
 }',
-		NULL
+		NULL,
+		'supinic/supibot-sql'
 	)

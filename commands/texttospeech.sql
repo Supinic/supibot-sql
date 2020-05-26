@@ -10,7 +10,8 @@ INSERT INTO
 		Whitelist_Response,
 		Static_Data,
 		Code,
-		Dynamic_Description
+		Dynamic_Description,
+		Source
 	)
 VALUES
 	(
@@ -218,5 +219,6 @@ VALUES
 		\"Be warned - there is a limit of how many parts of tts you can use in one command!\",
 		`Current limit: ${partsLimit} voices per message`
 	];
-})'
+})',
+		'supinic/supibot-sql'
 	)

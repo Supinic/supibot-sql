@@ -10,7 +10,8 @@ INSERT INTO
 		Whitelist_Response,
 		Static_Data,
 		Code,
-		Dynamic_Description
+		Dynamic_Description,
+		Source
 	)
 VALUES
 	(
@@ -71,5 +72,6 @@ VALUES
 		reply: `Verification completed! You may now use the bot on ${sourcePlatform.capital} as well as ${targetPlatform.capital}.`
 	};
 })',
-		NULL
+		NULL,
+		'supinic/supibot-sql'
 	)

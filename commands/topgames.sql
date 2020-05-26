@@ -10,7 +10,8 @@ INSERT INTO
 		Whitelist_Response,
 		Static_Data,
 		Code,
-		Dynamic_Description
+		Dynamic_Description,
+		Source
 	)
 VALUES
 	(
@@ -38,5 +39,6 @@ VALUES
 		reply: \"Most popular games on Twitch by viewers right now: \" + games.join(\", \")
 	};
 })',
-		NULL
+		NULL,
+		'supinic/supibot-sql'
 	)

@@ -10,7 +10,8 @@ INSERT INTO
 		Whitelist_Response,
 		Static_Data,
 		Code,
-		Dynamic_Description
+		Dynamic_Description,
+		Source
 	)
 VALUES
 	(
@@ -27,5 +28,6 @@ VALUES
 		reply: \"Twitch Legal Team has forced CommanderRoot to remove this and many more APIs. https://twitch-tools.rootonline.de/twitch_legal_notice.php\"
 	};
 })',
-		NULL
+		NULL,
+		'supinic/supibot-sql'
 	)

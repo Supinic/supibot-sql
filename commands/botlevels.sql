@@ -10,7 +10,8 @@ INSERT INTO
 		Whitelist_Response,
 		Static_Data,
 		Code,
-		Dynamic_Description
+		Dynamic_Description,
+		Source
 	)
 VALUES
 	(
@@ -27,5 +28,6 @@ VALUES
 		reply: \"Bots: https://supinic.com/bot/channel-bots // Levels: https://supinic.com/bot/channel-bots/levels // Badges: https://supinic.com/bot/channel-bots/badges\"
 	};
 })',
-		NULL
+		NULL,
+		'supinic/supibot-sql'
 	)

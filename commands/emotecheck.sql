@@ -10,7 +10,8 @@ INSERT INTO
 		Whitelist_Response,
 		Static_Data,
 		Code,
-		Dynamic_Description
+		Dynamic_Description,
+		Source
 	)
 VALUES
 	(
@@ -201,5 +202,6 @@ VALUES
 			: \"No emote set available for that type\"
 	};
 })',
-		NULL
+		NULL,
+		'supinic/supibot-sql'
 	)

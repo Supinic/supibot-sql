@@ -10,7 +10,8 @@ INSERT INTO
 		Whitelist_Response,
 		Static_Data,
 		Code,
-		Dynamic_Description
+		Dynamic_Description,
+		Source
 	)
 VALUES
 	(
@@ -46,5 +47,6 @@ VALUES
 		reply: `I consist of ${commandLines + backendLines} lines of code (backend: ${backendLines}, commands: ${commandLines}); for a total of ${backendLength + commandLength} characters.`
 	};
 }',
-		NULL
+		NULL,
+		'supinic/supibot-sql'
 	)

@@ -10,7 +10,8 @@ INSERT INTO
 		Whitelist_Response,
 		Static_Data,
 		Code,
-		Dynamic_Description
+		Dynamic_Description,
+		Source
 	)
 VALUES
 	(
@@ -25,5 +26,6 @@ VALUES
 		'(async function discord (context) {
 	return { reply: \"Join the Hackerman club today! Now with subscriber emotes supiniOkay https://discord.gg/wHWjRzp\" };
 })',
-		NULL
+		NULL,
+		'supinic/supibot-sql'
 	)

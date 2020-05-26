@@ -10,7 +10,8 @@ INSERT INTO
 		Whitelist_Response,
 		Static_Data,
 		Code,
-		Dynamic_Description
+		Dynamic_Description,
+		Source
 	)
 VALUES
 	(
@@ -144,5 +145,6 @@ VALUES
 		prefix + \"slots (list of words) => randomly shuffled list of emotes\",
 		prefix + \"slots #(pattern) => shuffled list from the pattern\"
 	];
-}'
+}',
+		'supinic/supibot-sql'
 	)
