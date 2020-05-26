@@ -84,8 +84,11 @@ VALUES
 			};
 		}
 		else {
+			const { definition, type } = data[specificIndex];
+			const string = sb.Utils.removeHTML(`(${type}): ${definition}`);
+
 			return {
-				reply: `(${data[specificIndex].type}): ${data[specificIndex].definition} ${extraText}`
+				reply: `${string} ${extraText}`
 			};
 		}
 	}
