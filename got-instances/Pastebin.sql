@@ -14,7 +14,6 @@ VALUES
 		'Pastebin',
 		'function',
 		'(() => ({
-	responseType: \"json\",
 	prefixUrl: \"https://pastebin.com/\",
 	headers: {
 		\"Content-Type\": \"application/x-www-form-urlencoded\",
