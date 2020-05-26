@@ -53,7 +53,7 @@ VALUES
 			cooldown: this.Cooldown / 2
 		};
 	}
-	else if (targetUser.ID === sb.Config.get(\"SELF_ID\")) {
+	else if (targetUser.Name === context.platform.Self_Name) {
 		return {
 			reply: \"I\'m always here, so you don\'t have to \" + context.invocation + \" me :)\",
 			cooldown: this.Cooldown / 2
@@ -129,8 +129,8 @@ VALUES
 				const precedingText = reminderText.slice(0, timeData.ranges[i].start);
 				if (!continues && !precedingText.match(/\\bin\\b\\s*$/)) {
 					continue;
-				}				
-				
+				}
+
 				continues = false;
 				const current = timeData.ranges[i];
 				const next = timeData.ranges[i + 1];
