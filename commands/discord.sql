@@ -24,7 +24,16 @@ VALUES
 		NULL,
 		NULL,
 		'(async function discord (context) {
-	return { reply: \"Join the Hackerman club today! Now with subscriber emotes supiniOkay https://discord.gg/wHWjRzp\" };
+	if (context.privateMessage) {
+		return {
+			success: false,
+			reply: \"There\'s no Discord in whispers...\"
+		};
+	}
+
+	return {
+		reply: (context.channel.Data.discord) ?? \"This channel has no Discord description set up.\"
+	}
 })',
 		NULL,
 		'supinic/supibot-sql'

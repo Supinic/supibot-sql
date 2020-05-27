@@ -57,7 +57,6 @@ VALUES
 			reply: `${userData.Name} is ${string} a Supibot Ambassador in #${channelData.Name}.`
 		};
 	};
-
 	return {
 		variables: [
 			{
@@ -271,6 +270,28 @@ VALUES
 						reply: `Track ID ${ID} (${row.values.Name}) has been stripped of the TODO tag.`
 					};
 				}
+			},
+			{
+				names: [\"discord\"],
+				elevatedChannelAccess: true,
+				parameter: \"arguments\",
+				description: \"If you\'re the channel owner or a channel ambassador, you can use this to set the response of the discord command.\",
+				set: async (context, ...args) => {
+					context.channel.Data.discord = args.join(\" \");
+					await context.channel.saveProperty(\"Data\");
+
+					return {
+						reply: `Discord description set successfully.`
+					};
+				},
+				unset: async (context) => {
+					context.channel.Data.discord = null;
+					await context.channel.saveProperty(\"Data\");
+
+					return {
+						reply: `Discord description unset successfully.`
+					};
+				}
 			}
 		]
 	};
@@ -306,6 +327,16 @@ VALUES
 			reply: `Only administrators can work with the type \"${type}\"!`
 		};
 	}
+	else if (
+		target.elevatedChannelAccess
+		&& !context.channel.isUserChannelOwner(context.user)
+		&& !context.channel.isUserAmbassador(context.user)
+	) {
+		return {
+			success: false,
+			reply: `Only channel owners and ambassadords can work with the type \"${type}\"!`
+		};
+	}
 
 	if (target.parameter === \"arguments\") {
 		return await target[invocation](context, ...args);
@@ -316,7 +347,7 @@ VALUES
 			if (typeof target.getLastID !== \"function\") {
 				return {
 					success: false,
-					reply: `You cannot use the keyword \"last\" while ${invocation}ting a ${type}!`	
+					reply: `You cannot use the keyword \"last\" while ${invocation}ting a ${type}!`
 				};
 			}
 
