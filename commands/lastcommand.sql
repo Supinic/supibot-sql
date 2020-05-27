@@ -30,6 +30,7 @@ VALUES
 			.where(\"Command <> %n\", this.ID)
 			.where(\"User_Alias = %n\", context.user.ID)
 			.where(\"Executed > DATE_ADD(NOW(), INTERVAL -1 MINUTE)\")
+			.where(\"Result IS NOT NULL\")
 			.orderBy(\"Executed DESC\")
 			.limit(1)
 			.single();
