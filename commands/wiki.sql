@@ -48,6 +48,7 @@ VALUES
 		}
 	}
 
+	const query = args.join(\" \").split(/(?:(\\W))/).map(i => i[0].toUpperCase() + i.slice(1)).join(\"\");
 	const rawData = await sb.Got({
 		url: `https://${language}.wikipedia.org/w/api.php`,
 		searchParams: new sb.URLParams()
@@ -55,7 +56,7 @@ VALUES
 			.set(\"action\", \"query\")
 			.set(\"prop\", \"extracts\")
 			.set(\"redirects\", \"1\")
-			.set(\"titles\", args.map(i => sb.Utils.capitalize(i)).join(\" \"))
+			.set(\"titles\", query)
 			.toString()
 	}).json();
 
