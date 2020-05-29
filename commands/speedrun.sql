@@ -19,7 +19,7 @@ VALUES
 		'speedrun',
 		NULL,
 		'ping',
-		NULL,
+		'Fetches the current world record speedrun of a given name in the default category. Check extended help for more info.',
 		10000,
 		NULL,
 		NULL,

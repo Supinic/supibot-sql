@@ -17,9 +17,9 @@ VALUES
 	(
 		223,
 		'randommeal',
-		NULL,
+		'[\"rmeal\"]',
 		'ping,pipe',
-		NULL,
+		'Searches for a meal recipe by its name, or fetches a random one, if no search query was provided.',
 		0,
 		NULL,
 		NULL,
