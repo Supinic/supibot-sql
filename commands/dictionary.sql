@@ -68,31 +68,26 @@ VALUES
 			reply: \"There is no such defintion!\"
 		};
 	}
-	else if (data.length === 1) {
+	else if (specificIndex < 0 || specificIndex >= data.length) {
 		return {
-			reply: `(${data[0].type}): ${data[0].definition}`
+			reply: \"Specified ID is out of bounds!\"
 		};
 	}
-	else {
+
+	let extraText = \"\";
+	if (data.length > 1) {
 		const plural  = (data.length - 1 === 1) ? \"\" : \"s\";
-		const extraText = (specificIndex === 0)
+		extraText = (specificIndex === 0)
 			? \"(\" + (data.length - 1) + \" more definition\" + plural + \" found\" + \")\"
 			: \"\";
-
-		if (specificIndex < 0 || specificIndex >= data.length) {
-			return {
-				reply: \"Specified ID is out of bounds!\"
-			};
-		}
-		else {
-			const { definition, type } = data[specificIndex];
-			const string = sb.Utils.removeHTML(`(${type}): ${definition}`);
-
-			return {
-				reply: `${string} ${extraText}`
-			};
-		}
 	}
+
+	const { definition, type } = data[specificIndex];
+	const string = sb.Utils.removeHTML(`(${type}): ${definition}`);
+
+	return {
+		reply: `${string} ${extraText}`
+	};
 })',
 		NULL,
 		'supinic/supibot-sql'
