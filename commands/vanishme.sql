@@ -18,7 +18,7 @@ VALUES
 		14,
 		'vanishme',
 		NULL,
-		'pipe,skip-banphrase,whitelist',
+		'pipe,skip-banphrase,system,whitelist',
 		'Posts !vanish',
 		5000,
 		NULL,

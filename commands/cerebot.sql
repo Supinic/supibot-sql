@@ -18,7 +18,7 @@ VALUES
 		81,
 		'cerebot',
 		NULL,
-		'pipe,skip-banphrase,whitelist',
+		'pipe,skip-banphrase,system,whitelist',
 		'Posts a command for cerebot to execute.',
 		5000,
 		NULL,
