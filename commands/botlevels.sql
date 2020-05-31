@@ -17,7 +17,7 @@ VALUES
 	(
 		108,
 		'botlevels',
-		NULL,
+		'[\"bots\"]',
 		'skip-banphrase',
 		'Posts the summary of community bots in #supinic channel on Twitch.',
 		10000,
