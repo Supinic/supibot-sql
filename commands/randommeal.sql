@@ -20,7 +20,7 @@ VALUES
 		'[\"rmeal\"]',
 		'ping,pipe',
 		'Searches for a meal recipe by its name, or fetches a random one, if no search query was provided.',
-		0,
+		10000,
 		NULL,
 		NULL,
 		'(async function randomMeal (context, ...args) {

@@ -20,7 +20,7 @@ VALUES
 		'[\"cock\", \"drinks\", \"tail\"]',
 		'ping,pipe',
 		'Searches for a cocktail recipe by its name, or fetches a random one, if no search query was provided.',
-		0,
+		10000,
 		NULL,
 		NULL,
 		'(async function randomCocktail (context, ...args) {
