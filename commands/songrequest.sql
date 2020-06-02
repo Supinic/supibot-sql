@@ -82,13 +82,46 @@ VALUES
 		}
 	}
 
+	let startTime = null;
+	let endTime = null;
 	let type = \"youtube\";
-	for (let i = 0; i < args.length; i++) {
+	for (let i = args.length - 1; i >= 0; i--) {
 		const token = args[i];
 		if (token.includes(\"type:\")) {
 			type = token.split(\":\")[1];
 			args.splice(i, 1);
 		}
+		else if (token.includes(\"start:\")) {
+			const string = token.split(\":\").slice(1).join(\":\");
+			startTime = sb.Utils.parseVideoDuration(string);
+			args.splice(i, 1);
+
+			if (!Number.isFinite(startTime) || startTime <= 0 || startTime > Math.pow(2, 32)) {
+				return {
+					success: false,
+					reply: \"Invalid start time!\"
+				};
+			}
+		}
+		else if (token.includes(\"end:\")) {
+			const string = token.split(\":\").slice(1).join(\":\");
+			endTime = sb.Utils.parseVideoDuration(string);
+			args.splice(i, 1);
+
+			if (!Number.isFinite(endTime) || endTime <= 0 || endTime > Math.pow(2, 32)) {
+				return {
+					success: false,
+					reply: \"Invalid end time!\"
+				};
+			}
+		}
+	}
+
+	if (startTime !== null && endTime !== null && startTime > endTime) {
+		return {
+			success: false,
+			reply: \"Start time cannot be greater than the end time!\"
+		};
 	}
 
 	let url = args.join(\" \");
@@ -239,15 +272,19 @@ VALUES
 
 	const authorString = (data.author) ? ` by ${data.author}` : \"\";
 	const length = data.duration ?? data.length ?? null;
-	if (length !== null && length > limit) {
+	const checkLength = (startTime === null && endTime === null)
+		? length
+		: ((endTime ?? length) - (startTime ?? 0));
+
+	if (checkLength !== null && checkLength > limit) {
 		return {
-			reply: `Video \"${data.name}\"${authorString} is too long: ${length}s > ${limit}s`
+			reply: `Video \"${data.name}\"${authorString} is too long: ${checkLength}s > ${limit}s`
 		};
 	}
 	else {
 		let id = null;
 		try {
-			id = await sb.VideoLANConnector.add(data.link, context.user.ID, data);
+			id = await sb.VideoLANConnector.add(data.link, { startTime, endTime });
 		}
 		catch (e) {
 			console.warn(\"sr error\", e);
@@ -294,11 +331,25 @@ VALUES
 			Status: videoStatus,
 			Started: started,
 			User_Alias: context.user.ID,
+			Start_Time: (startTime !== null) ? (startTime * 1000) : null,
+			End_Time: (endTime !== null) ? (endTime * 1000) : null
 		});
 		await row.save();
+	
+		const seek = [];
+		if (startTime !== null) {
+			seek.push(`starting at ${startTime} seconds`);
+		}
+		if (endTime !== null) {
+			seek.push(`ending at ${endTime} seconds`);
+		}
+
+		const seekString = (seek.length > 0)
+			? `Your video is ${seek.join(\" and \")}.`
+			: \"\";
 
 		return {
-			reply: `Video \"${data.name}\"${authorString} successfully added to queue with ID ${id}! It is playing ${when}`
+			reply: `Video \"${data.name}\"${authorString} successfully added to queue with ID ${id}! It is playing ${when}. ${seekString}`
 		};
 	}
 })',
