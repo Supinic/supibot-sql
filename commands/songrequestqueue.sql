@@ -28,8 +28,8 @@ VALUES
 		'(async function songRequestQueue (context) {
 	const state = sb.Config.get(\"SONG_REQUESTS_STATE\");
 	if (state === \"off\") {
-		return { 
-			reply: \"Song requests are currently turned off.\" 
+		return {
+			reply: \"Song requests are currently turned off.\"
 		};
 	}
 	else if (state === \"dubtrack\") {
@@ -40,19 +40,13 @@ VALUES
 	}
 	else if (state === \"cytube\") {
 		const cytube = (await sb.Command.get(\"cytube\").execute(context)).reply;
-		return { 
+		return {
 			reply: \"Song requests are currently using Cytube. Join here: \" + cytube + \" :)\"
 		};
 	}
 
-	const data = await sb.Query.getRecordset(rs => rs
-		.select(\"COUNT(*) AS Count\", \"SUM(Length) AS Length\")
-		.from(\"chat_data\", \"Song_Request\")
-		.where(\"Status = %s OR Status = %s\", \"Current\", \"Queued\")
-		.single()
-	);
-
-	if (data.Length === null) {
+	const data = await sb.VideoLANConnector.getNormalizedPlaylist();
+	if (data.length === 0) {
 		return {
 			reply: \"No songs are currently queued. Check history here: https://supinic.com/stream/song-request/history\"
 		};
@@ -60,7 +54,7 @@ VALUES
 
 	let status = null;
 	try {
-		status = await sb.VideoLANConnector.status(); 
+		status = await sb.VideoLANConnector.status();
 	}
 	catch (e) {
 		if (e.message === \"ETIMEDOUT\") {
@@ -73,11 +67,14 @@ VALUES
 		}
 	}
 
-	const length = data.Length - status.time;
+	const total = data.reduce((acc, cur) => acc += cur.Duration, 0);
+	const current = data.find(i => i.Status === \"Current\");
+	
+	const length = total - (current.End_Time ?? status.time);
 	const delta = sb.Utils.timeDelta(sb.Date.now() + length * 1000, true);
 
 	return {
-		reply: `There are ${data.Count} videos in the queue, with a total length of ${delta}. Check it out here: https://supinic.com/stream/song-request/queue`
+		reply: `There are ${data.length} videos in the queue, with a total length of ${delta}. Check it out here: https://supinic.com/stream/song-request/queue`
 	}
 })',
 		NULL,

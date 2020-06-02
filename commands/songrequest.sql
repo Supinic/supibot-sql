@@ -69,12 +69,7 @@ VALUES
 		return { reply: \"You must search for a link or a video description!\" };
 	}
 
-	const queue = await sb.Query.getRecordset(rs => rs
-		.select(\"Length\", \"Status\", \"User_Alias\", \"VLC_ID\")
-		.from(\"chat_data\", \"Song_Request\")
-		.where(\"Status IN %s+\", [\"Current\", \"Queued\"])
-	);
-
+	const queue = await sb.VideoLANConnector.getNormalizedPlaylist();
 	const userRequests = queue.filter(i => i.User_Alias === context.user.ID);
 	if (userRequests.length >= this.staticData.videoLimit) {
 		return {
@@ -245,7 +240,7 @@ VALUES
 				sb.Config.get(\"API_GOOGLE_YOUTUBE\")
 			);
 
-			lookup = (data[0]) 
+			lookup = (data[0])
 				? { link: data[0].ID }
 				: null;
 		}
@@ -266,9 +261,9 @@ VALUES
 		}
 	}
 
-	const limit = (queue.length === 0) 
+	const limit = (queue.length === 0)
 		? this.staticData.emptyQueueLimit
-		: this.staticData.limit; 
+		: this.staticData.limit;
 
 	const authorString = (data.author) ? ` by ${data.author}` : \"\";
 	const length = data.duration ?? data.length ?? null;
@@ -300,11 +295,14 @@ VALUES
 		const status = await sb.VideoLANConnector.status();
 
 		if (queue.length > 0) {
-			const { time, length } = status;
-			const playingDate = new sb.Date().addSeconds(length - time);
+			const current = queue.find(i => i.Status === \"Current\");
+			const { time: currentVideoPosition, length } = status;
+			const endTime = current.End_Time ?? length;
+
+			const playingDate = new sb.Date().addSeconds(endTime - currentVideoPosition);
 			const inQueue = queue.filter(i => i.Status === \"Queued\");
 
-			for (const { Length: length } of inQueue) {
+			for (const { Duration: length } of inQueue) {
 				playingDate.addSeconds(length ?? 0);
 			}
 
@@ -335,7 +333,7 @@ VALUES
 			End_Time: endTime ?? null
 		});
 		await row.save();
-	
+
 		const seek = [];
 		if (startTime !== null) {
 			seek.push(`starting at ${startTime} seconds`);

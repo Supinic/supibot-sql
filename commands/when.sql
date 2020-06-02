@@ -30,18 +30,7 @@ VALUES
 		};
 	}
 
-	const prefixSymbol = sb.Config.get(\"VIDEO_TYPE_REPLACE_PREFIX\");
-	const queue = await sb.Query.getRecordset(rs => rs
-		.select(\"Length\", \"Link\", \"Name\", \"Status\", \"User_Alias\")
-		.select(\"Video_Type.Link_Prefix AS Prefix\")
-		.from(\"chat_data\", \"Song_Request\")
-		.join({
-			toDatabase: \"data\",
-			toTable: \"Video_Type\",
-			on: \"Video_Type.ID = Song_Request.Video_Type\"
-		})
-		.where(\"Status IN %s+\", [\"Current\", \"Queued\"])
-	);
+	const queue = await sb.VideoLANConnector.getNormalizedPlaylist();
 	const personal = queue.filter(i => i.User_Alias === context.user.ID);
 
 	if (queue.length === 0) {
@@ -59,7 +48,7 @@ VALUES
 	let target = personal[0];
 	let timeRemaining = 0;
 
-	if (target.Status === \"Current\") {		
+	if (target.Status === \"Current\") {
 		if (personal.length === 1) {
 			return {
 				reply: `Your request \"${target.Name}\" is playing right now. You don\'t have any other videos in the queue.`
@@ -74,13 +63,15 @@ VALUES
 	let index = 0;
 	let loopItem = queue[index];
 	while (loopItem !== target && index < queue.length) {
-		timeRemaining += loopItem.Length;
+		timeRemaining += loopItem.Duration;
 		loopItem = queue[++index];
 	}
 
 	const status = await sb.VideoLANConnector.status();
+	const current = queue.find(i => i.Status === \"Current\");
 	if (status) {
-		timeRemaining -= status.time;
+		const endTime = current.End_Time ?? status.time;
+		timeRemaining -= endTime;
 	}
 
 	const delta = sb.Utils.formatTime(timeRemaining);
