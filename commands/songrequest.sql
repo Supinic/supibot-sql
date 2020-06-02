@@ -47,7 +47,20 @@ VALUES
 		\"iplis.ru\",
 		\"02ip.ru\",
 		\"ezstat.ru\"
-	]
+	],
+	parseTimestamp: (string) => {
+		const type = sb.Utils.linkParser.autoRecognize(string);
+		if (type === \"youtube\" && string.includes(\"t=\")) {
+			const { parse } = require(\"url\");
+			let { query } = parse(string);
+
+			if (/t=\\d+/.test(query)) {
+				query = query.replace(/(t=\\d+\\b)/, \"$1sec\");
+			}
+
+			return sb.Utils.parseDuration(query, { target: \"sec\" });
+		}
+	}
 })',
 		'(async function songRequest (context, ...args) {
 	const state = sb.Config.get(\"SONG_REQUESTS_STATE\");
@@ -112,6 +125,12 @@ VALUES
 		}
 	}
 
+	let url = args.join(\" \");
+	const potentialTimestamp = this.staticData.parseTimestamp(url);
+	if (potentialTimestamp && startTime === null) {
+		startTime = potentialTimestamp;
+	}
+
 	if (startTime !== null && endTime !== null && startTime > endTime) {
 		return {
 			success: false,
@@ -119,7 +138,6 @@ VALUES
 		};
 	}
 
-	let url = args.join(\" \");
 	const parsedURL = require(\"url\").parse(url);
 	let data = null;
 
