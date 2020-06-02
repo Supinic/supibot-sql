@@ -314,7 +314,7 @@ VALUES
 					reply: sb.Utils.tag.trim `
 						Check all suggestions: https://supinic.com/bot/suggestions/list
 						||
-						Your suggestions (requires login): https://supinic.com/bot/suggestions/mine
+						Your suggestions (requires login): https://supinic.com/bot/suggestions/list?columnName=${context.user.Name}
 					`
 				};
 			}
@@ -329,13 +329,13 @@ VALUES
 
 			const {
 				ID,
-				Date: date, 
+				Date: date,
 				Last_Update: update,
 				Status: status,
 				Text: text,
 				User_Alias: user
 			} = row.values;
-			
+
 			if (status === \"Quarantined\") {
 				return {
 					reply: \"This suggestion has been quarantined.\"
@@ -345,12 +345,12 @@ VALUES
 			const updated = (update)
 				? `, last updated ${sb.Utils.timeDelta(update)}`
 				: \"\";
-			
+
 			const userData = await sb.User.get(user, true);
 			return {
 				reply: sb.Utils.tag.trim `
 					Suggestion ID ${ID}
-					from ${userData.Name}: 
+					from ${userData.Name}:
 					status ${status}
 					(posted ${sb.Utils.timeDelta(date)}${updated}):
 					${text}
