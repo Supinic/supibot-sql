@@ -35,14 +35,14 @@ VALUES
 			sb.Master.send(\"Pulling from master PogChamp 👉\", context.channel);
 			await shell(\"git checkout -- yarn.lock package.json\");
 			const result = await shell(\"git pull origin master\");
-			console.log(\"pull result\", result);
+			console.log(\"pull result\", result.stdout, result.stderr);
 		});
 	}
 	if (types.includes(\"all\") || types.includes(\"yarn\") || types.includes(\"upgrade\")) {
 		queue.push(async () => {
 			sb.Master.send(\"Updating supi-core module PogChamp 👉\", context.channel);
 			const result = await shell(\"yarn upgrade supi-core\");
-			console.log(\"upgrade result\", result);
+			console.log(\"upgrade result\", result.stdout, result.stderr);
 		});
 	}
 
