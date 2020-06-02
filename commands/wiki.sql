@@ -48,7 +48,7 @@ VALUES
 		}
 	}
 
-	const query = args.join(\" \").split(/(?:(\\W))/).map(i => i[0].toUpperCase() + i.slice(1)).join(\"\");
+	const query = args.join(\" \").split(/(?:(\\W))/).filter(Boolean).map(i => i[0].toUpperCase() + i.slice(1)).join(\"\");
 	const rawData = await sb.Got({
 		url: `https://${language}.wikipedia.org/w/api.php`,
 		searchParams: new sb.URLParams()
