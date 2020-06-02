@@ -331,8 +331,8 @@ VALUES
 			Status: videoStatus,
 			Started: started,
 			User_Alias: context.user.ID,
-			Start_Time: (startTime !== null) ? (startTime * 1000) : null,
-			End_Time: (endTime !== null) ? (endTime * 1000) : null
+			Start_Time: startTime ?? null,
+			End_Time: endTime ?? null
 		});
 		await row.save();
 	
