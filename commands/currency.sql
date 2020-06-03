@@ -32,7 +32,8 @@ VALUES
 
 	if (!first || !second) {
 		return {
-			reply: \"Invalid syntax! Consult the command\'s help for more info.\",
+			success: false,
+			reply: \"Invalid syntax! Use (amount) (from-currency) to (to-currency) - e.g. 1 USD to EUR\",
 			cooldown: 2500
 		};
 	}
@@ -54,6 +55,7 @@ VALUES
 	amount = amount.replace(/[kmbt]/gi, \"\").replace(/,/g, \".\");
 	if (!Number(amount)) {
 		return {
+			success: false,
 			reply: \"The amount of currency must be a proper finite number!\",
 			cooldown: {
 				length: 2500
@@ -64,7 +66,8 @@ VALUES
 	const currencySymbol = first.toUpperCase() + \"_\" + second.toUpperCase();
 	if (!(/[A-Z]{3}_[A-Z]{3}/.test(currencySymbol))) {
 		return {
-			reply: \"Invalid syntax! Consult the command\'s help for more info.\",
+			success: false,
+			reply: \"Invalid syntax! Use (amount) (from-currency) to (to-currency) - e.g. 1 USD to EUR\",
 			cooldown: 2500
 		};
 	}
