@@ -120,6 +120,7 @@ VALUES
 			\"cockcourt\",
 			\"cosplaygirls\",
 			\"moobs\",
+			\"fatasses\",
 			\"feetpics\",
 			\"foot\",
 			\"russianbabes\"
