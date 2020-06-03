@@ -44,7 +44,7 @@ VALUES
 		}
 	}
 	
-	const meal = data.meals[0];
+	const meal = sb.Utils.randArray(data.meals);
 	const ingredients = Object.entries(meal).filter(([key, value]) => /ingredient\\d+/i.test(key)).map(([key, value]) => value).filter(Boolean);
 
 	return {
