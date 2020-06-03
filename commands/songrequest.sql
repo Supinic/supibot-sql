@@ -291,7 +291,7 @@ VALUES
 
 	if (checkLength !== null && checkLength > limit) {
 		return {
-			reply: `Video \"${data.name}\"${authorString} is too long: ${checkLength}s > ${limit}s`
+			reply: `Video \"${data.name}\"${authorString} is too long: ${checkLength}s > ${limit}s. However, you can change the start and end points of the video with these arguments, e.g.: start:20 end:60`
 		};
 	}
 	else {
