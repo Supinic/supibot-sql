@@ -24,6 +24,11 @@ VALUES
 		NULL,
 		NULL,
 		'(async function currency (context, amount, first, separator, second)  {
+	if (!second && !separator) {
+		second = first;
+		first = amount;
+		amount = \"1\";
+	}
 	if (!second) {
 		second = separator;
 		first = amount;
