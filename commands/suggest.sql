@@ -17,14 +17,14 @@ VALUES
 	(
 		48,
 		'suggest',
-		NULL,
+		'[\"suggestions\"]',
 		'ping,skip-banphrase',
 		'Suggest a feature for Supinic, regarding Supibot, Discord/Cytube, or the website. Posts links to a suggestion list if you don\'t provide any text.',
 		60000,
 		NULL,
 		NULL,
 		'(async function suggest (context, ...args) {
-	if (args.length === 0) {
+	if (args.length === 0 || context.invcation === \"suggestions\") {
 		return {
 			reply: sb.Utils.tag.trim `
 				All suggestions: https://supinic.com/bot/suggestions/list
