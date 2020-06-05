@@ -315,7 +315,7 @@ VALUES
 		if (queue.length > 0) {
 			const current = queue.find(i => i.Status === \"Current\");
 			const { time: currentVideoPosition, length } = status;
-			const endTime = current.End_Time ?? length;
+			const endTime = current?.End_Time ?? length;
 
 			const playingDate = new sb.Date().addSeconds(endTime - currentVideoPosition);
 			const inQueue = queue.filter(i => i.Status === \"Queued\");

@@ -70,7 +70,7 @@ VALUES
 	const total = data.reduce((acc, cur) => acc += cur.Duration, 0);
 	const current = data.find(i => i.Status === \"Current\");
 	
-	const length = total - (current.End_Time ?? status.time);
+	const length = total - (current?.End_Time ?? status.time);
 	const delta = sb.Utils.timeDelta(sb.Date.now() + length * 1000, true);
 
 	return {
