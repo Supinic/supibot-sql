@@ -28,7 +28,7 @@ VALUES
 	let script = null;	
 
 	try {
-		script = new vm.Script(\"(async () => {\\n\" + args.join(\" \") + \"\\n})()\");
+		script = new vm.Script(`(async () => {\\n\"use strict\";\\n${args.join(\" \")}\\n})()`);
 	}
 	catch (e) {
 		return {
