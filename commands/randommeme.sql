@@ -123,6 +123,7 @@ VALUES
 			\"fatasses\",
 			\"feetpics\",
 			\"foot\",
+			\"instagrammodels\",
 			\"russianbabes\"
 		],
 		defaultMemeSubreddits: [
