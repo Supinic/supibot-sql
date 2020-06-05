@@ -48,7 +48,7 @@ VALUES
 	);
 
 	return {
-		reply: \"Currently logging \" + preciseLines + \" lines in total across all channels, taking up approximately \" + sb.Utils.round(data.Bytes / 1073741824, 3) + \" GB of space.\"
+		reply: \"Currently logging \" + preciseLines + \" lines in total across all channels, taking up approximately \" + sb.Utils.round(data.Bytes / (10 ** 9), 3) + \" GB of space.\"
 	};
 })',
 		NULL,
