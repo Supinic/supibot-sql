@@ -24,16 +24,23 @@ VALUES
 		NULL,
 		NULL,
 		'(async function atop () {
-	const top = (await sb.Query.getRecordset(rs => rs
-		.select(\"Name\", \"SUM(Message_Count) AS Total\")
+	const top = await sb.Query.getRecordset(rs => rs
+		.select(\"User_Alias\", \"SUM(Message_Count) AS Total\")
 		.from(\"chat_data\", \"Message_Meta_User_Alias\")
-		.join(\"chat_data\", \"User_Alias\")
 		.groupBy(\"User_Alias\")
 		.orderBy(\"SUM(Message_Count) DESC\")
 		.limit(10)
-	)).map(i => i.Name + \": \" + i.Total).join(\"; \")
+	);
 
-	return { reply: \"Top users by total chat lines across all channels: \" + top };
+	const users = await sb.User.getMultiple(top.map(i => i.User_Alias));
+	const string = top.map((stats, index) => {
+		const user = users.find(i => stats.User_Alias === i.ID);
+		return `#${index + 1}: ${user.Name} (${stats.Total})`;
+	}).join(\"; \");
+
+	return { 
+		reply: \"Top users by total chat lines across all channels: \" + string
+	};
 })',
 		NULL,
 		'supinic/supibot-sql'
