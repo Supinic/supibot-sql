@@ -60,21 +60,22 @@ VALUES
 		'(async function check (context, type, identifier) {
 	if (!type) {
 		return {
+			success: false,
 			reply: \"No type provided! Please see the help of this command for more info.\"
 		};
 	}
 
 	switch (type.toLowerCase()) {
 		case \"afk\": {
-			if (!identifier) {
-				return { reply: \"Using my advanced quantum processing, I have concluded that you are not AFK! (no user provided)\" };
+			if (!identifier || identifier.toLowerCase() === context.user.Name) {
+				return { reply: \"Using my advanced quantum processing, I have concluded that you are actually not AFK!\" };
 			}
 
 			const targetUser = await sb.User.get(identifier, true);
 			if (!targetUser) {
 				return { reply: \"That user was not found!\" };
 			}
-			else if (targetUser.ID === sb.Config.get(\"SELF_ID\")) {
+			else if (targetUser.Name === context.platform.Self_Name) {
 				return { reply: \"MrDestructoid I\'m never AFK MrDestructoid I\'m always watching MrDestructoid\" };
 			}
 
@@ -109,7 +110,13 @@ VALUES
 
 			if (!targetUser) {
 				return {
+					success: false,
 					reply: \"Provided user does not exist!\"
+				};
+			}
+			else if (targetUser.Name === context.platform.Self_Name) {
+				return {
+					reply: \"No peeking! 🍪🤖🛡 👀\"
 				};
 			}
 
@@ -312,11 +319,25 @@ VALUES
 			if (!identifier) {
 				return {
 					reply: sb.Utils.tag.trim `
-						Check all suggestions: https://supinic.com/bot/suggestions/list
+						Check all suggestions:
+						https://supinic.com/bot/suggestions/list
 						||
-						Your suggestions (requires login): https://supinic.com/bot/suggestions/list?columnName=${context.user.Name}
+						Your suggestions (requires login):
+						https://supinic.com/bot/suggestions/list?columnName=${context.user.Name}
 					`
 				};
+			}
+
+			if (identifier === \"last\") {
+				identifier = await sb.Query.getRecordset(rs => rs
+					.select(\"ID\")
+					.from(\"data\", \"Suggestion\")
+					.where(\"User_Alias = %n\", context.user.ID)
+					.orderBy(\"ID DESC\")
+					.limit(1)
+					.single()
+					.flat(\"ID\")
+				);
 			}
 
 			const row = await sb.Query.getRow(\"data\", \"Suggestion\");
