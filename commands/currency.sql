@@ -34,7 +34,6 @@ VALUES
 		first = amount;
 		amount = \"1\";
 	}
-
 	if (!first || !second) {
 		return {
 			success: false,
@@ -42,7 +41,6 @@ VALUES
 			cooldown: 2500
 		};
 	}
-
 	let multiplier = 1;
 	if (/k/i.test(amount)) {
 		multiplier = 1.0e3;
@@ -56,7 +54,6 @@ VALUES
 	else if (/t/i.test(amount)) {
 		multiplier = 1.0e12;
 	}
-
 	amount = amount.replace(/[kmbt]/gi, \"\").replace(/,/g, \".\");
 	if (!Number(amount)) {
 		return {
@@ -67,7 +64,6 @@ VALUES
 			}
 		};
 	}
-
 	const currencySymbol = first.toUpperCase() + \"_\" + second.toUpperCase();
 	if (!(/[A-Z]{3}_[A-Z]{3}/.test(currencySymbol))) {
 		return {
@@ -76,11 +72,9 @@ VALUES
 			cooldown: 2500
 		};
 	}
-
 	if (!this.data.cache) {
 		this.data.cache = {};
 	}
-
 	if (!this.data.cache[currencySymbol] || sb.Date.now() > this.data.cache[currencySymbol].expiry) {
 		const { statusCode, body: data } = await sb.Got({
 			prefixUrl: \"https://free.currencyconverterapi.com/api\",
@@ -94,14 +88,12 @@ VALUES
 				.set(\"apiKey\", sb.Config.get(\"API_FREE_CURRENCY_CONVERTER\"))
 				.toString()
 		});
-
 		if (statusCode !== 200) {
 			throw new sb.errors.APIError({
 				statusCode,
 				apiName: \"CurrencyConverterAPI\"
 			});
 		}
-
 		if (typeof data[currencySymbol] === \"number\") {
 			this.data.cache[currencySymbol] = {
 				ratio: data[currencySymbol],
@@ -115,7 +107,6 @@ VALUES
 			};
 		}
 	}
-
 	const { ratio } = this.data.cache[currencySymbol];
 	if (typeof ratio === \"number\") {
 		return {
