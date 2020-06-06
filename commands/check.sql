@@ -320,10 +320,10 @@ VALUES
 				return {
 					reply: sb.Utils.tag.trim `
 						Check all suggestions:
-						https://supinic.com/bot/suggestions/list
+						https://supinic.com/data/suggestion/list
 						||
 						Your suggestions (requires login):
-						https://supinic.com/bot/suggestions/list?columnName=${context.user.Name}
+						https://supinic.com/data/suggestion/list?columnName=${context.user.Name}
 					`
 				};
 			}
