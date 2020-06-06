@@ -19,7 +19,7 @@ VALUES
 		'check',
 		NULL,
 		'ping,pipe',
-		'Checks certain variables you have set. Currently supports \"reminder\", \"cookie\".',
+		'Checks certain user or system variables. For a list of types, check the command\'s extended help.',
 		10000,
 		NULL,
 		'
@@ -49,6 +49,11 @@ VALUES
 			name: \"reset\",
 			aliases: [],
 			description: `Checks your last \"reset\".`
+		},
+		{
+			name: \"sr\",
+			aliases: [\"songrequests\"],
+			description: `For supinic\'s Twitch channel, checks the current status of song requests.`
 		},
 		{
 			name: \"suggest\",
@@ -311,6 +316,20 @@ VALUES
 					? `Your last \"reset\" was ${sb.Utils.timeDelta(last.Timestamp)}.`
 					: `You have never noted down a \"reset\" before.`
 			}
+		}
+
+		case \"sr\": 
+		case \"songrequests\": {	
+			if (context?.channel.ID !== 38) {				
+				return {
+					success: false,
+					reply: \"Only usable in Supinic\'s Twitch channel!\"
+				};
+			}
+
+			return {
+				reply: `Current song requests status: ${sb.Config.get(\"SONG_REQUESTS_STATE\")}`
+			};
 		}
 
 		case \"suggest\":
