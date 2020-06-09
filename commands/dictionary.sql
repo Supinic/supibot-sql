@@ -19,7 +19,7 @@ VALUES
 		'dictionary',
 		'[\"define\", \"def\", \"dict\"]',
 		'ping,pipe',
-		'Fetches the dictionary definition of a word. Add a number at the end to access specific definition index if the given word has multiple definitions.',
+		'Fetches the dictionary definition of a word. If there are multiple definitions, you can add \"index:#\" with a number to access specific definition indexes.',
 		10000,
 		NULL,
 		NULL,
