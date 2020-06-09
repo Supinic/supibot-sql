@@ -24,7 +24,7 @@ VALUES
 		NULL,
 		NULL,
 		'(async function vod (context, target, type) {
-	if (target === \"current\" && !type) {
+	if ((target === \"current\" || target === \"exact\") && !type) {
 		type = target;
 		target = null;
 	}
@@ -69,16 +69,17 @@ VALUES
 	const delta = sb.Utils.timeDelta(new sb.Date(data.created_at));
 	const prettyDuration = data.duration.match(/\\d+[hm]/g).join(\", \");
 
-	if (type === \"current\") {
+	if (type === \"current\" || type === \"exact\") {
 		if (!liveString) {			
 			return {
-				reply: `Channel is not currently live, no current timestamp supported.`
+				reply: `Channel is not currently live, no current/exact timestamp supported.`
 			};
 		}
 
-		const stamp = sb.Utils.parseDuration(data.duration, { target: \"sec\" }) - 90;
+		const offset = (type === \"current\") ? 90 : 0;
+		const stamp = sb.Utils.parseDuration(data.duration, { target: \"sec\" }) - offset;
 		return {
-			reply: `Current VOD timestamp: ${data.url}?t=${(stamp < 0) ? 0 : stamp}s`
+			reply: `${sb.Utils.capitalize(type)} VOD timestamp: ${data.url}?t=${(stamp < 0) ? 0 : stamp}s`
 		};
 	}
 
