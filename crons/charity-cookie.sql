@@ -15,7 +15,7 @@ VALUES
 		'charity-cookie',
 		'0 55 1 * * *',
 		'Charity cookie - gives away a random cookie to random person who has the Extra_User_Data record, but has not eaten their cookie today - 5 minutes before the reset',
-		'async () => {
+		'(async function cron_charityCookie () {
 	const excludedUsers = [2630, 35532, 2756, 1127];
 	
 	const data = await sb.Query.getRecordset(rs => rs
@@ -47,8 +47,8 @@ VALUES
 
 	await transaction.commit();
 
-	await channelData.send(`Congratulations ${userData.Name}, you have won an automatic cookie! ${cookie.reply});
-}',
+	await channelData.send(`Congratulations ${userData.Name}, you have won an automatic cookie! ${cookie.reply}`);
+})',
 		'Bot',
 		1
 	)
