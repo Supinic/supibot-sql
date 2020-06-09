@@ -16,7 +16,6 @@ VALUES
 		'(() => ({
 	prefixUrl: \"https://api.twitch.tv/v5\",
 	responseType: \"json\",
-	resolveBodyOnly: true,
 	headers: {
 		Accept: \"application/vnd.twitchtv.v5+json\",
 		\"Client-ID\": sb.Config.get(\"TWITCH_CLIENT_ID\"),
