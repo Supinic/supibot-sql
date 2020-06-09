@@ -19,46 +19,26 @@ VALUES
 		'commitcount',
 		'[\"FarmingCommits\"]',
 		'ping,pipe,skip-banphrase,system',
-		'For a given repository, gives you the amount of commits done within this day (UTC). If nothing is provided, uses supibot\'s repo.',
+		'For a given GitHub user, this command gives you the amount of push events done within 24 hours. If nothing is provided, uses the current channel as a username.',
 		10000,
 		NULL,
 		NULL,
-		'(async function commitCount (context, owner, repo) {
-	if (owner && !repo) {
-		[owner, repo] = owner.split(\"/\");
-	}
-	else if (!owner && !repo) {
-		owner = \"supinic\";
-		repo = \"supibot\";
-	}
+		'(async function commitCount (context, username) {
+	username = username ?? context.user.Name;
 
-	if (!owner || !repo) {
-		return {
-			success: false,
-			reply: \"Invalid owner or repository!\"
-		};
-	}	
-
-	const { year, month, day } = new sb.Date();
-	const { statusCode, body: data } = await sb.Got.instances.GitHub({
-		url: `repos/${owner}/${repo}/commits?page=1`,
-		throwHttpErrors: false
-	});
-
+	const { body: data, statusCode} = await sb.Got.instances.GitHub(`users/${username}/events`);
 	if (statusCode !== 200) {
 		return {
 			success: false,
-			reply: \"Target owner/repo does not exist!\"
+			reply: `Error ${statusCode}: ${data.message}`
 		};
 	}
 
-	const today = data.filter(i => {
-		const date = new sb.Date(i.commit.committer.date);
-		return (date.year === year && date.month === month && date.day === day);
-	});
-
+	const threshold = new sb.Date().addHours(-24);
+	const eventCount = data.filter(i => new sb.Date(i.created_at) >= threshold && i.type === \"PushEvent\").length;
+	const suffix = (eventCount === 1) ? \"\": \"s\";
 	return {
-		reply: `There have been ${today.length} commits to repo ${owner}/${repo} today. FarmingCommits`
+		reply: `GitHub user ${username} has made ${eventCount} push event${suffix} in the past 24 hours.`
 	};
 })',
 		NULL,
