@@ -41,7 +41,7 @@ VALUES
 	}
 	if (types.includes(\"all\") || types.includes(\"yarn\") || types.includes(\"upgrade\")) {
 		queue.push(async () => {
-			await context.channel.send(\"PogChamp 👉 Updating supi-core module\");
+			await context.channel.send(\"PogChamp 👉 yarn upgrade supi-core\");
 			const result = await shell(\"yarn upgrade supi-core\");
 			console.log(\"upgrade result\", { stdout: result.stdout, stderr: result.stderr });
 		});
