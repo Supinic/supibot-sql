@@ -28,7 +28,7 @@ VALUES
 		user = context.user.Name;
 	}
 
-	const rawData = await sb.Got.instances.Twitch.V5({
+	const { statusCode, body } = await sb.Got.instances.Twitch.V5({
 		url: \"users\",
 		throwHttpErrors: false,
 		searchParams: new sb.URLParams()
@@ -36,12 +36,13 @@ VALUES
 			.toString()
 	});
 
-	const data = rawData.users[0];
-	if (!data) {
+	if (statusCode !== 200 || body.users.length === 0) {
 		return {
 			reply: \"That Twitch account has no data associated with them.\"
 		};
 	}
+
+	const data = body.users[0];
 
 	const now = new sb.Date();
 	const created = new sb.Date(data.created_at);

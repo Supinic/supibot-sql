@@ -16,12 +16,9 @@ VALUES
 		'0 0 1-23/2 * * *',
 		'Posts the github link of supibot.',
 		'(async function cron_discord () {
-	const channelData = sb.Channel.get(38);
+	const channelData = sb.Channel.get(\"supinic\", \"twitch\");
 	if (!channelData.sessionData.live) {
-		sb.Master.send(
-			\"Node.JS developers miniDank check the Supibot repository miniDank 👉 https://github.com/Supinic/supibot\",
-			channelData
-		);
+		await channelData.send(\"Node.JS developers peepoHackies check the Supibot repository miniDank 👉 https://github.com/Supinic/supibot\");
 	}
 })',
 		'Bot',

@@ -42,8 +42,10 @@ VALUES
 		Notes: \"Automatically fetched from horoscope.com on \" + new sb.Date().format(\"Y-m-d H:i\")
 	});
 
-	const {insertId: id} = await row.save();
-	sb.Master.send(`Fetched a new cookie! ID ${id} saved to the database.`, 38);
+	const { insertId } = await row.save();
+
+	const channelData = sb.Channel.get(\"supinic\", \"twitch\");
+	await channelData.send(`Fetched a new cookie! ID ${id} saved to the database.`);
 })',
 		'Bot',
 		1

@@ -32,8 +32,11 @@ VALUES
 	);
 
 	for (const bot of bots) {
-		sb.Master.send(bot.Prefix + (bot.Prefix_Space ? \" \" : \"\") + \"ping\", context.channel);
+		const space = bot.Prefix_Space ? \" \" : \"\";
+		context.channel.send(`${bot.Prefix}${space}ping`);
 	}
+
+	return null;
 })',
 		NULL,
 		'supinic/supibot-sql'

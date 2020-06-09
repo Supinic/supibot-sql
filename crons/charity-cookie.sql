@@ -47,8 +47,7 @@ VALUES
 
 	await transaction.commit();
 
-	sb.Master.send(\"Congratulations \" + userData.Name + \", you have won an automatic cookie! \" + cookie.reply, channelData);
-	sb.Master.send(userData.Name + \" just got an automatic cookie in channel \" + channelData.Name, 38);
+	await channelData.send(`Congratulations ${userData.Name}, you have won an automatic cookie! ${cookie.reply});
 }',
 		'Bot',
 		1

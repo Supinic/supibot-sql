@@ -23,26 +23,29 @@ VALUES
 		60000,
 		NULL,
 		NULL,
-		'async (extra, emote, size = 3, delay = 250) => {
-	if (extra.channel.Mode === \"Write\") {
+		'(async function pyramid (context, emote, size = 3) {
+	if (context.channel.Mode !== \"Moderator\" && context.channel.Mode !== \"VIP\") {
 		return { reply: \"Cannot create pyramids in a non-VIP/Moderator chat!\" };
 	}
 	else if (!emote) {
 		return { reply: \"No emote provided!\" };
 	}
-	else if (emote.repeat(size) > extra.channel.Message_Limit || size > 20) {
+	else if (emote.repeat(size) > context.channel.Message_Limit || size > 20) {
 		return { reply: \"Target pyramid is either too wide or too tall!\" };
 	}
 
 	emote += \" \";
+	
 	for (let i = 1; i <= size; i++) {
-		sb.Master.send(emote.repeat(i), extra.channel);
+		context.channel.send(emote.repeat(i));
 	}
 
 	for (let i = (size - 1); i > 0; i--) {
-		sb.Master.send(emote.repeat(i), extra.channel);
+		context.channel.send(emote.repeat(i));
 	}
-}',
+	
+	return null;
+})',
 		NULL,
 		'supinic/supibot-sql'
 	)

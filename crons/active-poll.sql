@@ -26,7 +26,8 @@ VALUES
 	);
 
 	if (poll) {
-		sb.Master.send(`Poll ID ${poll.ID} is currently running! Vote with \"$vote yes\" or \"$vote no\"! MEGADANK 👉 ${poll.Text}`, 38);
+		const channelData = sb.Channel.get(\"supinic\", \"twitch\");
+		await channelData.send(`Poll ID ${poll.ID} is currently running! Vote with \"$vote yes\" or \"$vote no\"! MEGADANK 👉 ${poll.Text}`);
 	}
 }',
 		'Bot',

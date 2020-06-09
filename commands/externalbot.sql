@@ -75,7 +75,7 @@ VALUES
 
 	// Sends the actual external bot\'s command, and wait to see if it responds
 	const safeMessage = await sb.Master.prepareMessage(message, context.channel);
-	await sb.Master.send(safeMessage, context.channel);
+	await context.channel.send(safeMessage);
 
 	const promise = new sb.Promise();
 	sb.Master.data.externalPipePromises.set(key, promise);

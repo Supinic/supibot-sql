@@ -27,9 +27,7 @@ VALUES
 	if (!link) {
 		return {
 			reply: \"Guidelines for Necrodancer songs here: https://pastebin.com/K4n151xz\",
-			meta: {
-				skipCooldown: true
-			}
+			cooldown: 2500
 		};
 	}
 
@@ -44,7 +42,7 @@ VALUES
 	const name = encodeURIComponent(data.name + \" by \" + context.user.Name);
 	const url = `${sb.Config.get(\"LOCAL_IP\")}:${sb.Config.get(\"LOCAL_PLAY_SOUNDS_PORT\")}?necrodancer=${data.link}&name=${name}`;
 	
-	sb.Master.send(\"Downloading has started! Please wait...\", context.channel);
+	await context.channel.send(\"Downloading has started! Please wait...\");
 	await sb.Got(url);
 
 	return { reply: \"Downloaded successfully :)\" };

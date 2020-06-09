@@ -23,15 +23,15 @@ VALUES
 		5000,
 		NULL,
 		NULL,
-		'async (extra, ...args) => {
+		'(async function cerebot (context, ...args) {
 	let message = args.join(\" \").trim();
-	if (message[0] !== \"!\") {
+	if (!message.startsWith(\"!\")) {
 		message = \"!\" + message;
 	}
 
-	sb.Master.send(message, 7);
-	return { reply: null };
-}',
+	await sb.Channel.get(7).send(message);
+	return null;
+})',
 		NULL,
 		'supinic/supibot-sql'
 	)

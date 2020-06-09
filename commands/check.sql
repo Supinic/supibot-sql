@@ -198,7 +198,7 @@ VALUES
 			}
 
 			if (context.channel) {
-				sb.Master.send(\"The error stack Pastebin link has been whispered to you 💻\", context.channel.ID);
+				await context.channel.send(\"The error stack Pastebin link has been whispered to you 💻\");
 			}
 
 			return {
@@ -318,9 +318,9 @@ VALUES
 			}
 		}
 
-		case \"sr\": 
-		case \"songrequests\": {	
-			if (context?.channel.ID !== 38) {				
+		case \"sr\":
+		case \"songrequests\": {
+			if (context?.channel.ID !== 38) {
 				return {
 					success: false,
 					reply: \"Only usable in Supinic\'s Twitch channel!\"

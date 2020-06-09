@@ -33,7 +33,8 @@ VALUES
 			.flat(\"Username\")
 		)).map(i => `@${i}`).join(\" \");
 		
-		sb.Master.send(`${pingedUsers} New Node.js version detected! PagChomp 👉 ${latest.tag_name} Changelog: ${latest.html_url}`, 38);
+		const channelData = sb.User.get(\"supinic\", \"twitch\");
+		channelData.send(`${pingedUsers} New Node.js version detected! PagChomp 👉 ${latest.tag_name} Changelog: ${latest.html_url}`);
 	}
 })',
 		'Bot',
