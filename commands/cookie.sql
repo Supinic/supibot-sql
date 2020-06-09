@@ -45,11 +45,10 @@ VALUES
 	);
 
 	if (data?.Cookie_Today) {
-		const date = new sb.Date();
-		date.setHours(0, 0,0 , 0);
-		date.setTimezoneOffset(0);
-		
-		const delta = sb.Utils.timeDelta(date);
+		const next = new sb.Date().addDays(1);
+		const midnight = new sb.Date(sb.Date.UTC(next.year, next.month - 1, next.getUTCDate()));
+
+		const delta = sb.Utils.timeDelta(midnight);
 		return {
 			reply: `You already opened or gifted a fortune cookie today. You can get another one at midnight UTC, which is ${delta}.`
 		};
