@@ -22,12 +22,63 @@ VALUES
 		'Fetches short articles. You can use a 2 character ISO code to get country specific news, or any other word as a search query.',
 		10000,
 		NULL,
-		NULL,
+		'({
+	extra: {
+		exists: async (code) => {
+			code = code.toLowerCase();
+
+			return Boolean(await sb.Query.getRecordset(rs => rs
+				.select(\"1\")
+				.from(\"data\", \"Extra_News\")
+				.where(\"Code = %s\", code)
+				.single()
+			));
+		},
+
+		fetch: async (code, query) => {
+			code = code.toLowerCase();
+
+			const row = await sb.Query.getRecordset(rs => rs
+				.select(\"*\")
+				.from(\"data\", \"Extra_News\")
+				.where(\"Code = %s\", code)
+				.single()
+			);
+
+			if (!row) {
+				throw new sb.Error({ message: \"Extra news code does not exist!\" });
+			}
+
+			const url = row.URL + sb.Utils.randArray(JSON.parse(row.Endpoints));
+			const feed = await sb.Utils.parseRSS(url);
+
+			if (query) {
+				query = query.toLowerCase();
+				feed.items = feed.items.filter(i => (
+					(i.title?.toLowerCase().includes(query))
+					|| (i.content?.toLowerCase().includes(query))
+				));
+			}
+
+			const article = sb.Utils.randArray(feed.items);
+			if (!article) {
+				return null;
+			}
+
+			return {
+				title: article.title,
+				content: article.content,
+				link: article.link || article.url,
+				published: new sb.Date(article.pubDate)
+			};
+		}
+	}
+})',
 		'(async function news (context, ...rest) {
 	const params = new sb.URLParams().set(\"language\", \"en\");
-	if (rest[0] && sb.ExtraNews.check(rest[0])) {
+	if (rest[0] && await this.staticData.extra.exists(rest[0])) {
 		const code = rest.shift();
-		const article = await sb.ExtraNews.fetch(code, rest.join(\" \") || null);
+		const article = await this.staticData.extra.fetch(code, rest.join(\" \") || null);
 
 		if (!article) {
 			return {
