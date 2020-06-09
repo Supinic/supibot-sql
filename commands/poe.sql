@@ -182,6 +182,35 @@ VALUES
 			};
 		}
 
+		case \"tracker\": {
+			if (!context.user.Data.administrator) {
+				return {
+					success: false,
+					reply: \"Only administrators can toggle the tracker status!\"
+				};
+			}
+
+			const [type] = args;
+			const cron = sb.Cron.data.find(i => i.Name === \"ggg-tracker\");
+			if (![\"on\", \"off\"].includes(type)) {
+				return {
+					success: false,
+					reply: \"Must provide a type - on/off!\"
+				};
+			}
+			else if (!cron) {
+				return {
+					success: false,
+					reply: \"There is no cron job for tracking GGG replies!\"
+				};
+			}
+
+			cron.data.enabled = (type === \"on\");
+			return {
+				reply: `Automatic tracker has been turned ${type}.`
+			};
+		}
+
 		default: return {
 			reply: `Invalid query type provided! Currently supported: \"lab <difficulty>\", \"uniques <user>\".`
 		}
