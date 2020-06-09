@@ -28,6 +28,15 @@ VALUES
 		this.data.latestID = data.id;
 	}
 	else if (this.data.latestID !== data.id) {
+		const users = await sb.Query.getRecordset(rs => rs
+			.select(\"User_Alias.Name AS Username\")
+			.from(\"chat_data\", \"Event_Subscription\")
+			.join(\"chat_data\", \"User_Alias\")
+			.where(\"Active = %b\", true)
+			.where(\"Type = %s\", \"GGG tracker\")
+			.flat(\"Username\")
+		)
+
 		console.log(\"GGG post\", type, data);
 		this.data.latestID = data.id;
 
@@ -45,7 +54,7 @@ VALUES
 		}
 
 		const channelData = sb.Channel.get(\"supinic\", \"twitch\");
-		await channelData.send(message);
+		await channelData.send(users.join(\",\") + \" PogChamp 👉 \" + message);
 	}
 })',
 		'Bot',
