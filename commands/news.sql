@@ -59,15 +59,24 @@ VALUES
 		params.set(\"country\", \"US\");
 	}
 
-	const data = await sb.Got({
+	const { statusCode, body: data } = await sb.Got({
 		url: \"https://newsapi.org/v2/top-headlines\",
 		searchParams: params.toString(),
+		throwHttpErrors: false,
+		responseType: \"json\",
 		headers: {
 			Authorization: \"Bearer \" + sb.Config.get(\"API_NEWSAPI_ORG\")
 		}
-	}).json();
+	});
 
-	if (!data.articles) {
+	if (statusCode !== 200) {
+		throw new sb.errors.APIError({
+			statusCode,
+			reason: data?.message ?? null,
+			apiName: \"NewsAPI\"
+		}); 
+	}
+	else if (!data.articles) {
 		return {
 			reply: \"No news data returned!\"
 		};
