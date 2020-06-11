@@ -62,32 +62,21 @@ VALUES
 		};
 	}
 
-	const key = (context.channel.ID + \"_\" + botData.ID);
-
-	if (!sb.Master.data.externalPipePromises) {
-		sb.Master.data.externalPipePromises = new Map();
-	}
-	if (sb.Master.data.externalPipePromises.get(key)) {
+	if (context.platform.userMessagePromises.get(context.channel)?.get(botData)) {
 		return {
-			reply: \"Already awaiting a bot response in this channel!\"
+			success: false,
+			reply: `Already awaiting response from ${botData.Name} in this channel!`
 		};
 	}
 
 	// Sends the actual external bot\'s command, and wait to see if it responds
 	const safeMessage = await sb.Master.prepareMessage(message, context.channel);
+	const messagePromise = context.channel.waitForUserMessage(botData);
+
 	await context.channel.send(safeMessage);
 
-	const promise = new sb.Promise();
-	sb.Master.data.externalPipePromises.set(key, promise);
-
-	// Set up a timeout to abort awaiting if the external bot isn\'t replying
-	setTimeout(() => {
-		sb.Master.data.externalPipePromises.delete(key);
-		promise.resolve(null);
-	}, this.staticData.responseTimeout);
-
-	const resultMessage = await promise;
-	if (resultMessage === null) {
+	const result = await messagePromise;
+	if (result === null) {
 		return {
 			reason: \"bad_invocation\",
 			reply: `No response from external bot after ${this.staticData.responseTimeout / 1000} seconds!`
@@ -96,7 +85,7 @@ VALUES
 
 	const selfRegex = new RegExp(\"^@?\" + context.platform.Self_Name + \",?\", \"i\");
 	return {
-		reply: resultMessage.replace(selfRegex, \"\")
+		reply: result.message.replace(selfRegex, \"\")
 	};
 })',
 		NULL,
