@@ -31,16 +31,6 @@ VALUES
 
 	const resultsInPastebin = args[args.length - 1] === \"pastebin\";
 	let finalResult = null;
-	let fakeChannel = null;
-
-	if (context.channel) {
-		const tempData = {...context.channel};
-		tempData.Data = JSON.stringify(tempData.Data);
-
-		fakeChannel = new sb.Channel(tempData);
-		fakeChannel.Ping = false;
-	}
-
 	let currentArgs = [];
 
 	for (const inv of invocations) {
@@ -64,14 +54,15 @@ VALUES
 		const result = await sb.Command.checkAndExecute(
 			cmd,
 			cmdArgs,
-			fakeChannel,
+			context.channel,
 			context.user,
 			{
 				...context.append,
 				platform: context.platform,
 				pipe: true,
+				skipBanphrases: true,
 				skipPending: true,
-				skipBanphrases: true
+				skipPing: true
 			}
 		);
 
