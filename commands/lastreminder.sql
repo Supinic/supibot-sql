@@ -23,45 +23,47 @@ VALUES
 		10000,
 		NULL,
 		NULL,
-		'async (extra, user) => {
+		'(async function lastReminder (context, user) {
 	if (!user) {
 		return { reply: \"No user provided!\" };
 	}
-	
-	const targetUserData = await sb.Utils.getDiscordUserDataFromMentions(user, extra.append) || await sb.User.get(user, true);
+
+	const targetUserData = await sb.Utils.getDiscordUserDataFromMentions(user, context.append) || await sb.User.get(user, true);
 	if (!targetUserData) {
 		return { reply: \"That user does not exist!\" };
 	}
-	else if (targetUserData.ID === sb.Config.get(\"SELF_ID\")) {
-		return { reply: \"I\'m not your god damn calendar. Keep track of shit yourself.\" };
+	else if (targetUserData.Name === context.platform.Self_Name) {
+		return {
+			reply: \"I\'m not your god damn calendar. Keep track of shit yourself.\"
+		};
 	}
-	
-	const reminderData = (await sb.Query.getRecordset(rs => rs
+
+	const reminder = await sb.Query.getRecordset(rs => rs
 		.select(\"Text\", \"Created\")
 		.from(\"chat_data\", \"Reminder\")
 		.where(\"User_From = %n\", targetUserData.ID)
-		.where(\"User_To = %n\", extra.user.ID)
+		.where(\"User_To = %n\", context.user.ID)
 		.where(\"Schedule IS NULL\")
 		.where(\"Active = %b\", false)
 		.orderBy(\"Created DESC\")
 		.limit(1)
-	))[0];
-	
-	if (!reminderData) {
+		.single()
+	);
+
+	if (!reminder) {
 		return { reply: \"That user has never set a non-timed reminder for you!\" };
 	}
 	else {
-		return { 
-			reply: [
-				\"Last reminder from\",
-				targetUserData.Name,
-				\"to you:\",
-				reminderData.Text || \"(no message)\",
-				\"(set \" + sb.Utils.timeDelta(reminderData.Created) + \")\"
-			].join(\" \")
+		const delta = sb.Utils.timeDelta(reminder.Created);
+		return {
+			reply: sb.Utils.tag.trim `
+				Last reminder from ${targetUserData.Name} to you:
+				${reminder.Text ?? \"(no message)\"}
+				(set ${delta})
+			`
 		};
-	}	
-}',
+	}
+})',
 		NULL,
 		'supinic/supibot-sql'
 	)
