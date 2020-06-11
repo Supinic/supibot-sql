@@ -16,9 +16,9 @@ VALUES
 		'0 * * * * *',
 		'Checks gggtracker.com periodically for new posts by GGG staff members.',
 		'(async function cron_gggTracker () {
-	if (!this.data.enabled) {
-		return;
-	}
+	//if (!this.data.enabled) {
+	//	return;
+	//}
 
 	const { activity } = await sb.Got(\"https://gggtracker.com/activity.json\").json();
 	activity.sort((a, b) => new sb.Date(b.data.time) - new sb.Date(a.data.time));
@@ -54,7 +54,7 @@ VALUES
 		}
 
 		const channelData = sb.Channel.get(\"supinic\", \"twitch\");
-		await channelData.send(users.join(\",\") + \" PogChamp 👉 \" + message);
+		await channelData.send(users.join(\", \") + \" PogChamp 👉 \" + message);
 	}
 })',
 		'Bot',
