@@ -44,6 +44,15 @@ VALUES
 			.toString()
 	}).json();
 
+	if (data.package) {
+		const { version, description, repository } = data.packument;
+		const { createdAt } = data.upsell;
+		const delta = sb.Utils.timeDelta(new sb.Date(createdAt));
+		return {
+			reply: `${data.package} v${version}: ${description} (last publish: ${delta}) ${repository}`
+		};
+	}
+
 	if (data.objects.length === 0) {
 		return {
 			success: false,
