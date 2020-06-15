@@ -41,6 +41,12 @@ VALUES
 
 	const data = await sb.Got.instances.Leppunen(`twitch/streamschedule/${channelName}`).json();
 	if (data.status === 200 && data.nextStream) {
+		let extra = \"\";
+		if (data.interruption) {
+			const { endAt, reason } = data.interruption;
+			extra = `Stream schedule is interrupted - reason: ${reason}, lasts until ${sb.Utils.timeDelta(new sb.Date(endAt))}.`;
+		}
+
 		const {
 			game = \"(no category)\",
 			title,
@@ -49,7 +55,7 @@ VALUES
 
 		const time = sb.Utils.timeDelta(new sb.Date(startsAt));
 		return {
-			reply: `${channelName}\'s next stream: ${game} - ${title}, starting ${time}.`
+			reply: `${channelName}\'s next stream: ${game} - ${title}, starting ${time}. ${extra}`
 		};
 	}
 	else if (data.error) {
@@ -61,7 +67,7 @@ VALUES
 		console.warn(\"Unespected schedule result\", data);
 		return {
 			success: false,
-			reply: \"What? monkaS @leppunen @supinic\"
+			reply: \"Unexpected API result monkaS @leppunen @supinic\"
 		};
 	}
 })',
