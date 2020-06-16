@@ -35,10 +35,16 @@ VALUES
 	}
 
 	const threshold = new sb.Date().addHours(-24);
-	const eventCount = data.filter(i => new sb.Date(i.created_at) >= threshold && i.type === \"PushEvent\").length;
-	const suffix = (eventCount === 1) ? \"\": \"s\";
+	const pushEvents = data.filter(i => new sb.Date(i.created_at) >= threshold && i.type === \"PushEvent\");
+	const commitCount = pushEvents.reduce((acc, cur) => acc += cur.payload.commits.length, 0);
+
+	const suffix = (commitCount === 1) ? \"\": \"s\";
+	const who = (username === context.user.Name) 
+		? \"You have\"
+		: `GitHub user ${username} has`;
+
 	return {
-		reply: `GitHub user ${username} has made ${eventCount} push event${suffix} in the past 24 hours.`
+		reply: `${who} created ${commitCount} commit${suffix} in the past 24 hours.`
 	};
 })',
 		NULL,
