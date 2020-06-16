@@ -95,7 +95,7 @@ VALUES
 		\"Checks various statistics bound to you, found around supibot\'s data.\",
 		\"\",
 
-		`${prefix}stats (type)</code>`,
+		`<code>${prefix}stats (type)</code>`,
 		\"Statistics based on the type used\",
 		\"\",
 
