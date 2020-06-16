@@ -25,6 +25,26 @@ VALUES
 		'({
 	emotes: {
 		pride: [
+			\"PrideCrown\", 
+			\"PrideDragon\", 
+			\"PrideFloat\", 
+			\"PrideHeartL\", 
+			\"PrideLaugh\", 
+			\"PridePaint\", 
+			\"PrideStrong\", 
+			\"PrideUwu\", 
+			\"PrideWorld\", 
+			\"PrideFlower\", 
+			\"PrideHeartL\", 
+			\"PrideLaugh\", 
+			\"PrideLion\", 
+			\"PrideLove\", 
+			\"PrideRhino\", 
+			\"PrideShrug\", 
+			\"PrideWave\", 
+			\"PrideWorld\"
+		],
+		pride2019: [
 			\"PrideAsexual\",
 			\"PrideBalloons\",
 			\"PrideBisexual\",
