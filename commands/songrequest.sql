@@ -19,7 +19,7 @@ VALUES
 		'songrequest',
 		'[\"sr\"]',
 		'ping,pipe,whitelist',
-		'Requests a song to play on supinic stream. Uses a local VLC API to enqueue songs to the playlist, or links to Cytube, or uses the necrodancer command to download a song. This all depends on the song request status.',
+		'Requests a song to play on Supinic\'s stream. You can use \"start:\" and \"end:\" to request parts of a song using seconds or a time syntax. \"start:100\" or \"end:05:30\", for example.',
 		5000,
 		'Only available in supinic\'s channel.',
 		'({
