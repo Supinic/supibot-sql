@@ -18,7 +18,7 @@ VALUES
 		9,
 		'debug',
 		NULL,
-		'pipe,skip-banphrase,system,whitelist',
+		'developer,pipe,skip-banphrase,system,whitelist',
 		'supiniHack ',
 		0,
 		NULL,

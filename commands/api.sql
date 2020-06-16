@@ -18,7 +18,7 @@ VALUES
 		156,
 		'api',
 		'[\"apidocs\"]',
-		'ping,pipe',
+		'developer,ping,pipe',
 		'Posts the link for supinic.com API documentation.',
 		10000,
 		NULL,

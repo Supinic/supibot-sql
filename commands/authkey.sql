@@ -18,7 +18,7 @@ VALUES
 		153,
 		'authkey',
 		NULL,
-		'ping,pipe',
+		'developer,ping,pipe',
 		'Works with an authentication string used to access supinic.com APIs that require a login; outside of Twitch login.',
 		10000,
 		NULL,

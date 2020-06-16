@@ -18,7 +18,7 @@ VALUES
 		173,
 		'code',
 		NULL,
-		'ping,pipe',
+		'developer,ping,pipe',
 		'Posts a link to a specific command\'s code definition on supinic.com website.',
 		5000,
 		NULL,

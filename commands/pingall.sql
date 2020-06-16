@@ -18,7 +18,7 @@ VALUES
 		172,
 		'pingall',
 		NULL,
-		'pipe,skip-banphrase,system,whitelist',
+		'developer,pipe,skip-banphrase,whitelist',
 		'Attempts to check all channel bots by using their ping commands.',
 		0,
 		NULL,
