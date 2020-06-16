@@ -44,7 +44,11 @@ VALUES
 		let extra = \"\";
 		if (data.interruption) {
 			const { endAt, reason } = data.interruption;
-			extra = `Stream schedule is interrupted - reason: ${reason}, lasts until ${sb.Utils.timeDelta(new sb.Date(endAt))}.`;
+			const end = new sb.Date(endAt);
+
+			if (end <= sb.Date.now()) {
+				extra = `Stream schedule is interrupted - reason: ${reason}, lasts until ${sb.Utils.timeDelta(end)}.`;
+			}
 		}
 
 		const {
