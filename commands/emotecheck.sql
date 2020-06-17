@@ -23,205 +23,278 @@ VALUES
 		15000,
 		NULL,
 		'({
-	emotes: {
-		pride: [
-			\"PrideCrown\", 
-			\"PrideDragon\", 
-			\"PrideFloat\", 
-			\"PrideHeartL\", 
-			\"PrideLaugh\", 
-			\"PridePaint\", 
-			\"PrideStrong\", 
-			\"PrideUwu\", 
-			\"PrideWorld\", 
-			\"PrideFlower\", 
-			\"PrideHeartL\", 
-			\"PrideLaugh\", 
-			\"PrideLion\", 
-			\"PrideLove\", 
-			\"PrideRhino\", 
-			\"PrideShrug\", 
-			\"PrideWave\", 
-			\"PrideWorld\"
-		],
-		pride2019: [
-			\"PrideAsexual\",
-			\"PrideBalloons\",
-			\"PrideBisexual\",
-			\"PrideCheers\",
-			\"PrideFlag\",
-			\"PrideGasp\",
-			\"PrideGive\",
-			\"PrideHi\",
-			\"PrideLesbian\",
-			\"PrideLionChomp\",
-			\"PrideLionHey\",
-			\"PrideLionYay\",
-			\"PridePan\",
-			\"PrideParty\",
-			\"PrideSaba\",
-			\"PrideShine\",
-			\"PrideTake\",
-			\"PrideTrans\",
-			\"PrideWingL\",
-			\"PrideWingR\"
-		],
-		haha: [
-			\"Haha2020\",
-			\"HahaBaby\",
-			\"HahaBall\",
-			\"HahaCat\",
-			\"HahaDoge\",
-			\"HahaDreidel\",
-			\"HahaElf\",
-			\"HahaGingercat\",
-			\"HahaGoose\",
-			\"HahaHide\",
-			\"HahaLean\",
-			\"HahaNutcracker\",
-			\"HahaNyandeer\",
-			\"HahaPoint\",
-			\"HahaPresent\",
-			\"HahaReindeer\",
-			\"HahaShrugLeft\",
-			\"HahaShrugMiddle\",
-			\"HahaShrugRight\",
-			\"HahaSleep\",
-			\"HahaSnowhal\",
-			\"HahaSweat\",
-			\"HahaThink\",
-			\"HahaThisisfine\",
-			\"HahaTurtledove\"
-		],
-		rpg: [
-			\"RPGAyaya\",
-			\"RPGBukka\",
-			\"RPGBukkaNoo\",
-			\"RPGEmpty\",
-			\"RPGEpicStaff\",
-			\"RPGEpicSword\",
-			\"RPGFei\",
-			\"RPGFireball\",
-			\"RPGGhosto\",
-			\"RPGHP\",
-			\"RPGMana\",
-			\"RPGOops\",
-			\"RPGPhatLoot\",
-			\"RPGSeven\",
-			\"RPGShihu\",
-			\"RPGStaff\",
-			\"RPGTreeNua\",
-			\"RPGYonger\"
-		],
-		fb: [
-			\"FBBlock\",
-			\"FBCatch\",
-			\"FBChallenge\",
-			\"FBPass\",
-			\"FBPenalty\",
-			\"FBRun\",
-			\"FBSpiral\",
-			\"FBtouchdown\"
-		],
-
-		get food () { return this.fight; },
-		fight: [
-			\"FightBagel\",
-			\"FightBerry\",
-			\"FightBox\",
-			\"FightBurger\",
-			\"FightCC\",
-			\"FightCake\",
-			\"FightCheese\",
-			\"FightChips\",
-			\"FightCookie\",
-			\"FightCorn\",
-			\"FightCup\",
-			\"FightEgg\",
-			\"FightFruit\",
-			\"FightFry\",
-			\"FightIce\",
-			\"FightJello\",
-			\"FightMash\",
-			\"FightNacho\",
-			\"FightPBJ\",
-			\"FightPC\",
-			\"FightPepper\",
-			\"FightPie\",
-			\"FightPizza\",
-			\"FightPop\",
-			\"FightPudding\",
-			\"FightRamen\",
-			\"FightSalad\",
-			\"FightSardine\",
-			\"FightSmoothie\",
-			\"FightSmore\",
-			\"FightSoda\",
-			\"FightSoup\",
-			\"FightSpag\",
-			\"FightSub\",
-			\"FightTomato\"
-		],
-		
-		get kk () { return this.KKona; },
-		KKona: [
-			\"BBrexit\",
-			\"CCabron\",
-			\"CChile\",
-			\"GGyros\",
-			\"KKarjala\",
-			\"KKebab\",
-			\"KKhan\",
-			\"KKiwi\",
-			\"KKomrade\",
-			\"KKona\",
-			\"KKozak\",
-			\"KKraut\",
-			\"KKrikey\",
-			\"KKroissant\",
-			\"KKurwa\"
-		],
-		
-		get luv () { return this.valentine; },
-		valentine: [
-			\"LuvBlondeL\",
-			\"LuvBlondeR\",
-			\"LuvBlush\",
-			\"LuvBrownL\",
-			\"LuvBrownR\",
-			\"LuvCool\",
-			\"LuvGift\",
-			\"LuvHearts\",
-			\"LuvOops\",
-			\"LuvPeekL\",
-			\"LuvPeekR\",
-			\"LuvSign\",
-			\"LuvSnooze\",
-			\"LuvUok\"
-		],
-
-		sir: [ // Implemented on 2020-04-02, a \"reward\" for having 2FA on your Twitch account
-			\"SirMad\",
-			\"SirPrise\",
-			\"SirSad\",
-			\"SirShield\",
-			\"SirSword\",
-			\"SirUwU\"
-		]
-	}
+	sets: [
+		{
+			name: \"pride2020\",
+			aliases: [\"pride\"],
+			description: \"These emotes were randomly made available by watching streams in June 2020\",
+			emotes: [
+				\"PrideCrown\",
+				\"PrideCute\",
+				\"PrideDragon\",
+				\"PrideFloat\",
+				\"PrideFlower\",
+				\"PrideHeartL\",
+				\"PrideHeartR\",
+				\"PrideHeyyy\",
+				\"PrideKoala\",
+				\"PrideLGBTea\",
+				\"PrideLaugh\",
+				\"PrideLion\",
+				\"PrideLove\",
+				\"PridePaint\",
+				\"PridePenguin\",
+				\"PridePog\",
+				\"PrideRhino\",
+				\"PrideRise\",
+				\"PrideShrug\",
+				\"PrideStrong\",
+				\"PrideToucan\",
+				\"PrideUnicorn\",
+				\"PrideUwu\",
+				\"PrideWave\",
+				\"PrideWorld\"
+			]
+		},
+		{
+			name: \"pride2019\",
+			aliases: [],
+			description: \"These emotes were randomly made available by watching streams in June 2019\",
+			emotes: [
+				\"PrideAsexual\",
+				\"PrideBalloons\",
+				\"PrideBisexual\",
+				\"PrideCheers\",
+				\"PrideFlag\",
+				\"PrideGasp\",
+				\"PrideGive\",
+				\"PrideHi\",
+				\"PrideLesbian\",
+				\"PrideLionChomp\",
+				\"PrideLionHey\",
+				\"PrideLionYay\",
+				\"PridePan\",
+				\"PrideParty\",
+				\"PrideSaba\",
+				\"PrideShine\",
+				\"PrideTake\",
+				\"PrideTrans\",
+				\"PrideWingL\",
+				\"PrideWingR\"
+			]
+		},
+		{
+			name: \"haha\",
+			aliases: [],
+			description: \"N/A\",
+			emotes: [
+				\"Haha2020\",
+				\"HahaBaby\",
+				\"HahaBall\",
+				\"HahaCat\",
+				\"HahaDoge\",
+				\"HahaDreidel\",
+				\"HahaElf\",
+				\"HahaGingercat\",
+				\"HahaGoose\",
+				\"HahaHide\",
+				\"HahaLean\",
+				\"HahaNutcracker\",
+				\"HahaNyandeer\",
+				\"HahaPoint\",
+				\"HahaPresent\",
+				\"HahaReindeer\",
+				\"HahaShrugLeft\",
+				\"HahaShrugMiddle\",
+				\"HahaShrugRight\",
+				\"HahaSleep\",
+				\"HahaSnowhal\",
+				\"HahaSweat\",
+				\"HahaThink\",
+				\"HahaThisisfine\",
+				\"HahaTurtledove\"
+			]
+		},
+		{
+			name: \"rpg\",
+			aliases: [],
+			description: \"N/A\",
+			emotes: [
+				\"RPGAyaya\",
+				\"RPGBukka\",
+				\"RPGBukkaNoo\",
+				\"RPGEmpty\",
+				\"RPGEpicStaff\",
+				\"RPGEpicSword\",
+				\"RPGFei\",
+				\"RPGFireball\",
+				\"RPGGhosto\",
+				\"RPGHP\",
+				\"RPGMana\",
+				\"RPGOops\",
+				\"RPGPhatLoot\",
+				\"RPGSeven\",
+				\"RPGShihu\",
+				\"RPGStaff\",
+				\"RPGTreeNua\",
+				\"RPGYonger\"
+			]
+		},
+		{
+			name: \"fb\",
+			aliases: [\"football\"],
+			description: \"N/A\",
+			emotes: [
+				\"FBBlock\",
+				\"FBCatch\",
+				\"FBChallenge\",
+				\"FBPass\",
+				\"FBPenalty\",
+				\"FBRun\",
+				\"FBSpiral\",
+				\"FBtouchdown\"
+			]
+		},
+		{
+			name: \"fight\",
+			aliases: [\"food\"],
+			description: \"N/A\",
+			emotes: [
+				\"FightBagel\",
+		         \"FightBerry\",
+		         \"FightBox\",
+		         \"FightBurger\",
+		         \"FightCC\",
+		         \"FightCake\",
+		         \"FightCheese\",
+		         \"FightChips\",
+		         \"FightCookie\",
+		         \"FightCorn\",
+		         \"FightCup\",
+		         \"FightEgg\",
+		         \"FightFruit\",
+		         \"FightFry\",
+		         \"FightIce\",
+		         \"FightJello\",
+		         \"FightMash\",
+		         \"FightNacho\",
+		         \"FightPBJ\",
+		         \"FightPC\",
+		         \"FightPepper\",
+		         \"FightPie\",
+		         \"FightPizza\",
+		         \"FightPop\",
+		         \"FightPudding\",
+		         \"FightRamen\",
+		         \"FightSalad\",
+		         \"FightSardine\",
+		         \"FightSmoothie\",
+		         \"FightSmore\",
+		         \"FightSoda\",
+		         \"FightSoup\",
+		         \"FightSpag\",
+		         \"FightSub\",
+		         \"FightTomato\"
+			]
+		},
+		{
+			name: \"kk\",
+			aliases: [\"kkona\"],
+			description: \"KKona-style emotes, mostly available in Supinic\'s channel on Twitch. Each variation represents a country.\",
+			emotes: [
+				\"BBrexit\",
+				\"CCabron\",
+				\"CChile\",
+				\"GGyros\",
+				\"KKarjala\",
+				\"KKebab\",
+				\"KKhan\",
+				\"KKiwi\",
+				\"KKomrade\",
+				\"KKona\",
+				\"KKozak\",
+				\"KKraut\",
+				\"KKrikey\",
+				\"KKroissant\",
+				\"KKurwa\"
+			]
+		},
+		{
+			name: \"luv\",
+			aliases: [\"valentine\"],
+			description: \"N/A\",
+			emotes: [
+				\"LuvBlondeL\",
+				\"LuvBlondeR\",
+				\"LuvBlush\",
+				\"LuvBrownL\",
+				\"LuvBrownR\",
+				\"LuvCool\",
+				\"LuvGift\",
+				\"LuvHearts\",
+				\"LuvOops\",
+				\"LuvPeekL\",
+				\"LuvPeekR\",
+				\"LuvSign\",
+				\"LuvSnooze\",
+				\"LuvUok\"
+			]
+		},
+		{
+			name: \"sir\",
+			aliases: [\"2fa\"],
+			description: \"Implemented on 2020-04-02, this emoteset is a reward for having 2FA on your Twitch account\",
+			emotes: [
+				\"SirMad\",
+				\"SirPrise\",
+				\"SirSad\",
+				\"SirShield\",
+				\"SirSword\",
+				\"SirUwU\"
+			]
+		}
+	]
 })',
-		'(async function emoteCheck (context, type) {
-	if (!type) {
-		return { reply: \"No type provided\" };
+		'(async function emoteCheck (context, name) {
+	if (!name) {
+		return {
+			reply: `Check available emote sets here: https://supinic.com/bot/command/${this.ID}`
+		};
 	}
 
-	const result = this.staticData.emotes[type];
+	name = name.toLowerCase();
+	const result = this.staticData.sets.find(i => i.name === name || i.aliases.includes(name));
+	if (!result) {
+		return {
+			reply: `No valid emote set found! Check available emote sets here: https://supinic.com/bot/command/${this.ID}`
+		};
+	}
+	
 	return {
-		reply: (result)
-			? result.join(\" \")
-			: \"No emote set available for that type\"
+		reply: result.emotes.join(\" \")
 	};
 })',
-		NULL,
+		'(async (prefix, values) => {
+	const { sets } = values.getStaticData();
+	const list = sets.map(i => {
+		const aliases = (i.aliases.length === 0)
+			? \"\"
+			: `(${i.aliases.join(\", \")})`;
+
+		return `<li><code>${i.name} ${aliases}</code><br>${i.description}</li>`;
+	}).join(\"<br>\");
+	
+	return [
+		\"Posts entire emote sets on Twitch and stuff.\",
+		\"Useful to see if you are missing any of given emotes, or just for convience and/or novelty\",
+		\"\",
+
+		`<code>${prefix}emotecheck (set name)</code>`,
+		\"(emotes)\",
+		\"\",
+
+		`<ul>${list}</ul>`
+	];
+})',
 		'supinic/supibot-sql'
 	)
