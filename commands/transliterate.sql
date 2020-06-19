@@ -23,13 +23,34 @@ VALUES
 		15000,
 		NULL,
 		NULL,
-		'async (extra, ...args) => {
+		'(async function transliterate (context, ...args) {
 	if (args.length === 0) {
-		return { reply: \"No input provided!\" };
+		return {
+			success: false,
+			reply: \"No input provided!\"
+		};
 	}
 
-	return { reply: sb.Utils.transliterate(args.join(\" \")) };
-}',
+	const html = await sb.Got({
+		url: \"https://ichi.moe/cl/qr\",
+		searchParams: new sb.URLParams()
+			.set(\"r\", \"htr\")
+			.set(\"q\", args.join(\" \"))
+			.toString()
+	}).text();
+
+	const $ = sb.Utils.cheerio(html);
+	const words = Array.from($(\"#div-ichiran-result span.ds-text:not(.hidden) span.ds-word\")).map(i => i.firstChild.data);
+	if (words.length > 0) {
+		return {
+			reply: words.join(\" \")
+		};
+	}
+
+	return {
+		reply: sb.Utils.transliterate(args.join(\" \"))
+	};
+})',
 		NULL,
 		'supinic/supibot-sql'
 	)
