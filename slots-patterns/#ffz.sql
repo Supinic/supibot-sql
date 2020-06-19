@@ -12,12 +12,12 @@ VALUES
 		7,
 		'#ffz',
 		'(async function slotsPattern_ffz (context) {
-	const data = await sb.Got({
-		throwHttpErros: false,
+	const { statusCode, body: data } = await sb.Got({
+		throwHttpErrors: false,
 		url: \"https://api.frankerfacez.com/v1/room/\" + context.channel.Name
-	}).json();
+	});
 	
-	if (data.status === 404) {
+	if (statusCode === 404) {
 		return { reply: \"This channel doesn\'t exist within FFZ database!\" };
 	}
 
