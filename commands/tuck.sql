@@ -23,8 +23,9 @@ VALUES
 		20000,
 		NULL,
 		NULL,
-		'(async function tuck (context, user, emote) {
-	user = (user || \"\").toLowerCase().replace(/^@/, \"\");
+		'(async function tuck (context, user, ...args) {
+	const emote = args.pop() ?? null;
+	user = user?.toLowerCase().replace(/^@/, \"\") ?? null;
 
 	if (context.invocation === \"tuck\") {
 		if (!user || user === context.user.Name) {
@@ -39,7 +40,7 @@ VALUES
 		}
 		else {
 			return { 
-				reply: `You tucked ${user} to bed ${emote || \"FeelsOkayMan\"} 👉 🛏`
+				reply: `You tucked ${user} to bed ${emote ?? \"FeelsOkayMan\"} 👉 🛏`
 			};
 		}
 	}
@@ -55,7 +56,7 @@ VALUES
 			};
 		}
 		else {
-			const forehead = (emote && emote.toLowerCase().includes(\"head\"))
+			const forehead = (emote?.toLowerCase().includes(\"head\"))
 				? emote
 				: \"4Head\";
 
