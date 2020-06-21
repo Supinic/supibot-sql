@@ -67,6 +67,11 @@ VALUES
 })();',
 		'(async function poe (context, commandType, ...args) {
 	if (!commandType) {
+		const leagueStart = new sb.Date(\"2020-06-19 22:00\");
+		return {
+			reply: `Harvest League (3.11) started ${sb.Utils.timeDelta(leagueStart)}!`
+		};
+
 		return {
 			reply: `No query type provided! Currently supported: \"lab\".`
 		};
