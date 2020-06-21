@@ -16,8 +16,8 @@ INSERT INTO
 VALUES
 	(
 		208,
-		'ForeverAlone',
-		'[\"epal\"]',
+		'epal',
+		'[\"ForeverAlone\"]',
 		'ping',
 		'Fetches a random person from epal.gg - post their description. If used on supinic\'s channel with TTS on, and if they have an audio introduction, it will be played on stream.',
 		10000,
