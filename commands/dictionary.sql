@@ -19,74 +19,63 @@ VALUES
 		'dictionary',
 		'[\"define\", \"def\", \"dict\"]',
 		'ping,pipe',
-		'Fetches the dictionary definition of a word. If there are multiple definitions, you can add \"index:#\" with a number to access specific definition indexes.',
+		'Fetches the dictionary definition of a word. You can use \"lang:\" to specifiy a language, and if there are multiple definitions, you can add \"index:#\" with a number to access specific definition indexes.',
 		10000,
 		NULL,
 		NULL,
 		'(async function dictionary (context, ...args) {
-	let specificIndex = 0;
-	for (let i = 0; i < args.length; i++) {
+	if (args.length === 0) {
+		return {
+			success: false,
+			reply: \"No word provided!\"
+		};
+	}
+
+	let index = 0;
+	let language = \"en\";
+	for (let i = args.length - 1; i >= 0; i--) {
 		const token = args[i];
-		if (/^index:\\d+$/.test(token)) {
-			specificIndex = Number(token.replace(\"index:\", \"\"));
+		if (token.includes(\"lang:\")) {
+			language = sb.Utils.languageISO.getCode(token.split(\":\")[1]);
+			args.splice(i, 1);
+		}
+		else if (token.includes(\"index:\")) {
+			index = Number(token.split(\":\")[1]);
 			args.splice(i, 1);
 		}
 	}
 
-	const term = args[0];
-	const { body, statusCode } = await sb.Got({
-		url: `https://owlbot.info/api/v2/dictionary/${term}`,
-		searchParams: \"format=json\",
-		throwHttpErrors: false
+	if (!language) {
+		return {
+			success: false,
+			reply: \"Invalid language provided!\"
+		};
+	}
+
+	const word = encodeURIComponent(args.shift());
+	const { statusCode, body: data } = await sb.Got({
+		url: `https://api.dictionaryapi.dev/api/v1/entries/${language}/${word}`,
+		throwHttpErrors: false,
+		responseType: \"json\"
 	});
 
 	if (statusCode !== 200) {
 		return {
-			success: false,
-			reply: `Dictionary API returned error ${statusCode}!`
+			reply: data.message
 		};
 	}
 	
-	let data = null;
-	try {
-		data = JSON.parse(body);
-	}
-	catch (e) {
+	const items = Object.entries(data[0].meaning).flatMap(([type, value]) => value.map(item => ({ type, definition: item.definition })))
+	const result = items[index];
+	if (!result) {
 		return {
 			success: false,
-			reply: `Dictionary API cannot return proper data! (asked for JSON, got HTML)`
+			reply: `There is no item with that index! Maximum index: ${item.length}`
 		};
 	}
-
-	if (data.length === 1 && data[0].message) {
-		return {
-			reply: data[0].message
-		};
-	}
-	else if (data.length === 0) {
-		return {
-			reply: \"There is no such defintion!\"
-		};
-	}
-	else if (specificIndex < 0 || specificIndex >= data.length) {
-		return {
-			reply: \"Specified ID is out of bounds!\"
-		};
-	}
-
-	let extraText = \"\";
-	if (data.length > 1) {
-		const plural  = (data.length - 1 === 1) ? \"\" : \"s\";
-		extraText = (specificIndex === 0)
-			? \"(\" + (data.length - 1) + \" more definition\" + plural + \" found\" + \")\"
-			: \"\";
-	}
-
-	const { definition, type } = data[specificIndex];
-	const string = sb.Utils.removeHTML(`(${type}): ${definition}`);
 
 	return {
-		reply: `${string} ${extraText}`
+		reply: `${data[0].word} (${result.type}): ${result.definition}`
 	};
 })',
 		NULL,
