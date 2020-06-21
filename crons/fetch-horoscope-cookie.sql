@@ -45,7 +45,7 @@ VALUES
 	const { insertId } = await row.save();
 
 	const channelData = sb.Channel.get(\"supinic\", \"twitch\");
-	await channelData.send(`Fetched a new cookie! ID ${id} saved to the database.`);
+	await channelData.send(`Fetched a new cookie! ID ${insertId} saved to the database.`);
 })',
 		'Bot',
 		1
