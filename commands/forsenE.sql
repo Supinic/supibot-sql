@@ -48,7 +48,8 @@ VALUES
 			\"Twitch seems to be having some issues right now, pressed go live twice but no one can watch. will be back if they fix it\",
 			\"oh and @AdmiralBulldog I\'m coming for your ass ;)\",
 			\"People malding over rerun streamers. Meanwhile I wake up thinking about playing a game for the first time in a long time. Stop obsessing over twitch and viewcounts and just play the game.\",
-			`Banned for 2 weeks for saying retarded russians instead of retarded \"people who cant participate in voice comms in valorant due to legal reasons\". I guess I have some more time to beat up my half russian siblings now. nice`
+			`Banned for 2 weeks for saying retarded russians instead of retarded \"people who cant participate in voice comms in valorant due to legal reasons\". I guess I have some more time to beat up my half russian siblings now. nice`,
+			`Getting a new TV, any netflix and chillers out there know what to get? OS and shit thats useful in 2020. inb4 \"tv in 2020 OMEGALUL\"`
 		],
 		notes: [
 			`Source for the \"b.\" tweet: https://twitter.com/Forsen/status/1057549668253659136`,
