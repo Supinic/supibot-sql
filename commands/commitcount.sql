@@ -26,7 +26,8 @@ VALUES
 		'(async function commitCount (context, username) {
 	username = username ?? context.user.Name;
 
-	const { body: data, statusCode} = await sb.Got.instances.GitHub(`users/${username}/events`);
+	const escaped = encodeURIComponent(username);
+	const { body: data, statusCode} = await sb.Got.instances.GitHub(`users/${escaped}/events`);
 	if (statusCode !== 200) {
 		return {
 			success: false,
