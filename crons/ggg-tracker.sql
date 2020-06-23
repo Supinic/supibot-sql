@@ -45,12 +45,8 @@ VALUES
 			const link = \"https://old.reddit.com/\" + data.permalink.split(\"/\").slice(0, -2).join(\"/\");
 			message = `New Reddit post by ${data.author}: ${data.title} ${link}`
 		}
-		else if (type === \"reddit_comment\") {
-			const clean = sb.Utils.fixHTML(sb.Utils.removeHTML(data.body_html));
-			message = `New Reddit comment by ${data.author}: \"${clean}\"`;
-		}
-		else if (type === \"forum_post\") {
-			message = `New GGG forum post by ${data.poster}: \"${data.thread_title}\" https://pathofexile.com/forum/view-thread/${data.thread_id}`;
+		else {
+			return;
 		}
 
 		const channelData = sb.Channel.get(\"supinic\", \"twitch\");
