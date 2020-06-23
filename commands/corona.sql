@@ -289,10 +289,13 @@ VALUES
 		}
 	}
 
+	const active = group(allCases - (allDeaths ?? 0) - (allRecoveries ?? 0));		
 	return {
 		reply: sb.Utils.tag.trim `
 			${intro}
-			has ${cases.amount} confirmed ${cases.word}${(cases.plusAmount === null)
+			has 
+			${active} active cases,
+			${cases.amount} total ${cases.word}${(cases.plusAmount === null)
 				? \"\"
 				: ` (${cases.plusPrefix}${cases.plusAmount})`
 			},
