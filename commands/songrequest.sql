@@ -249,7 +249,8 @@ VALUES
 				};
 			}
 			else if (body.data.length > 0) {
-				lookup = { link: body.data[0].link };
+				const link = body.data[0].uri.split(\"/\").pop();
+				lookup = { link };
 			}
 		}
 		else if (type === \"youtube\") {
