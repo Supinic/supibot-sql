@@ -23,7 +23,11 @@ VALUES
 		10000,
 		NULL,
 		NULL,
-		'async () => ({ reply: \"https://supinic.com/gachi/list\" })',
+		'(async gachiList () { 
+	return {
+		reply: \"https://supinic.com/track/gachi/list\"
+	};
+})',
 		NULL,
 		'supinic/supibot-sql'
 	)
