@@ -29,7 +29,7 @@ VALUES
 			reply: sb.Utils.tag.trim `
 				All suggestions: https://supinic.com/data/suggestion/list
 				||
-				Your suggestions: https://supinic.com/data/suggestion/list?columnName=${context.user.Name}
+				Your suggestions: https://supinic.com/data/suggestion/list?columnAuthor=${context.user.Name}
 			`,
 			cooldown: 5000
 		};
