@@ -22,7 +22,23 @@ VALUES
 		'Fetches the dictionary definition of a word. You can use \"lang:\" to specifiy a language, and if there are multiple definitions, you can add \"index:#\" with a number to access specific definition indexes.',
 		10000,
 		NULL,
-		NULL,
+		'({
+	languages: [
+		[\"en\", \"English\"],
+		[\"hi\", \"Hindi\"],
+		[\"es\", \"Spanish\"],
+		[\"fr\", \"French\"],
+		[\"ja\", \"Japanese\"],
+		[\"ru\", \"Russian\"],
+		[\"de\", \"German\"],
+		[\"it\", \"Italian\"],
+		[\"ko\", \"Korean\"],
+		[\"pt-BR\", \"Brazilian Portuguese - only works via the code\"],
+		[\"zh-CN\", \"Chinese\"],
+		[\"ar\", \"Arabic\"],
+		[\"tr\", \"Turkish\"]
+	]
+})',
 		'(async function dictionary (context, ...args) {
 	if (args.length === 0) {
 		return {
@@ -35,8 +51,15 @@ VALUES
 	let language = \"en\";
 	for (let i = args.length - 1; i >= 0; i--) {
 		const token = args[i];
-		if (token.includes(\"lang:\")) {
-			language = sb.Utils.languageISO.getCode(token.split(\":\")[1]);
+		if (token.includes(\"lang:\") || token.includes(\"language:\")) {
+			const identifier = token.split(\":\")[1];
+			if (identifier.length <= 5) {
+				language = identifier;
+			}
+			else {
+				language = sb.Utils.languageISO.getCode(identifier);
+			}
+
 			args.splice(i, 1);
 		}
 		else if (token.includes(\"index:\")) {
@@ -49,6 +72,12 @@ VALUES
 		return {
 			success: false,
 			reply: \"Invalid language provided!\"
+		};
+	}
+	else if (!this.staticData.languages.map(i => i[0]).includes(language)) {
+		return {
+			success: false,
+			reply: \"Your provided language is not supported by the Dictionary API!\"
 		};
 	}
 
@@ -85,6 +114,31 @@ VALUES
 		reply: `${data[0].word} (${result.type}): ${result.definition}`
 	};
 })',
-		NULL,
+		'async (prefix, values) => {
+	const { languages } = values.getStaticData();
+	const list = languages.map(([code, name]) => `<li><code>${code}</code> - ${name}</li>`).join(\"\");
+
+	return [
+		\"Fetches dictionary definitions of provided words, also in specific languages.\",
+		\"If there\'s multiple, you can check a different definition by appending the index:# parameter.\",
+		\"\",
+
+		`<code>${prefix}dictionary (word)</code>`,
+		\"Will fetch the word\'s definition in the English language.\",
+		\"\",
+
+		`<code>${prefix}dictionary lang:fr (word)</code>`,	
+		`<code>${prefix}dictionary language:French (word)</code>`,	
+		\"Both of these will fetch the word\'s definition in the French language.\",
+		\"\",
+
+		`<code>${prefix}dictionary (word) index:3</code>`,
+		\"Will fetch the word\'s 4th (counting starts from zero) definition in the English language.\",
+		\"\",
+
+		\"List of supported languages:\",
+		list
+	];
+}',
 		'supinic/supibot-sql'
 	)
