@@ -49,7 +49,7 @@ VALUES
 	if (!targetUser) {
 		return { reply: \"Target user does not exist in the database!\" };
 	}
-	else if (targetUser.ID === sb.Config.get(\"SELF_ID\")) {
+	else if (targetUser.Name === context.platform.Self_Name) {
 		return { reply: \"I don\'t eat cookies, sugar is bad for my circuits!\" };
 	}	
 

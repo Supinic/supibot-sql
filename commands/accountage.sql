@@ -43,7 +43,6 @@ VALUES
 	}
 
 	const data = body.users[0];
-
 	const now = new sb.Date();
 	const created = new sb.Date(data.created_at);
 	const delta = sb.Utils.timeDelta(created);
@@ -53,7 +52,7 @@ VALUES
 
 	let anniversary = \"\";
 	if (now.year > created.year && now.month === created.month && now.day === created.day) {
-		const who = (user.ID === sb.Config.get(\"SELF_ID\")) ? \"my\" : \"your\";
+		const who = (user.Name === context.platform.Self_Name) ? \"my\" : \"your\";
 		anniversary = `It\'s ${who} ${now.year - created.year}. Twitch anniversary! FeelsBirthdayMan Clap`;
 	}
 

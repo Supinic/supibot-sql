@@ -28,7 +28,7 @@ VALUES
 		.select(\"Bot_Alias\", \"Prefix\", \"Prefix_Space\")
 		.from(\"bot_data\", \"Bot\")
 		.where(\"Prefix IS NOT NULL\")
-		.where(\"Bot_Alias <> %n\", sb.Config.get(\"SELF_ID\"))
+		.where(\"Prefix <> %s\", sb.Command.prefix)
 	);
 
 	for (const bot of bots) {

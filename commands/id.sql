@@ -22,7 +22,9 @@ VALUES
 		'Checks your (or someone else\'s) ID in the database of users - the lower the number, the earlier the user was first spotted',
 		10000,
 		NULL,
-		NULL,
+		'({
+	threshold: 1127
+})',
 		'(async function id (context, user) {
 	let targetUser = context.user;
 	if (user) {
@@ -45,9 +47,9 @@ VALUES
 		pronoun = \"you were\";
 	}
 
-	const temporalReply = (targetUser.ID === sb.Config.get(\"SELF_ID\"))
+	const temporalReply = (targetUser.Name === context.platform.Self_Name)
 		? \"first brought to life as an mIRC bot\"
-		: (targetUser.ID < sb.Config.get(\"SELF_ID\"))
+		: (targetUser.ID < this.staticData.botID)
 			? \"first mentioned in logs (predating Supibot)\"
 			: \"first seen\";
 
@@ -57,7 +59,7 @@ VALUES
 
 	let birthdayString = \"\";
 	if (now.year > year && now.month === month && now.day === day) {
-		if (targetUser.ID === sb.Config.get(\"SELF_ID\")) {
+		if (targetUser.Name === context.platform.Self_Name) {
 			birthdayString = \"It\'s my birthday! FeelsBirthdayMan MrDestructoid\";
 		}
 		else {

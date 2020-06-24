@@ -35,7 +35,7 @@ VALUES
 	else if (targetUser.ID === context.user.ID) {
 		return { reply: \"You\'re right here NaM\" };
 	}
-	else if (targetUser.ID === sb.Config.get(\"SELF_ID\")) {
+	else if (targetUser.Name === context.platform.Self_Name) {
 		return { reply: \"I\'m right here MrDestructoid\" };
 	}
 

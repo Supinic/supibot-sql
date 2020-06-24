@@ -39,7 +39,7 @@ VALUES
 	type = type.toLowerCase();
 	switch (type) {
 		case \"cookie\": {
-			if (targetUserData.ID === sb.Config.get(\"SELF_ID\")) {
+			if (targetUserData.Name === context.platform.Self_Name) {
 				return { reply: \"I appreciate the gesture, but thanks, I don\'t eat sweets :)\" };
 			}
 

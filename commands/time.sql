@@ -89,7 +89,7 @@ VALUES
 				cooldown: 2500
 			};
 		}
-		else if (targetUser.ID === sb.Config.get(\"SELF_ID\")) {
+		else if (targetUser.Name === context.platform.Self_Name) {
 			return {
 				reply: `My current time is ${sb.Date.now()} 🤖`
 			};
