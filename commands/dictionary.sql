@@ -61,16 +61,23 @@ VALUES
 
 	if (statusCode !== 200) {
 		return {
+			success: false,
 			reply: data.message
 		};
 	}
 	
 	const items = Object.entries(data[0].meaning).flatMap(([type, value]) => value.map(item => ({ type, definition: item.definition })))
+	if (items.length === 0) {		
+		return {
+			reply: `${data[0].word} (${data[0].phonetic}) - no word meaning has been found!`
+		};
+	}
+
 	const result = items[index];
 	if (!result) {
 		return {
 			success: false,
-			reply: `There is no item with that index! Maximum index: ${item.length}`
+			reply: `There is no item with that index! Maximum index: ${items.length}`
 		};
 	}
 
