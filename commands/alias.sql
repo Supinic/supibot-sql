@@ -28,7 +28,7 @@ VALUES
 		response: \"Your alias should only contain letters, numbers and be 2-25 characters long.\"
 	},
 
-	applyParameters: (aliasArguments, commandArguments) => {
+	applyParameters: (context, aliasArguments, commandArguments) => {
 		const resultArguments = [];
 
 		for (let i = 0; i < aliasArguments.length; i++) {
@@ -250,7 +250,7 @@ VALUES
 			}
 
 			const { invocation, args: aliasArguments } = wrapper.get(name);
-			const { success, reply, resultArguments } = this.staticData.applyParameters(aliasArguments, args);
+			const { success, reply, resultArguments } = this.staticData.applyParameters(context, aliasArguments, args);
 			if (!success) {
 				return { success, reply };
 			}
