@@ -20,6 +20,9 @@ VALUES
 	if (statusCode === 404) {
 		return { reply: \"This channel doesn\'t exist within FFZ database!\" };
 	}
+	else if (data.sets) {
+		return { reply: \"No FFZ emotes found!\" };
+	}
 
 	const set = Object.keys(data.sets)[0];
 	if (data.sets[set].emoticons.length === 0) {
