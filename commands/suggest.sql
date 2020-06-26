@@ -27,9 +27,8 @@ VALUES
 	if (args.length === 0 || context.invcation === \"suggestions\") {
 		return {
 			reply: sb.Utils.tag.trim `
-				All suggestions: https://supinic.com/data/suggestion/list
-				||
-				Your suggestions: https://supinic.com/data/suggestion/list?columnAuthor=${context.user.Name}
+				No suggestion text provided!
+				Your suggestions here: https://supinic.com/data/suggestion/list?columnAuthor=${context.user.Name}
 			`,
 			cooldown: 5000
 		};
