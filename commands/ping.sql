@@ -49,10 +49,14 @@ VALUES
 	const memoryData = String(memory).split(\"\\n\").filter(Boolean).map(i => Number(i.split(/:\\s+/)[1].replace(/kB/, \"\")) * 1000);
 	const pong = \"P\" + chars[context.invocation[1]] + \"ng!\";
 
+	const [swapTotal, swapFree] = memoryData.slice(14, 16);
+	const swapUsed = (swapTotal - swapFree);
+
 	const data = {
 		Uptime: sb.Utils.timeDelta(sb.Master.started).replace(\"ago\", \"\").trim(),
 		Temperature: temperature.stdout.match(/([\\d\\.]+)/)[1] + \"°C\",
 		\"Free memory\": sb.Utils.formatByteSize(memoryData[2], 0) + \"/\" + sb.Utils.formatByteSize(memoryData[0], 0),
+		Swap: sb.Utils.formatByteSize(swapUsed, 0) + \"/\" + sb.Utils.formatByteSize(swapTotal, 0),
 		\"Commands used\": sb.Runtime.commandsUsed
 	};
 
