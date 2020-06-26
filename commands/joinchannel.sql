@@ -42,8 +42,16 @@ VALUES
 			reply: `Only additional mode available is \"Read\"!`
 		};
 	}
-
+	
 	channel = channel.replace(\"#\", \"\").toLowerCase();
+	const existing = sb.Channel.get(channel);
+	if (existing) {
+		return {
+			success: false,
+			reply: \"This channel already exists in the database, with mode = \" + existing.Mode + \"!\"
+		};
+	}
+
 	const channelID = await sb.Utils.getTwitchID(channel);
 	if (!channelID) {
 		return {
