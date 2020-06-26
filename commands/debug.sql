@@ -41,7 +41,7 @@ VALUES
 		const ForeignObject = vm.runInContext(\"Object\", scriptContext);
 		let result = await script.runInNewContext(scriptContext, { timeout: 2500 });
 		if (typeof result !== \"undefined\") {
-			if (result?.constructor === ForeignObject) {
+			if (result?.constructor?.name === \"Object\") {
 				result = JSON.stringify(result, null, 4);
 			}
 
