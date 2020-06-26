@@ -23,7 +23,7 @@ VALUES
 		10000,
 		NULL,
 		NULL,
-		'(async gachiList () { 
+		'(async function gachiList () { 
 	return {
 		reply: \"https://supinic.com/track/gachi/list\"
 	};
