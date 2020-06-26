@@ -27,7 +27,12 @@ VALUES
 	const query = args.join(\"\");
 	if (!query) {
 		return {
-			reply: \"Supibot: https://github.com/Supinic/supibot - Website: https://github.com/Supinic/supinic.com\"
+			reply: sb.Utils.tag.trim `
+				Supibot: https://github.com/Supinic/supibot 
+				// Website: https://github.com/Supinic/supinic.com
+				// Modules: https://github.com/Supinic/supi-core
+				// SQL: https://github.com/Supinic/supibot-sql
+			`
 		};
 	}
 
