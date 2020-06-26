@@ -168,7 +168,7 @@ VALUES
 			const row = await sb.Query.getRow(\"music\", \"Track\");
 
 			row.setValues({
-				Link: link,
+				Link: videoData.ID,
 				Name: (videoData && videoData.name) || null,
 				Added_By: context.user.ID,
 				Video_Type: this.data.typeMap[type],
