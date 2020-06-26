@@ -50,7 +50,7 @@ VALUES
 				Platform: sub.Platform,
 				User_From: sb.Config.get(\"SELF_ID\"),
 				User_To: oldRow.User_Alias,
-				Text: `Suggestion ${oldRow.ID} changed: ${oldRow.Status} => ${newRow.Status}`,
+				Text: `[EVENT] Suggestion ${oldRow.ID} changed: ${oldRow.Status} => ${newRow.Status}`,
 				Schedule: null,
 				Created: new sb.Date(),
 				Private_Message: true
