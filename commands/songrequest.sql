@@ -216,7 +216,7 @@ VALUES
 		const meta = await sb.Utils.getMediaFileData(url);
 		if (meta?.duration) {
 			const name = decodeURIComponent(parsedURL.path.split(\"/\").pop());
-			const encoded = encodeURI(url);
+			const encoded = encodeURI(decodeURI(url));
 			data = {
 				name,
 				ID: encoded,
