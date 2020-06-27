@@ -376,6 +376,10 @@ VALUES
 		`<code>${prefix}alias edit <u>hello</u></code> => \"translate to:italian Hello!\"`,
 		\"\",
 
+		`<code>${prefix}alias rename (old-name) (new-name)</code>`,
+		\"Renames your command alias from old-name to new-name.\",
+		\"\",
+
 		`<code>${prefix}alias list</code>`,
 		\"Lists all your currently active aliases.\",
 		\"\",
