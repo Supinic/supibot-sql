@@ -67,11 +67,6 @@ VALUES
 })();',
 		'(async function poe (context, commandType, ...args) {
 	if (!commandType) {
-		const leagueStart = new sb.Date(\"2020-06-19 22:00\");
-		return {
-			reply: `Harvest League (3.11) started ${sb.Utils.timeDelta(leagueStart)}!`
-		};
-
 		return {
 			reply: `No query type provided! Currently supported: \"lab\".`
 		};
@@ -121,6 +116,68 @@ VALUES
 			};
 		}
 
+		case \"price\": {
+			const [leagueName, ...rest] = args;
+			const itemName = rest.join(\" \");
+			if (!leagueName || !itemName) {
+				return {
+					success: false,
+					reply: `No league or item provided!`
+				};
+			}
+
+			const [league, item] = await Promise.all([
+				sb.Query.getRecordset(rs => rs
+					.select(\"*\")
+					.from(\"poe\", \"League\")
+					.where(\"Shortcut = %s\", leagueName)
+					.where(\"Active = %b\", true)
+					.single()
+				),
+
+				sb.Query.getRecordset(rs => rs
+					.select(\"*\")
+					.from(\"poe\", \"Item\")
+					.where(\"Name = %s\", itemName)
+					.single()
+				)
+			]);
+			if (!league) {
+				return {
+					success: false,
+					reply: `Provided league does not exist or is not active!`
+				};
+			}
+			else if (!item) {
+				return {
+					success: false,
+					reply: `Provided item does not exist or is not being tracked!`
+				};
+			}
+
+			const price = await sb.Query.getRecordset(rs => rs
+				.select(\"Chaos_Equivalent AS Chaos\")
+				.from(\"poe\", \"Price\")
+				.where(\"League = %n\", league.ID)
+				.where(\"Item = %n\", item.ID)
+				.single()
+			);
+			if (!price) {
+				return {
+					success: false,
+					reply: `No price found for that item!`
+				};
+			}
+
+			let reply = `${itemName} is currently worth ${price.Chaos} chaos in ${league.Name}.`;
+			if (price.Chaos < 0.5) {
+				const flipped = sb.Utils.round(1 / price.Chaos, 2);
+				reply = `1 chaos can currently buy ${flipped} of ${item.Name} in ${league.Name}.`;
+			}
+
+			return { reply };
+		}
+
 		case \"syndicate\": {
 			const person = args.shift();
 			if (!person) {
@@ -155,7 +212,7 @@ VALUES
 		case \"trial\":
 		case \"trials\": {
 			const trialType = args.shift() ?? \"all\";
-			return { 
+			return {
 				reply: this.staticData.trials[trialType] ?? \"Invalid trial type provided!\"
 			};
 		}
