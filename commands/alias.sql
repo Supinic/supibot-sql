@@ -109,7 +109,7 @@ VALUES
 				This command lets you created your own command aliases.
 				Check the extended help here:
 				https://supinic.com/bot/command/${this.ID}
-		    `
+			`
 		};
 	}
 
@@ -336,7 +336,7 @@ VALUES
 				Invalid sub-command provided!
 				Check the extended help here:
 			   	https://supinic.com/bot/command/${this.ID}
-		    `
+			`
 		}
 	}
 
