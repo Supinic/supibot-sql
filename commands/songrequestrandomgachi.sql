@@ -25,13 +25,13 @@ VALUES
 		'({
 	repeatLimit: 5
 })',
-		'(async function songRequestRandomGachi () {
+		'(async function songRequestRandomGachi (context, ...args) {
 	let link = null;
 	let counter = 0;
 	const rg = sb.Command.get(\"rg\");
 
 	while (!link && counter < this.staticData.repeatLimit) {
-		const { reply } = await rg.execute({}, \"linkOnly:true\");
+		const { reply } = await rg.execute({}, \"linkOnly:true\", ...args);
 		const data = await sb.Utils.linkParser.fetchData(reply);
 
 		if (data === null) {
