@@ -20,9 +20,10 @@ VALUES
 		'[\"$\"]',
 		'ping,pipe',
 		'This command lets you create your own aliases (shorthands) for any other combination of commands and arguments. Check the extended help for step-by-step info.',
-		5000,
+		2500,
 		NULL,
 		'({
+	aliasLimit: 10,
 	nameCheck: {
 		regex: /^[\\w]{2,25}$/,
 		response: \"Your alias should only contain letters, numbers and be 2-25 characters long.\"
@@ -30,52 +31,62 @@ VALUES
 
 	applyParameters: (context, aliasArguments, commandArguments) => {
 		const resultArguments = [];
+		const numberRegex = /\\${(\\d+)(\\+?)}/;
+		const keywordRegex = /\\${(channel|executor)}/;
 
-		for (let i = 0; i < aliasArguments.length; i++) {
-			const targetArgument = aliasArguments[i];
+		for (const arg of aliasArguments) {
+			if (numberRegex.test(arg)) {
+				const [rawOrder, useRest] = arg.match(numberRegex).slice(1);
+				const order = Number(rawOrder);
+				if (!sb.Utils.isValidInteger(order)) {
+					return {
+						success: false,
+						reply: `Invalid argument number \"${arg}\"!`
+					};
+				}
 
-			if (targetArgument.startsWith(\"${\") && targetArgument.endsWith(\"}\")) {
-				const replacementName = targetArgument.substr(2, targetArgument.length - 3);
+				let replacement = null;
+				if (useRest) {
+					const rest = commandArguments.slice(order);
+					if (rest.length === 0) {
+						return {
+							success: false,
+							reply: `There are no arguments starting from position ${order}!`
+						};
+					}
 
-				if (replacementName === \"channel\") {
+					replacement = rest.join(\" \");
+				}
+				else {
+					replacement = commandArguments[order];
+					if (!replacement) {
+						return {
+							success: false,
+							reply: `Command argument number ${order} is missing!`
+						};
+					}
+				}
+
+				const result = arg.replace(numberRegex, replacement);
+				resultArguments.push(...result.split(\" \"));
+			}
+			else if (keywordRegex.test(arg)) {
+				const type = arg.match(keywordRegex)[1];
+				if (type === \"channel\") {
 					resultArguments.push(context.channel?.Name ?? \"[whispers]\");
 				}
-				else if (replacementName === \"executor\") {
+				else if (type === \"executor\") {
 					resultArguments.push(context.user.Name);
-				}
-				else if (!Number.isNaN(Number(replacementName))) {
-					// ${0}
-					const argument = commandArguments[Number(replacementName) + 1];
-					if (argument) {
-						resultArguments.push(argument);
-					}
-					else {
-						// Argument is empty, don\'t add anything.
-					}
-				}
-				else if (
-					!Number.isNaN(Number(replacementName.substr(0, replacementName.length - 3)))
-					&& replacementName[replacementName.length - 3] === \"+\"
-				) {	
-					// ${0+}
-					const argument = commandArguments.slice(Number(replacementName.substr(0, replacementName.length - 3)) + 1);
-					if (argument) {
-						resultArguments.splice(resultArguments.length, 0, ...argument);
-					}
-					else {
-						// Arguments are empty, don\'t add anything.
-					}
 				}
 				else {
 					return {
 						success: false,
-						reply: `Unknown replacement ${targetArgument}.`
-					}
+						reply: `This shouldn\'t happen :)`
+					};
 				}
 			}
 			else {
-				// not a replacement
-				resultArguments.push(targetArgument);
+				resultArguments.push(arg);
 			}
 		}
 
@@ -97,7 +108,7 @@ VALUES
 			reply: sb.Utils.tag.trim `
 				This command lets you created your own command aliases.
 				Check the extended help here:
-			    https://supinic.com/bot/command/${this.ID}
+				https://supinic.com/bot/command/${this.ID}
 		    `
 		};
 	}
@@ -108,6 +119,7 @@ VALUES
 	}
 
 	let changed = false;
+	let reply = \"Unexpected reply! Contact @Supinic about this.\";
 	const wrapper = new Map(Object.entries(context.user.Data.aliasedCommands));
 
 	type = type.toLowerCase();
@@ -117,13 +129,13 @@ VALUES
 			if (!name || !command) {
 				return {
 					success: false,
-					reply: `No alias or command name provided! Use \"alias add (alias-name) (command-name) (...arguments)\"`
+					reply: `You didn\'t provide a name, or a command! Use: alias add (name) (command) (...arguments)\"`
 				};
 			}
 			else if (wrapper.has(name)) {
 				return {
 					success: false,
-					reply: `Cannot create alias - you already have an alias with this name! To replace it, remove it first.`
+					reply: `Cannot add alias \"${name}\" - you already have one! You can either _edit_ its definion, _rename_ it or _remove_ it.`
 				};
 			}
 			else if (!this.staticData.nameCheck.regex.test(name)) {
@@ -145,9 +157,12 @@ VALUES
 			wrapper.set(name, {
 				name,
 				invocation: command,
-				args: rest
+				args: rest,
+				created: new sb.Date().toJSON(),
+				lastEdit: null
 			});
 
+			reply = `Your alias \"${name}\" has been created successfully.`;
 			break;
 		}
 
@@ -168,7 +183,7 @@ VALUES
 
 			const { invocation, args: commandArgs } = wrapper.get(name);
 			return {
-				reply: `Definition of alias \"${name}\": ${invocation} ${commandArgs.join(\" \")}`
+				reply: `Your alias \"${name}\" has this definition: ${invocation} ${commandArgs.join(\" \")}`
 			};
 		}
 
@@ -183,7 +198,7 @@ VALUES
 			else if (!wrapper.has(name)) {
 				return {
 					success: false,
-					reply: `Cannot edit - you don\'t have an alias wit this name!`
+					reply: `You don\'t have an alias with this name!`
 				};
 			}
 
@@ -195,22 +210,23 @@ VALUES
 				};
 			}
 
+			const obj = wrapper.get(name);
+			obj.invocation = command;
+			obj.args = rest;
+			obj.lastEdit = new sb.Date().toJSON();
+
 			changed = true;
-			wrapper.set(name, {
-				name,
-				invocation: command,
-				args: rest
-			});
+			reply = `Your alias \"${name}\" has been successfully edited.`;
 
 			break;
 		}
 
 		case \"list\": {
-			const list = [...wrapper.keys()].sort().join(\", \");
+			const list = [...wrapper.keys()].map(i => `\"${i}\"`).sort().join(\", \");
 			return {
 				reply: (list.length === 0)
 					? \"You currently don\'t have any aliases.\"
-					: `Your aliases: ${list}`
+					: `Your aliases: ${list}.`
 			};
 		}
 
@@ -231,6 +247,33 @@ VALUES
 
 			changed = true;
 			wrapper.delete(name);
+			reply = `Your alias \"${name}\" has been succesfully removed.`;
+
+			break;
+		}
+
+		case \"rename\": {
+			const [oldName, newName] = args;
+			if (!oldName || !newName) {
+				return {
+					success: false,
+					reply: \"You must provide both the current alias name and the new one!\"
+				};
+			}
+			else if (!wrapper.has(oldName)) {
+				return {
+					success: false,
+					reply: \"Can\'t rename - you don\'t have an alias with that name!\"
+				};
+			}
+
+			changed = true;
+			wrapper.set(newName, wrapper.get(oldName));
+			wrapper.get(newName).lastEdit = new sb.Date().toJSON();
+			wrapper.delete(oldName);
+
+			reply = `Your alias \"${oldName}\" has been succesfully renamed to \"${newName}\".`;
+
 			break;
 		}
 
@@ -250,9 +293,21 @@ VALUES
 			}
 
 			const { invocation, args: aliasArguments } = wrapper.get(name);
-			const { success, reply, resultArguments } = this.staticData.applyParameters(context, aliasArguments, args);
+			const { success, reply, resultArguments } = this.staticData.applyParameters(context, aliasArguments, args.slice(1));
 			if (!success) {
 				return { success, reply };
+			}
+
+			const aliasCount = (context.append.aliasCount ?? 0) + 1;
+			if (aliasCount > this.staticData.aliasLimit) {
+				return {
+					success: false,
+					reply: sb.Utils.tag.trim `
+						Your alias cannot continue!
+						It causes more than ${this.staticData.aliasLimit} alias calls.
+						Please reduce the complexity first.
+					`
+				};
 			}
 
 			const result = await sb.Command.checkAndExecute(
@@ -262,6 +317,7 @@ VALUES
 				context.user,
 				{
 					...context.append,
+					aliasCount,
 					platform: context.platform,
 					skipPending: true,
 					skipPing: true
@@ -279,21 +335,17 @@ VALUES
 			reply: sb.Utils.tag.trim `
 				Invalid sub-command provided!
 				Check the extended help here:
-			    https://supinic.com/bot/command/${this.ID}
+			   	https://supinic.com/bot/command/${this.ID}
 		    `
 		}
 	}
 
-	let addendum = \"\";
 	if (changed) {
 		context.user.Data.aliasedCommands = Object.fromEntries(wrapper);
 		await context.user.saveProperty(\"Data\");
-		addendum = \"Changes saved successfully!\";
 	}
 
-	return {
-		reply: `Alias operation ${type} succeeded. ${addendum}`
-	};
+	return { reply };
 })',
 		'async (prefix) => {
 	return [
@@ -331,6 +383,50 @@ VALUES
 		`<code>${prefix}alias remove (name)</code>`,
 		\"Removes your command alias with the given name.\",
 		\"\",
+
+		\"<h5>Replacements</h5>\",
+		\"Replaces a symbol in your alias with a value depending on its name.\",
+		`<ul>
+			<li>
+				<code>\\${#}</code> (e.g. \\${0}, \\${1}, ...)
+				<br>
+				Replaced by argument number # in your alias execution.
+				<br>
+				<code>${prefix}alias add test translate to:\\${0} hello!</code>
+				<br>
+				<code>${prefix}alias run test spanish</code> => <code>${prefix}translate to:spanish hello</code>
+			</li>
+			<br>
+			<li>
+				<code>\\${#+}</code> (e.g. \\${0+}, \\${1+}, ...)
+				<br>
+				Replaced by argument number # and all the following arguments in your alias execution.
+				<br>
+				<code>${prefix}alias add test translate to:\\${0} hello, \\${1+}!</code>
+				<br>
+				<code>${prefix}alias run test spanish my friends</code> => <code>${prefix}translate to:spanish hello, my friends!</code>
+			</li>
+			<br>
+			<li>
+				<code>\\${channel}</code>
+				<br>
+				The channel name the alias is run in.
+				<br>
+				<code>${prefix}alias add test remind \\${channel} hello!</code>
+				<br>
+				<code>${prefix}alias run test</code> => <code>${prefix}remind (channel-name) hello!</code>
+			</li>
+			<br>
+			<li>
+				<code>\\${executor}</code>
+				<br>
+				The username of the person running the alias.
+				<br>
+				<code>${prefix}alias add test remind person hello from \\${executor}!</code>
+				<br>
+				<code>${prefix}alias run test</code> => <code>${prefix}remind person hello from (you)!</code>
+			</li>
+		</ul>`
 	];
 }',
 		'supinic/supibot-sql'
