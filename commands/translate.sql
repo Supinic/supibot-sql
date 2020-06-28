@@ -24,13 +24,6 @@ VALUES
 		NULL,
 		NULL,
 		'(async function translate (context, ...args) {
-	if (args.length === 0) {
-		return {
-			reply: \"No text for translation provided!\",
-			meta: { skipCooldown: true }
-		};
-	}
-
 	const options = { from: \"auto\", to: \"en\", direction: true, confidence: true };
 	let fail = { from: null, to: null };
 
@@ -61,6 +54,12 @@ VALUES
 
 	if (fail.from || fail.to) {
 		return { reply: `Language \"${fail.from || fail.to}\" was not recognized!` };
+	}
+	else if (args.length === 0) {
+		return {
+			reply: \"No text for translation provided!\",
+			cooldown: 2500
+		};
 	}
 
 	const response = await sb.Got({
