@@ -34,7 +34,7 @@ VALUES
 		};
 	}
 
-	const row = await sb.Query.getRow(\"data\", \"Suggestion\")
+	const row = await sb.Query.getRow(\"data\", \"Suggestion\");
 	row.setValues({
 		Text: args.join(\" \"),
 		User_Alias: context.user.ID,
@@ -43,12 +43,35 @@ VALUES
 
 	await row.save();
 
+	const isSubscribed = await sb.Query.getRecordset(rs => rs
+		.select(\"ID\")
+		.from(\"chat_data\", \"Event_Subscription\")
+		.where(\"User_Alias = %n\", context.user.ID)
+		.where(\"Type = %s\", \"Suggestion\")
+		.flat(\"ID\")
+		.single()
+	);
+
+	let subscribed = \"\";
+	if (!isSubscribed) {
+		const row = await sb.Query.getRow(\"chat_data\", \"Event_Subscription\");
+		row.setValues({
+			Active: true,
+			Platform: context.platform.ID,
+			Type: \"Suggestion\",
+			User_Alias: context.user.ID
+		});
+
+		await row.save();
+		subscribed = \"You will now receive reminders when your suggestions get updated - you can use the $unsubscribe command to remove this. \"
+	}
+
 	const emote = (context.platform.Name === \"twitch\")
 		? \"BroBalt\"
 		: \"👍\";
 
 	return {
-		reply: `Suggestion saved, and will eventually be processed (ID ${row.values.ID}) ${emote}`
+		reply: `Suggestion saved, and will eventually be processed (ID ${row.values.ID}) ${emote} ${subscribed}`
 	};
 })',
 		NULL,
