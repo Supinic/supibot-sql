@@ -13,6 +13,7 @@ VALUES
 		'#ffz',
 		'(async function slotsPattern_ffz (context) {
 	const { statusCode, body: data } = await sb.Got({
+		responseType: \"json\",
 		throwHttpErrors: false,
 		url: \"https://api.frankerfacez.com/v1/room/\" + context.channel.Name
 	});
@@ -20,7 +21,7 @@ VALUES
 	if (statusCode === 404) {
 		return { reply: \"This channel doesn\'t exist within FFZ database!\" };
 	}
-	else if (data.sets) {
+	else if (!data.sets) {
 		return { reply: \"No FFZ emotes found!\" };
 	}
 
