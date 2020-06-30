@@ -34,7 +34,7 @@ VALUES
 	let currentArgs = [];
 
 	for (const inv of invocations) {
-		let [cmd, ...cmdArgs] = inv.replace(/^\\$\\s*/, \"$\").split(\" \");
+		let [cmd, ...cmdArgs] = inv.split(\" \");
 		cmdArgs = cmdArgs.concat(currentArgs);
 
 		if (cmd.includes(\"translate\")) {
