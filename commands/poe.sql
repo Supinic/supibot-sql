@@ -40,243 +40,222 @@ VALUES
 	trials.all = Object.values(trials).join(\" -- \");
 
 	return {
-		trials,
 		commands: [
 			{
 				name: \"labyrinth\",
 				aliases: [\"lab\"],
-				description: \"Fetches the current overview picture of today\'s Labyrinth. Use a difficulty (normal, cruel, merciless, uber) to see each one separately.\"
+				description: \"Fetches the current overview picture of today\'s Labyrinth. Use a difficulty (normal, cruel, merciless, uber) to see each one separately.\",
+				execute: async (context, ...args) => {
+					const labType = (args[0] || \"\").toLowerCase();
+					const types = [\"uber\", \"merciless\", \"cruel\", \"normal\"];
+					if (!types.includes(labType)) {
+						return {
+							reply: \"Invalid labyrinth type provided! Supported types: \" + types.join(\", \")
+						};
+					}
+
+					if (!this.data.labyrinth.date || this.data.labyrinth.date.day !== new sb.Date().day) {
+						this.data.labyrinth.date = new sb.Date().setTimezoneOffset(0);
+						this.data.details = {};
+
+						const html = await sb.Got.instances.FakeAgent(\"https://poelab.com\").text();
+						const $ = sb.Utils.cheerio(html);
+						const links = Array.from($(\".redLink\").slice(0, 4).map((_, i) => i.attribs.href));
+
+						for (let i = 0; i < links.length; i++) {
+							const type = types[i];
+							this.data.details[type] = {
+								type,
+								link: links[i],
+								imageLink: null
+							};
+						}
+					}
+
+					const detail = this.data.details[labType];
+					if (detail.imageLink === null) {
+						const html = await sb.Got.instances.FakeAgent(detail.link).text();
+						const $ = sb.Utils.cheerio(html);
+
+						detail.imageLink = $(\"#notesImg\")[0].attribs.src;
+					}
+
+					return {
+						reply: `Today\'s ${labType} labyrinth map: ${detail.imageLink}`
+					};
+				}
+			},
+			{
+				name: \"price\",
+				aliases: [],
+				description: \"Checks for current price of a given currency (items coming later). Usage: poe price (league) (item)\",
+				execute: async (context, ...args) => {
+					const [leagueName, ...rest] = args;
+					const itemName = rest.join(\" \");
+					if (!leagueName || !itemName) {
+						return {
+							success: false,
+							reply: `No league or item provided!`
+						};
+					}
+
+					const [league, item] = await Promise.all([
+						sb.Query.getRecordset(rs => rs
+							.select(\"*\")
+							.from(\"poe\", \"League\")
+							.where(\"Shortcut = %s\", leagueName)
+							.where(\"Active = %b\", true)
+							.single()
+						),
+
+						sb.Query.getRecordset(rs => rs
+							.select(\"*\")
+							.from(\"poe\", \"Item\")
+							.where(\"Name = %s\", itemName)
+							.single()
+						)
+					]);
+					if (!league) {
+						return {
+							success: false,
+							reply: `Provided league does not exist or is not active!`
+						};
+					}
+					else if (!item) {
+						return {
+							success: false,
+							reply: `Provided item does not exist or is not being tracked!`
+						};
+					}
+
+					const price = await sb.Query.getRecordset(rs => rs
+						.select(\"Chaos_Equivalent AS Chaos\")
+						.from(\"poe\", \"Price\")
+						.where(\"League = %n\", league.ID)
+						.where(\"Item = %n\", item.ID)
+						.single()
+					);
+					if (!price) {
+						return {
+							success: false,
+							reply: `No price found for that item!`
+						};
+					}
+
+					let reply = `${itemName} is currently worth ${price.Chaos} chaos in ${league.Name}.`;
+					if (price.Chaos < 0.5) {
+						const flipped = sb.Utils.round(1 / price.Chaos, 2);
+						reply = `1 chaos can currently buy ${flipped} of ${item.Name} in ${league.Name}.`;
+					}
+
+					return { reply };
+				}
 			},
 			{
 				name: \"syndicate\",
-				aliases: [],
-				description: \"Fetches info about the Syndicate. If nothing is specified, you get a chart. You can also specify a Syndicate member to get their overview, or add a position to be even more specific.\"
+				aliases: [\"syn\"],
+				description: \"Fetches info about the Syndicate. If nothing is specified, you get a chart. You can also specify a Syndicate member to get their overview, or add a position to be even more specific.\",
+				execute: async (context, ...args) => {
+					const person = args.shift();
+					if (!person) {
+						return {
+							reply: \"Check the Syndicate sheet here: https://poesyn.xyz/syndicate or the picture here: https://i.nuuls.com/huXFC.png\"
+						};
+					}
+
+					const type = (args.shift()) ?? null;
+					const data = await sb.Query.getRecordset(rs => rs
+						.select(\"*\")
+						.from(\"poe\", \"Syndicate\")
+						.where(\"Name = %s\", person)
+						.limit(1)
+						.single()
+					);
+
+					if (!data) {
+						return {
+							success: false,
+							reply: \"Syndicate member or type does not exist!\"
+						};
+					}
+
+					return {
+						reply: (type === null)
+							? Object.entries(data).map(([key, value]) => `${key}: ${value}`).join(\"; \")
+							: `${data.Name} at ${type}: ${data[sb.Utils.capitalize(type)]}`
+					};
+				}
 			},
 			{
 				name: \"trial\",
 				aliases: [\"trials\"],
-				description: \"Fetches info about the Labyrinth trials for specified difficulty, or overall if not specified.\"
+				description: \"Fetches info about the Labyrinth trials for specified difficulty, or overall if not specified.\",
+				execute: async (context, ...args) => {
+					const trialType = args.shift() ?? \"all\";
+					return {
+						reply: trials[trialType] ?? \"Invalid trial type provided!\"
+					};
+				}
 			},
 			{
 				name: \"uniques\",
 				aliases: [],
-				description: \"If a user has requested to have their unique stash tab available on supibot, you can get its link by invoking this sub-command.\"
+				description: \"If a user has requested to have their unique stash tab available on supibot, you can get its link by invoking this sub-command.\",
+				execute: async (context, ...args) => {
+					let [user, type] = args;
+					if (!user) {
+						if (!context.channel) {
+							return {
+								success: false,
+								reply: \"Must provide a user name - no channel is available!\"
+							}
+						}
+
+						user = context.channel.Name;
+					}
+
+					const userData = await sb.User.get(user);
+					if (!userData) {
+						return {
+							success: false,
+							reply: \"Provided user does not exist!\"
+						}
+					}
+					
+					const link = userData.Data?.pathOfExile?.uniqueTabs ?? null;
+					if (!link) {
+						return {
+							success: false,
+							reply: `Provided user has no unique stash tabs set up!`
+						};
+					}
+
+					return {
+							reply: `${userData.Name}\'s unique tab(s): ${link}`
+						};
+				}
 			}
 		]
 	};
 })();',
-		'(async function poe (context, commandType, ...args) {
-	if (!commandType) {
+		'(async function poe (context, type, ...args) {
+	if (!type) {
 		return {
-			reply: `No query type provided! Currently supported: \"lab\".`
+			reply: `No subcommand provided! Check the command\'s help: https://supinic.com/bot/command/${this.ID}`
 		};
 	}
 
-	commandType = commandType.toLowerCase();
+	type = type.toLowerCase();
 
-	switch (commandType) {
-		case \"lab\":
-		case \"labyrinth\": {
-			const labType = (args[0] || \"\").toLowerCase();
-			const types = [\"uber\", \"merciless\", \"cruel\", \"normal\"];
-			if (!types.includes(labType)) {
-				return {
-					reply: \"Invalid labyrinth type provided! Supported types: \" + types.join(\", \")
-				};
-			}
-
-			if (!this.data.labyrinth.date || this.data.labyrinth.date.day !== new sb.Date().day) {
-				this.data.labyrinth.date = new sb.Date().setTimezoneOffset(0);
-				this.data.details = {};
-
-				const html = await sb.Got.instances.FakeAgent(\"https://poelab.com\").text();
-				const $ = sb.Utils.cheerio(html);
-				const links = Array.from($(\".redLink\").slice(0, 4).map((_, i) => i.attribs.href));
-
-				for (let i = 0; i < links.length; i++) {
-					const type = types[i];
-					this.data.details[type] = {
-						type,
-						link: links[i],
-						imageLink: null
-					};
-				}
-			}
-
-			const detail = this.data.details[labType];
-			if (detail.imageLink === null) {
-				const html = await sb.Got.instances.FakeAgent(detail.link).text();
-				const $ = sb.Utils.cheerio(html);
-
-				detail.imageLink = $(\"#notesImg\")[0].attribs.src;
-			}
-
-			return {
-				reply: `Today\'s ${labType} labyrinth map: ${detail.imageLink}`
-			};
-		}
-
-		case \"price\": {
-			const [leagueName, ...rest] = args;
-			const itemName = rest.join(\" \");
-			if (!leagueName || !itemName) {
-				return {
-					success: false,
-					reply: `No league or item provided!`
-				};
-			}
-
-			const [league, item] = await Promise.all([
-				sb.Query.getRecordset(rs => rs
-					.select(\"*\")
-					.from(\"poe\", \"League\")
-					.where(\"Shortcut = %s\", leagueName)
-					.where(\"Active = %b\", true)
-					.single()
-				),
-
-				sb.Query.getRecordset(rs => rs
-					.select(\"*\")
-					.from(\"poe\", \"Item\")
-					.where(\"Name = %s\", itemName)
-					.single()
-				)
-			]);
-			if (!league) {
-				return {
-					success: false,
-					reply: `Provided league does not exist or is not active!`
-				};
-			}
-			else if (!item) {
-				return {
-					success: false,
-					reply: `Provided item does not exist or is not being tracked!`
-				};
-			}
-
-			const price = await sb.Query.getRecordset(rs => rs
-				.select(\"Chaos_Equivalent AS Chaos\")
-				.from(\"poe\", \"Price\")
-				.where(\"League = %n\", league.ID)
-				.where(\"Item = %n\", item.ID)
-				.single()
-			);
-			if (!price) {
-				return {
-					success: false,
-					reply: `No price found for that item!`
-				};
-			}
-
-			let reply = `${itemName} is currently worth ${price.Chaos} chaos in ${league.Name}.`;
-			if (price.Chaos < 0.5) {
-				const flipped = sb.Utils.round(1 / price.Chaos, 2);
-				reply = `1 chaos can currently buy ${flipped} of ${item.Name} in ${league.Name}.`;
-			}
-
-			return { reply };
-		}
-
-		case \"syndicate\": {
-			const person = args.shift();
-			if (!person) {
-				return {
-					reply: \"Check the Syndicate sheet here: https://poesyn.xyz/syndicate or the picture here: https://i.nuuls.com/huXFC.png\"
-				};
-			}
-
-			const type = (args.shift()) ?? null;
-			const data = await sb.Query.getRecordset(rs => rs
-				.select(\"*\")
-				.from(\"poe\", \"Syndicate\")
-				.where(\"Name = %s\", person)
-				.limit(1)
-				.single()
-			);
-
-			if (!data) {
-				return {
-					success: false,
-					reply: \"Syndicate member or type does not exist!\"
-				};
-			}
-
-			return {
-				reply: (type === null)
-					? Object.entries(data).map(([key, value]) => `${key}: ${value}`).join(\"; \")
-					: `${data.Name} at ${type}: ${data[sb.Utils.capitalize(type)]}`
-			};
-		}
-
-		case \"trial\":
-		case \"trials\": {
-			const trialType = args.shift() ?? \"all\";
-			return {
-				reply: this.staticData.trials[trialType] ?? \"Invalid trial type provided!\"
-			};
-		}
-
-		case \"uniques\": {
-			let [user, type] = args;
-			if (!user) {
-				if (!context.channel) {
-					return {
-						success: false,
-						reply: \"Must provide a user name - no channel is available!\"
-					}
-				}
-
-				user = context.channel.Name;
-			}
-
-			const userData = await sb.User.get(user);
-			const link = userData.Data?.pathOfExile?.uniqueTabs ?? null;
-			if (!link) {
-				return {
-					success: false,
-					reply: `User ${userData.Name} has no unique stash tabs set up!`
-				};
-			}
-
-			return {
-				reply: `${userData.Name}\'s unique tab(s): ${link}`
-			};
-		}
-
-		case \"tracker\": {
-			if (!context.user.Data.administrator) {
-				return {
-					success: false,
-					reply: \"Only administrators can toggle the tracker status!\"
-				};
-			}
-
-			const [type] = args;
-			const cron = sb.Cron.data.find(i => i.Name === \"ggg-tracker\");
-			if (![\"on\", \"off\"].includes(type)) {
-				return {
-					success: false,
-					reply: \"Must provide a type - on/off!\"
-				};
-			}
-			else if (!cron) {
-				return {
-					success: false,
-					reply: \"There is no cron job for tracking GGG replies!\"
-				};
-			}
-
-			cron.data.enabled = (type === \"on\");
-			return {
-				reply: `Automatic tracker has been turned ${type}.`
-			};
-		}
-
-		default: return {
-			reply: `Invalid query type provided! Currently supported: \"lab <difficulty>\", \"uniques <user>\".`
-		}
+	const target = this.staticData.commands.find(i => i.name === type || i.aliases.includes(type));
+	if (!target) {
+		return {
+			success: false,
+			reply: `Provided subcommand does not exist! Check the command\'s help: https://supinic.com/bot/command/${this.ID}`
+		};
 	}
+
+	return await target.execute(context, ...args);
 })',
 		'async (prefix, values) => {
 	const { commands } = values.getStaticData();
