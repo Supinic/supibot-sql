@@ -22,46 +22,85 @@ VALUES
 		'Requests a song to play on Supinic\'s stream. You can use \"start:\" and \"end:\" to request parts of a song using seconds or a time syntax. \"start:100\" or \"end:05:30\", for example.',
 		5000,
 		'Only available in supinic\'s channel.',
-		'({
-	limit: 605,
-	emptyQueueLimit: 905,
-	videoLimit: 5,
-	blacklistedSites: [
-		\"grabify.link\",
-		\"leancoding.co\",
-		\"stopify.co\",
-		\"freegiftcards.co\",
-		\"joinmy.site\",
-		\"curiouscat.club\",
-		\"catsnthings.fun\",
-		\"catsnthing.com\",
-		\"iplogger.org\",
-		\"2no.co\",
-		\"iplogger.com\",	
-		\"iplogger.ru\",
-		\"yip.su\",
-		\"iplogger.co\",
-		\"iplogger.info\",
-		\"ipgrabber.ru\",
-		\"ipgraber.ru\",
-		\"iplis.ru\",
-		\"02ip.ru\",
-		\"ezstat.ru\"
-	],
-	parseTimestamp: (string) => {
-		const type = sb.Utils.linkParser.autoRecognize(string);
-		if (type === \"youtube\" && string.includes(\"t=\")) {
-			const { parse } = require(\"url\");
-			let { query } = parse(string);
+		'(() => {
+	const limits = {
+		time: 900,
+		amount: 10
+	};
 
-			if (/t=\\d+/.test(query)) {
-				query = query.replace(/(t=\\d+\\b)/, \"$1sec\");
+	return {
+		limits,
+
+		blacklistedSites: [
+			\"grabify.link\",
+			\"leancoding.co\",
+			\"stopify.co\",
+			\"freegiftcards.co\",
+			\"joinmy.site\",
+			\"curiouscat.club\",
+			\"catsnthings.fun\",
+			\"catsnthing.com\",
+			\"iplogger.org\",
+			\"2no.co\",
+			\"iplogger.com\",
+			\"iplogger.ru\",
+			\"yip.su\",
+			\"iplogger.co\",
+			\"iplogger.info\",
+			\"ipgrabber.ru\",
+			\"ipgraber.ru\",
+			\"iplis.ru\",
+			\"02ip.ru\",
+			\"ezstat.ru\"
+		],
+
+		checkLimits: (userData, playlist) => {
+			const userRequests = playlist.filter(i => i.User_Alias === userData.ID);
+			if (userRequests.length >= limits.amount) {
+				return {
+					canRequest: false,
+					reason: `Maximum amount of videos queued! (${userRequests.length}/${limits.amount})`
+				};
 			}
 
-			return sb.Utils.parseDuration(query, { target: \"sec\" });
+			let totalTime = 0;
+			for (const request of userRequests) {
+				totalTime += (request.End_Time ?? request.Length) - (request.Start_Time ?? 0);
+			}
+
+			totalTime = Math.ceil(totalTime);
+			if (totalTime >= limits.time) {
+				return {
+					canRequest: false,
+					reason: `Maximum video time exceeded! (${totalTime}/${limits.time} seconds)`
+				};
+			}
+
+			return {
+				canRequest: true,
+				totalTime: totalTime,
+				requests: userRequests.length,
+				reason: null,
+				time: limits.time,
+				amount: limits.amount
+			};
+		},
+
+		parseTimestamp: (string) => {
+			const type = sb.Utils.linkParser.autoRecognize(string);
+			if (type === \"youtube\" && string.includes(\"t=\")) {
+				const { parse } = require(\"url\");
+				let { query } = parse(string);
+
+				if (/t=\\d+/.test(query)) {
+					query = query.replace(/(t=\\d+\\b)/, \"$1sec\");
+				}
+
+				return sb.Utils.parseDuration(query, { target: \"sec\" });
+			}
 		}
-	}
-})',
+	};
+})()',
 		'(async function songRequest (context, ...args) {
 	const state = sb.Config.get(\"SONG_REQUESTS_STATE\");
 	if (state === \"off\") {
@@ -83,11 +122,11 @@ VALUES
 	}
 
 	const queue = await sb.VideoLANConnector.getNormalizedPlaylist();
-	const userRequests = queue.filter(i => i.User_Alias === context.user.ID);
-	if (userRequests.length >= this.staticData.videoLimit) {
+	const limits = this.staticData.checkLimits(context.user, queue);
+	if (!limits.canRequest) {
 		return {
-			reply: `Can only request up to ${this.staticData.videoLimit} videos in the queue!`
-		}
+			reply: limits.reason
+		};
 	}
 
 	let startTime = null;
@@ -280,95 +319,97 @@ VALUES
 		}
 	}
 
-	const limit = (queue.length === 0)
-		? this.staticData.emptyQueueLimit
-		: this.staticData.limit;
-
 	const authorString = (data.author) ? ` by ${data.author}` : \"\";
 	const length = data.duration ?? data.length ?? null;
-	const checkLength = (startTime === null && endTime === null)
-		? length
-		: ((endTime ?? length) - (startTime ?? 0));
+	const segmentLength = (endTime ?? length) - (startTime ?? 0);
 
-	if (checkLength !== null && checkLength > limit) {
+	if ((limits.totalTime + segmentLength) > limits.time) {
+		const excess = (limits.totalTime + segmentLength) - limits.time;
 		return {
-			reply: `Video \"${data.name}\"${authorString} is too long: ${checkLength}s > ${limit}s. However, you can change the start and end points of the video with these arguments, e.g.: start:20 end:60`
+			reply: sb.Utils.tag.trim `
+				Your video would exceed the total video limit by ${excess} seconds!.
+				You can change the start and end points of the video with these arguments, e.g.: start:20 end:60
+			`
 		};
 	}
-	else {
-		let id = null;
-		try {
-			id = await sb.VideoLANConnector.add(data.link, { startTime, endTime });
-		}
-		catch (e) {
-			console.warn(\"sr error\", e);
-			await sb.Config.set(\"SONG_REQUESTS_STATE\", \"off\");
-			return {
-				reply: `The desktop listener is currently turned off. Turning song requests off.`
-			};
-		}
 
-		let when = \"right now!\";
-		let videoStatus = \"Current\";
-		let started = new sb.Date();
-		const status = await sb.VideoLANConnector.status();
-
-		if (queue.length > 0) {
-			const current = queue.find(i => i.Status === \"Current\");
-			const { time: currentVideoPosition, length } = status;
-			const endTime = current?.End_Time ?? length;
-
-			const playingDate = new sb.Date().addSeconds(endTime - currentVideoPosition);
-			const inQueue = queue.filter(i => i.Status === \"Queued\");
-
-			for (const { Duration: length } of inQueue) {
-				playingDate.addSeconds(length ?? 0);
-			}
-
-			started = null;
-			videoStatus = \"Queued\";
-			when = sb.Utils.timeDelta(playingDate);
-		}
-
-		const videoType = data.videoType ?? await sb.Query.getRecordset(rs => rs
-			.select(\"ID\")
-			.from(\"data\", \"Video_Type\")
-			.where(\"Parser_Name = %s\", data.type)
-			.limit(1)
-			.single()
-		);
-
-		const row = await sb.Query.getRow(\"chat_data\", \"Song_Request\");
-		row.setValues({
-			VLC_ID: id,
-			Link: data.ID,
-			Name: sb.Utils.wrapString(data.name, 100),
-			Video_Type: videoType.ID,
-			Length: (data.duration) ? Math.ceil(data.duration) : null,
-			Status: videoStatus,
-			Started: started,
-			User_Alias: context.user.ID,
-			Start_Time: startTime ?? null,
-			End_Time: endTime ?? null
-		});
-		await row.save();
-
-		const seek = [];
-		if (startTime !== null) {
-			seek.push(`starting at ${startTime} seconds`);
-		}
-		if (endTime !== null) {
-			seek.push(`ending at ${endTime} seconds`);
-		}
-
-		const seekString = (seek.length > 0)
-			? `Your video is ${seek.join(\" and \")}.`
-			: \"\";
-
+	let id = null;
+	try {
+		id = await sb.VideoLANConnector.add(data.link, { startTime, endTime });
+	}
+	catch (e) {
+		console.warn(\"sr error\", e);
+		await sb.Config.set(\"SONG_REQUESTS_STATE\", \"off\");
 		return {
-			reply: `Video \"${data.name}\"${authorString} successfully added to queue with ID ${id}! It is playing ${when}. ${seekString}`
+			reply: `The desktop listener is currently turned off. Turning song requests off.`
 		};
 	}
+
+	let when = \"right now!\";
+	let videoStatus = \"Current\";
+	let started = new sb.Date();
+	const status = await sb.VideoLANConnector.status();
+
+	if (queue.length > 0) {
+		const current = queue.find(i => i.Status === \"Current\");
+		const { time: currentVideoPosition, length } = status;
+		const endTime = current?.End_Time ?? length;
+
+		const playingDate = new sb.Date().addSeconds(endTime - currentVideoPosition);
+		const inQueue = queue.filter(i => i.Status === \"Queued\");
+
+		for (const { Duration: length } of inQueue) {
+			playingDate.addSeconds(length ?? 0);
+		}
+
+		started = null;
+		videoStatus = \"Queued\";
+		when = sb.Utils.timeDelta(playingDate);
+	}
+
+	const videoType = data.videoType ?? await sb.Query.getRecordset(rs => rs
+		.select(\"ID\")
+		.from(\"data\", \"Video_Type\")
+		.where(\"Parser_Name = %s\", data.type)
+		.limit(1)
+		.single()
+	);
+
+	const row = await sb.Query.getRow(\"chat_data\", \"Song_Request\");
+	row.setValues({
+		VLC_ID: id,
+		Link: data.ID,
+		Name: sb.Utils.wrapString(data.name, 100),
+		Video_Type: videoType.ID,
+		Length: (data.duration) ? Math.ceil(data.duration) : null,
+		Status: videoStatus,
+		Started: started,
+		User_Alias: context.user.ID,
+		Start_Time: startTime ?? null,
+		End_Time: endTime ?? null
+	});
+	await row.save();
+
+	const seek = [];
+	if (startTime !== null) {
+		seek.push(`starting at ${startTime} seconds`);
+	}
+	if (endTime !== null) {
+		seek.push(`ending at ${endTime} seconds`);
+	}
+
+	const seekString = (seek.length > 0)
+		? `Your video is ${seek.join(\" and \")}.`
+		: \"\";
+
+	return {
+		reply: sb.Utils.tag.trim `
+			Video \"${data.name}\"${authorString} successfully added to queue with ID ${id}! 
+			It is playing ${when}.
+			${seekString}
+			(slots: ${limits.requests + 1}/${limits.amount}, length: ${limits.totalTime + segmentLength}/${limits.time})
+		`
+	};
 })',
 		NULL,
 		'supinic/supibot-sql'
