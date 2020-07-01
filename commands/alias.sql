@@ -106,7 +106,7 @@ VALUES
 	if (!type) {
 		return {
 			reply: sb.Utils.tag.trim `
-				This command lets you created your own command aliases.
+				This command lets you create your own command aliases.
 				Check the extended help here:
 				https://supinic.com/bot/command/${this.ID}
 			`
