@@ -51,7 +51,7 @@ VALUES
 	for (const set of controller.availableEmoteSets) {
 		const setData = this.data.emoteSetsData.find(i => i.set_id === set);
 		const emoteList = controller.availableEmotes[set];
-		if (!setData || setData.channel_name === \"Twitch\") {
+		if (!emoteList || !setData || setData.channel_name === \"Twitch\") {
 			continue;
 		}
 
