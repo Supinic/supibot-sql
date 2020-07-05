@@ -21,6 +21,8 @@ VALUES
 	}).json();
 
 	const latest = rawData.sort((a, b) => new sb.Date(b.created_at) - new sb.Date(a.created_at)).shift();
+	console.log(latest.tag_name, sb.Config.get(\"LATEST_NODE_JS_VERSION\"))
+
 	if (latest.tag_name !== sb.Config.get(\"LATEST_NODE_JS_VERSION\")) {
 		sb.Config.set(\"LATEST_NODE_JS_VERSION\", latest.tag_name);
 		
@@ -33,7 +35,7 @@ VALUES
 			.flat(\"Username\")
 		)).map(i => `@${i}`).join(\" \");
 		
-		const channelData = sb.User.get(\"supinic\", \"twitch\");
+		const channelData = sb.Channel.get(38);
 		channelData.send(`${pingedUsers} New Node.js version detected! PagChomp 👉 ${latest.tag_name} Changelog: ${latest.html_url}`);
 	}
 })',
