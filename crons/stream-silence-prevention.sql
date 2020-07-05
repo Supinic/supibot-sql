@@ -35,25 +35,11 @@ VALUES
 		return;
 	}
 
-	const endTime = await sb.Query.getRecordset(rs => rs
-		.select(\"End_Time\")
-		.from(\"chat_data\", \"Song_Request\")
-		.orderBy(\"ID\")
-		.limit(1)
-		.single()
-		.flat(\"End_Time\")
-	);
-
-	const timePassed = (sb.Date.now() - endTime);
-	if (timePassed < 15) {
-		return;
-	}
-
 	const self = await sb.User.get(\"supibot\");
 	const pipe = sb.Command.get(\"pipe\");
 
-	await pipe.execute({ user: self, channel: channelData, platform: sb.Platform.get(1) }, \"rg favourite:supinic | sr\");
-	await channelData.send(\"Silence prevention! ☺ Requested a random favourite song\");
+	const result = await pipe.execute({ user: self, channel: channelData, platform: sb.Platform.get(1) }, \"rg favourite:supinic | sr\");
+	await channelData.send(\"Silence prevention! \" + result.reply);
 })',
 		'Bot',
 		1
