@@ -179,8 +179,6 @@ VALUES
 				.where(targetChannel + \".ID = %n\", targetID)
 				.single()
 			);
-
-			console.log({result, ID, targetID, targetChannel, channels})
 		}
 		else {
 			const data = await sb.Query.getRecordset(rs => rs
