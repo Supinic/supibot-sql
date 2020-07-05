@@ -95,10 +95,11 @@ VALUES
 		};
 	}
 	
-	const items = Object.entries(data[0].meaning).flatMap(([type, value]) => value.map(item => ({ type, definition: item.definition })))
+	const records = data.flatMap(i => Object.entries(i.meaning));
+	const items = records.flatMap(([type, value]) => value.map(item => ({ type, definition: item.definition })))
 	if (items.length === 0) {		
 		return {
-			reply: `${data[0].word} (${data[0].phonetic}) - no word meaning has been found!`
+			reply: `${data[0].word} (${data[0].phonetic ?? \"N/A\"}) - no word meaning has been found!`
 		};
 	}
 
@@ -110,8 +111,9 @@ VALUES
 		};
 	}
 
+	const position = `(index ${index}/${items.length - 1})`;
 	return {
-		reply: `${data[0].word} (${result.type}): ${result.definition}`
+		reply: `${position} ${data[0].word} (${result.type}): ${result.definition}`
 	};
 })',
 		'async (prefix, values) => {
