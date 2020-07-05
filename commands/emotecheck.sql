@@ -248,7 +248,7 @@ VALUES
 		{
 			name: \"sir\",
 			aliases: [\"2fa\"],
-			description: \"Implemented on 2020-04-02, this emoteset is a reward for having 2FA on your Twitch account\",
+			description: \"Implemented on 2020-04-02, this emoteset is a reward for having 2FA on your Twitch account.\",
 			emotes: [
 				\"SirMad\",
 				\"SirPrise\",
@@ -256,6 +256,88 @@ VALUES
 				\"SirShield\",
 				\"SirSword\",
 				\"SirUwU\"
+			]
+		},
+		{
+			name: \"hype\",
+			aliases: [\"hypetrain\"],
+			description: \"Hype Train emotes - obtainable when you participate in a so-called hype train in a channel.\",
+			emotes: [
+				\"HypeChimp\",
+				\"HypeGhost\",
+				\"HypeChest\",
+				\"HypeFrog\",
+				\"HypeCherry\",
+				\"HypePeace\",
+
+				\"HypeBug\",
+				\"HypeBrain\",
+				\"HypeZap\",
+				\"HypeShip\",
+				\"HypeSign\",
+				\"HypeSideeye\",
+
+				\"HypeYikes\",
+				\"HypeRacer\",
+				\"HypeCar\",
+				\"HypeFirst\",
+				\"HypeTrophy\",
+				\"HypeBanana\",
+
+				\"HypeBlock\",
+				\"HypeDaze\",
+				\"HypeBounce\",
+				\"HypeJewel\",
+				\"HypeBlobk\",
+				\"HypeTeamwork\",
+
+				\"HypeLove\",
+				\"HypePunk\",
+				\"HypeKO\",
+				\"HypePunch\",
+				\"HypeFire\",
+				\"HypePizza\"
+			]
+		},
+		{
+			name: \"legacyhype\",
+			aliases: [\"oldhype\"],
+			description: \"Legacy Hype Train emotes - no longer available.\",
+			emotes: [
+				\"HypeGriffin1\",
+				\"HypeGriffin2\",
+				\"HypeGriffin3\",
+				\"HypeGriffin4\",
+				\"HypeGriffin5\",
+				\"HypeGriffin6\",
+
+				\"HypeBigfoot1\",
+				\"HypeBigfoot2\",
+				\"HypeBigfoot3\",
+				\"HypeBigfoot4\",
+				\"HypeBigfoot5\",
+				\"HypeBigfoot6\",
+
+				\"HypeOni1\",
+				\"HypeOni2\",
+				\"HypeOni3\",
+				\"HypeOni4\",
+				\"HypeOni5\",
+				\"HypeOni6\",
+
+				\"HypeDragon1\",
+				\"HypeDragon2\",
+				\"HypeDragon3\",
+				\"HypeDragon4\",
+				\"HypeDragon5\",
+				\"HypeDragon6\",
+
+				\"HypeUnicorn1\",
+				\"HypeUnicorn2\",
+				\"HypeUnicorn3\",
+				\"HypeUnicorn4\",
+				\"HypeUnicorn5\",
+				\"HypeUnicorn6\",
 			]
 		}
 	]
