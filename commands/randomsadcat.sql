@@ -98,7 +98,10 @@ VALUES
 			\"https://i.imgur.com/QjiutEj.jpg\",
 			\"https://i.imgur.com/rebC8Vn.jpg\",
 			\"https://i.imgur.com/d5bX9Em.jpg\",
-			\"https://i.imgur.com/mHEzlpb.png\"
+			\"https://i.imgur.com/mHEzlpb.png\",
+			\"https://i.imgur.com/RK0utUO.png\",
+			\"https://i.imgur.com/KbxyatG.jpg\",
+			\"https://i.imgur.com/t92rgqv.png\"
 		]
 	};
 })()',
