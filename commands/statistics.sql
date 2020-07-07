@@ -50,7 +50,8 @@ VALUES
 			description: \"Checks the total time you have been afk for. Each status type is separate, you can use total-afk to check all of them combined.\",
 			execute: async (context, type, ...args) => {
 				const data = await sb.Query.getRecordset(rs => {
-					rs.select(\"SUM(UNIX_TIMESTAMP(Ended) - UNIX_TIMESTAMP(Started)) AS Delta\")
+					rs.select(\"COUNT(*) AS Amount\")
+						.select(\"SUM(UNIX_TIMESTAMP(Ended) - UNIX_TIMESTAMP(Started)) AS Delta\")
 						.from(\"chat_data\", \"AFK\")
 						.where(\"User_Alias = %n\", context.user.ID)
 						.single();
@@ -76,8 +77,16 @@ VALUES
 					};
 				}
 				else {
+					const delta = sb.Utils.timeDelta(sb.Date.now() + data.Delta * 1000, true);
+					const average = sb.Utils.timeDelta(sb.Date.now() + (data.Delta * 1000 / data.Amount), true);
+					
 					return {
-						reply: `You have been AFK with status \"${target}\" for a total of ${sb.Utils.formatTime(data.Delta)}.`
+						reply: sb.Utils.tag.trim `
+							You have been AFK with status \"${target}\"
+							${data.Amount} times,
+							for a total of ~${delta}.
+							This averages to ~${average} spent AFK per invocation.
+						`
 					};
 				}
 			}
