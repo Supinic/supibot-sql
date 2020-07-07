@@ -100,11 +100,11 @@ VALUES
 		}
 		else if (args && weatherRegex.test(args[args.length - 1])) {
 			const match = args.pop().match(weatherRegex);
-	
+
 			if (match[2]) { // +<number> = shift by X, used in daily/hourly
 				number = Number(match[3]);
 				type = (match[1] === \"day\") ? \"daily\" : (match[1] === \"hour\") ? \"hourly\" : null;
-	
+
 				if (!type || (type === \"daily\" && number > 7) || (type === \"hourly\" && number > 48)) {
 					return { reply: \"Invalid combination of parameters!\" };
 				}
@@ -167,22 +167,27 @@ VALUES
 			? \"No precipitation expected.\"
 			: (sb.Utils.round(data.precipProbability * 100) + \"% chance of \" + sb.Utils.round(data.precipIntensity, 2) + \" mm \" + data.precipType + \".\");
 		const temp = (type !== \"daily\")
-			? (sb.Utils.round(data.temperature, 2) + \"°C\")
-			: (\"Temperatures: \" + sb.Utils.round(data.temperatureMin) + \"°C to \" + sb.Utils.round(data.temperatureMax) + \"°C\");
+			? (sb.Utils.round(data.temperature, 2) + \"°C.\")
+			: (\"Temperatures: \" + sb.Utils.round(data.temperatureMin) + \"°C to \" + sb.Utils.round(data.temperatureMax) + \"°C.\");
 		const storm = (type === \"currently\")
 			? (typeof data.nearestStormDistance !== \"undefined\")
 				? (\"Nearest storm is \" + data.nearestStormDistance + \" km away. \")
 				: (\"No storms nearby. \")
 			: \"\";
-
-		message = (icon || data.icon) + \" \" + // data.summary + \". \" +
-			temp + \". \" +
-			((type === \"currently\") ? (\"Feels like \" + sb.Utils.round(data.apparentTemperature) + \"°C. \") : \"\") +
-			storm +
-			sb.Utils.round(data.cloudCover * 100) + \"% cloudy. \" +
-			\"Wind gusts up to \" + sb.Utils.round(data.windGust * 3.6) + \" km/h. \" +
-			sb.Utils.round(data.humidity * 100) + \"% humidity. \" +
-			precip;
+		const feels = (type === \"currently\") 
+			? `Feels like ${sb.Utils.round(data.apparentTemperature)}°C` 
+			: \"\";
+		
+		message = sb.Utils.tag.trim `
+			${icon ?? data.icon}
+			${temp}
+			${feels}
+			${storm}
+			${sb.Utils.round(data.cloudCover * 100)}% cloudy. 
+			Wind gusts up to ${sb.Utils.round(data.windGust * 3.6)} km/h.
+			${precip}
+			Air pressure: ~${data.pressure} hPa.
+		`;
 	}
 
 	let plusTime = \"\";
