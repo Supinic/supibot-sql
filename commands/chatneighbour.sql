@@ -18,16 +18,15 @@ VALUES
 		231,
 		'chatneighbour',
 		'[\"cn\"]',
-		'ping,pipe',
+		'pipe',
 		NULL,
 		10000,
 		NULL,
 		NULL,
-		'(async function (context) {
+		'(async function (context, targetUser) {
 	if (!context.channel) {
 		return {
-			success: false,
-			reply: \"It\'s just us two here in private messages...\"
+			reply: \"It\'s just the two us here, in private messages...\"
 		};
 	}
 	else if (context.platform.Name !== \"twitch\") {
@@ -45,16 +44,41 @@ VALUES
 		};
 	}
 
-	const selfIndex = list.indexOf(context.user.Name);
-	const neighbours = [list[selfIndex - 1], list[selfIndex + 1]].filter(Boolean);
-	if (neighbours.length === 0) {
+	const userData = (targetUser)
+		? await sb.User.get(targetUser)
+		: context.user;
+
+	if (!userData) {
 		return {
-			reply: `You have no chat neighbours. (?)`
+			success: false,
+			reply: \"That user does not exist!\"
+		};
+	}
+
+	const chatterIndex = list.indexOf(userData.Name);
+	if (chatterIndex === -1) {
+		return {
+			success: false,
+			reply: \"That user is not currently present in chat!\"
+		};
+	}
+
+	const neighbours = list.slice(chatterIndex - 1, chatterIndex + 2)
+		.filter(Boolean)
+		.map(i => i[0] + \"\\u{E0000}\" + i.slice(1));
+
+	if (neighbours.length < 2) {
+		return {
+			reply: `No chat neighbours have been detected... This shouldn\'t happen?`
 		};
 	}
 
 	return {
-		reply: `Your chat neighbour(s): ${neighbours.join(\", \")}`
+		meta: {
+			skipWhitespaceCheck: true
+		},
+
+		reply: `Chat neighbour(s): ${neighbours.join(\" 🤝 \")}`
 	};
 })',
 		NULL,
