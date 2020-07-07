@@ -65,6 +65,37 @@ VALUES
 			}
 		},
 		{
+			name: \"alias\",
+			aliases: [\"aliases\"],
+			description: \"Checks your currently active aliases, or the definition of a specific one.\",
+			execute: async (context, identifier) => {
+				const aliases = context.user.Data.aliasedCommands;
+				if (!aliases || Object.keys(aliases).length === 0) {
+					return {
+						success: false,
+						reply: `You don\'t have any active aliases at the moment!`
+					};
+				}
+
+				if (!identifier) {
+					return {
+						reply: `List: ${Object.keys(aliases).sort().join(\", \")}`
+					};
+				}
+				else if (!aliases[identifier]) {
+					return {
+						success: false,
+						reply: `You don\'t have an active alias with that name!`
+					};
+				}
+
+				const { invocation, args } = aliases[identifier];
+				return {
+					reply: `Definition: ${invocation} ${args.join(\" \")}`
+				};
+			}
+		},
+		{
 
 			name: \"ambassador\",
 			aliases: [\"ambassadors\"],
