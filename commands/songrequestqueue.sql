@@ -71,7 +71,7 @@ VALUES
 	const current = data.find(i => i.Status === \"Current\");
 	
 	const length = total - (current?.End_Time ?? status.time);
-	const delta = sb.Utils.timeDelta(sb.Date.now() + length * 1000, true);
+	const delta = sb.Utils.timeDelta(Math.round(sb.Date.now() + length * 1000), true);
 
 	return {
 		reply: `There are ${data.length} videos in the queue, with a total length of ${delta}. Check it out here: https://supinic.com/stream/song-request/queue`

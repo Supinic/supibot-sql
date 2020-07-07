@@ -407,7 +407,7 @@ VALUES
 			Video \"${data.name}\"${authorString} successfully added to queue with ID ${id}! 
 			It is playing ${when}.
 			${seekString}
-			(slots: ${limits.requests + 1}/${limits.amount}, length: ${limits.totalTime + segmentLength}/${limits.time})
+			(slots: ${limits.requests + 1}/${limits.amount}, length: ${Math.round(limits.totalTime + segmentLength)}/${limits.time})
 		`
 	};
 })',

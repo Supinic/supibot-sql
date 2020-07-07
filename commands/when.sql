@@ -74,7 +74,7 @@ VALUES
 		timeRemaining -= endTime;
 	}
 
-	const delta = sb.Utils.formatTime(timeRemaining);
+	const delta = sb.Utils.formatTime(Math.round(timeRemaining));
 	const bridge = (prepend) ? \"Then,\" : \"Your next video\";
 
 	return {
