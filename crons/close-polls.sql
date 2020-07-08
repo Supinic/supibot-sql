@@ -29,7 +29,7 @@ VALUES
 		return;
 	}
 
-	const row = await sb.Row.get(\"chat_data\", \"Poll\");
+	const row = await sb.Query.getRow(\"chat_data\", \"Poll\");
 	await row.load(activePoll.ID);
 
 	const votes = await sb.Query.getRecordset(rs => rs
@@ -55,7 +55,8 @@ VALUES
 		Text: `Poll ID ${activePoll.ID} you voted on just ended! Status: ${row.values.Status} Votes: ${voteString}`,
 		Schedule: null,
 		Created: new sb.Date(),
-		Private_Message: true
+		Private_Message: true,
+		Platform: 1
 	}, true));
 
 	await Promise.all(reminders);
