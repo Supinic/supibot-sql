@@ -13,13 +13,9 @@ VALUES
 		8,
 		'rs',
 		'serbian',
-		'https://www.republika.rs/rss/',
+		'http://rs.n1info.com/rss/',
 		'[
-	\"najnovije-vesti\",
-	\"vesti/srbija\",
-	\"vesti/beograd\",
-	\"vesti/tema-dana\",
-	\"lifestyle/zena\"
+	\"249/Naslovna\"
 ]',
 		'RSS'
 	)
