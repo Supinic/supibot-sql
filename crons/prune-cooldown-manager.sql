@@ -15,7 +15,7 @@ VALUES
 		'prune-cooldown-manager',
 		'30 * * * * *',
 		'Periodically removes all expired cooldowns',
-		'(async function cron_pruneCooldownManager () {
+		'(async function pruneCooldownManager () {
 	sb.CooldownManager && sb.CooldownManager.prune();
 })',
 		'Bot',

@@ -15,7 +15,7 @@ VALUES
 		'nodejs',
 		'0 0 */1 * * *',
 		'Checks new releases of nodejs, and if one is detected, then posts it in chat.',
-		'(async function cron_nodejs () {
+		'(async function checkLastNodeVersion () {
 	const rawData = await sb.Got.instances.GitHub({
 		url: \"repos/nodejs/node/releases\",
 	}).json();

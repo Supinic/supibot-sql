@@ -15,7 +15,7 @@ VALUES
 		'test',
 		'*/10 * * * * *',
 		'Testing.',
-		'(async function cron_test (...args) {
+		'(async function test (...args) {
 	this.data.test = this.data.test || [];
 	this.data.test.push(sb.Utils.random(1, 100));
 

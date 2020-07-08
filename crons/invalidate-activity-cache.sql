@@ -15,7 +15,7 @@ VALUES
 		'invalidate-activity-cache',
 		'0 0 0 * * *',
 		'Periodically (every midnight) clears channel activity cache on the website.',
-		'(async function cron_invalidateActivityCache () {
+		'(async function invalidateWebsiteActivityCache () {
 	sb.App.cache.channelActivity = {};
 })',
 		'Website',

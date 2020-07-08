@@ -15,7 +15,7 @@ VALUES
 		'twitch-online-channels',
 		'0 */2 * * * *',
 		'Fetches the online status of all active Twitch channels. Basically, just caches the current status so that further API calls are not necessary.',
-		'(async function cron_twitchOnlineChannels () {
+		'(async function fetchTwitchChannelOnlineStatus () {
 	const channelList = sb.Channel.getJoinableForPlatform(\"twitch\").filter(i => i.Mode !== \"Read\");
 	const data = await sb.Got.instances.Twitch.Kraken({
 		url: \"streams\",

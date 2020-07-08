@@ -15,7 +15,7 @@ VALUES
 		'refresh-twitch-app-access-token',
 		'0 0 12 * * *',
 		'Refreshes the bot\'s Twitch app access token.',
-		'(async function cron_refreshTwitchAppAccessToken () {
+		'(async function refreshTwitchAppAccessToken () {
 	const { access_token: token } = await sb.Got({
 		method: \"POST\",
 		url: \"https://id.twitch.tv/oauth2/token\",

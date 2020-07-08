@@ -15,7 +15,7 @@ VALUES
 		'suggestion-notification-system',
 		'0 * * * * *',
 		'Manages sending notifications about suggestions being changed. This is to notify users (via private system reminders) that their suggestion\'s status has changed.',
-		'(async function cron_suggestionNotificationSystem () {
+		'(async function notifyOnSuggestionChange () {
 	const subscriptions = await sb.Query.getRecordset(rs => rs
 		.select(\"User_Alias\", \"Platform\")
 		.from(\"chat_data\", \"Event_Subscription\")

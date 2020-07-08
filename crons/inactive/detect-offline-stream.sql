@@ -15,7 +15,7 @@ VALUES
 		'detect-offline-stream',
 		'0 * * * * *',
 		'Checks if the channel \"supinic\" is offline, to unset stream variables like \"sr\", \"tts\" and others.',
-		'(async function cron_detectOfflineStream () {
+		'(async function detectOfflineStream () {
 	const sr = sb.Config.get(\"SONG_REQUESTS_STATE\");
 	if (sr === \"off\") {
 		return;

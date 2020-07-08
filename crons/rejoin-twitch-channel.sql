@@ -15,7 +15,7 @@ VALUES
 		'rejoin-twitch-channel',
 		'0 0 * * * *',
 		'Attempts to reconnect channels on Twitch that the bot has been unable to join - most likely because of a ban.',
-		'(async function cron_rejoinTwitchChannels () {
+		'(async function rejoinFailedTwitchChannels () {
 	const { client, controller } = sb.Platform.get(\"twitch\");
 	const channels = [...controller.failedJoinChannels];
 

@@ -15,7 +15,7 @@ VALUES
 		'discord',
 		'0 0 */2 * * *',
 		'Posts the discord link of supinic channel',
-		'(async function cron_discord () {
+		'(async function announceDiscordLink () {
 	const channelData = sb.Channel.get(\"supinic\", \"twitch\");
 	if (!channelData.sessionData.live) {
 		await channelData.send(channelData.Data.discord);

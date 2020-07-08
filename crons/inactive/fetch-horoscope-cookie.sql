@@ -15,7 +15,7 @@ VALUES
 		'fetch-horoscope-cookie',
 		'0 0 10/22 * * *',
 		'Automatically yoinks a cookie from horoscope.com and adds an extract of it into the database.',
-		'(async function cron_fetchHoroscopeCookie () {
+		'(async function fetchHoroscopeCookie () {
 	const zodiac = [\"aquarius\", \"pisces\", \"aries\", \"taurus\", \"gemini\", \"cancer\", \"leo\", \"virgo\", \"libra\", \"scorpio\", \"sagittarius\", \"capricorn\"];
 	const regex = new RegExp(`,\\\\s*(${zodiac.join(\"|\")})`, \"gi\");
 
@@ -48,5 +48,5 @@ VALUES
 	await channelData.send(`Fetched a new cookie! ID ${insertId} saved to the database.`);
 })',
 		'Bot',
-		1
+		0
 	)

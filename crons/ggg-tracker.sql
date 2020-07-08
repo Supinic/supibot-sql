@@ -15,7 +15,7 @@ VALUES
 		'ggg-tracker',
 		'0 * * * * *',
 		'Checks gggtracker.com periodically for new posts by GGG staff members.',
-		'(async function cron_gggTracker () {
+		'(async function trackGGG () {
 	//if (!this.data.enabled) {
 	//	return;
 	//}

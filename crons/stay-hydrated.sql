@@ -15,7 +15,7 @@ VALUES
 		'stay-hydrated',
 		'0 30 * * * *',
 		'Stay hydrated!',
-		'(async function cron_stayHydrated () {
+		'(async function announceStayHydrated () {
 	const channelData = sb.Channel.get(\"supinic\", \"twitch\");
 	if (channelData.sessionData.live) {
 		await channelData.send(\"OMGScoots TeaTime Don\'t forget to stay hydrated!\");

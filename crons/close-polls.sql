@@ -15,7 +15,7 @@ VALUES
 		'close-polls',
 		'0 * * * * *',
 		'Checks for unclosed polls that have ended, and if it finds one, determines the result, and sends system reminders to everyone who voted.',
-		'(async function cron_closePolls () {
+		'(async function closeActivePoll () {
 	const activePoll = await sb.Query.getRecordset(rs => rs
 		.select(\"ID\")
 		.from(\"chat_data\", \"Poll\")
