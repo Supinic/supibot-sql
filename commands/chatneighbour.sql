@@ -18,9 +18,9 @@ VALUES
 		231,
 		'chatneighbour',
 		'[\"cn\"]',
-		'pipe',
-		NULL,
-		10000,
+		'block,opt-out,pipe',
+		'Finds your chat neighbour(s). When you take the chatter list in a channel and sort by the alphabet, your chat neighbours are users that come before and after you in the list. Use this to find new friends! 😃',
+		7500,
 		NULL,
 		NULL,
 		'(async function (context, targetUser) {
