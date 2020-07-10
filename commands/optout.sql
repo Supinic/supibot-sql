@@ -24,6 +24,14 @@ VALUES
 		NULL,
 		NULL,
 		'(async function optOut (context, ...args) {
+	const { invocation } = context;
+	if (args.length === 0) {
+		return {
+			success: false,
+			reply: `You must provide something to ${invocation} from! Check the command\'s help if needed.`
+		};
+	}
+
 	let deliberateGlobalOptout = false;
 	const types = [\"command\", \"platform\", \"channel\"];
 	const names = {};
@@ -99,7 +107,6 @@ VALUES
 		&& i.User_Alias === context.user.ID
 	));
 
-	const { invocation } = context;
 	if (filter) {
 		if (filter.Issued_By !== context.user.ID) {
 			return {
