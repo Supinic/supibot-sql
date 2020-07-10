@@ -175,7 +175,7 @@ VALUES
 				: (\"No storms nearby. \")
 			: \"\";
 		const feels = (type === \"currently\") 
-			? `Feels like ${sb.Utils.round(data.apparentTemperature)}°C` 
+			? `Feels like ${sb.Utils.round(data.apparentTemperature)}°C.` 
 			: \"\";
 		
 		message = sb.Utils.tag.trim `
