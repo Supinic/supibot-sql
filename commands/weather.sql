@@ -174,17 +174,18 @@ VALUES
 				? (\"Nearest storm is \" + data.nearestStormDistance + \" km away. \")
 				: (\"No storms nearby. \")
 			: \"\";
-		const feels = (type === \"currently\") 
-			? `Feels like ${sb.Utils.round(data.apparentTemperature)}°C.` 
+		const feels = (type === \"currently\")
+			? `Feels like ${sb.Utils.round(data.apparentTemperature)}°C.`
 			: \"\";
-		
+
 		message = sb.Utils.tag.trim `
 			${icon ?? data.icon}
 			${temp}
 			${feels}
 			${storm}
-			${sb.Utils.round(data.cloudCover * 100)}% cloudy. 
+			${sb.Utils.round(data.cloudCover * 100)}% cloudy.
 			Wind gusts up to ${sb.Utils.round(data.windGust * 3.6)} km/h.
+			${sb.Utils.round(data.humidity * 100)}% humidity.
 			${precip}
 			Air pressure: ~${data.pressure} hPa.
 		`;
