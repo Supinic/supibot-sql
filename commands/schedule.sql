@@ -57,9 +57,15 @@ VALUES
 			startsAt
 		} = data.nextStream;
 
+		let target = `${channelName}\'s`;
+		if  (channelName === context.user.Name) {
+			target = \"Your\";
+			extra += \" (shouldn\'t you know when you\'re supposed to stream? 😉)\";
+		}
+
 		const time = sb.Utils.timeDelta(new sb.Date(startsAt));
 		return {
-			reply: `${channelName}\'s next stream: ${game} - ${title}, starting ${time}. ${extra}`
+			reply: `${target}\'s next stream: ${game} - ${title}, starting ${time}. ${extra}`
 		};
 	}
 	else if (data.error) {
