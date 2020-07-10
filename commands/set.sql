@@ -150,16 +150,25 @@ VALUES
 					}
 
 					if (row.values.User_Alias !== context.user.ID) {
-						return { reply: \"That suggestion was not created by you!\" };
+						return {
+							success: false,
+							reply: \"That suggestion was not created by you!\"
+						};
 					}
-					else if (row.values.Status === \"Dismissed by author\") {
-						return { reply: \"That reminder is already deactivated!\" };
+					else if (row.values.Status !== \"New\") {
+						return {
+							success: false,
+							reply: \"You cannot unset a suggestion if it\'s already been processed!\"
+						};
 					}
 					else {
 						row.values.Priority = null;
 						row.values.Status = \"Dismissed by author\";
 						await row.save();
-						return { reply: \"Suggestion ID \" + ID + \" has been flagged as \\\"Dismissed by author\\\".\" };
+
+						return {
+							reply: `Suggestion ID ${ID} has been set as \"Dismissed by author\".`
+						};
 					}
 				}
 			},
@@ -334,7 +343,7 @@ VALUES
 	) {
 		return {
 			success: false,
-			reply: `Only channel owners and ambassadords can work with the type \"${type}\"!`
+			reply: `Only channel owners and ambassadors can work with the type \"${type}\"!`
 		};
 	}
 
