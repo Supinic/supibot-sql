@@ -51,11 +51,18 @@ VALUES
 	}
 })',
 		'(async function ocr (context, ...args) {
-	let language = \"eng\";	
+	let language = \"eng\";
 	for (let i = 0; i < args.length; i++) {
 		const token = args[i];
 		if (token.includes(\"lang:\")) {
-			language = token.split(\":\")[1];
+			language = sb.Utils.languageISO.getCode(token.split(\":\")[1], \"iso6393\");
+			if (!language) {
+				return {
+					success: false,
+					reply: \"Language could not be parsed!\"
+				};
+			}
+
 			args.splice(i, 1);
 		}
 	}
@@ -100,7 +107,7 @@ VALUES
 		};
 	}
 
-	const result = data.ParsedResults[0].ParsedText;	
+	const result = data.ParsedResults[0].ParsedText;
 	return {
 		reply: (result.length === 0)
 			? \"No text found.\"
