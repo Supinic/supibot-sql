@@ -55,15 +55,15 @@ VALUES
 		};
 	}
 
-	const chatterIndex = list.indexOf(userData.Name);
-	if (chatterIndex === -1) {
+	const index = list.indexOf(userData.Name);
+	if (index === -1) {
 		return {
 			success: false,
 			reply: \"That user is not currently present in chat!\"
 		};
 	}
 
-	const neighbours = list.slice(chatterIndex - 1, chatterIndex + 2)
+	const neighbours = [list[index - 1], list[index], list[index + 1]]
 		.filter(Boolean)
 		.map(i => i[0] + \"\\u{E0000}\" + i.slice(1));
 
