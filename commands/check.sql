@@ -365,8 +365,13 @@ VALUES
 					};
 				}
 
+				const state = sb.Config.get(\"SONG_REQUESTS_STATE\");
+				const pauseString = (state === \"vlc\" && sb.Config.get(\"SONG_REQUESTS_VLC_PAUSED\"))
+					? \"Song requests are paused at the moment.\"
+					: \"\";
+
 				return {
-					reply: `Current song requests status: ${sb.Config.get(\"SONG_REQUESTS_STATE\")}`
+					reply: `Current song requests status: ${state}. ${pauseString}`
 				};
 			}
 		},
