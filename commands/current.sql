@@ -120,6 +120,9 @@ VALUES
 		const position = (includePosition)
 			? `Current position: ${time}/${length}s.`
 			: \"\";
+		const pauseString = (sb.Config.get(\"SONG_REQUESTS_VLC_PAUSED\"))
+			? \"The song request is paused at the moment.\"
+			: \"\";
 
 		return {
 			reply: sb.Utils.tag.trim `
@@ -130,6 +133,7 @@ VALUES
 				requested by ${userData.Name}.
 				${position}
 				${link}
+				${pauseString}
 			`
 		};
 	}

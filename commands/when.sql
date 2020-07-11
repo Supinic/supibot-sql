@@ -76,9 +76,12 @@ VALUES
 
 	const delta = sb.Utils.formatTime(Math.round(timeRemaining));
 	const bridge = (prepend) ? \"Then,\" : \"Your next video\";
+	const pauseString = (sb.Config.get(\"SONG_REQUESTS_VLC_PAUSED\"))
+		? \"Song requests are paused at the moment.\"
+		: \"\";
 
 	return {
-		reply: `${prepend} ${bridge} \"${target.Name}\" is playing in ${delta}.`
+		reply: `${prepend} ${bridge} \"${target.Name}\" is playing in ${delta}. ${pauseString}`
 	};
 })',
 		NULL,

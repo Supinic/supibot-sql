@@ -398,15 +398,19 @@ VALUES
 		seek.push(`ending at ${endTime} seconds`);
 	}
 
+	const pauseString = (sb.Config.get(\"SONG_REQUESTS_VLC_PAUSED\"))
+		? \"Song requests are paused at the moment.\"
+		: \"\";
 	const seekString = (seek.length > 0)
 		? `Your video is ${seek.join(\" and \")}.`
 		: \"\";
 
 	return {
 		reply: sb.Utils.tag.trim `
-			Video \"${data.name}\"${authorString} successfully added to queue with ID ${id}! 
+			Video \"${data.name}\"${authorString} successfully added to queue with ID ${id}!
 			It is playing ${when}.
 			${seekString}
+			${pauseString}
 			(slots: ${limits.requests + 1}/${limits.amount}, length: ${Math.round(limits.totalTime + segmentLength)}/${limits.time})
 		`
 	};
