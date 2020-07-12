@@ -65,7 +65,7 @@ VALUES
 
 		const time = sb.Utils.timeDelta(new sb.Date(startsAt));
 		return {
-			reply: `${target}\'s next stream: ${game} - ${title}, starting ${time}. ${extra}`
+			reply: `${target} next stream: ${game} - ${title}, starting ${time}. ${extra}`
 		};
 	}
 	else if (data.error) {
