@@ -298,6 +298,14 @@ VALUES
 				return { success, reply };
 			}
 
+			const commandData = sb.Command.get(invocation);
+			if (context.append.pipe && !commandData.Flags.pipe) {
+				return {
+					success: false,
+					reply: `Cannot use command ${invocation} inside of a pipe, despite being wrapped in an alias!`
+				};
+			}
+
 			const aliasCount = (context.append.aliasCount ?? 0) + 1;
 			if (aliasCount > this.staticData.aliasLimit) {
 				return {
