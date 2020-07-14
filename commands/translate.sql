@@ -78,7 +78,8 @@ VALUES
 
 	let reply = response[0].map(i => i[0]).join(\" \");
 	if (options.direction) {
-		let array = [sb.Utils.capitalize(sb.Utils.languageISO.getName(response[2]))];
+		const languageID = response[2].replace(/-.*/, \"\");
+		const array = [sb.Utils.capitalize(sb.Utils.languageISO.getName(languageID))];
 
 		if (options.confidence && response[6] && response[6] !== 1) {
 			const confidence = sb.Utils.round(response[6] * 100, 0) + \"%\";
