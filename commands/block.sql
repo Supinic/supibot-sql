@@ -93,6 +93,12 @@ VALUES
 			reply: \"Cannot specify both the channel and platform!\"
 		};
 	}
+	else if (names.user === context.platform.Self_Name) {
+		return {
+			success: false,
+			reply: \"I wouldn\'t try that.\"
+		};
+	}
 
 	const filter = sb.Filter.data.find(i => (
 		i.Type === \"Block\"
