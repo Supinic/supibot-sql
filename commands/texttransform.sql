@@ -266,7 +266,7 @@ VALUES
 		\"Each type, and their aliases listed below, along with an example.\",
 		\"\",
 		
-		\"Note: if used within a pipe command, this command has no cooldown, and you can use it multiple times within the same pipe!\",
+		`Note: if used within the <a href=\"/bot/command/104\">pipe command</a>, this command has no cooldown, and you can use it multiple times within the same pipe!`,
 		\"\",
 
 		\"Example text: \" + lorem,
