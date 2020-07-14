@@ -249,74 +249,31 @@ VALUES
 		}
 	};
 })',
-		'async (prefix) => [
-	\"Transforms given text to different styles, according to type provided.\",
-	\"Types, their aliases and short-hands are listed below, separeted by slash\",
-	\"\",
+		'async (prefix, values) => {
+	const lorem = \"Lorem Ipsum is simply dummy text of the printing and typesetting industry.\";
+	const { types, convert } = values.getStaticData();
+	const examples = types.sort((a, b) => a.name.localeCompare(b.name)).map(transform => {
+		const message = convert[transform.type](lorem, transform.data ?? null);
+		const aliases = (transform.aliases.length === 0)
+			? \"\"
+			: ` (${transform.aliases.join(\", \")})`;
 
-	`<code>${prefix}tt 3Head This is a sample message.</code>`,
-	`dis is a sample message.`,
-	``,
+		return `<li><code>${transform.name}${aliases}</code><br>${message}</li>`;
+	});
 
-	`<code>${prefix}tt cap/capitalize This is a sample message.</code>`,
-	`This Is A Sample Message.`,
-	``,
+	return [
+		\"Transforms some given text to different styles, according to the transform type provided.\",
+		\"Each type, and their aliases listed below, along with an example.\",
+		\"\",
+		
+		\"Note: if used within a pipe command, this command has no cooldown, and you can use it multiple times within the same pipe!\",
+		\"\",
 
-	`<code>${prefix}tt fancy This is a test</code>`,
-	 `𝓣𝓱𝓲𝓼 𝓲𝓼 𝓪 𝓽𝓮𝓼𝓽`,
-	``,
+		\"Example text: \" + lorem,
+		\"\",
 
-	`<code>${prefix}tt KKona Let\'s mine some gold and buy some guns.</code>`,
-	`done let\'s maahn sum color an buy sum barkin\' irons.`,
-	``,
-
-	`<code>${prefix}tt KKrikey KKrikey Let\'s buy a beer at the gas station.</code>`,
-	`Let\'s buy a cold one at the fuckin\' servo. Too right, mate.`,
-	``,
-	
-	`<code>${prefix}tt lc/lower/lowercase This is a test</code>`,
-	`this is a test`,
-	``,
-	
-	`<code>${prefix}tt leet/1337/l337 This is a test</code>`,
-	`7hi5 i5 4 7357`,
-	``,
-	
-	`<code>${prefix}tt medieval This is a test</code>`,
-	`𝕿𝖍𝖎𝖘 𝖎𝖘 𝖆 𝖙𝖊𝖘𝖙`,
-	``,
-	
-	`<code>${prefix}tt monkaOMEGA Hello</code>`,
-	`Hell monkaOMEGA`,
-	``,
-	
-	`<code>${prefix}tt OMEGALUL Hello</code>`,
-	`Hell OMEGALUL`,
-	``,
-	
-	`<code>${prefix}tt owo/owoify There he is. The ogrelord. Shrek!</code>`,
-	`Thewe he is. The ogwewowd. Shwek ^w^`,
-	``,
-
-	`<code>${prefix}tt runes/runic Sample sentence</code>`,
-	`ᛋᚪᛗᛈᛚᛖ ᛋᛖᚾᛏᛖᚾᚳᛖ`,
-	``,
-	
-	`<code>${prefix}tt smol/super/superscript My dream is a chat full of smol spam</code>`,
-	`ᴹʸ ᵈʳᵉᵃᵐ ⁱˢ ᵃ ᶜʰᵃᵗ ᶠᵘˡˡ ᵒᶠ ˢᵐᵒˡ ˢᵖᵃᵐ`,
-	``,
-
-	`<code>${prefix}tt uc/upper/uppercase This is a test</code>`,
-	`THIS IS A TEST`,
-	``,
-
-	`<code>${prefix}tt ud/upsidedown/flipped Sample sentence.</code>`,
-	`.ǝɔuǝʇuǝs ǝlpɯɐS`,
-	``,
-	
-	`<code>${prefix}tt vw/vaporwave This is a test</code>`,
-	`Ｔｈｉｓ ｉｓ ａ ｔｅｓｔ`,
-	``
-]',
+		\"<ul>\" + examples.join(\"<br>\") + \"</ul>\"
+	];
+}',
 		'supinic/supibot-sql'
 	)
