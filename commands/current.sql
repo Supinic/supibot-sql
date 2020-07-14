@@ -160,6 +160,21 @@ VALUES
 		};
 	}
 })',
-		NULL,
+		'async (prefix) => [
+	`Checks the currently playinyg song on Supinic\'s channel/stream`,
+	``,
+
+	`<code>${prefix}song</code>`,
+	`Currently playing: (link)`,
+	``,
+
+	`<code>${prefix}song linkOnly:true</code>`,
+	`(link)`,
+	``,
+
+	`<code>${prefix}song previous</code>`,
+	`Last played song: (link)`,
+	``,
+];',
 		'supinic/supibot-sql'
 	)
