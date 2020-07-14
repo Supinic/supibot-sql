@@ -25,7 +25,7 @@ VALUES
 		'({
 	types: [\"current\", \"previous\"]
 })',
-		'(async function current (context, type) {
+		'(async function current (context, ...args) {
 	const linkSymbol = sb.Config.get(\"VIDEO_TYPE_REPLACE_PREFIX\");
 	const state = sb.Config.get(\"SONG_REQUESTS_STATE\");
 
@@ -76,7 +76,16 @@ VALUES
 		}
 	}
 
-	type = type || \"current\";
+	let linkOnly = false;
+	for (let i = args.length - 1; i >= 0; i--) {
+		const token = args[i];
+		if (token.startsWith(\"linkOnly\")) {
+			linkOnly = token.split(\":\")[1] === \"true\";
+			args.splice(i, 1);
+		}
+	}
+
+	const type = args.shift() ?? \"current\";
 	if (!this.staticData.types.includes(type)) {
 		return {
 			success: false,
@@ -115,6 +124,12 @@ VALUES
 
 	if (playing) {
 		const link = playing.Prefix.replace(linkSymbol, playing.Link);
+		if (linkOnly) {
+			return {
+				reply: link
+			};
+		}		
+		
 		const userData = await sb.User.get(playing.User);
 		const { length, time } = await sb.VideoLANConnector.status();
 		const position = (includePosition)
@@ -139,7 +154,9 @@ VALUES
 	}
 	else {
 		return {
-			reply: \"No video is currently being played.\"
+			reply: (linkOnly)
+				? null
+				: \"No video is currently being played.\"
 		};
 	}
 })',
