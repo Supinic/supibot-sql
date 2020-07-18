@@ -164,6 +164,32 @@ VALUES
 		`
 	};
 })',
-		NULL,
+		'async (prefix, values) => {
+	const rawChannels = await sb.Query.getRecordset(rs => rs
+		.select(\"Name\")
+		.from(\"data\", \"Twitch_Lotto_Channel\")
+		.flat(\"Name\")
+	);
+
+	const channels = rawChannels.map(i => `<li>${i}</li>`).join(\"\");
+	return [
+		\"Rolls a random picture sourced from Twitch channels. The data is from the Twitchlotto website\",
+		\"You can specify a channel from the list below to get links only from there.\",
+		\"Caution! The images are not filtered by any means and can be NSFW.\",
+		`You will get an approximation of \"NSFW score\" by an AI, so keep an eye out for that.`,
+		\"\",
+
+		`<code>${prefix}twitchlotto</code>`,
+		\"Fetches a random image from any channel\",
+		\"\",
+		
+		`<code>${prefix}twitchlotto (channel)</code>`,
+		\"Fetches a random image from the specified channel\",
+		\"\",
+
+		\"Supported channels:\",
+		`<ul>${channels}</ul>`
+	];
+}',
 		'supinic/supibot-sql'
 	)
