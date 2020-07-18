@@ -19,7 +19,7 @@ VALUES
 		'twitchlotto',
 		'[\"tl\"]',
 		'ping,whitelist',
-		'Posts an image from Twitch Lotto, trying to fix it via an NSFW API.',
+		'Fetches a random Imgur image from a Twitch channel (based off Twitchlotto) and checks it for NSFW stuff via an AI. The \"nudity score\" is posted along with the link.',
 		10000,
 		NULL,
 		'(() => {
