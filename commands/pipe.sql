@@ -69,7 +69,7 @@ VALUES
 		console.debug(\"Pipe\", result);
 
 		if (!result) { // Banphrase result: Do not reply
-			return { reply: null };
+			currentArgs = [];
 		}
 		else if (typeof result !== \"object\") { // Banphrase result: Reply with message
 			return { reply: result };
@@ -105,7 +105,7 @@ VALUES
 			currentArgs = result.reply.split(\" \");
 		}
 		else {
-			currentArgs = sb.Utils.wrapString(result.reply, 300).split(\" \");
+			currentArgs = sb.Utils.wrapString(result.reply, 2000).split(\" \");
 		}
 
 		finalResult = result;
