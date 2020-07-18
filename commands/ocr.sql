@@ -67,6 +67,10 @@ VALUES
 		}
 	}
 
+	if (language === \"chi\") {
+		language = \"chs\"; // thanks for using standard codes everyone
+	}
+
 	if (!Object.keys(this.staticData.languages).includes(language)) {
 		return {
 			success: false,
