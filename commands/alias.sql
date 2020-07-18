@@ -338,6 +338,49 @@ VALUES
 			};
 		}
 
+		case \"spy\": {
+			const [targetUser, targetAlias] = args;
+			if (!targetUser) {
+				return {
+					success: false,
+					reply: \"No target username provided!\"
+				};
+			}
+
+			const target = await sb.User.get(targetUser);
+			if (!target) {
+				return {
+					success: false,
+					reply: \"Invalid user provided!\"
+				};
+			}
+
+			const aliases = target.Data.aliasedCommands;
+			if (!aliases || Object.keys(aliases).length === 0) {
+				return {
+					success: false,
+					reply: \"They currently don\'t have any aliases!\"
+				};
+			}			
+			else if (!targetAlias) {
+				const list = Object.keys(aliases).map(i => `\"${i}\"`).sort().join(\", \");
+				return {
+					reply: `Their aliases: ${list}.`
+				};
+			}
+			else if (!aliases[targetAlias]) {
+				return {
+					success: false,
+					reply: \"They don\'t have an alias with that name!\"
+				};
+			}
+
+			const { invocation, args: commandArgs } = aliases[targetAlias];
+			return {
+				reply: `Their alias \"${targetAlias}\" has this definition: ${invocation} ${commandArgs.join(\" \")}`
+			};
+		}
+
 		default: return {
 			success: false,
 			reply: sb.Utils.tag.trim `
