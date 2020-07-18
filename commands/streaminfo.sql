@@ -24,7 +24,10 @@ VALUES
 		NULL,
 		NULL,
 		'(async function streamInfo (context, ...args) {
-	const target = args.join(\"_\") || context.channel.Name;
+	const target = (args.length === 0)
+		? context.channel.Name
+		: args[0];
+
 	const targetData = await sb.User.get(target);
 	const channelID = targetData?.Twitch_ID ?? await sb.Utils.getTwitchID(target);
 
