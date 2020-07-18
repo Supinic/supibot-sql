@@ -199,6 +199,12 @@ VALUES
 					}
 				}).join(\" \");
 			}
+		},
+		{
+			name: \"trim\",
+			type: \"method\",
+			aliases: [],
+			data: (message) => message.replace(/\\s+/g, \"\")
 		}
 	];
 
