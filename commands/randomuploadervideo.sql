@@ -85,7 +85,7 @@ VALUES
 	const { result } = await sb.Utils.fetchYoutubePlaylist({
 		key: sb.Config.get(\"API_GOOGLE_YOUTUBE\"),
 		limit: 50,
-		limitAction: \"return\",
+		limitAction: null,
 		perPage: 50,
 		playlistID
 	});
