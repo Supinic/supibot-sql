@@ -42,8 +42,8 @@ VALUES
 
 	const { day, month } = date;
 	let event = await sb.Query.getRecordset(rs => rs
-	    .select(\"Year\", \"Text\")
-	    .from(\"data\", \"Historic_Event\")
+		.select(\"Year\", \"Text\")
+		.from(\"data\", \"Historic_Event\")
 		.where(\"Day = %n\", day)
 		.where(\"Month = %n\", month)
 		.orderBy(\"RAND()\")
@@ -51,64 +51,10 @@ VALUES
 		.single()
 	);
 
-	if (!event) {
-		const dateString = this.staticData.formatter.format(date);
-		const { body: data } = await sb.Got({
-			responseType: \"json\",
-			url: `https://en.wikipedia.org/w/api.php`,
-			searchParams: new sb.URLParams()
-				.set(\"format\", \"json\")
-				.set(\"action\", \"query\")
-				.set(\"prop\", \"extracts\")
-				.set(\"redirects\", \"1\")
-				.set(\"titles\", dateString)
-				.toString()
-		});
-
-		const pageID = Object.keys(data.query.pages)[0];
-		const { extract } = data.query.pages[pageID];
-		const $ = sb.Utils.cheerio(extract);
-		const list = Array.from($(\"h2\"))
-			.find(i => i.firstChild?.attribs?.id === \"Events\")
-			.nextSibling
-			.nextSibling
-			.children
-			.map(i => $(i)?.text() ?? null)
-			.filter(Boolean);
-
-		const batch = await sb.Query.getBatch(\"data\", \"Historic_Event\", [\"Year\", \"Month\", \"Day\", \"Text\"]);
-		for (const string of list) {
-			const [yearString, eventString] = string.split(\" – \");
-			if (!eventString) {
-				continue;
-			}
-
-			let year = Number(yearString);
-			if (yearString.includes(\"AD\")) {
-				year = Number(yearString.replace(\"AD\", \"\"));
-			}
-			else if (yearString.includes(\"BC\")) {
-				year = Number(yearString.replace(/BCE?/, \"\"));
-				year = -year;
-			}
-
-			batch.add({
-				Text: eventString.trim(),
-				Year: year,
-				Month: month,
-				Day: day
-			});
-		}
-
-		event = sb.Utils.randArray(batch.records);
-		await batch.insert();
-	}
-
 	return {
 		reply: `Year ${event.Year}: ${event.Text}`
 	};
-})
-',
+})',
 		NULL,
 		'supinic/supibot-sql'
 	)
