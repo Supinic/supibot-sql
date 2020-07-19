@@ -52,7 +52,7 @@ VALUES
 	}
 
 	this.data.cooldowns[data.Name] = this.data.cooldowns[data.Name] ?? 0;
-	
+
 	const now = sb.Date.now();
 	if (this.data.cooldowns[data.Name] >= now) {
 		const delta = sb.Utils.timeDelta(this.data.cooldowns[data.Name]);
@@ -66,9 +66,16 @@ VALUES
 		success = await sb.LocalRequest.playAudio(data.Filename);
 	}
 	catch (e) {
+		console.warn(e);
 		await sb.Config.set(\"PLAYSOUNDS_ENABLED\", false);
 		return { reply: \"The desktop listener is not currently running, turning off playsounds!\" }
 	}
+
+	await sb.Query.getRecordUpdater(ru => ru
+		.update(\"data\", \"Playsound\")
+		.set(\"Use_Count\", data.Use_Count + 1)
+		.where(\"Name = %s\", data.Name)
+	);
 
 	this.data.cooldowns[data.Name] = now + data.Cooldown;
 	return {
