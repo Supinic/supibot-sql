@@ -112,7 +112,7 @@ VALUES
 	}
 
 	return {
-		replyWithPrivateMessage: Boolean(finalResult.replyWithPrivateMessage),
+		replyWithPrivateMessage: Boolean(finalResult?.replyWithPrivateMessage),
 		reply: currentArgs.join(\" \")
 	};
 })',
