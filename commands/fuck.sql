@@ -30,12 +30,14 @@ VALUES
 		user = sb.Utils.randArray([...sb.User.data.values()]).Name;
 	}
 
-	if (user === context.user.Name) {
+	user = user.toLowerCase();
+
+	if (user === context.user.Name || user === \"me\") {
 		return {
 			reply: \"There are toys made for that, you know...\"
 		};
 	}
-	else if (user === context.platform.Self_Name) {
+	else if (user === context.platform.Self_Name.toLowerCase()) {
 		return {
 			reply: \"Hey buddy, I think you got the wrong door.\"
 		};
