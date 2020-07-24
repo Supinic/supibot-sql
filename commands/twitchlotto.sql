@@ -61,7 +61,6 @@ VALUES
 			.flat(\"Name\")
 		);
 	}
-
 	if (channel && !this.data.channels.includes(channel)) {
 		return {
 			success: false,
@@ -119,6 +118,35 @@ VALUES
 			.where(\"Link = %s\", link)
 			.single()
 		);
+	}
+
+	if (image.Available === false) {
+		return {
+			success: false,
+			reply: `This image has been deleted from its host! Try again.`,
+			cooldown: 2500
+		};
+	}
+	else if (image.Available === null) {
+		const { statusCode } = await sb.Got({
+			method: \"HEAD\",
+			throwHttpErrors: false,
+			followRedirect: false,
+			url: `https://i.imgur.com/${image.Link}`
+		});
+
+		if (statusCode !== 200) {
+			await sb.Query.getRecordUpdater(ru => ru
+				.update(\"data\", \"Twitch_Lotto\")
+				.set(\"Available\", false)
+				.where(\"Link = %s\", image.Link)
+			);
+
+			return {
+				success: false,
+				reply: `Image is no longer available! https://i.imgur.com/${image.Link}`
+			};
+		}
 	}
 
 	if (image.Score === null) {
