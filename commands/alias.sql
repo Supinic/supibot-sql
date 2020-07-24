@@ -31,7 +31,7 @@ VALUES
 
 	applyParameters: (context, aliasArguments, commandArguments) => {
 		const resultArguments = [];
-		const numberRegex = /\\${(\\d+)(\\+?)}/;
+		const numberRegex = /\\${(?<order>\\d+)(-(?<range>\\d+))?(?<rest>\\+?)?}/;
 		const keywordRegex = /\\${(channel|executor)}/;
 
 		for (const arg of aliasArguments) {
@@ -40,39 +40,51 @@ VALUES
 				const iteratorRegex = new RegExp(numberRegex, \"g\");
 				const iterator = arg.matchAll(iteratorRegex);
 
-				for (const item of iterator) {
-					const order = Number(item[1]);
+				for (const match of iterator) {
+					const { groups } = match;
+					const item = match[0];
+
+					const order = Number(groups.order);
 					if (!sb.Utils.isValidInteger(order)) {
 						return {
 							success: false,
-							reply: `Invalid argument number \"${arg}\"!`
+							reply: `Invalid parameter order for argument \"${arg}\"!`
 						};
 					}
 
-					const useRest = (item[2] === \"+\");
+					if (groups.rest && groups.range) {
+						return {
+							success: false,
+							reply: `Can\'t combine range and rest parameters in argument \"${arg}\"!`
+						};
+					}
+
 					let replacement = null;
-					if (useRest) {
-						const rest = commandArguments.slice(order);
-						if (rest.length === 0) {
+					if (groups.rest) {
+						replacement = commandArguments.slice(order).join(\" \");
+					}
+					else if (groups.range) {
+						const range = Number(groups.range);
+						if (!sb.Utils.isValidInteger(range)) {
 							return {
 								success: false,
-								reply: `There are no arguments starting from position ${order}!`
+								reply: `Invalid range parameter for argument \"${arg}\"!`
+							};
+						}
+						else if (order >= range) {
+							return {
+								success: false,
+								reply: `The end of a range must be greater than the start of it in argument \"${arg}\"!`
 							};
 						}
 
-						replacement = rest.join(\" \");
+						replacement = commandArguments.slice(order, range + 1).join(\" \");
 					}
 					else {
-						replacement = commandArguments[order];
-						if (!replacement) {
-							return {
-								success: false,
-								reply: `Command argument number ${order} is missing!`
-							};
-						}
+						replacement = commandArguments[order] ?? \"\";
 					}
 
-					result = result.replace(item[0], replacement);
+					result = result.replace(item, replacement);
 				}
 
 				resultArguments.push(...result.split(\" \"));
