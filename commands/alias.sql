@@ -36,38 +36,45 @@ VALUES
 
 		for (const arg of aliasArguments) {
 			if (numberRegex.test(arg)) {
-				const [rawOrder, useRest] = arg.match(numberRegex).slice(1);
-				const order = Number(rawOrder);
-				if (!sb.Utils.isValidInteger(order)) {
-					return {
-						success: false,
-						reply: `Invalid argument number \"${arg}\"!`
-					};
-				}
+				let result = arg;
+				const iteratorRegex = new RegExp(numberRegex, \"g\");
+				const iterator = arg.matchAll(iteratorRegex);
 
-				let replacement = null;
-				if (useRest) {
-					const rest = commandArguments.slice(order);
-					if (rest.length === 0) {
+				for (const item of iterator) {
+					const order = Number(item[1]);
+					if (!sb.Utils.isValidInteger(order)) {
 						return {
 							success: false,
-							reply: `There are no arguments starting from position ${order}!`
+							reply: `Invalid argument number \"${arg}\"!`
 						};
 					}
 
-					replacement = rest.join(\" \");
-				}
-				else {
-					replacement = commandArguments[order];
-					if (!replacement) {
-						return {
-							success: false,
-							reply: `Command argument number ${order} is missing!`
-						};
+					const useRest = (item[2] === \"+\");
+					let replacement = null;
+					if (useRest) {
+						const rest = commandArguments.slice(order);
+						if (rest.length === 0) {
+							return {
+								success: false,
+								reply: `There are no arguments starting from position ${order}!`
+							};
+						}
+
+						replacement = rest.join(\" \");
 					}
+					else {
+						replacement = commandArguments[order];
+						if (!replacement) {
+							return {
+								success: false,
+								reply: `Command argument number ${order} is missing!`
+							};
+						}
+					}
+
+					result = result.replace(item[0], replacement);
 				}
 
-				const result = arg.replace(numberRegex, replacement);
 				resultArguments.push(...result.split(\" \"));
 			}
 			else if (keywordRegex.test(arg)) {
@@ -95,7 +102,6 @@ VALUES
 			resultArguments
 		};
 	}
-
 })',
 		'(async function alias (context, type, ...args) {
 	if (context.invocation === \"$\") {
