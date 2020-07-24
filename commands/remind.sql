@@ -34,7 +34,11 @@ VALUES
 		'(async function remind (context, ...args) {
 	let deprecationNotice = \"\";
 	if (args.length === 0) {
-		return { reply: \"Not enough info provided!\", meta: { skipCooldown: true } };
+		return { 
+			success: false,
+			reply: `Incorrect syntax! Use \"remind (person) (text)\"`,
+			cooldown: 2500
+		};
 	}
 	else if (sb.User.bots.has(context.user.ID)) {
 		deprecationNotice = \"Deprecation notice: bots should be using the reminder API! \";
@@ -236,7 +240,6 @@ VALUES
 		};
 	}
 	else {
-		console.warn(\"Reminder create failed\", result);
 		return {
 			reply: this.staticData.strings[result.cause] ?? `Reminder not created - result is ${result.cause}.`
 		};
