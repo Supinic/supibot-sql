@@ -5,6 +5,7 @@ INSERT INTO
 		Name,
 		Expression,
 		Description,
+		Defer,
 		Code,
 		Type,
 		Active
@@ -15,6 +16,7 @@ VALUES
 		'stay-hydrated',
 		'0 30 * * * *',
 		'Stay hydrated!',
+		NULL,
 		'(async function announceStayHydrated () {
 	const channelData = sb.Channel.get(\"supinic\", \"twitch\");
 	if (channelData.sessionData.live) {

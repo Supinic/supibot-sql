@@ -5,6 +5,7 @@ INSERT INTO
 		Name,
 		Expression,
 		Description,
+		Defer,
 		Code,
 		Type,
 		Active
@@ -15,6 +16,7 @@ VALUES
 		'test',
 		'*/10 * * * * *',
 		'Testing.',
+		NULL,
 		'(async function test (...args) {
 	this.data.test = this.data.test || [];
 	this.data.test.push(sb.Utils.random(1, 100));

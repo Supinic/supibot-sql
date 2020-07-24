@@ -5,6 +5,7 @@ INSERT INTO
 		Name,
 		Expression,
 		Description,
+		Defer,
 		Code,
 		Type,
 		Active
@@ -15,6 +16,7 @@ VALUES
 		'detect-offline-stream',
 		'0 * * * * *',
 		'Checks if the channel \"supinic\" is offline, to unset stream variables like \"sr\", \"tts\" and others.',
+		NULL,
 		'(async function detectOfflineStream () {
 	const sr = sb.Config.get(\"SONG_REQUESTS_STATE\");
 	if (sr === \"off\") {

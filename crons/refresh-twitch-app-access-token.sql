@@ -5,6 +5,7 @@ INSERT INTO
 		Name,
 		Expression,
 		Description,
+		Defer,
 		Code,
 		Type,
 		Active
@@ -15,6 +16,7 @@ VALUES
 		'refresh-twitch-app-access-token',
 		'0 0 12 * * *',
 		'Refreshes the bot\'s Twitch app access token.',
+		NULL,
 		'(async function refreshTwitchAppAccessToken () {
 	const { access_token: token } = await sb.Got({
 		method: \"POST\",

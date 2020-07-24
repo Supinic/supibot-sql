@@ -5,6 +5,7 @@ INSERT INTO
 		Name,
 		Expression,
 		Description,
+		Defer,
 		Code,
 		Type,
 		Active
@@ -15,6 +16,7 @@ VALUES
 		'suggestion-notification-system',
 		'0 * * * * *',
 		'Manages sending notifications about suggestions being changed. This is to notify users (via private system reminders) that their suggestion\'s status has changed.',
+		NULL,
 		'(async function notifyOnSuggestionChange () {
 	const subscriptions = await sb.Query.getRecordset(rs => rs
 		.select(\"User_Alias\", \"Platform\")

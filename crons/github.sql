@@ -5,6 +5,7 @@ INSERT INTO
 		Name,
 		Expression,
 		Description,
+		Defer,
 		Code,
 		Type,
 		Active
@@ -15,6 +16,7 @@ VALUES
 		'github',
 		'0 0 1-23/2 * * *',
 		'Posts the github link of supibot.',
+		NULL,
 		'(async function announceGithub () {
 	const channelData = sb.Channel.get(\"supinic\", \"twitch\");
 	if (!channelData.sessionData.live) {

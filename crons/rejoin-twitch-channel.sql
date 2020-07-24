@@ -5,6 +5,7 @@ INSERT INTO
 		Name,
 		Expression,
 		Description,
+		Defer,
 		Code,
 		Type,
 		Active
@@ -15,6 +16,7 @@ VALUES
 		'rejoin-twitch-channel',
 		'0 0 * * * *',
 		'Attempts to reconnect channels on Twitch that the bot has been unable to join - most likely because of a ban.',
+		NULL,
 		'(async function rejoinFailedTwitchChannels () {
 	const { client, controller } = sb.Platform.get(\"twitch\");
 	const channels = [...controller.failedJoinChannels];

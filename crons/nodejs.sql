@@ -5,6 +5,7 @@ INSERT INTO
 		Name,
 		Expression,
 		Description,
+		Defer,
 		Code,
 		Type,
 		Active
@@ -15,15 +16,16 @@ VALUES
 		'nodejs',
 		'0 0 */1 * * *',
 		'Checks new releases of nodejs, and if one is detected, then posts it in chat.',
+		NULL,
 		'(async function checkLastNodeVersion () {
 	const rawData = await sb.Got.instances.GitHub({
 		url: \"repos/nodejs/node/releases\",
 	}).json();
 
 	const latest = rawData.sort((a, b) => new sb.Date(b.created_at) - new sb.Date(a.created_at)).shift();
-	console.log(latest.tag_name, sb.Config.get(\"LATEST_NODE_JS_VERSION\"))
 
 	if (latest.tag_name !== sb.Config.get(\"LATEST_NODE_JS_VERSION\")) {
+		console.log(\"New nodejs version!\", sb.Config.get(\"LATEST_NODE_JS_VERSION\"), latest.tag_name);
 		sb.Config.set(\"LATEST_NODE_JS_VERSION\", latest.tag_name);
 		
 		const pingedUsers = (await sb.Query.getRecordset(rs => rs

@@ -5,6 +5,7 @@ INSERT INTO
 		Name,
 		Expression,
 		Description,
+		Defer,
 		Code,
 		Type,
 		Active
@@ -15,6 +16,7 @@ VALUES
 		'stream-silence-prevention',
 		'*/10 * * * * *',
 		'Makes sure that there is not a prolonged period of song request silence on Supinic\'s stream while live.',
+		NULL,
 		'(async function preventStreamSilence () {
 	if (this.data.stopped) {
 		return;

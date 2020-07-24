@@ -5,6 +5,7 @@ INSERT INTO
 		Name,
 		Expression,
 		Description,
+		Defer,
 		Code,
 		Type,
 		Active
@@ -15,6 +16,7 @@ VALUES
 		'discord',
 		'0 0 */2 * * *',
 		'Posts the discord link of supinic channel',
+		NULL,
 		'(async function announceDiscordLink () {
 	const channelData = sb.Channel.get(\"supinic\", \"twitch\");
 	if (!channelData.sessionData.live) {

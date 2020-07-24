@@ -5,6 +5,7 @@ INSERT INTO
 		Name,
 		Expression,
 		Description,
+		Defer,
 		Code,
 		Type,
 		Active
@@ -15,6 +16,7 @@ VALUES
 		'ggg-tracker',
 		'0 * * * * *',
 		'Checks gggtracker.com periodically for new posts by GGG staff members.',
+		NULL,
 		'(async function trackGGG () {
 	//if (!this.data.enabled) {
 	//	return;
@@ -37,7 +39,6 @@ VALUES
 			.flat(\"Username\")
 		)
 
-		console.log(\"GGG post\", type, data);
 		this.data.latestID = data.id;
 
 		let message = \"\";

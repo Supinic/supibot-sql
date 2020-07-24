@@ -5,6 +5,7 @@ INSERT INTO
 		Name,
 		Expression,
 		Description,
+		Defer,
 		Code,
 		Type,
 		Active
@@ -15,6 +16,7 @@ VALUES
 		'charity-cookie',
 		'0 55 1 * * *',
 		'Charity cookie - gives away a random cookie to random person who has the Extra_User_Data record, but has not eaten their cookie today - 5 minutes before the reset',
+		NULL,
 		'(async function giveOutCharityCookie () {
 	const excludedUsers = [2630, 35532, 2756, 1127];
 	

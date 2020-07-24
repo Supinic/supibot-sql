@@ -5,6 +5,7 @@ INSERT INTO
 		Name,
 		Expression,
 		Description,
+		Defer,
 		Code,
 		Type,
 		Active
@@ -15,6 +16,7 @@ VALUES
 		'active-poll',
 		'0 15,45 * * * *',
 		'If a poll is running, announce it in chat every couple of minutes.',
+		NULL,
 		'(async function announceActivePoll () {
 	const now = new sb.Date();
 	const poll = await sb.Query.getRecordset(rs => rs

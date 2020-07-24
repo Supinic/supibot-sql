@@ -5,6 +5,7 @@ INSERT INTO
 		Name,
 		Expression,
 		Description,
+		Defer,
 		Code,
 		Type,
 		Active
@@ -15,6 +16,7 @@ VALUES
 		'bot-active',
 		'0 */10 * * * *',
 		'Pings the bot active API to make sure supibot is being registered as online',
+		NULL,
 		'(async function verifyBotAcitivity () {
 	const userData = await sb.User.get(sb.Config.get(\"SELF_ID\"));
 	await sb.Got.instances.Supinic({

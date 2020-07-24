@@ -5,6 +5,7 @@ INSERT INTO
 		Name,
 		Expression,
 		Description,
+		Defer,
 		Code,
 		Type,
 		Active
@@ -15,6 +16,7 @@ VALUES
 		'prune-cooldown-manager',
 		'30 * * * * *',
 		'Periodically removes all expired cooldowns',
+		NULL,
 		'(async function pruneCooldownManager () {
 	sb.CooldownManager && sb.CooldownManager.prune();
 })',
