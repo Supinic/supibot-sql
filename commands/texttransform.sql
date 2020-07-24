@@ -23,6 +23,8 @@ VALUES
 		10000,
 		NULL,
 		'(() => {
+	const morse = {\"0\":\"-----\",\"1\":\".----\",\"2\":\"..---\",\"3\":\"...--\",\"4\":\"....-\",\"5\":\".....\",\"6\":\"-....\",\"7\":\"--...\",\"8\":\"---..\",\"9\":\"----.\",\"a\":\".-\",\"b\":\"-...\",\"c\":\"-.-.\",\"d\":\"-..\",\"e\":\".\",\"f\":\"..-.\",\"g\":\"--.\",\"h\":\"....\",\"i\":\"..\",\"j\":\".---\",\"k\":\"-.-\",\"l\":\".-..\",\"m\":\"--\",\"n\":\"-.\",\"o\":\"---\",\"p\":\".--.\",\"q\":\"--.-\",\"r\":\".-.\",\"s\":\"...\",\"t\":\"-\",\"u\":\"..-\",\"v\":\"...-\",\"w\":\".--\",\"x\":\"-..-\",\"y\":\"-.--\",\"z\":\"--..\",\".\":\".-.-.-\",\",\":\"--..--\",\"?\":\"..--..\",\"!\":\"-.-.--\",\"-\":\"-....-\",\"/\":\"-..-.\",\"@\":\".--.-.\",\"(\":\"-.--.\",\")\":\"-.--.-\"};
+	
 	const convert = {
 		method: (string, fn) => fn(string),
 		map: (string, map) => [...string].map(i => map[i] || i).join(\"\"),
@@ -205,6 +207,30 @@ VALUES
 			type: \"method\",
 			aliases: [],
 			data: (message) => message.replace(/\\s+/g, \"\")
+		},
+		{
+			name: \"binary\",
+			type: \"method\",
+			aliases: [\"bin\"],
+			data: (message) => message.split(\"\").map(i => (\"0\".repeat(8) + i.charCodeAt(0).toString(2)).slice(-8)).join(\" \")
+		},
+		{
+			name: \"morse\",
+			type: \"method\",
+			aliases: [],
+			data: (message) => {
+				const arr = [];
+				for (const character of message.toLowerCase()) {
+					if (character === \" \") {
+						arr.push(\"/\");
+					}
+					else if (morse[character]) {
+						arr.push(morse[character]);
+					}
+				}
+
+				return arr.join(\" \");
+			}
 		}
 	];
 
