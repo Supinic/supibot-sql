@@ -91,7 +91,7 @@ VALUES
 				case \"opt-out\": reply = \"That user has opted out from this command!\"; break;
 				case \"pipe-nsfw\": reply = \"You cannot pipe NSFW results!\"; break;
 
-				default: reply = result.reson ?? result.reply;
+				default: reply = result.reason ?? result.reply;
 			}
 
 			return {
