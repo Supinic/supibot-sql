@@ -113,7 +113,10 @@ VALUES
 			options.Channel = context.channel.ID;
 		}
 		else {
-			return { success: false, reply: \"Channel must be provided!\" }
+			return {
+				success: false,
+				reply: \"Can\'t do that in this channel!\"
+			};
 		}
 	}
 	else {
