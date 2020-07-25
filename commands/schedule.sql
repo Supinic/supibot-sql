@@ -51,19 +51,21 @@ VALUES
 			}
 		}
 
-		const {
-			game = \"(no category)\",
-			title,
-			startsAt
-		} = data.nextStream;
+		const game = (data.nextStream.game === \"No game set\")
+			? \"(no category)\"
+			: data.nextStream.game;
+
+		const title = (data.nextStream.title === \"\")
+			? \"(no title)\"
+			: data.nextStream.title;
 
 		let target = `${channelName}\'s`;
-		if  (channelName === context.user.Name) {
+		if (channelName === context.user.Name) {
 			target = \"Your\";
 			extra += \" (shouldn\'t you know when you\'re supposed to stream? 😉)\";
 		}
 
-		const time = sb.Utils.timeDelta(new sb.Date(startsAt));
+		const time = sb.Utils.timeDelta(new sb.Date(data.nextStream.startsAt));
 		return {
 			reply: `${target} next stream: ${game} - ${title}, starting ${time}. ${extra}`
 		};
