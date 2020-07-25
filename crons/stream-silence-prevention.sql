@@ -38,10 +38,10 @@ VALUES
 	}
 
 	if (!this.data.videos) {
-		const playlistID = \"PL9TsqVDcBIdtyegewA00JC0mlSkoq\";
+		const playlistID = \"PL9TsqVDcBIdtyegewA00JC0mlSkoq-VnJ\";
 		const { result } = await sb.Utils.fetchYoutubePlaylist({
 			key: sb.Config.get(\"API_GOOGLE_YOUTUBE\"),
-   			playlistID: this.staticData.playlist
+   			playlistID
 		});
 
 		this.data.videos = result.map(i => i.ID);
