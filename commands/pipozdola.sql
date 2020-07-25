@@ -18,7 +18,7 @@ VALUES
 		88,
 		'pipozdola',
 		NULL,
-		'ping,pipe,skip-banphrase,system,whitelist',
+		'mention,pipe,skip-banphrase,system,whitelist',
 		'PIP OMEGALUL ZD OMEGALUL LA',
 		10000,
 		NULL,

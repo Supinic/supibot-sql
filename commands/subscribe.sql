@@ -18,7 +18,7 @@ VALUES
 		76,
 		'subscribe',
 		'[\"unsubscribe\"]',
-		'ping,pipe,skip-banphrase',
+		'mention,pipe,skip-banphrase',
 		'Subscribe or unscribe to a database changing event. Check the extended help for detailed info on each subscription event.',
 		5000,
 		NULL,

@@ -18,7 +18,7 @@ VALUES
 		93,
 		'pyramid',
 		NULL,
-		'ping,pipe,whitelist',
+		'mention,pipe,whitelist',
 		'Creates a pyramid in chat. Only usable in chats where Supibot is a VIP or a Moderator.',
 		60000,
 		NULL,

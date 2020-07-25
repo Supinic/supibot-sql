@@ -18,7 +18,7 @@ VALUES
 		69,
 		'lastreminder',
 		'[\"lr\"]',
-		'ping,pipe',
+		'mention,pipe',
 		'Fetches the last (already used) reminder a target user has set for you.',
 		10000,
 		NULL,

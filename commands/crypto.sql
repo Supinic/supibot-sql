@@ -18,7 +18,7 @@ VALUES
 		84,
 		'crypto',
 		NULL,
-		'ping,pipe',
+		'mention,pipe',
 		'Fetches the latest price of a cryptocurrency.',
 		10000,
 		NULL,

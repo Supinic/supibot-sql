@@ -18,7 +18,7 @@ VALUES
 		5,
 		'cookie',
 		NULL,
-		'ping,pipe,rollback',
+		'mention,pipe,rollback',
 		'Open a random fortune cookie wisdom. Watch out - only one allowed per day, and no refunds! Daily reset occurs at midnight UTC.',
 		10000,
 		NULL,

@@ -18,7 +18,7 @@ VALUES
 		151,
 		'countlinesofcode',
 		'[\"cloc\"]',
-		'archived,ping,pipe,system',
+		'archived,mention,pipe,system',
 		'Counts the lines of supibot\'s code.',
 		60000,
 		NULL,

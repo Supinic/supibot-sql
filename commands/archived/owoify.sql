@@ -18,7 +18,7 @@ VALUES
 		134,
 		'owoify',
 		NULL,
-		'archived,ping,pipe',
+		'archived,mention,pipe',
 		'Turns the text you provide into a top tier shitpost.',
 		10000,
 		NULL,

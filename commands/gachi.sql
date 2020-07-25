@@ -18,7 +18,7 @@ VALUES
 		97,
 		'gachi',
 		'[\"gachilist\", \"gl\"]',
-		'ping,pipe',
+		'mention,pipe',
 		'Posts the link of gachimuchi list on supinic.com',
 		10000,
 		NULL,

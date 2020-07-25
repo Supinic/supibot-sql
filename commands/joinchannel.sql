@@ -18,7 +18,7 @@ VALUES
 		59,
 		'joinchannel',
 		NULL,
-		'ping,pipe,system,whitelist',
+		'mention,pipe,system,whitelist',
 		'Adds a new channel to database, sets its tables and events, and joins it. Only applicable for Twitch channels (for now, at least).',
 		0,
 		NULL,

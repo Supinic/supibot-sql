@@ -18,7 +18,7 @@ VALUES
 		195,
 		'gachichecksongrequest',
 		'[\"gcsr\", \"srgc\"]',
-		'archived,ping,pipe',
+		'archived,mention,pipe',
 		'Checks if the currently playing song on the VLC (possibly others?) API is in the gachi list. If not, basically executes the \"gc\" command.',
 		10000,
 		NULL,

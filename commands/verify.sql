@@ -18,7 +18,7 @@ VALUES
 		114,
 		'verify',
 		NULL,
-		'ping,pipe,system,whitelist',
+		'mention,pipe,system,whitelist',
 		'Verifies a user to be able to use a specific command based on some requirement.',
 		0,
 		NULL,

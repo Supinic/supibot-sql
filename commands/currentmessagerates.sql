@@ -18,7 +18,7 @@ VALUES
 		221,
 		'currentmessagerates',
 		'[\"cmr\"]',
-		'ping,pipe',
+		'mention,pipe',
 		'Fetches the current messages/minute stats in the current channel.',
 		10000,
 		NULL,

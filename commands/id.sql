@@ -18,7 +18,7 @@ VALUES
 		19,
 		'id',
 		NULL,
-		'ping,pipe,skip-banphrase',
+		'mention,pipe,skip-banphrase',
 		'Checks your (or someone else\'s) ID in the database of users - the lower the number, the earlier the user was first spotted',
 		10000,
 		NULL,

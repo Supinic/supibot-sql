@@ -18,7 +18,7 @@ VALUES
 		186,
 		'thesaurus',
 		NULL,
-		'ping,pipe',
+		'mention,pipe',
 		'Attempts to re-created your sentence using random synonyms for each word. EXPERIMENTAL',
 		30000,
 		NULL,

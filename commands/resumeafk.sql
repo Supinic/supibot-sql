@@ -18,7 +18,7 @@ VALUES
 		119,
 		'resumeafk',
 		'[\"rafk\", \"cafk\", \"continueafk\"]',
-		'ping,pipe',
+		'mention,pipe',
 		'Resumes your AFK status, if used within 5 minutes of coming back from AFK.',
 		120000,
 		NULL,

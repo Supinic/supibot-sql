@@ -18,7 +18,7 @@ VALUES
 		160,
 		'emotecheck',
 		'[\"ec\"]',
-		'ping,pipe',
+		'mention,pipe',
 		'Posts the list of each of Twitch\'s amazing \"global\" emote sets.',
 		15000,
 		NULL,

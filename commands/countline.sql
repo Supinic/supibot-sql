@@ -18,7 +18,7 @@ VALUES
 		41,
 		'countline',
 		'[\"cl\"]',
-		'opt-out,ping,pipe',
+		'mention,opt-out,pipe',
 		'Fetches the amount of chat line you (or a specified user) have in the current channel.',
 		15000,
 		NULL,

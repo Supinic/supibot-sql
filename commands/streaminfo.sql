@@ -18,7 +18,7 @@ VALUES
 		154,
 		'streaminfo',
 		'[\"si\", \"uptime\"]',
-		'ping,pipe',
+		'mention,pipe',
 		'Posts stream info about a Twitch channel.',
 		10000,
 		NULL,

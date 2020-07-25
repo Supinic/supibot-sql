@@ -18,7 +18,7 @@ VALUES
 		143,
 		'trackreupload',
 		'[\"tr\"]',
-		'ping,pipe,whitelist',
+		'mention,pipe,whitelist',
 		'Sets a track ID in the list already to have the next track as a reupload. The next track can be an existing ID (if it\'s not a reupload already) or a new link, in which case it gets added to list.',
 		10000,
 		'Only available for people who know what they\'re doing Kappa',

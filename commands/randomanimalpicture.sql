@@ -18,7 +18,7 @@ VALUES
 		198,
 		'randomanimalpicture',
 		'[\"rap\", \"rbp\", \"rcp\", \"rdp\", \"rfp\"]',
-		'ping,pipe',
+		'mention,pipe',
 		'Posts a random picture for a given animal type.',
 		10000,
 		NULL,

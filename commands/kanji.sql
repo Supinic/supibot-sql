@@ -18,7 +18,7 @@ VALUES
 		212,
 		'kanji',
 		NULL,
-		'ping,pipe',
+		'mention,pipe',
 		'Posts a quick summary of a given Kanji(?) character',
 		10000,
 		NULL,

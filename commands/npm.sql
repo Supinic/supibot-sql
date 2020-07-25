@@ -18,7 +18,7 @@ VALUES
 		225,
 		'npm',
 		NULL,
-		'developer,ping,pipe',
+		'developer,mention,pipe',
 		'Looks up an npm package with your given query, and posts a short description + link.',
 		10000,
 		NULL,

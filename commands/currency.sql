@@ -18,7 +18,7 @@ VALUES
 		26,
 		'currency',
 		'[\"money\"]',
-		'ping,pipe,skip-banphrase',
+		'mention,pipe,skip-banphrase',
 		'Attempts to convert a specified amount of one currency to another. Only supports 3-letter ISO codes. Example: 100 USD to EUR.',
 		10000,
 		NULL,

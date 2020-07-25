@@ -18,7 +18,7 @@ VALUES
 		95,
 		'mirror',
 		NULL,
-		'archived,ping,pipe,whitelist',
+		'archived,mention,pipe,whitelist',
 		'Toggles the message mirroring status in current channel.',
 		5000,
 		NULL,

@@ -18,7 +18,7 @@ VALUES
 		10,
 		'randomgachi',
 		'[\"rg\"]',
-		'ping,pipe',
+		'mention,pipe',
 		'Fetches a random gachi track from the gachi list, excluding Bilibili and Nicovideo videos with no Youtube reuploads',
 		5000,
 		NULL,

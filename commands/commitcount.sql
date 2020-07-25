@@ -18,7 +18,7 @@ VALUES
 		226,
 		'commitcount',
 		'[\"FarmingCommits\"]',
-		'ping,pipe,skip-banphrase,system',
+		'mention,pipe,skip-banphrase,system',
 		'For a given GitHub user, this command gives you the amount of push events done within 24 hours. If nothing is provided, uses the current channel as a username.',
 		10000,
 		NULL,

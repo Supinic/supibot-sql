@@ -18,7 +18,7 @@ VALUES
 		103,
 		'about',
 		NULL,
-		'ping,pipe',
+		'mention,pipe',
 		'Posts a summary of what supibot does, and what it is.',
 		60000,
 		NULL,

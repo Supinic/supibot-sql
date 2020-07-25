@@ -18,7 +18,7 @@ VALUES
 		152,
 		'uname',
 		'[\"version\"]',
-		'developer,ping,pipe',
+		'developer,mention,pipe',
 		'Posts the current supibot version, along with the latest \"patch notes\"',
 		10000,
 		NULL,

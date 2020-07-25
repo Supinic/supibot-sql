@@ -18,7 +18,7 @@ VALUES
 		177,
 		'vod',
 		NULL,
-		'ping',
+		'mention',
 		'Posts the last VOD of a specified channel. If you use the keyword \"current\", you\'ll get a timestamp as well.',
 		15000,
 		NULL,

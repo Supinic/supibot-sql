@@ -18,7 +18,7 @@ VALUES
 		128,
 		'case',
 		NULL,
-		'archived,ping,pipe',
+		'archived,mention,pipe',
 		'Makes the input lower or uppercase. Only usable in pipe.',
 		0,
 		NULL,

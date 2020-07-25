@@ -18,7 +18,7 @@ VALUES
 		155,
 		'nutrients',
 		NULL,
-		'ping,pipe',
+		'mention,pipe',
 		'Posts basic nutrients for a specified food query',
 		10000,
 		NULL,

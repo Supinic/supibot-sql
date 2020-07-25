@@ -18,7 +18,7 @@ VALUES
 		204,
 		'chan',
 		'[\"4chan\", \"textchan\", \"filechan\", \"imagechan\"]',
-		'ping,pipe',
+		'mention,pipe',
 		'Pulls a random post from a random board, or a specified one, if you provide it.',
 		10000,
 		NULL,

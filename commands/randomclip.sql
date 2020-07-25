@@ -18,7 +18,7 @@ VALUES
 		105,
 		'randomclip',
 		'[\"rc\"]',
-		'ping,pipe',
+		'mention,pipe',
 		'Posts a random clip from either the current channel or the specified channel. You can specify a parameter period, with options day/week/month/all, for example: perdiod:week',
 		30000,
 		NULL,

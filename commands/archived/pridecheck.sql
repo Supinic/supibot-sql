@@ -18,7 +18,7 @@ VALUES
 		112,
 		'pridecheck',
 		NULL,
-		'archived,ping,pipe',
+		'archived,mention,pipe',
 		'KappaPride',
 		10000,
 		NULL,

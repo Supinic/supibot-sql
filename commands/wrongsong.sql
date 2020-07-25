@@ -18,7 +18,7 @@ VALUES
 		167,
 		'wrongsong',
 		'[\"ws\"]',
-		'ping,pipe,whitelist',
+		'mention,pipe,whitelist',
 		'If you have at least one song playing or in the queue, this command will skip the first one. You can also add an ID to skip a specific song.',
 		5000,
 		NULL,

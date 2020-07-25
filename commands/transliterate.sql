@@ -18,7 +18,7 @@ VALUES
 		138,
 		'transliterate',
 		NULL,
-		'ping,pipe',
+		'mention,pipe',
 		'Transliterates non-latin text into Latin. Should support most of the languages not using Latin (like Japanese, Chinese, Russian, ...)',
 		15000,
 		NULL,

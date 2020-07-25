@@ -18,7 +18,7 @@ VALUES
 		203,
 		'mdn',
 		NULL,
-		'developer,ping,pipe',
+		'developer,mention,pipe',
 		'Searches the MDN website for a given term, then returns the article link.',
 		10000,
 		NULL,

@@ -18,7 +18,7 @@ VALUES
 		120,
 		'boshy',
 		NULL,
-		'ping,pipe,whitelist',
+		'mention,pipe,whitelist',
 		'Oh no no PepeLaugh',
 		15000,
 		NULL,

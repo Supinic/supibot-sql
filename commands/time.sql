@@ -18,7 +18,7 @@ VALUES
 		28,
 		'time',
 		NULL,
-		'ping,pipe',
+		'mention,pipe',
 		'Fetches the current time and timezone for a given location',
 		10000,
 		NULL,

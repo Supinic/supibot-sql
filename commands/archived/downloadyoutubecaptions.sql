@@ -18,7 +18,7 @@ VALUES
 		127,
 		'downloadyoutubecaptions',
 		'[\"dytc\", \"dyts\"]',
-		'archived,ping,pipe,whitelist',
+		'archived,mention,pipe,whitelist',
 		'Downloads the subtitles (captions) of a video, posts them in a Pastebin paste and gives you the link.',
 		60000,
 		'Temporarily disabled',

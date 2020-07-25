@@ -18,7 +18,7 @@ VALUES
 		149,
 		'stackoverflowsearch',
 		'[\"stackoverflow\", \"sos\"]',
-		'ping,pipe',
+		'mention,pipe',
 		'Searches SO for relevant questions and answers.',
 		15000,
 		NULL,

@@ -18,7 +18,7 @@ VALUES
 		187,
 		'when',
 		NULL,
-		'ping,pipe,whitelist',
+		'mention,pipe,whitelist',
 		'Tells you when your command is going to be played next, approximately.',
 		15000,
 		'Only available in channels with VLC API configured!',

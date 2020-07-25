@@ -18,7 +18,7 @@ VALUES
 		194,
 		'bot',
 		NULL,
-		'ping,pipe',
+		'mention,pipe',
 		'Allows broadcasters to set various parameters for the bot in their own channel. Usable anywhere, but only applies to their own channel.',
 		2500,
 		NULL,

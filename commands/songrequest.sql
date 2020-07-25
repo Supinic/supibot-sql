@@ -18,7 +18,7 @@ VALUES
 		56,
 		'songrequest',
 		'[\"sr\"]',
-		'ping,pipe,whitelist',
+		'mention,pipe,whitelist',
 		'Requests a song to play on Supinic\'s stream. You can use \"start:\" and \"end:\" to request parts of a song using seconds or a time syntax. \"start:100\" or \"end:05:30\", for example.',
 		5000,
 		'Only available in supinic\'s channel.',

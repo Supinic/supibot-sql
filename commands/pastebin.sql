@@ -18,7 +18,7 @@ VALUES
 		146,
 		'pastebin',
 		NULL,
-		'ping,pipe',
+		'mention,pipe',
 		'Takes the result of a different command (pipe-only) and posts a Pastebin paste with it.',
 		20000,
 		NULL,

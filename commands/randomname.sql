@@ -18,7 +18,7 @@ VALUES
 		210,
 		'randomname',
 		'[\"rn\"]',
-		'ping,pipe',
+		'mention,pipe',
 		'Fetches a random name.',
 		10000,
 		NULL,

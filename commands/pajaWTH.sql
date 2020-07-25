@@ -18,7 +18,7 @@ VALUES
 		52,
 		'pajaWTH',
 		'[\"obamaWTF\"]',
-		'ping,pipe,skip-banphrase',
+		'mention,pipe,skip-banphrase',
 		'Posts a random Anthony \"Obama Chavez\" Stone quote, mostly from Knaked Knights and the snippets from IWF 2017.',
 		5000,
 		NULL,

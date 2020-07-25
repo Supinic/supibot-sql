@@ -18,7 +18,7 @@ VALUES
 		40,
 		'lastseen',
 		'[\"ls\", \"stalk\"]',
-		'block,opt-out,ping,pipe',
+		'block,mention,opt-out,pipe',
 		'Posts the target user\'s last chat line in all chats combined (!) and the date they sent it.',
 		5000,
 		NULL,

@@ -18,7 +18,7 @@ VALUES
 		68,
 		'current',
 		'[\"song\"]',
-		'ping,pipe,whitelist',
+		'mention,pipe,whitelist',
 		'Fetches the current song playing on stream.',
 		5000,
 		NULL,

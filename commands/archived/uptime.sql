@@ -18,7 +18,7 @@ VALUES
 		51,
 		'uptime',
 		NULL,
-		'archived,ping,pipe,skip-banphrase',
+		'archived,mention,pipe,skip-banphrase',
 		'Posts the uptime of a given stream, or the channel you\'re in, if none is provided.',
 		10000,
 		NULL,

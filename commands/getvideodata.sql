@@ -18,7 +18,7 @@ VALUES
 		129,
 		'getvideodata',
 		'[\"gvd\"]',
-		'ping,pipe,system',
+		'mention,pipe,system',
 		'Uses supinic\'s API to fetch general info about a link, which is then posted to a Pastebin post.',
 		5000,
 		NULL,

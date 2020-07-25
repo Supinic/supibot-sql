@@ -18,7 +18,7 @@ VALUES
 		107,
 		'stock',
 		NULL,
-		'ping,pipe',
+		'mention,pipe',
 		'Fetches the latest price and daily change for a stock.',
 		10000,
 		NULL,

@@ -18,7 +18,7 @@ VALUES
 		3,
 		'math',
 		NULL,
-		'ping,pipe',
+		'mention,pipe',
 		'Does math. For more info, check the documentation for math.js',
 		5000,
 		NULL,

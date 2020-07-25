@@ -18,7 +18,7 @@ VALUES
 		142,
 		'vote',
 		'[\"poll\"]',
-		'ping,pipe',
+		'mention,pipe',
 		'If there is poll running, you can vote \"yes\" or \"no\", if you don\'t post either you will get the currently running poll (or nothing if there\'s none)',
 		5000,
 		NULL,

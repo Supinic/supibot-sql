@@ -18,7 +18,7 @@ VALUES
 		67,
 		'twitter',
 		'[\"tweet\"]',
-		'ping,pipe',
+		'mention,pipe',
 		'Fetches the last tweet from a given user. No retweets or replies, just plain standalone tweets.',
 		10000,
 		NULL,

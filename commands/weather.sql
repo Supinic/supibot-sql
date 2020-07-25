@@ -18,7 +18,7 @@ VALUES
 		39,
 		'weather',
 		NULL,
-		'ping,pipe',
+		'mention,pipe',
 		'Fetches the current weather in a given location. You can add \"hour+#\" or \"day+#\" at the end for hourly/daily forecast, or \"week\" at the end for a weekly summary. Powered by Darksky.',
 		10000,
 		NULL,

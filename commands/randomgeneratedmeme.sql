@@ -18,7 +18,7 @@ VALUES
 		213,
 		'randomgeneratedmeme',
 		'[\"rgm\"]',
-		'ping,pipe',
+		'mention,pipe',
 		'Posts the text of a randomly generated meme.',
 		10000,
 		NULL,

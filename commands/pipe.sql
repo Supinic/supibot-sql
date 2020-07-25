@@ -18,7 +18,7 @@ VALUES
 		104,
 		'pipe',
 		NULL,
-		'ping,pipe,system',
+		'mention,pipe,system',
 		'Pipes the result of one command to another, and so forth. Each command will be used as if used separately, so each will be checked for cooldowns and banphrases. Use the character \"|\" or \">\" to separate each command.',
 		5000,
 		NULL,
@@ -62,7 +62,7 @@ VALUES
 				pipe: true,
 				skipBanphrases: true,
 				skipPending: true,
-				skipPing: true
+				skipMention: true
 			}
 		);
 

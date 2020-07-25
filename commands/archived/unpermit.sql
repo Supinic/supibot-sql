@@ -18,7 +18,7 @@ VALUES
 		17,
 		'unpermit',
 		NULL,
-		'archived,ping,pipe,skip-banphrase,system,whitelist',
+		'archived,mention,pipe,skip-banphrase,system,whitelist',
 		'Revokes the right to execute a given command from a given user',
 		0,
 		NULL,

@@ -18,7 +18,7 @@ VALUES
 		185,
 		'record',
 		NULL,
-		'ping,pipe',
+		'mention,pipe',
 		'Checks for various max/min records of various sources.',
 		10000,
 		NULL,

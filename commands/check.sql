@@ -18,7 +18,7 @@ VALUES
 		53,
 		'check',
 		NULL,
-		'ping,pipe',
+		'mention,pipe',
 		'Checks certain user or system variables. For a list of types, check the command\'s extended help.',
 		10000,
 		NULL,

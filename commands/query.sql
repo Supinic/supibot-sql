@@ -18,7 +18,7 @@ VALUES
 		115,
 		'query',
 		NULL,
-		'ping,pipe',
+		'mention,pipe',
 		'Wolfram Alpha query',
 		60000,
 		NULL,

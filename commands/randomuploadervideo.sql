@@ -18,7 +18,7 @@ VALUES
 		232,
 		'randomuploadervideo',
 		'[\"ruv\"]',
-		'ping,pipe',
+		'mention,pipe',
 		'On supinic\'s stream, takes the currently playing video (if there is any) and fetches another random video from the same Youtube uploader.',
 		20000,
 		'Only usable in Supinic\'s channel.',

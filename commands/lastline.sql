@@ -18,7 +18,7 @@ VALUES
 		43,
 		'lastline',
 		'[\"ll\", \"lastmessage\", \"lm\"]',
-		'opt-out,ping,pipe',
+		'mention,opt-out,pipe',
 		'Posts the target user\'s last chat line in the context of the current channel, and the date they sent it.',
 		5000,
 		NULL,

@@ -18,7 +18,7 @@ VALUES
 		216,
 		'ocr',
 		NULL,
-		'ping,pipe',
+		'mention,pipe',
 		'Takes your image link and attempts to find the text in it by using OCR.',
 		10000,
 		NULL,

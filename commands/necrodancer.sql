@@ -18,7 +18,7 @@ VALUES
 		141,
 		'necrodancer',
 		NULL,
-		'ping,pipe,whitelist',
+		'mention,pipe,whitelist',
 		'Download an audio file to play with Crypt of the Necrodancer.',
 		60000,
 		NULL,

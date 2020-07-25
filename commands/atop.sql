@@ -18,7 +18,7 @@ VALUES
 		62,
 		'atop',
 		NULL,
-		'ping,pipe,system,whitelist',
+		'mention,pipe,system,whitelist',
 		'Fetches the top 10 users by total amount of chat lines across all channels. This is a very heavy operation on SQL, so please use it sparingly.',
 		0,
 		NULL,

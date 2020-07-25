@@ -18,7 +18,7 @@ VALUES
 		211,
 		'firstfollowedchannel',
 		'[\"ffc\"]',
-		'opt-out,ping,pipe',
+		'mention,opt-out,pipe',
 		'Fetches the first channel you or someone else have ever followed on Twitch.',
 		10000,
 		NULL,

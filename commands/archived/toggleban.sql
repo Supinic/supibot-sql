@@ -18,7 +18,7 @@ VALUES
 		55,
 		'toggleban',
 		NULL,
-		'archived,ping,pipe,system,whitelist',
+		'archived,mention,pipe,system,whitelist',
 		'Toggles the status of an existing ban based on the ID.',
 		0,
 		NULL,

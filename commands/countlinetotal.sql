@@ -18,7 +18,7 @@ VALUES
 		8,
 		'countlinetotal',
 		'[\"clt\"]',
-		'ping,pipe,skip-banphrase,system,whitelist',
+		'mention,pipe,skip-banphrase,system,whitelist',
 		'Fetches the amount of data lines from ALL the log tables, including the total size.',
 		0,
 		NULL,

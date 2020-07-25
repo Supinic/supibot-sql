@@ -18,7 +18,7 @@ VALUES
 		44,
 		'firstline',
 		'[\"fl\"]',
-		'opt-out,ping,pipe',
+		'mention,opt-out,pipe',
 		'Posts the target user\'s first chat line in the context of the current channel, and the date they sent it.',
 		5000,
 		NULL,

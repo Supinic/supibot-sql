@@ -18,7 +18,7 @@ VALUES
 		49,
 		'help',
 		'[\"commands\"]',
-		'ping,pipe',
+		'mention,pipe',
 		'Posts either: a short list of all commands, or a description of a specific command if you specify it.',
 		5000,
 		NULL,
@@ -36,12 +36,15 @@ VALUES
 	}
 	// Print specific command description
 	else {
-		const cmdStr = commandString.toLowerCase().replace(new RegExp(\"^\\\\\" + prefix), \"\");
-		if (cmdStr === \"me\") {
+		const identifier = (sb.Command.is(commandString))
+			? commandString.replace(sb.Command.prefix)
+			: commandString;
+
+		if (identifier.toLowerCase() === \"me\") {
 			return { reply: \"I can\'t directly help you, but maybe if you use one of my commands, you\'ll feel better? :)\" };
 		}
 
-		const command = sb.Command.data.find(cmd => cmd.Name.toLowerCase() === cmdStr || cmd.Aliases.includes(cmdStr));
+		const command = sb.Command.get(identifier);
 		if (!command) {
 			return { reply: \"That command does not exist!\" };
 		}

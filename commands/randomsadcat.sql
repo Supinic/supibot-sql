@@ -18,7 +18,7 @@ VALUES
 		193,
 		'randomsadcat',
 		'[\"rsc\"]',
-		'ping,pipe',
+		'mention,pipe',
 		'Posts a random sad cat image SadCat',
 		15000,
 		NULL,

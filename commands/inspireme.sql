@@ -18,7 +18,7 @@ VALUES
 		132,
 		'inspireme',
 		NULL,
-		'ping,pipe',
+		'mention,pipe',
 		'Inspires you. Randomly.',
 		15000,
 		NULL,

@@ -18,7 +18,7 @@ VALUES
 		199,
 		'stachursky',
 		'[\"FeelsStachurskyMan\"]',
-		'ping,pipe',
+		'mention,pipe',
 		'Posts a random excerpt from a Stachursky song.',
 		10000,
 		NULL,

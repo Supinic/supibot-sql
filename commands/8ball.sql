@@ -18,7 +18,7 @@ VALUES
 		133,
 		'8ball',
 		NULL,
-		'ping,pipe',
+		'mention,pipe',
 		'Checks your question against the fortune-telling 8-ball.',
 		30000,
 		NULL,

@@ -18,7 +18,7 @@ VALUES
 		182,
 		'spellcheck',
 		'[\"sc\"]',
-		'archived,ping,pipe',
+		'archived,mention,pipe',
 		'Spell checks your message.',
 		25000,
 		NULL,

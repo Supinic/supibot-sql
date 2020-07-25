@@ -18,7 +18,7 @@ VALUES
 		147,
 		'dubtrack',
 		NULL,
-		'archived,ping,pipe,whitelist',
+		'archived,mention,pipe,whitelist',
 		'Posts a link to supinic\'s dubtrack to use on stream, when necessary.',
 		5000,
 		'Only available on specific channels who have dubtrack.',

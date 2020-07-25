@@ -18,7 +18,7 @@ VALUES
 		228,
 		'fakenews',
 		NULL,
-		'ping,pipe',
+		'mention,pipe',
 		'Randomly creates fake news headlines from existing presets. These are not real, and are supposed to be light-hearted and just a joke. Don\'t take them seriously.',
 		10000,
 		NULL,

@@ -18,7 +18,7 @@ VALUES
 		190,
 		'randomfilm',
 		'[\"rf\"]',
-		'ping,pipe',
+		'mention,pipe',
 		'Fetches a random movie.',
 		15000,
 		NULL,

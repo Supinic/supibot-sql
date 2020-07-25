@@ -18,7 +18,7 @@ VALUES
 		24,
 		'copypasta',
 		NULL,
-		'ping,pipe',
+		'mention,pipe',
 		'Fetches a random Twitch-related copypasta. The date of creation usually ranges from 2014-2015.',
 		15000,
 		NULL,

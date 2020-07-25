@@ -18,7 +18,7 @@ VALUES
 		123,
 		'videostats',
 		NULL,
-		'ping,pipe,whitelist',
+		'mention,pipe,whitelist',
 		'Post the statistics about a given bare video link (means, just the ID and not the entire link) in a given Cytube room.',
 		10000,
 		'Video statistics are only available in Cytube rooms.',

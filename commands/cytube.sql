@@ -18,7 +18,7 @@ VALUES
 		178,
 		'cytube',
 		NULL,
-		'ping,pipe,whitelist',
+		'mention,pipe,whitelist',
 		'Posts the link to channel\'s cytube',
 		15000,
 		NULL,

@@ -18,7 +18,7 @@ VALUES
 		234,
 		'randomhistoricevent',
 		'[\"rhe\"]',
-		'ping,pipe',
+		'mention,pipe',
 		NULL,
 		10000,
 		NULL,

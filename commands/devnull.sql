@@ -18,7 +18,7 @@ VALUES
 		205,
 		'devnull',
 		'[\"/dev/null\", \"null\"]',
-		'ping,pipe',
+		'mention,pipe',
 		'Discards all output. Only usable in pipes.',
 		0,
 		NULL,

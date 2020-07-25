@@ -18,7 +18,7 @@ VALUES
 		165,
 		'discord',
 		NULL,
-		'ping,pipe',
+		'mention,pipe',
 		'Posts the link to the current channel\'s Discord(?)',
 		15000,
 		NULL,

@@ -18,7 +18,7 @@ VALUES
 		87,
 		'wowclassicstatus',
 		'[\"wcs\"]',
-		'archived,ping,pipe,skip-banphrase',
+		'archived,mention,pipe,skip-banphrase',
 		'Sets your presumed WoW Classic status - whether or not you\'ll play, and how hard you want to go.',
 		5000,
 		NULL,

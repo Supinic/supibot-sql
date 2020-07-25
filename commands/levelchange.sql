@@ -18,7 +18,7 @@ VALUES
 		111,
 		'levelchange',
 		'[\"lc\"]',
-		'ping,pipe',
+		'mention,pipe',
 		'Search for the last level change (default, staff, admin, ...) of a given Twitch user.',
 		15000,
 		NULL,

@@ -18,7 +18,7 @@ VALUES
 		219,
 		'freeforsen',
 		NULL,
-		'archived,ping,pipe',
+		'archived,mention,pipe',
 		'Free Forsen forsenE',
 		10000,
 		NULL,

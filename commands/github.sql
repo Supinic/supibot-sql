@@ -18,7 +18,7 @@ VALUES
 		162,
 		'github',
 		NULL,
-		'developer,ping,pipe',
+		'developer,mention,pipe',
 		'Posts GitHub repository links for Supibot and the website. If you add anything afterwards, a search will be executed for your query on the bot repository.',
 		5000,
 		NULL,

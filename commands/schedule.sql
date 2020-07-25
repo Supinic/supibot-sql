@@ -18,7 +18,7 @@ VALUES
 		184,
 		'schedule',
 		NULL,
-		'opt-out,ping,pipe',
+		'mention,opt-out,pipe',
 		'Posts the channel\'s stream schedule.',
 		30000,
 		NULL,

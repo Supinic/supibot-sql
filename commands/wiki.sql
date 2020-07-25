@@ -18,7 +18,7 @@ VALUES
 		4,
 		'wiki',
 		NULL,
-		'ping,pipe',
+		'mention,pipe',
 		'Fetches the headline of the first article found according to user query. Watch out, articles might be case sensitive.',
 		15000,
 		NULL,

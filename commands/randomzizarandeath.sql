@@ -18,7 +18,7 @@ VALUES
 		201,
 		'randomzizarandeath',
 		'[\"rzd\"]',
-		'ping,pipe',
+		'mention,pipe',
 		'Posts a random video with Zizaran dying in Path of Exile.',
 		30000,
 		NULL,

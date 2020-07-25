@@ -18,7 +18,7 @@ VALUES
 		98,
 		'pingme',
 		NULL,
-		'opt-out,ping,pipe',
+		'mention,opt-out,pipe',
 		'Sets a self-notification in the current channel when the target user is spotted in a different channel.',
 		15000,
 		NULL,

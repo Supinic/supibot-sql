@@ -18,7 +18,7 @@ VALUES
 		60,
 		'stream',
 		NULL,
-		'ping,pipe,system,whitelist',
+		'mention,pipe,system,whitelist',
 		'Multiple configurations regarding the stream. Mostly used for #supinic, and nobody else.',
 		0,
 		NULL,

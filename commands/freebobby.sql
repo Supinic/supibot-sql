@@ -18,7 +18,7 @@ VALUES
 		137,
 		'freebobby',
 		NULL,
-		'ping,pipe',
+		'mention,pipe',
 		'When is Bobby Shmurda going to be freed? TriHard',
 		15000,
 		NULL,

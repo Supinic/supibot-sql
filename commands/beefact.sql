@@ -18,7 +18,7 @@ VALUES
 		101,
 		'beefact',
 		NULL,
-		'ping,pipe',
+		'mention,pipe',
 		'Posts a random fact about bees.',
 		10000,
 		NULL,

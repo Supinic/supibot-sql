@@ -18,7 +18,7 @@ VALUES
 		168,
 		'reset',
 		NULL,
-		'ping,pipe,system',
+		'mention,pipe,system',
 		'Tracks your last \"\"\"reset\"\"\".',
 		30000,
 		NULL,

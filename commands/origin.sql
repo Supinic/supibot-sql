@@ -18,7 +18,7 @@ VALUES
 		20,
 		'origin',
 		NULL,
-		'ping,pipe',
+		'mention,pipe',
 		'Fetches the origin of a given emote',
 		10000,
 		NULL,

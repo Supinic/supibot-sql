@@ -18,7 +18,7 @@ VALUES
 		125,
 		'simplesql',
 		'[\"ssql\"]',
-		'ping,pipe,system,whitelist',
+		'mention,pipe,system,whitelist',
 		'Executes a quick SQL query, and returns its (simple) result.',
 		0,
 		NULL,

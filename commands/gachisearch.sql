@@ -18,7 +18,7 @@ VALUES
 		169,
 		'gachisearch',
 		'[\"gs\"]',
-		'ping,pipe',
+		'mention,pipe',
 		'Searches for a given track in the gachi list, and attempts to post a link.',
 		15000,
 		NULL,

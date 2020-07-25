@@ -18,7 +18,7 @@ VALUES
 		224,
 		'randomcocktail',
 		'[\"cock\", \"drinks\", \"tail\"]',
-		'ping,pipe',
+		'mention,pipe',
 		'Searches for a cocktail recipe by its name, or fetches a random one, if no search query was provided.',
 		10000,
 		NULL,

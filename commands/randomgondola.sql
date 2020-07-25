@@ -18,7 +18,7 @@ VALUES
 		171,
 		'randomgondola',
 		'[\"rgo\"]',
-		'ping,pipe',
+		'mention,pipe',
 		'Posts a random gondola video, based on the Gondola Stravers API.',
 		20000,
 		NULL,

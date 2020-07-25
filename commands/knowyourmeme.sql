@@ -18,7 +18,7 @@ VALUES
 		188,
 		'knowyourmeme',
 		'[\"kym\"]',
-		'ping,pipe',
+		'mention,pipe',
 		'Gets a smol description of a meme from KnowYourMeme, it\'s just the summary.',
 		30000,
 		NULL,

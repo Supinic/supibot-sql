@@ -18,7 +18,7 @@ VALUES
 		191,
 		'content',
 		NULL,
-		'ping,pipe',
+		'mention,pipe',
 		'Shows how many suggestions there are Uncategorized and New - basically showing how much content I have for the next stream.',
 		30000,
 		NULL,

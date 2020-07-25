@@ -18,7 +18,7 @@ VALUES
 		27,
 		'%',
 		NULL,
-		'ping,pipe,skip-banphrase',
+		'mention,pipe,skip-banphrase',
 		'Rolls a random percentage between 0 and 100%',
 		5000,
 		NULL,

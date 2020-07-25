@@ -18,7 +18,7 @@ VALUES
 		61,
 		'totalcountline',
 		'[\"acl\", \"tcl\"]',
-		'ping,pipe,skip-banphrase',
+		'mention,pipe,skip-banphrase',
 		'Fetches the total amount of a user\'s (or yours, if nobody was specified) chat lines in all tracked channels summed together.',
 		30000,
 		NULL,

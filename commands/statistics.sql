@@ -18,7 +18,7 @@ VALUES
 		196,
 		'statistics',
 		'[\"stat\", \"stats\"]',
-		'ping,pipe',
+		'mention,pipe',
 		'Posts various statistics regarding you, e.g. total afk time.',
 		10000,
 		NULL,

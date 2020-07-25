@@ -18,7 +18,7 @@ VALUES
 		50,
 		'countlinechannel',
 		'[\"clc\"]',
-		'ping,pipe,skip-banphrase',
+		'mention,pipe,skip-banphrase',
 		'Fetches the amount of chat lines in the current channel.',
 		60000,
 		NULL,

@@ -18,7 +18,7 @@ VALUES
 		126,
 		'botsubs',
 		NULL,
-		'ping,pipe',
+		'mention,pipe',
 		'Checks the channels supibot is currently subscribed to on Twitch.',
 		10000,
 		NULL,

@@ -18,7 +18,7 @@ VALUES
 		32,
 		'coinflip',
 		'[\"cf\"]',
-		'ping,pipe,skip-banphrase',
+		'mention,pipe,skip-banphrase',
 		'Flips a coin.',
 		2500,
 		NULL,

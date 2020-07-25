@@ -18,7 +18,7 @@ VALUES
 		229,
 		'streamgames',
 		'[\"games\", \"sg\"]',
-		'developer,ping,pipe,system,whitelist',
+		'developer,mention,pipe,system,whitelist',
 		'Posts the link to supinic\'s stream game list on Gist.',
 		5000,
 		NULL,

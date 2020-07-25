@@ -18,7 +18,7 @@ VALUES
 		37,
 		'news',
 		NULL,
-		'ping,pipe',
+		'mention,pipe',
 		'Fetches short articles. You can use a 2 character ISO code to get country specific news, or any other word as a search query.',
 		10000,
 		NULL,

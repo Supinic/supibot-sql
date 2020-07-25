@@ -18,7 +18,7 @@ VALUES
 		30,
 		'remind',
 		'[\"notify\", \"reminder\", \"remindme\", \"notifyme\", \"remindprivate\", \"notifyprivate\"]',
-		'block,opt-out,ping,pipe',
+		'block,mention,opt-out,pipe',
 		'Sets a notify for a given user. Can also set a time to ping that user (or yourself) in given amount of time, but in that case you must use the word \"in\" and then a number specifying the amount days, hours, minutes, etc.',
 		10000,
 		NULL,

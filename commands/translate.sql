@@ -18,7 +18,7 @@ VALUES
 		38,
 		'translate',
 		NULL,
-		'ping,pipe',
+		'mention,pipe',
 		'Implicitly translates from auto-recognized language to English. Supports parameters \'from\' and \'to\'. Example: from:german to:french Guten Tag\",',
 		15000,
 		NULL,

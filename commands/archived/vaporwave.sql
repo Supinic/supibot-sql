@@ -18,7 +18,7 @@ VALUES
 		159,
 		'vaporwave',
 		'[\"vw\"]',
-		'archived,ping,pipe',
+		'archived,mention,pipe',
 		'ＡＥＳＴＨＥＴＩＣ ＣＯＭＭＡＮＤ ＴＨＡＴ ＴＵＲＮＳ ＮＯＲＭＡＬ ＴＥＸＴ ＩＮＴＯ ＴＨＩＳ',
 		10000,
 		NULL,

@@ -18,7 +18,7 @@ VALUES
 		47,
 		'gachicheck',
 		'[\"gc\"]',
-		'ping,pipe,skip-banphrase',
+		'mention,pipe,skip-banphrase',
 		'Checks if a given gachi link exists in the database, if not, adds it to the todo list to be processed later.',
 		2500,
 		NULL,

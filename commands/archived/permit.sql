@@ -18,7 +18,7 @@ VALUES
 		15,
 		'permit',
 		NULL,
-		'archived,ping,pipe,skip-banphrase,system,whitelist',
+		'archived,mention,pipe,skip-banphrase,system,whitelist',
 		'Grants a given user the right to execute a given command',
 		0,
 		NULL,

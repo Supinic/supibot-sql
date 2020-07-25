@@ -18,7 +18,7 @@ VALUES
 		94,
 		'playsound',
 		'[\"ps\"]',
-		'ping,pipe,whitelist',
+		'mention,pipe,whitelist',
 		'Plays a sound on supinic stream, if enabled. Use \"list\" as an argument to see the list of available playsounds.',
 		10000,
 		NULL,

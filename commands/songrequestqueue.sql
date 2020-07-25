@@ -18,7 +18,7 @@ VALUES
 		161,
 		'songrequestqueue',
 		'[\"srq\", \"queue\"]',
-		'ping,pipe,whitelist',
+		'mention,pipe,whitelist',
 		'Posts the summary of song request queue. EXPERIMENTAL monkaS',
 		30000,
 		'Only available in supinic\'s channel.',

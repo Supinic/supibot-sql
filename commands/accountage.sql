@@ -18,7 +18,7 @@ VALUES
 		102,
 		'accountage',
 		'[\"accage\"]',
-		'ping,pipe',
+		'mention,pipe',
 		'Fetches the Twitch account age of a given account. If none is given, checks yours.',
 		15000,
 		NULL,

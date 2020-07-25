@@ -18,7 +18,7 @@ VALUES
 		163,
 		'randomkanyewestquote',
 		'[\"rkwq\"]',
-		'ping,pipe',
+		'mention,pipe',
 		'Posts a random Kanye West quote.',
 		15000,
 		NULL,

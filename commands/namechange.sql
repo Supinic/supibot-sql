@@ -18,7 +18,7 @@ VALUES
 		25,
 		'namechange',
 		'[\"nc\"]',
-		'ping,pipe',
+		'mention,pipe',
 		'Search for the last name change of a given Twitch user.',
 		15000,
 		NULL,

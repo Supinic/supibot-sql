@@ -18,7 +18,7 @@ VALUES
 		48,
 		'suggest',
 		'[\"suggestions\"]',
-		'ping,skip-banphrase',
+		'mention,skip-banphrase',
 		'Suggest a feature for Supinic, regarding Supibot, Discord/Cytube, or the website. Posts links to a suggestion list if you don\'t provide any text.',
 		60000,
 		NULL,

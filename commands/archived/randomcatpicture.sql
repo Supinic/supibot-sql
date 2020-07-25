@@ -18,7 +18,7 @@ VALUES
 		83,
 		'randomcatpicture',
 		'[\"rcp\"]',
-		'archived,ping,pipe,whitelist',
+		'archived,mention,pipe,whitelist',
 		'Fetches a picture of a random cat.',
 		10000,
 		'Only people who verified that they have a cat can use this command. You can verify by using the $suggest command with a picture of your cat.',

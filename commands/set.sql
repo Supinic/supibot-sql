@@ -18,7 +18,7 @@ VALUES
 		207,
 		'set',
 		'[\"unset\"]',
-		'owner-override,ping',
+		'mention,owner-override',
 		'Sets/unsets certain variables within Supibot. Check the extended help for full info.',
 		5000,
 		NULL,

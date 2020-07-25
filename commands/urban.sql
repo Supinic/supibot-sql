@@ -18,7 +18,7 @@ VALUES
 		29,
 		'urban',
 		NULL,
-		'ping,pipe',
+		'mention,pipe',
 		'Fetches the top definition of a given term from UrbanDictionary. You can append \"index:#\" at the end to access definitions that aren\'t first in the search',
 		10000,
 		NULL,

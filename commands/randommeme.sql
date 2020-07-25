@@ -18,7 +18,7 @@ VALUES
 		77,
 		'randommeme',
 		'[\"rm\"]',
-		'ping,pipe',
+		'mention,pipe',
 		'If no parameters are provided, posts a random reddit meme. If you provide a subreddit, a post will be chosen randomly. NSFW subreddits and posts are only available on NSFW Discord channels!',
 		15000,
 		NULL,

@@ -18,7 +18,7 @@ VALUES
 		7,
 		'comment',
 		NULL,
-		'ping,pipe',
+		'mention,pipe',
 		'Fetches a random comment from a set of 10 thousand randomly generated Youtube videos.',
 		15000,
 		NULL,

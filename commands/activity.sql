@@ -18,7 +18,7 @@ VALUES
 		100,
 		'activity',
 		NULL,
-		'ping,pipe,skip-banphrase,whitelist',
+		'mention,pipe,skip-banphrase,whitelist',
 		'Posts a link to the supinic website showing the current channel activity.',
 		15000,
 		'Only available on Twitch (for now)!',

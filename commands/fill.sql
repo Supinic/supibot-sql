@@ -18,7 +18,7 @@ VALUES
 		175,
 		'fill',
 		NULL,
-		'ping,pipe',
+		'mention,pipe',
 		'Takes the input and scrambles it around randomly.',
 		20000,
 		NULL,

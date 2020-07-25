@@ -18,7 +18,7 @@ VALUES
 		176,
 		'block',
 		'[\"unblock\"]',
-		'ping,pipe,skip-banphrase',
+		'mention,pipe,skip-banphrase',
 		'Blocks, or unblocks a specified user from using a specified command with you as the target. You can also set a channel, or platform for the block to be active on.',
 		5000,
 		NULL,

@@ -18,7 +18,7 @@ VALUES
 		12,
 		'gamesdonequick',
 		'[\"gdq\"]',
-		'ping,pipe',
+		'mention,pipe',
 		'Posts a Markov chain-generated GDQ speedrun donation message.',
 		10000,
 		NULL,

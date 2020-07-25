@@ -18,7 +18,7 @@ VALUES
 		166,
 		'countlinerecord',
 		'[\"clr\"]',
-		'ping,pipe',
+		'mention,pipe',
 		'Posts the two records of each channel: The amount, and the total length of messages posted within each one minute.',
 		30000,
 		NULL,

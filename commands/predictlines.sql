@@ -18,7 +18,7 @@ VALUES
 		158,
 		'predictlines',
 		'[\"pl\"]',
-		'ping,pipe',
+		'mention,pipe',
 		'Predicts the amount of lines a given user will have in some amount of time.',
 		10000,
 		NULL,

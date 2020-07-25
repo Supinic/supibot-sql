@@ -18,7 +18,7 @@ VALUES
 		96,
 		'gift',
 		'[\"give\"]',
-		'ping,pipe',
+		'mention,pipe',
 		'Gifts a certain something to someone else. Right now, supported parameters are: \"cookie\" - gifts your cooldown for a cookie to someone else!',
 		5000,
 		NULL,

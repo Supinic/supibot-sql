@@ -18,7 +18,7 @@ VALUES
 		71,
 		'roll',
 		NULL,
-		'ping,pipe,skip-banphrase',
+		'mention,pipe,skip-banphrase',
 		'Rolls a random number. If nothing is specified, rolls 1-100. You can also specify <number X>d<number Y> for X amount of dice rolls with Y sides each.',
 		5000,
 		NULL,

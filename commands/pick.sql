@@ -18,7 +18,7 @@ VALUES
 		189,
 		'pick',
 		NULL,
-		'ping,pipe',
+		'mention,pipe',
 		'Picks a single word from the provided list of words in a message.',
 		10000,
 		NULL,

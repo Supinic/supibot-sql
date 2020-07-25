@@ -18,7 +18,7 @@ VALUES
 		192,
 		'fuck',
 		NULL,
-		'opt-out,ping,pipe',
+		'mention,opt-out,pipe',
 		'Fucks target user to bed.',
 		10000,
 		NULL,

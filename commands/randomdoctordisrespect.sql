@@ -18,7 +18,7 @@ VALUES
 		179,
 		'randomdoctordisrespect',
 		'[\"rdd\"]',
-		'ping,pipe',
+		'mention,pipe',
 		'Posts a Markov chain-generated tweet from Dr. Disrespect.',
 		10000,
 		NULL,

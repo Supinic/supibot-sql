@@ -18,7 +18,7 @@ VALUES
 		89,
 		'slots',
 		NULL,
-		'ping,pipe',
+		'mention,pipe',
 		'Once at least three unique emotes (or words) have been provided, rolls a pseudo slot machine to see if you get a flush.',
 		20000,
 		NULL,

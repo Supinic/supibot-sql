@@ -18,7 +18,7 @@ VALUES
 		215,
 		'youtubesearch',
 		'[\"ys\"]',
-		'ping,pipe',
+		'mention,pipe',
 		'Searches Youtube for video(s) with your query. Respects safe search for each platform.',
 		15000,
 		NULL,

@@ -18,7 +18,7 @@ VALUES
 		2,
 		'haHAA',
 		'[\"4Head\", \"4HEad\"]',
-		'ping,pipe',
+		'mention,pipe',
 		'Posts a random, hilarious joke, 100% guaranteed.',
 		5000,
 		NULL,

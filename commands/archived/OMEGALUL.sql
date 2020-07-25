@@ -18,7 +18,7 @@ VALUES
 		164,
 		'OMEGALUL',
 		NULL,
-		'archived,ping,pipe',
+		'archived,mention,pipe',
 		'Replaces all capital \"O\"\'s by \"OMEGALUL\"',
 		10000,
 		NULL,

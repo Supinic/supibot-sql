@@ -18,7 +18,7 @@ VALUES
 		148,
 		'downloadclip',
 		'[\"dlclip\"]',
-		'ping,pipe',
+		'mention,pipe',
 		'Takes a Twitch clip name, and sends a download link to it into whispers.',
 		30000,
 		NULL,

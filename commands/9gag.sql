@@ -18,7 +18,7 @@ VALUES
 		227,
 		'9gag',
 		'[\"gag\"]',
-		'ping,pipe',
+		'mention,pipe',
 		'Searches 9gag for posts that fit your search text, or a random featured one if you don\'t provide anything.',
 		10000,
 		NULL,

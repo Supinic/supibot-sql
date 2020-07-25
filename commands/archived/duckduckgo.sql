@@ -18,7 +18,7 @@ VALUES
 		209,
 		'duckduckgo',
 		'[\"ddg\"]',
-		'archived,ping,pipe',
+		'archived,mention,pipe',
 		'Try the DuckDuckGo Instant Answer API to answer your questions!',
 		15000,
 		NULL,

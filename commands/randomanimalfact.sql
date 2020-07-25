@@ -18,7 +18,7 @@ VALUES
 		197,
 		'randomanimalfact',
 		'[\"raf\", \"rbf\", \"rcf\", \"rdf\", \"rff\"]',
-		'ping,pipe',
+		'mention,pipe',
 		'Posts a random fact about a selected animal type.',
 		10000,
 		NULL,

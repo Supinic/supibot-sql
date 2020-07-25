@@ -18,7 +18,7 @@ VALUES
 		23,
 		'dictionary',
 		'[\"define\", \"def\", \"dict\"]',
-		'ping,pipe',
+		'mention,pipe',
 		'Fetches the dictionary definition of a word. You can use \"lang:\" to specifiy a language, and if there are multiple definitions, you can add \"index:#\" with a number to access specific definition indexes.',
 		10000,
 		NULL,

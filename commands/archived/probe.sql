@@ -18,7 +18,7 @@ VALUES
 		113,
 		'probe',
 		NULL,
-		'archived,ping,pipe,skip-banphrase,system,whitelist',
+		'archived,mention,pipe,skip-banphrase,system,whitelist',
 		'Posts all possible data about a user. Admin only inspection',
 		0,
 		NULL,

@@ -18,7 +18,7 @@ VALUES
 		230,
 		'alias',
 		'[\"$\"]',
-		'ping,pipe',
+		'mention,pipe',
 		'This command lets you create your own aliases (shorthands) for any other combination of commands and arguments. Check the extended help for step-by-step info.',
 		2500,
 		NULL,
@@ -346,7 +346,7 @@ VALUES
 					aliasCount,
 					platform: context.platform,
 					skipPending: true,
-					skipPing: true
+					skipMention: true
 				}
 			);
 

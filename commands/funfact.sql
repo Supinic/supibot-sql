@@ -18,7 +18,7 @@ VALUES
 		13,
 		'funfact',
 		NULL,
-		'ping,pipe',
+		'mention,pipe',
 		'Fetches a random fun fact. Absolutely not guaranteed to be fun or fact. Want to help out? Send us your own fun fact via the $suggest command!',
 		60000,
 		NULL,

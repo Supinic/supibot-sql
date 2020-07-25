@@ -18,7 +18,7 @@ VALUES
 		122,
 		'whatemoteisit',
 		'[\"weit\"]',
-		'ping,pipe',
+		'mention,pipe',
 		'What emote is it? Posts specifics about a given Twitch subscriber emote.',
 		10000,
 		NULL,

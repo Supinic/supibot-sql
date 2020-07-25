@@ -18,7 +18,7 @@ VALUES
 		72,
 		'optout',
 		'[\"unoptout\"]',
-		'ping,skip-banphrase',
+		'mention,skip-banphrase',
 		'Makes it so you cannot be the target of a command - the command will not be executed at all. For detailed usage, please check the extended help.',
 		5000,
 		NULL,

@@ -18,7 +18,7 @@ VALUES
 		214,
 		'link',
 		NULL,
-		'ping,system',
+		'mention,system',
 		'Verifies your account linking challenge across platforms. You should only ever use this command if you are prompted to.',
 		5000,
 		NULL,

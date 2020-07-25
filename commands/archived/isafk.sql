@@ -18,7 +18,7 @@ VALUES
 		18,
 		'isafk',
 		'[\"afkcheck\", \"checkafk\"]',
-		'archived,ping,pipe',
+		'archived,mention,pipe',
 		'Checks if given user is AFK',
 		5000,
 		NULL,

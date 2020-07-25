@@ -18,7 +18,7 @@ VALUES
 		174,
 		'addbetween',
 		'[\"ab\"]',
-		'ping,pipe',
+		'mention,pipe',
 		'Fills the message provided with the word (usually an emote) provided as the first argument.',
 		30000,
 		NULL,

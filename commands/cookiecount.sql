@@ -18,7 +18,7 @@ VALUES
 		99,
 		'cookiecount',
 		'[\"cc\", \"tcc\"]',
-		'opt-out,ping,pipe,skip-banphrase',
+		'mention,opt-out,pipe,skip-banphrase',
 		'Fetches the amount of cookies you (or someone else) have eaten so far. If you use \"total\", then you will see the total amount of cookies eaten.',
 		10000,
 		NULL,

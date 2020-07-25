@@ -18,7 +18,7 @@ VALUES
 		116,
 		'followage',
 		'[\"fa\"]',
-		'ping,pipe',
+		'mention,pipe',
 		'Fetches the followage <user> <channel>. If no channel provided, checks the current one. If no user provided either, checks yourself.',
 		10000,
 		NULL,

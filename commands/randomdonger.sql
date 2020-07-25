@@ -18,7 +18,7 @@ VALUES
 		135,
 		'randomdonger',
 		'[\"rd\"]',
-		'ping,pipe',
+		'mention,pipe',
 		'Raise your dongers.',
 		10000,
 		NULL,
