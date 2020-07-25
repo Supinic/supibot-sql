@@ -39,7 +39,7 @@ VALUES
 			.toString()
 	}).json();
 
-	if (!rawData) {
+	if (!rawData || Object.keys(rawData).length === 0) {
 		return {
 			reply: \"Stock symbol could not be found!\"
 		};
