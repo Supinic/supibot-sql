@@ -178,8 +178,13 @@ VALUES
 	}
 
 	const comparison = new sb.Date(now.valueOf() + delta);
-
-	if (delta === 0) {
+	if (delta < 0) {
+		return {
+			success: false,
+			reply: \"Past reminders are only available to people who possess a time machine!\",
+		};
+	}
+	else if (delta === 0) {
 		if (targetUser === context.user) {
 			return {
 				reply: `To remind yourself, your text must have the word \"in\" - such as \"check in 5 minutes\"`,
