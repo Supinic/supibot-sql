@@ -46,8 +46,8 @@ VALUES
 			const { endAt, reason } = data.interruption;
 			const end = new sb.Date(endAt);
 
-			if (end <= sb.Date.now()) {
-				extra = `Stream schedule is interrupted - reason: ${reason}, lasts until ${sb.Utils.timeDelta(end)}.`;
+			if (sb.Date.now() <= end) {
+				extra = `Stream schedule is interrupted - reason: ${reason}, will be back ${sb.Utils.timeDelta(end)}.`;
 			}
 		}
 
