@@ -32,16 +32,12 @@ VALUES
 	}
 })',
 		'(async function remind (context, ...args) {
-	let deprecationNotice = \"\";
 	if (args.length === 0) {
-		return { 
+		return {
 			success: false,
 			reply: `Incorrect syntax! Use \"remind (person) (text)\"`,
 			cooldown: 2500
 		};
-	}
-	else if (sb.User.bots.has(context.user.ID)) {
-		deprecationNotice = \"Deprecation notice: bots should be using the reminder API! \";
 	}
 
 	let targetUser = await sb.Utils.getDiscordUserDataFromMentions(args[0].toLowerCase(), context.append) || await sb.User.get(args[0], true);
@@ -235,13 +231,12 @@ VALUES
 		Created: new sb.Date(),
 		Private_Message: isPrivate
 	});
-
 	if (result.success) {
 		const who = (targetUser.ID === context.user.ID) ? \"you\" : targetUser.Name;
 		const method = (isPrivate) ? \"privately \" : \"\";
 
 		return {
-			reply: `${deprecationNotice}I will ${method}remind ${who} ${targetReminderDelta} (ID ${result.ID})`
+			reply: `I will ${method}remind ${who} ${targetReminderDelta} (ID ${result.ID})`
 		};
 	}
 	else {
