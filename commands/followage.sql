@@ -24,6 +24,11 @@ VALUES
 		NULL,
 		NULL,
 		'(async function followAge (context, user, channel) {
+	if (!channel && user) {
+		channel = user;
+		user = context.user.Name;
+	}
+
 	if (!channel) {
 		if (!context.channel) {
 			return {
@@ -78,15 +83,22 @@ VALUES
 		throwHttpErrors: false
 	});
 
+	const prefix = (user.toLowerCase() === context.user.Name)
+		? \"You are\"
+		: `${user} is`;
+	const suffix = (channel.toLowerCase() === context.user.Name)
+		? \"you\"
+		: channel;
+
 	if (data.error && data.status === 404) {
 		return {
-			reply: `${user} is not following ${channel}.`
+			reply: `${prefix} not following ${suffix}.`
 		};
 	}
 	else {
 		const delta = sb.Utils.timeDelta(new sb.Date(data.created_at), true);
 		return {
-			reply: `${user} has been following ${channel} for ${delta}.`
+			reply: `${prefix} following ${suffix} for ${delta}.`
 		};
 	}
 })',
