@@ -25,7 +25,7 @@ VALUES
 		'({
 	aliasLimit: 10,
 	nameCheck: {
-		regex: /^[\\w\\u00a9\\u00ae\\u2000-\\u3300\\ud83c\\ud000-\\udfff\\ud83d\\ud000-\\udfff\\ud83e[\\ud000-\\udfff]{2,25}$/,
+		regex: /^[-\\w\\u00a9\\u00ae\\u2000-\\u3300\\ud83c\\ud000-\\udfff\\ud83d\\ud000-\\udfff\\ud83e\\ud000-\\udfff]{2,25}$/,
 		response: \"Your alias should only contain letters, numbers and be 2-25 characters long.\"
 	},
 
