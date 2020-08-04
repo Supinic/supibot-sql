@@ -30,29 +30,34 @@ VALUES
 
 	return {
 		limits,
-
-		blacklistedSites: [
-			\"grabify.link\",
-			\"leancoding.co\",
-			\"stopify.co\",
-			\"freegiftcards.co\",
-			\"joinmy.site\",
-			\"curiouscat.club\",
-			\"catsnthings.fun\",
-			\"catsnthing.com\",
-			\"iplogger.org\",
-			\"2no.co\",
-			\"iplogger.com\",
-			\"iplogger.ru\",
-			\"yip.su\",
-			\"iplogger.co\",
-			\"iplogger.info\",
-			\"ipgrabber.ru\",
-			\"ipgraber.ru\",
-			\"iplis.ru\",
-			\"02ip.ru\",
-			\"ezstat.ru\"
-		],
+		blacklist: {
+			sites: [
+				\"grabify.link\",
+				\"leancoding.co\",
+				\"stopify.co\",
+				\"freegiftcards.co\",
+				\"joinmy.site\",
+				\"curiouscat.club\",
+				\"catsnthings.fun\",
+				\"catsnthing.com\",
+				\"iplogger.org\",
+				\"2no.co\",
+				\"iplogger.com\",
+				\"iplogger.ru\",
+				\"yip.su\",
+				\"iplogger.co\",
+				\"iplogger.info\",
+				\"ipgrabber.ru\",
+				\"ipgraber.ru\",
+				\"iplis.ru\",
+				\"02ip.ru\",
+				\"ezstat.ru\"
+			],
+			tracks: [],
+			authors: [
+				\"UCeM9xfry6R09FxPZgRV1XcA\"
+			]
+		},
 
 		checkLimits: (userData, playlist) => {
 			const userRequests = playlist.filter(i => i.User_Alias === userData.ID);
@@ -180,7 +185,8 @@ VALUES
 	const parsedURL = require(\"url\").parse(url);
 	let data = null;
 
-	if (this.staticData.blacklistedSites.includes(parsedURL.host)) {
+	const { blacklist } = this.staticData;
+	if (blacklist.sites.includes(parsedURL.host)) {
 		return {
 			success: false,
 			reply: \"Don\'t.\"
@@ -317,6 +323,13 @@ VALUES
 		else {
 			data = await sb.Utils.linkParser.fetchData(lookup.link, type);
 		}
+	}
+
+	if (blacklist.tracks.includes(data.ID) || blacklist.authors.includes(data.authorID)) {
+		return {
+			success: false,
+			reply: `Track/author has been blacklisted!`
+		};
 	}
 
 	const authorString = (data.author) ? ` by ${data.author}` : \"\";
