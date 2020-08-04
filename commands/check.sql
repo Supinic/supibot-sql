@@ -483,7 +483,7 @@ VALUES
 	if (!item) {
 		return {
 			success: false,
-			reply: `Invalid type provided! Phttps://supinic.com/bot/command/${this.ID}`
+			reply: `Invalid type provided! https://supinic.com/bot/command/${this.ID}`
 		};
 	}
 
