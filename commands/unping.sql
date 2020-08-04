@@ -17,7 +17,7 @@ VALUES
 	(
 		181,
 		'unping',
-		'[\"dpm\", \"reping\"]',
+		'[\"reping\"]',
 		'mention,pipe',
 		'Sets/unsets a command pinging you when it\'s being invoked.',
 		5000,
