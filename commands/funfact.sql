@@ -30,11 +30,21 @@ VALUES
 		sb.Utils.random(1, 12)
 	);
 
-	const rawData = await sb.Got({
+	const { statusCode, body: rawData } = await sb.Got({
+		responseType: \"json\",
+		throwHttpErrors: false,
+
 		prefixUrl: \"https://uselessfacts.net/api\",
 		url: \"posts\",
 		searchParams: \"d=\" + randomDate.toJSON()
-	}).json();
+	});
+	
+	if (statusCode !== 200) {
+		throw new sb.errors.APIError({
+			statusCode,
+			apiName: \"UselessFactsAPI\"
+		});
+	}
 
 	const data = rawData.filter(i => i._id !== this.data.previousFactID);
 	if (data.length === 0) {
