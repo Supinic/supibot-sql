@@ -412,8 +412,8 @@ VALUES
 						Check all suggestions:
 						https://supinic.com/data/suggestion/list
 						||
-						Your suggestions (requires login):
-						https://supinic.com/data/suggestion/list?columnName=${context.user.Name}
+						Your suggestions:
+						https://supinic.com/data/suggestion/list?columnAuthor=${context.user.Name}
 					`
 					};
 				}
