@@ -18,7 +18,7 @@ VALUES
 		54,
 		'ban',
 		'[\"unban\"]',
-		'mention,skip-banphrase,system',
+		'mention,system',
 		'Bans/unbans any combination of channel, user, and command from being executed. Only usable by administrators, or Twitch channel owners.',
 		5000,
 		NULL,
