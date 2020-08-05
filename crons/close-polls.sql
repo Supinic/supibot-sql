@@ -14,7 +14,7 @@ VALUES
 	(
 		16,
 		'close-polls',
-		'0 * * * * *',
+		'0 0 * * * *',
 		'Checks for unclosed polls that have ended, and if it finds one, determines the result, and sends system reminders to everyone who voted.',
 		NULL,
 		'(async function closeActivePoll () {
