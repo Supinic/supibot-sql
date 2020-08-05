@@ -20,7 +20,7 @@ VALUES
 		'[\"remention\"]',
 		'mention',
 		'Makes a specific command (or, in advanced mode, a combination of command/channel/platform, or global) not mention you by removing the \"username,\" part at the beginning.',
-		2500,
+		5000,
 		NULL,
 		NULL,
 		'(async function unmention (context, ...args) {
@@ -41,11 +41,7 @@ VALUES
 		channel: null
 	};
 
-	if (args[0] === \"all\") { // Unmention from everything
-		args.splice(0, 1);
-		deliberateGlobalUnmention = true;
-	}
-	else if (args.every(i => !i.includes(\":\"))) { // Simple mode
+	if (args.every(i => !i.includes(\":\"))) { // Simple mode
 		[filterData.command] = args;
 		args.splice(0, 1);
 	}
@@ -58,6 +54,11 @@ VALUES
 				args.splice(i, 1);
 			}
 		}
+	}
+
+	if (filterData.command === \"all\") {
+		filterData.command = null;
+		deliberateGlobalUnmention = true;
 	}
 
 	for (const [type, value] of Object.entries(filterData)) {

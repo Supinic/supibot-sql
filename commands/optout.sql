@@ -41,11 +41,7 @@ VALUES
 		channel: null
 	};
 
-	if (args[0] === \"all\") { // Opt out from everything
-		args.splice(0, 1);
-		deliberateGlobalOptout = true;
-	}
-	else if (args.every(i => !i.includes(\":\"))) { // Simple mode
+	if (args.every(i => !i.includes(\":\"))) { // Simple mode
 		[filterData.command] = args;
 		args.splice(0, 1);
 	}
@@ -58,6 +54,11 @@ VALUES
 				args.splice(i, 1);
 			}
 		}
+	}
+
+	if (filterData.command === \"all\") { // Opt out from everything
+		filterData.command = null;
+		deliberateGlobalOptout = true;
 	}
 
 	for (const [type, value] of Object.entries(filterData)) {
@@ -150,7 +151,7 @@ VALUES
 		let commandString = `command ${commandPrefix}${names.command}`;
 
 		if (filterData.command === null) {
-			commandString = \"all commands\";
+			commandString = \"all opt-outable commands\";
 		}
 
 		let location = \"\";

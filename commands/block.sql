@@ -18,12 +18,14 @@ VALUES
 		176,
 		'block',
 		'[\"unblock\"]',
-		'mention,pipe,skip-banphrase',
+		'mention',
 		'Blocks, or unblocks a specified user from using a specified command with you as the target. You can also set a channel, or platform for the block to be active on.',
 		5000,
 		NULL,
 		NULL,
 		'(async function block (context, ...args) {
+	const { invocation } = context;
+	let deliberateGlobalBlock = false;
 	const types = [\"user\", \"command\", \"platform\", \"channel\"];
 	const names = {};
 	const filterData = {
@@ -55,6 +57,11 @@ VALUES
 		}
 	}
 
+	if (filterData.command === \"all\") {
+		filterData.command = null;
+		deliberateGlobalBlock = true;
+	}
+
 	for (const [type, value] of Object.entries(filterData)) {
 		if (value === null) {
 			continue;
@@ -81,7 +88,13 @@ VALUES
 		}
 	}
 
-	if (!filterData.user && !filterData.command) {
+	if (!deliberateGlobalBlock && filterData.command === null) {
+		return {
+			success: false,
+			reply: `A command (or \"all\" to ${invocation} globally) must be provided!`
+		};
+	}
+	else if (!filterData.user && !filterData.command) {
 		return {
 			success: false,
 			reply: \"Specify both the user and the command to block!\"
@@ -109,7 +122,6 @@ VALUES
 		&& i.User_Alias === context.user.ID
 	));
 
-	const { invocation } = context;
 	if (filter) {
 		if (filter.Issued_By !== context.user.ID) {
 			return {
@@ -159,10 +171,15 @@ VALUES
 		}
 
 		const commandPrefix = sb.Config.get(\"COMMAND_PREFIX\");
+		let commandString = `the command ${commandPrefix}${names.command}`;
+		if (filterData.command === null) {
+			commandString = \"all blockable commands\";
+		}
+
 		return {
 			reply: sb.Utils.tag.trim `
 				You blocked ${names.user}
-				from using the command ${commandPrefix}${names.command}
+				from using ${commandString}
 				on you${location}
 				(ID ${filter.ID}).
 			`

@@ -18,7 +18,7 @@ VALUES
 		181,
 		'unping',
 		'[\"reping\"]',
-		'mention,pipe',
+		'mention',
 		'Sets/unsets a command pinging you when it\'s being invoked.',
 		5000,
 		NULL,
@@ -41,11 +41,7 @@ VALUES
 		channel: null
 	};
 
-	if (args[0] === \"all\") { // Unping from everything
-		args.splice(0, 1);
-		deliberateGlobalUnping = true;
-	}
-	else if (args.every(i => !i.includes(\":\"))) { // Simple mode
+	if (args.every(i => !i.includes(\":\"))) { // Simple mode
 		[filterData.command] = args;
 		args.splice(0, 1);
 	}
@@ -58,6 +54,11 @@ VALUES
 				args.splice(i, 1);
 			}
 		}
+	}
+
+	if (filterData.command === \"all\") {
+		filterData.command = null;
+		deliberateGlobalUnping = true;
 	}
 
 	for (const [type, value] of Object.entries(filterData)) {
