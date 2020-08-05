@@ -66,8 +66,6 @@ VALUES
 			}
 		);
 
-		console.debug(\"Pipe\", result);
-
 		if (!result) { // Banphrase result: Do not reply
 			currentArgs = [];
 		}
