@@ -421,7 +421,14 @@ VALUES
 		\"Meta-command that lets you create aliases (or shorthands) for existing commands or their combinations.\",
 		\"You have to first create an alias, and then run it. You can manage your aliases by listing, checking, removing and adding.\",
 		\"\",
+
+		`<h5>What\'s an alias?</h5>`,
+		`An alias is a word that lets you quickly use a command without typing the entirity of it.`,
+		`E.g.: You don\'t want to type <code>${prefix}weather New York, USA</code> every time, so you create an alias called <code>ny</code>.`,
+		`Then, you can simply use the alias like so: <code>${prefix}$ ny</code>`,
+		\"\",
 		
+		`<h5>Usage</h5>`,
 		`<code>${prefix}alias add (name) (definition)</code>`,
 		`Creates your command alias, e.g.:`,
 		`<code>${prefix}alias add <u>hello</u> translate to:german Hello!</code>`,
@@ -457,6 +464,14 @@ VALUES
 		\"Removes your command alias with the given name.\",
 		\"\",
 
+		`<code>${prefix}alias spy (user)</code>`,
+		\"Lists all active aliases the target person currently has.\",
+		\"\",
+
+		`<code>${prefix}alias spy (user) (name)</code>`,
+		\"Posts the definition of the alias with given name, that belongs to given person.\",
+		\"\",		
+
 		\"<h5>Replacements</h5>\",
 		\"Replaces a symbol in your alias with a value depending on its name.\",
 		`<ul>
@@ -478,6 +493,16 @@ VALUES
 				<code>${prefix}alias add test translate to:\\${0} hello, \\${1+}!</code>
 				<br>
 				<code>${prefix}alias run test spanish my friends</code> => <code>${prefix}translate to:spanish hello, my friends!</code>
+			</li>
+			<br>
+			<li>
+				<code>\\${#-#}</code> (e.g. \\${0-1}, \\${1-10}, ...)
+				<br>
+				Replaced by argument number #1 and all the following arguments until #2, inclusive.
+				<br>
+				<code>${prefix}alias add test translate to:german hello, \\${0-2}!</code>
+				<br>
+				<code>${prefix}alias run test spanish hello there again - my friends!</code> => <code>${prefix}translate to:german hello there again</code>
 			</li>
 			<br>
 			<li>
