@@ -113,6 +113,27 @@ VALUES
 		};
 	}
 })',
-		NULL,
+		'async (prefix) => {https://supinic.com
+	return [
+		`Returns a random gachimuchi track from the <a href=\"/track/gachi/list\">track list</a>.`,
+		\"\",
+		
+		`<code>${prefix}rg</code>`,
+		\"No arguments - any random track\",
+		\"\",
+
+		`<code>${prefix}rg favourite</code>`,
+		\"If you have marked any tracks as your favourites on the website, this will make the command choose only from your favourites.\",
+		\"\",
+
+		`<code>${prefix}rg favourite:(user)</code>`,
+		\"Same as above, but for any other user you choose\",
+		\"\",
+
+		`<code>${prefix}rg linkOnly:true</code>`,
+		\"Will only input the link, with no other text. Useful for piping.\",
+		\"<b>Note:</b>When you pipe this command, <code>linkOnly</code> is used by default.\"		
+	]
+}',
 		'supinic/supibot-sql'
 	)
