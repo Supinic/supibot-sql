@@ -77,8 +77,14 @@ VALUES
 			};
 		}
 		else {
+			if (emote === \"4Head\") {
+				return { 
+					reply: `You gently pat ${user} on the ${emote}`
+				};
+			}
+
 			return { 
-				reply: `You gently pat ${user} on the head 🙂`
+				reply: `You gently pat ${user} on the head ${emote ?? \"🙂\"}`
 			};
 		}
 	}
