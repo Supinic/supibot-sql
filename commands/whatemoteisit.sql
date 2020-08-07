@@ -30,9 +30,22 @@ VALUES
 		return { reply: error + \"!\" };
 	}
 
+	const originID = await sb.Query.getRecordset(rs => rs
+	    .select(\"ID\")
+	    .from(\"data\", \"Origin\")
+		.where(\"Emote_ID = %s\", emoteid)
+		.limit(1)
+		.single()
+		.flat(\"ID\")
+	);
+
+	const originString = (originID)
+		? `This emote has origin info - use the ${sb.Command.prefix}origin command.`
+		: \"\";
+	
 	const emoteLink = \"https://twitchemotes.com/emotes/\" + emoteid;
 	return {
-		reply: `${emotecode} (ID ${emoteid}) - tier ${tier} sub emote to channel ${channel}. ${emoteLink}`
+		reply: `${emotecode} (ID ${emoteid}) - tier ${tier} sub emote to channel ${channel}. ${emoteLink} ${originString}`
 	};
 })',
 		NULL,
