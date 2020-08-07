@@ -24,6 +24,13 @@ VALUES
 		NULL,
 		NULL,
 		'(async function math (context, ...args) {
+	if (args.length === 0) {
+		return {
+			success: false,
+			reply: \"No input provided!\"
+		};
+	}
+
 	const { response, status } = await sb.Got.instances.Leppunen({
 		url: \"math\",
 		searchParams: new sb.URLParams()
