@@ -451,6 +451,10 @@ VALUES
 		\"Plays the TTS using UK English.\",
 		\"\",
 
+		`<code>${prefix}tts speed:0.5 This is a message.</code>`,
+		\"Plays the TTS, same as above, but at 50% speed.\",
+		\"\",
+
 		`<code>${prefix}tts language:Italian Questo è un messaggio.</code>`,
 		\"Plays the TTS using Italian.\",
 		\"\",
