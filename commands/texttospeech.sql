@@ -29,13 +29,257 @@ VALUES
 	return {
 		limit,
 		partsLimit,
-		maxCooldown: (this.Cooldown + (limit - 10000) * 10)
+		maxCooldown: (this.Cooldown + (limit - 10000) * 10),
+
+		locales: [
+			{
+				\"locale\": \"en-gb\",
+				\"language\": \"English\",
+				\"code\": \"en\"
+			},
+			{
+				\"locale\": \"en-us\",
+				\"language\": \"English\",
+				\"code\": \"en\"
+			},
+			{
+				\"locale\": \"en-au\",
+				\"language\": \"English\",
+				\"code\": \"en\"
+			},
+			{
+				\"locale\": \"en-in\",
+				\"language\": \"English\",
+				\"code\": \"en\"
+			},
+			{
+				\"locale\": \"ar\",
+				\"language\": \"Arabic\",
+				\"code\": \"ar\"
+			},
+			{
+				\"locale\": \"bn-bd\",
+				\"language\": \"Bengali\",
+				\"code\": \"bn\"
+			},
+			{
+				\"locale\": \"zh-cn\",
+				\"language\": \"Chinese\",
+				\"code\": \"zh\"
+			},
+			{
+				\"locale\": \"cs-cz\",
+				\"language\": \"Czech\",
+				\"code\": \"cs\"
+			},
+			{
+				\"locale\": \"da-dk\",
+				\"language\": \"Danish\",
+				\"code\": \"da\"
+			},
+			{
+				\"locale\": \"nl-nl\",
+				\"language\": \"Dutch\",
+				\"code\": \"nl\"
+			},
+			{
+				\"locale\": \"et-ee\",
+				\"language\": \"Estonian\",
+				\"code\": \"et\"
+			},
+			{
+				\"locale\": \"tl-ph\",
+				\"language\": \"Filipino\",
+				\"code\": \"tl\"
+			},
+			{
+				\"locale\": \"fi-fi\",
+				\"language\": \"Finnish\",
+				\"code\": \"fi\"
+			},
+			{
+				\"locale\": \"fr-fr\",
+				\"language\": \"French\",
+				\"code\": \"fr\"
+			},
+			{
+				\"locale\": \"fr-ca\",
+				\"language\": \"French\",
+				\"code\": \"fr\"
+			},
+			{
+				\"locale\": \"de-de\",
+				\"language\": \"German\",
+				\"code\": \"de\"
+			},
+			{
+				\"locale\": \"el-gr\",
+				\"language\": \"Greek\",
+				\"code\": \"el\"
+			},
+			{
+				\"locale\": \"hi-in\",
+				\"language\": \"Hindi\",
+				\"code\": \"hi\"
+			},
+			{
+				\"locale\": \"hu-hu\",
+				\"language\": \"Hungarian\",
+				\"code\": \"hu\"
+			},
+			{
+				\"locale\": \"it-it\",
+				\"language\": \"Italian\",
+				\"code\": \"it\"
+			},
+			{
+				\"locale\": \"id-id\",
+				\"language\": \"Indonesian\",
+				\"code\": \"id\"
+			},
+			{
+				\"locale\": \"ja-jp\",
+				\"language\": \"Japanese\",
+				\"code\": \"ja\"
+			},
+			{
+				\"locale\": \"jw-id\",
+				\"language\": \"Javanese\",
+				\"code\": \"jv\"
+			},
+			{
+				\"locale\": \"km-kh\",
+				\"language\": \"Khmer\",
+				\"code\": \"my\"
+			},
+			{
+				\"locale\": \"ko-kr\",
+				\"language\": \"Korean\",
+				\"code\": \"ko\"
+			},
+			{
+				\"locale\": \"la\",
+				\"language\": \"Latin\",
+				\"code\": \"la\"
+			},
+			{
+				\"locale\": \"ml-in\",
+				\"language\": \"Malayalam\",
+				\"code\": \"ml\"
+			},
+			{
+				\"locale\": \"mr-in\",
+				\"language\": \"Marathi\",
+				\"code\": \"mr\"
+			},
+			{
+				\"locale\": \"my-mm\",
+				\"language\": \"Burmese\",
+				\"code\": \"my\"
+			},
+			{
+				\"locale\": \"ne-np\",
+				\"language\": \"Nepali\",
+				\"code\": \"ne\"
+			},
+			{
+				\"locale\": \"nb-no\",
+				\"language\": \"Norwegian\",
+				\"code\": \"no\"
+			},
+			{
+				\"locale\": \"pl-pl\",
+				\"language\": \"Polish\",
+				\"code\": \"pl\"
+			},
+			{
+				\"locale\": \"pt-pt\",
+				\"language\": \"Portuguese\",
+				\"code\": \"pt\"
+			},
+			{
+				\"locale\": \"pt-br\",
+				\"language\": \"Portuguese\",
+				\"code\": \"pt\"
+			},
+			{
+				\"locale\": \"ro-ro\",
+				\"language\": \"Romanian\",
+				\"code\": \"ro\"
+			},
+			{
+				\"locale\": \"ru-ru\",
+				\"language\": \"Russian\",
+				\"code\": \"ru\"
+			},
+			{
+				\"locale\": \"si-lk\",
+				\"language\": \"Sinhala\",
+				\"code\": \"si\"
+			},
+			{
+				\"locale\": \"sk-sk\",
+				\"language\": \"Slovak\",
+				\"code\": \"sk\"
+			},
+			{
+				\"locale\": \"es-es\",
+				\"language\": \"Spanish\",
+				\"code\": \"es\"
+			},
+			{
+				\"locale\": \"es-mx\",
+				\"language\": \"Spanish\",
+				\"code\": \"es\"
+			},
+			{
+				\"locale\": \"su-sd\",
+				\"language\": \"Sundanese\",
+				\"code\": \"su\"
+			},
+			{
+				\"locale\": \"sv-se\",
+				\"language\": \"Swedish\",
+				\"code\": \"sv\"
+			},
+			{
+				\"locale\": \"ta-in\",
+				\"language\": \"Tamil\",
+				\"code\": \"ta\"
+			},
+			{
+				\"locale\": \"te-in\",
+				\"language\": \"Telugu\",
+				\"code\": \"te\"
+			},
+			{
+				\"locale\": \"th-th\",
+				\"language\": \"Thai\",
+				\"code\": \"th\"
+			},
+			{
+				\"locale\": \"tr-tr\",
+				\"language\": \"Turkish\",
+				\"code\": \"tr\"
+			},
+			{
+				\"locale\": \"uk-ua\",
+				\"language\": \"Ukrainian\",
+				\"code\": \"uk\"
+			},
+			{
+				\"locale\": \"vi-vn\",
+				\"language\": \"Vietnamese\",
+				\"code\": \"vi\"
+			}
+		]
+
 	};
 })()',
 		'(async function textToSpeech (context, ...args) {
 	if (context.channel?.ID !== 38 || args.length === 0) {
 		return {
-			reply: \"List of available voices: https://supinic.com/stream/tts\"
+			reply: \"Language list is not yet available. Coming soon™\"
 		};
 	}
 	else if (!sb.Config.get(\"TTS_ENABLED\")) {
@@ -54,65 +298,73 @@ VALUES
 		this.data.pending = true;
 	}
 
-	const partCheck = (string) => string.match(/^(voice|lang):\\w+$/);
-	const voiceData = sb.Config.get(\"TTS_VOICE_DATA\");
-	const availableVoices = voiceData.map(i => i.name.toLowerCase());
-	const voiceMap = Object.fromEntries(voiceData.map(i => [i.name, i.id]));
-	
+	const { locales } = this.staticData;
+
 	let ttsData = [];
-	let currentVoice = \"Brian\";
+	let currentLocale = \"en-us\";
 	let currentText = [];
+	let speed = 1;
 
 	for (const token of args) {
-		if (partCheck(token)) {
-			let newVoice = null;
-			let [type, param] = token.split(\":\");
-			if (!type || !param) {
+		if (token.includes(\"speed:\")) {
+			const newSpeed = Number(token.split(\":\")[1]);
+			if (!Number.isFinite(newSpeed) || newSpeed < 0.1 || newSpeed > 1.0) {
+				this.data.pending = false;
+				return {
+					success: false,
+					reply: `Invalid speed coefficient provided! Must be within the range <0.1, 1.0>`
+				};
+			}
+
+			if (currentText.length > 0) {
+				ttsData.push({
+					locale: currentLocale.locale,
+					text: currentText.join(\" \"),
+					speed
+				});
+			}
+
+			speed = newSpeed;		
+			currentText = [];
+		}
+		else if (token.includes(\"lang:\") || token.includes(\"language:\")) {
+			const param = token.split(\":\")[1]?.toLowerCase();
+			if (!param) {
 				this.data.pending = false;
 				return {
 					reply: `Incorrect format provided! Use (voice|lang):(name) instead.`
 				};
 			}
 
-			param = param.toLowerCase();
-
-			if (type === \"lang\") {
-				const filtered = voiceData.filter(i => i.lang.toLowerCase().includes(param));
-				if (filtered.length === 0) {
+			let locale = locales.find(i => i.locale === param);
+			if (!locale) {
+				const code = sb.Utils.languageISO.getCode(param);
+				if (!code) {
 					this.data.pending = false;
 					return {
 						reply: `Language not found: ${param}`
 					};
 				}
 
-				newVoice = sb.Utils.randArray(filtered).name;
-			}
-			else if (type === \"voice\") {
-				if (param === \"random\") {
-					param = sb.Utils.randArray(availableVoices);
-				}
-
-				if (!availableVoices.includes(param)) {
+				locale = locales.find(i => i.code === code);
+				if (!locale) {
 					this.data.pending = false;
 					return {
-						reply: `Voice not found: ${param}`,
-						cooldown: { length: 2500 }
+						reply: `Language not supported: ${param}`
 					};
 				}
-
-				newVoice = sb.Utils.capitalize(param);
 			}
 
-			if (newVoice !== currentVoice)  {
+			if (locale !== currentLocale)  {
 				if (currentText.length > 0) {
 					ttsData.push({
-						name: currentVoice,
-						voice: currentVoice,
-						text: currentText.join(\" \")
+						locale: currentLocale.locale,
+						text: currentText.join(\" \"),
+						speed
 					});
 				}
 
-				currentVoice = newVoice;
+				currentLocale = locale;
 				currentText = [];
 			}
 		}
@@ -122,23 +374,20 @@ VALUES
 	}
 
 	ttsData.push({
-		name: currentVoice,
-		voice: currentVoice,
-		text: currentText.join(\" \")
+		locale: currentLocale.locale,
+		text: currentText.join(\" \"),
+		speed
 	});
-	
+
 	ttsData = ttsData.filter(i => i.text.length > 0);
 
 	if (ttsData.length > this.staticData.partsLimit) {
 		this.data.pending = false;
 		return {
-			reply: `Your TTS was refused! You used too many voices - ${ttsData.length}, but the maximum is ${this.staticData.partsLimit}.`,
+			success: false,
+			reply: `Your TTS was refused! You used too many parts - ${ttsData.length}, but the maximum is ${this.staticData.partsLimit}.`,
 			cooldown: { length: 5000 }
 		};
-	}
-
-	for (const record of ttsData) {
-		record.voice = voiceMap[record.voice];
 	}
 
 	let messageTime = 0n;
@@ -172,52 +421,61 @@ VALUES
 
 	const duration = sb.Utils.round(Number(messageTime) / 1.0e6, 0);
 	let cooldown = (duration > 10000)
-		? (context.command.Cooldown + (duration - 10000) * 10) * (ttsData.length)
-		: context.command.Cooldown;
+		? (this.Cooldown + (duration - 10000) * 10) * (ttsData.length)
+		: this.Cooldown;
 
 	if (cooldown > this.staticData.maxCooldown) {
 		cooldown = this.staticData.maxCooldown;
 	}
 
-	const randomVoicesString = `You used these voices: ${ttsData.map(i => i.name).join(\", \")}.`;
 	return {
-		reply: `Your message has been succesfully played on TTS! It took ${duration / 1000} seconds to read out, and your cooldown is ${cooldown / 1000} seconds. ${randomVoicesString}`,
+		reply: `Your message has been succesfully played on TTS! It took ${duration / 1000} seconds to read out, and your cooldown is ${cooldown / 1000} seconds.`,
 		cooldown: {
 			length: cooldown
 		}
 	};
 })',
 		'(async (prefix, values) => {
-	const { partsLimit } = values.getStaticData();
+	const { partsLimit, locales } = values.getStaticData();
+	const list = locales.map(i => {
+		return `<li><code>${i.locale}</code> - ${i.language}</li>`;
+	}).join(\"\");
 
 	return [
 		\"Plays your messages as TTS on supinic\'s stream, if enabled.\",
-		\"You can specify a voice to have it say your message. If you don\'t specify, Brian is used by default\",
-		\"You can also specify a language (full name, or ISO code), in which case a random voice for the given language will be chosen for you.\",
+		\"You can specify a language or a locale to have it say your message. If you don\'t specify, UK English is used by default\",
 		\"If you use multiple voices, each part of the message will be read out by different voices.\",
 		\"\",
 
 		`<code>${prefix}tts This is a message.</code>`,
-		\"Plays the TTS using Brian.\",
+		\"Plays the TTS using UK English.\",
 		\"\",
 
-		`<code>${prefix}tts voice:Giorgio Questo è un messaggio.</code>`,
-		\"Plays the TTS using Giorgio.\",
+		`<code>${prefix}tts language:Italian Questo è un messaggio.</code>`,
+		\"Plays the TTS using Italian.\",
 		\"\",
 
 		`<code>${prefix}tts lang:french Ceci est un message.</code>`,
-		\"Plays the TTS using a random French voice.\",
+		\"Plays the TTS using a French.\",
 		\"\",
 
-		`<code>${prefix}tts lang:fr Ceci est un message.</code>`,
-		\"Plays the TTS, same as above (uses ISO code for French \'fr\').\",
+		`<code>${prefix}tts lang:fr-fr Ceci est un message.</code>`,
+		\"Plays the TTS, same as above, but using the locale <code>fr-fr</code>\",
 		\"\",
 
-		`<code>${prefix}tts voice:Brian Hello there. voice:Emilie Comment ça va? voice:Jacek Co mówisz?</code>`,
+		`<code>${prefix}tts lang:en-au Once a jolly swagman, camped by a billabong, under the shade of a Coolibah tree.</code>`,
+		\"Plays the TTS using Australian English. You must use the locale to access this voice, because English is otherwise shared.\",
+		\"\",
+
+		`<code>${prefix}tts lang:en-gb Hello there. lang:fr-fr Comment ça va? lang:polish Co mówisz?</code>`,
 		\"Plays the TTS using three voices for each message part.\",
 		\"The voice name has to be specified before (!) the actual message.\",
 		\"Be warned - there is a limit of how many parts of tts you can use in one command!\",
-		`Current limit: ${partsLimit} voices per message`
+		`Current limit: ${partsLimit} voices per message`,
+		\"\",
+
+		\"Available locales:\",
+		`<ul>${list}</ul>`		
 	];
 })',
 		'supinic/supibot-sql'
