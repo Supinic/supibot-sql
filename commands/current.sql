@@ -85,7 +85,10 @@ VALUES
 		}
 	}
 
-	const type = args.shift() ?? \"current\";
+	const type = (context.invocation === \"current\")
+		? \"current\"
+		: (args.shift() ?? \"current\");
+
 	if (!this.staticData.types.includes(type)) {
 		return {
 			success: false,
