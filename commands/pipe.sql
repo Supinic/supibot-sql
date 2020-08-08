@@ -37,18 +37,18 @@ VALUES
 		let [cmd, ...cmdArgs] = inv.split(\" \");
 		cmdArgs = cmdArgs.concat(currentArgs);
 
-		if (cmd.includes(\"translate\")) {
-			cmdArgs.push(\"direction:false\", \"confidence:false\");
-		}
-		else if (cmd.includes(\"rg\")) {
-			cmdArgs.push(\"linkOnly:true\");
-		}
-
 		const check = sb.Command.get(cmd.replace(sb.Command.prefix, \"\"));
 		if (check) {
 			if (!check.Flags.pipe) {
 				return { reply: \"Command \" + cmd + \" cannot be used in a pipe!\" };
 			}
+		}
+
+		if ([\"randomgachi\", \"current\"].includes(check.Name)) {
+			cmdArgs.push(\"linkOnly:true\");
+		}
+		else if (check.Name === \"translate\") {
+			cmdArgs.push(\"direction:false\", \"confidence:false\");
 		}
 
 		const result = await sb.Command.checkAndExecute(
