@@ -348,7 +348,16 @@ VALUES
 
 	let id = null;
 	try {
-		id = await sb.VideoLANConnector.add(data.link, { startTime, endTime });
+		let vlcLink = data.link;
+		if (data.type === \"bilibili\" || data.type === \"nicovideo\") {
+			const { promisify } = require(\"util\");
+			const shell = promisify(require(\"child_process\").exec);
+			const result = await shell(`/code/node_modules/youtube-dl/bin/youtube-dl --get-url ${data.link}`);
+
+			vlcLink = result.stdout;
+		}
+
+		id = await sb.VideoLANConnector.add(vlcLink, { startTime, endTime });
 	}
 	catch (e) {
 		console.warn(\"sr error\", e);
