@@ -40,6 +40,31 @@ VALUES
 	}
 })',
 		'(async function weather (context, ...args) {
+	let number = null;
+	let type = \"currently\";
+	const weatherRegex = /\\b(hour|day|week)(\\+?(\\d+))?$/;
+
+	if (args.length > 0) {
+		if (args[args.length - 1].includes(\"-\")) {
+			return { reply: \"Checking for weather history is not currently implemented\" };
+		}
+		else if (args && weatherRegex.test(args[args.length - 1])) {
+			const match = args.pop().match(weatherRegex);
+
+			if (match[2]) { // +<number> = shift by X, used in daily/hourly
+				number = Number(match[3]);
+				type = (match[1] === \"day\") ? \"daily\" : (match[1] === \"hour\") ? \"hourly\" : null;
+
+				if (!type || (type === \"daily\" && number > 7) || (type === \"hourly\" && number > 48)) {
+					return { reply: \"Invalid combination of parameters!\" };
+				}
+			}
+			else { // summary
+				type = (match[1] === \"day\") ? \"hourly\" : (match[1] === \"hour\") ? \"minutely\" : \"daily\";
+			}
+		}
+	}
+	
 	let skipLocation = false;
 	let coords = null;
 	let formattedAddress = null;
@@ -87,31 +112,6 @@ VALUES
 			coords = userData.Data.location.coordinates;
 			skipLocation = userData.Data.location.hidden;
 			formattedAddress = userData.Data.location.formatted;
-		}
-	}
-
-	let number = null;
-	let type = \"currently\";
-	const weatherRegex = /\\b(hour|day|week)(\\+?(\\d+))?$/;
-
-	if (args.length > 0) {
-		if (args[args.length - 1].includes(\"-\")) {
-			return { reply: \"Checking for weather history is not currently implemented\" };
-		}
-		else if (args && weatherRegex.test(args[args.length - 1])) {
-			const match = args.pop().match(weatherRegex);
-
-			if (match[2]) { // +<number> = shift by X, used in daily/hourly
-				number = Number(match[3]);
-				type = (match[1] === \"day\") ? \"daily\" : (match[1] === \"hour\") ? \"hourly\" : null;
-
-				if (!type || (type === \"daily\" && number > 7) || (type === \"hourly\" && number > 48)) {
-					return { reply: \"Invalid combination of parameters!\" };
-				}
-			}
-			else { // summary
-				type = (match[1] === \"day\") ? \"hourly\" : (match[1] === \"hour\") ? \"minutely\" : \"daily\";
-			}
 		}
 	}
 
