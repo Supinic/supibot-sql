@@ -19,7 +19,7 @@ VALUES
 		'texttospeech',
 		'[\"tts\"]',
 		'mention,pipe,skip-banphrase',
-		'Plays TTS on stream, if enabled. You can specify voice by using \"voice:<name>\" or \"lang:<language>\" anywhere in your message. Available voices: https://supinic.com/stream/tts',
+		'Plays TTS on stream, if enabled. You can specify the language by using \"language:<language>\" anywhere in your message.',
 		10000,
 		NULL,
 		'(() => {
