@@ -13,7 +13,7 @@ VALUES
 		12,
 		'by',
 		'belarusian',
-		'https://www.belta.by/',
-		'[\"rss\"]',
+		'https://charter97.org/be/rss/',
+		'[\"all\"]',
 		'RSS'
 	)
