@@ -112,10 +112,11 @@ VALUES
 
 	const results = [];
 	for (const { link, type } of links) {
+		const videoData = await sb.Utils.linkParser.fetchData(link, type);
 		const check = await sb.Query.getRecordset(rs => rs
 			.select(\"ID\")
 			.from(\"music\", \"Track\")
-			.where(\"Link = %s\", link)
+			.where(\"Link = %s\", videoData.ID)
 			.single()
 		);
 
@@ -136,7 +137,6 @@ VALUES
 
 			let addendum = \"\";
 			if (updateExisting) {
-				const videoData = await sb.Utils.linkParser.fetchData(link, type);
 
 				if (row.values.Available && videoData === null) {
 					row.values.Available = false;
