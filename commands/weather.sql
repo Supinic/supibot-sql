@@ -77,7 +77,7 @@ VALUES
 		}
 		else {
 			return {
-				reply: \"No place provided!\",
+				reply: `No place provided, and you don\'t have a default location set! Check the ${sb.Command.prefix}set command\'s help on how to set your location.`,
 				cooldown: 2500
 			};
 		}
