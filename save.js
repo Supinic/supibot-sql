@@ -13,18 +13,17 @@ module.exports = async function save (options) {
 		}
 	}	
 
-	const { ignoredColumns = [], Query } = options;
-	const columnData = await Query.getRecordset(rs => rs
+	const { Query } = options;
+	const ignoredColumns = (options.ignoredColumns ?? []).map(i => i.toLowerCase());
+
+	const columnData = (await Query.getRecordset(rs => rs
 		.select("COLUMN_NAME AS `Column`", "DATA_TYPE AS `Type`")
 		.from("information_schema", "COLUMNS")
 		.where("TABLE_SCHEMA = %s", options.database)
 		.where("TABLE_NAME = %s", options.table)
-	);
+	)).filter(i => !ignoredColumns.includes(i.Column.toLowerCase()));
 
-	const columnNames = columnData
-		.map(i => i.Column)
-		.filter(i => !ignoredColumns.includes(i));
-		
+	const columnNames = columnData.map(i => i.Column);
 	const rows = await Query.getRecordset(rs => rs
 		.select("*")
 		.from(options.database, options.table)

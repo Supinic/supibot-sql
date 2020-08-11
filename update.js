@@ -54,6 +54,15 @@
 			table: "Extra_News",
 			ignoredColumns: ["Helpers"],
 			Query: sb.Query
+		},
+		{
+			path: "./chat-modules/",
+			directories: ["./chat-modules"],
+			filenameColumn: "Name",
+			database: "chat_data",
+			table: "Chat_Module",
+			ignoredColumns: ["Active", "Global", "Platform", "Created", "Last_Edited"],
+			Query: sb.Query
 		}
 	];
 	
