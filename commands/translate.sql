@@ -62,7 +62,8 @@ VALUES
 		};
 	}
 
-	const response = await sb.Got({
+	const { body: response, statusCode } = await sb.Got({
+		responseType: \"json\",
 		url: \"https://translate.googleapis.com/translate_a/single\",
 		throwHttpErrors: false,
 		searchParams: new sb.URLParams()
@@ -74,7 +75,20 @@ VALUES
 			.set(\"oe\", \"UTF-8\")
 			.set(\"q\", args.join(\" \"))
 			.toString()
-	}).json();
+	});
+
+	if (statusCode === 400) {
+		return { 
+			success: false,
+			reply: \"Language not supported\" 
+		};
+	}
+	else if (statusCode !== 200) {
+		throw new sb.errors.APIError({
+			statusCode,
+			apiName: \"GoogleTranslateAPI\"
+		});
+	}
 
 	let reply = response[0].map(i => i[0]).join(\" \");
 	if (options.direction) {
