@@ -116,7 +116,7 @@ VALUES
 		const check = await sb.Query.getRecordset(rs => rs
 			.select(\"ID\")
 			.from(\"music\", \"Track\")
-			.where(\"Link = %s\", videoData.ID)
+			.where(\"Link = %s\", String(videoData.ID))
 			.single()
 		);
 
