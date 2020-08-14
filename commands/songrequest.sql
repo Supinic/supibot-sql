@@ -92,7 +92,7 @@ VALUES
 				const playlist = [
 					controller.currentlyPlaying,
 					...controller.playlistData
-				].filter(i => i.queueby?.toLowerCase() === botName.toLowerCase());
+				].filter(i => i && i.queueby?.toLowerCase() === botName.toLowerCase());
 
 				if (playlist.length > this.limits.total) {
 					return {
