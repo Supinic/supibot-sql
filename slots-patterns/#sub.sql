@@ -13,15 +13,13 @@ VALUES
 		'#sub',
 		'() => {
 	const { controller } = sb.Platform.get(\"twitch\");
-
-	if (Object.keys(controller.availableEmotes).length === 0) {
+	if ((controller?.availableEmotes ?? []).length === 0) {
 		return \"Twitch messed up, no emotes available...\";
 	}
 
-	return Object.entries(controller.availableEmotes)
-		.filter(([key]) => Number(key) > 0 && Number(key) < 3e8)
-		.map(([key, array]) => array.map(emote => emote.code))
-		.flat();
+	return controller.availableEmotes
+		.filter(emoteSet => [\"1\", \"2\", \"3\"].includes(emoteSet.tier))
+		.flatMap(emoteSet => emoteSet.emotes.map(emote => emote.token));
 }',
 		'Function',
 		'Rolls random emotes from supibot\'s current subscriber emote list.'
