@@ -62,7 +62,10 @@ VALUES
 			};
 		}
 		else {
-			throw e;
+			throw new sb.errors.APIError({
+				apiName: \"UrbanDictionaryAPI\",
+				statusCode: e.statusCode ?? 500
+			});
 		}
 	}
 
