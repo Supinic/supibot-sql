@@ -137,8 +137,8 @@ VALUES
 				const next = timeData.ranges[i + 1];
 
 				delta += current.time;
-				targetReminderDate = targetReminderDate ?? new sb.Date();
-				targetReminderDate.addMilliseconds(current.time);
+				targetReminderDate = targetReminderDate ?? sb.Date.now();
+				targetReminderDate += current.time;
 
 				// Parse out the text between ranges, ...
 				const between = (next)
@@ -167,9 +167,15 @@ VALUES
 
 			reminderText = reminderText.replace(/\\x00/g, \"\");
 		}
-
+		
 		if (delta > 0) {
-			targetReminderDelta = sb.Utils.timeDelta(targetReminderDate);
+			if (typeof targetReminderDate === \"number\") {
+				targetReminderDate = new sb.Date(targetReminderDate);
+				targetReminderDelta = sb.Utils.timeDelta(targetReminderDate);
+			}
+			else {
+				targetReminderDelta = sb.Utils.timeDelta(sb.Date.now() + targetReminderDate.valueOf());
+			}
 		}
 	}
 
