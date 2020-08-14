@@ -59,6 +59,70 @@ VALUES
 			]
 		},
 
+		cytubeIntegration: {
+			limits: {
+				total: 5,
+				time: 600
+			},
+
+			queue: async function (link) {
+				const properLink = sb.Utils.linkParser.autoRecognize(link);
+				if (!properLink) {
+					return {
+						success: false,
+						reply: \"Must use proper URLs for song requests!\"
+					};
+				}
+
+				const linkData = await sb.Utils.linkParser.fetchData(link);
+				if (!linkData) {
+					return {
+						success: false,
+						reply: \"Link not found!\"
+					};
+				}
+				else if (linkData.duration > this.limits.time) {
+					return {
+						success: false,
+						reply: `Video too long! ${linkData.duration}sec / ${this.limits.time}sec`
+					};
+				}
+
+				const { Self_Name: botName, client, controller } = sb.Platform.get(\"cytube\");
+				const playlist = [
+					controller.currentlyPlaying,
+					...controller.playlistData
+				].filter(i => i.queueby?.toLowerCase() === botName.toLowerCase());
+
+				if (playlist.length > this.limits.total) {
+					return {
+						success: false,
+						reply: \"Too many videos queued from outside Cytube!\"
+					};
+				}
+
+				const cytubeType = await sb.Query.getRecordset(rs => rs
+				    .select(\"Type\")
+				    .from(\"data\", \"Video_Type\")
+					.where(\"Parser_Name = %s\", linkData.type)
+					.limit(1)
+					.single()
+					.flat(\"Type\")
+				);
+				if (!cytubeType) {
+					return {
+						success: false,
+						reply: \"Link cannot be played on Cytube!\"
+					};
+				}
+
+				controller.queue(cytubeType, linkData.ID);
+				return {
+					reply: `Added to Cytube queue successfully. External playlist: ${playlist.length + 1}/${this.limits.total}`
+				};
+			}
+		},
+
 		checkLimits: (userData, playlist) => {
 			const userRequests = playlist.filter(i => i.User_Alias === userData.ID);
 			if (userRequests.length >= limits.amount) {
@@ -119,8 +183,14 @@ VALUES
 		return { reply: \"Song requests are currently using dubtrack. Join here: \" + dubtrack + \" :)\" };
 	}
 	else if (state === \"cytube\") {
-		const cytube = (await sb.Command.get(\"cytube\").execute(context)).reply;
-		return { reply: \"Song requests are currently using Cytube. Join here: \" + cytube + \" :)\" };
+		if (!sb.Config.get(\"EXTERNAL_CYTUBE_SR_ENABLED\", false)) {
+			const cytube = (await sb.Command.get(\"cytube\").execute(context)).reply;
+			return {
+				reply: \"Song requests are currently using Cytube. Join here: \" + cytube + \" :)\"
+			};
+		}
+
+		return await this.staticData.cytubeIntegration.queue(args[0]);
 	}
 	else if (args.length === 0) {
 		return { reply: \"You must search for a link or a video description!\" };
