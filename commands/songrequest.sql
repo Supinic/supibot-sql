@@ -402,6 +402,26 @@ VALUES
 		};
 	}
 
+	const exists = queue.find(i => (
+		i.Link === data.ID
+		&& i.Start_Time === startTime
+		&& i.End_Time === endTime
+	));
+	
+	let existsString = \"\";
+	if (exists) {
+		const string = `This video is already queued as ID ${exists.VLC_ID}!`;
+		if (!sb.Config.get(\"SONG_REQUESTS_DUPLICATE_ALLOWED\", false)) {
+			return {
+				success: false,
+				reply: string
+			};
+		}
+		else {
+			existsString = string;
+		}
+	}
+
 	const authorString = (data.author) ? ` by ${data.author}` : \"\";
 	const length = data.duration ?? data.length ?? null;
 	const segmentLength = (endTime ?? length) - (startTime ?? 0);
@@ -503,6 +523,7 @@ VALUES
 			It is playing ${when}.
 			${seekString}
 			${pauseString}
+			${existsString}
 			(slots: ${limits.requests + 1}/${limits.amount}, length: ${Math.round(limits.totalTime + segmentLength)}/${limits.time})
 		`
 	};
