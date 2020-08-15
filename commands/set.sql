@@ -157,7 +157,7 @@ VALUES
 					.single()
 					.flat(\"ID\")
 				),
-				unset: async (context, ID) => {
+				unset: async (context, ID, ...args) => {
 					const row = await sb.Query.getRow(\"data\", \"Suggestion\");
 					try {
 						await row.load(ID);
@@ -172,19 +172,28 @@ VALUES
 							reply: \"That suggestion was not created by you!\"
 						};
 					}
-					else if (row.values.Status !== \"New\") {
-						return {
-							success: false,
-							reply: \"You cannot unset a suggestion if it\'s already been processed!\"
-						};
-					}
-					else {
-						row.values.Priority = null;
-						row.values.Status = \"Dismissed by author\";
+					else if (row.values.Status === \"New\" || row.values.Status === \"Needs testing\") {						
+						if (row.values.Status === \"New\") {
+							row.values.Status = \"Dismissed by author\";
+							row.values.Priority = null;
+						}
+						else if (row.values.Status === \"Needs testing\") {
+							row.values.Status = \"Completed\";
+							if (args.length > 0) {
+								row.values.Notes = `Testing updated by author: ${args.join(\" \")}\\n\\n${row.values.Notes}`;
+							}
+						}
+
 						await row.save();
 
 						return {
-							reply: `Suggestion ID ${ID} has been set as \"Dismissed by author\".`
+							reply: `Suggestion ID ${ID} has been set as \"${row.values.Status}\".`
+						};
+					}
+					else {
+						return {
+							success: false,
+							reply: \"You cannot unset a suggestion if it\'s already been processed!\"
 						};
 					}
 				}
