@@ -24,6 +24,10 @@ VALUES
 		NULL,
 		NULL,
 		'(async function truck (context, target) {
+	if (target && target.startsWith(\"@\")) {
+		target = target.slice(1);
+	}
+
 	if (target?.toLowerCase() === context.platform.Self_Name) {
 		return { 
 			reply: \"KKonaW I\'M DRIVING THE TRUCK KKonaW GET OUT OF THE WAY KKonaW\"
