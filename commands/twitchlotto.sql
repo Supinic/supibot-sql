@@ -150,9 +150,10 @@ VALUES
 	}
 
 	if (image.Score === null) {
-		const resultData = await sb.Got({
+		const { statusCode, body: resultData } = await sb.Got({
 			method: \"POST\",
 			responseType: \"json\",
+			throwHttpErrors: false,
 			url: \"https://api.deepai.org/api/nsfw-detector\",
 			headers: {
 				\"Api-Key\": sb.Config.get(\"API_DEEP_AI\")
@@ -160,7 +161,15 @@ VALUES
 			form: {
 				image: `https://i.imgur.com/${image.Link}`
 			}
-		}).json();
+		});
+		
+		if (statusCode !== 200) {
+			console.log({ statusCode, resultData });
+			return {
+				success: false,
+				reply: `Fetching image data failed! Status code ${statusCode}`
+			};
+		}
 
 		const json = JSON.stringify(resultData.output);
 		await sb.Query.getRecordUpdater(ru => ru
