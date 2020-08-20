@@ -14,7 +14,7 @@ VALUES
 	(
 		15,
 		'stay-hydrated',
-		'0 30 * * * *',
+		'0 20 * * * *',
 		'Stay hydrated!',
 		NULL,
 		'(async function announceStayHydrated () {
