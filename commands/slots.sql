@@ -26,7 +26,8 @@ VALUES
 		'(async function slots (context, ...emotes) {
 	if (emotes[0] === \"leader\" || emotes[0] === \"leaders\") {
 		return {
-			reply: \"Check out all the previous slots winners here! https://supinic.com/bot/slots-winner/list\"
+			reply: \"Check out all the previous slots winners here! https://supinic.com/bot/slots-winner/list\",
+			cooldown: 5000
 		};
 	}
 
