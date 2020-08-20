@@ -41,7 +41,7 @@ VALUES
 	);
 
 	return {
-		reply: `Current message rates: ${rates?.Amount ?? 0} messages/minute.`
+		reply: `Message rates for the previous hour: ${rates?.Amount ?? 0} messages/hr.`
 	};
 })',
 		NULL,
