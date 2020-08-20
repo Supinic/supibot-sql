@@ -26,7 +26,10 @@ VALUES
 		'(async function gachiSearch (context, ...args) {
 	const query = args.join(\" \");
 	if (!query) {
-		return { reply: \"Pepega\" };
+		return { 
+			success: false,
+			reply: \"No search query provided!\"
+		};
 	}
 
 	const searchParams = new sb.URLParams()
@@ -41,6 +44,7 @@ VALUES
 
 	if (!data || data.length === 0) {
 		return {
+			success: false,
 			reply: \"No tracks matching that query have been found!\"
 		};
 	}
