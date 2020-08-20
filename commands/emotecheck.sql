@@ -25,6 +25,29 @@ VALUES
 		'({
 	sets: [
 		{
+			name: \"hyperscape\",
+			aliases: [\"hyper\"],
+			description: \"These emotes are acquired when you or someone else cheers, subs or gifts subs in a channel. Active in August 2020\",
+			notes: \"https://blog.twitch.tv/en/2020/08/11/hyper-scape-launches-celebrate-with-new-features-and-exclusive-emotes/\",
+			emotes: [
+				\"HyperCheese\",
+				\"HyperCooldown\",
+				\"HyperCrate\",
+				\"HyperCrown\",
+				\"HyperGravity\",
+				\"HyperHaste\",
+				\"HyperHex\",
+				\"HyperJump\",
+				\"HyperLost\",
+				\"HyperMayhem\",
+				\"HyperMine\",
+				\"HyperParkour\",
+				\"HyperReveal\",
+				\"HyperSlam\",
+				\"HyperTiger\"
+			]
+		},
+		{
 			name: \"pride2020\",
 			aliases: [\"pride\"],
 			description: \"These emotes were randomly made available by watching streams in June 2020\",
