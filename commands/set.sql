@@ -23,6 +23,12 @@ VALUES
 		5000,
 		NULL,
 		'(() => {
+	const birthdayRegex = /(\\d+)[.\\-/\\s]+(\\w{3})/i;
+	const birthdayFormatter = new Intl.DateTimeFormat(\"en-us\", {
+		day: \"numeric\",
+		month: \"long\"
+	});
+
 	const handleAmbassadors = async (type, context, ...args) => {
 		const [user, channel = context.channel?.Name] = args;
 		if (!user || !channel) {
@@ -172,7 +178,7 @@ VALUES
 							reply: \"That suggestion was not created by you!\"
 						};
 					}
-					else if (row.values.Status === \"New\" || row.values.Status === \"Needs testing\") {						
+					else if (row.values.Status === \"New\" || row.values.Status === \"Needs testing\") {
 						if (row.values.Status === \"New\") {
 							row.values.Status = \"Dismissed by author\";
 							row.values.Priority = null;
@@ -204,17 +210,40 @@ VALUES
 				description: `Sets/unsets your IRL location. If you add the keyword \"private\", it\'s going to be hidden. This location is used in commands such as weather, time, and others.`,
 				set: async (context, ...args) => {
 					let hidden = false;
+					let visibilityType = null;
 					if (args[0] === \"private\" || args[0] === \"hidden\") {
 						hidden = true;
-						args.shift();
+						visibilityType = args.shift();
+					}
+					else if (args[0] === \"public\" || args[0] === \"visible\") {
+						hidden = false;
+						visibilityType = args.shift();
 					}
 
 					if (args.length === 0) {
-						return {
-							success: false,
-							reply: \"No location provided!\",
-							cooldown: 2500
-						};
+						const { location } = context.user.Data;
+						if (location) {
+							if (location.hidden === hidden) {
+								return {
+									success: false,
+									reply: `Your location is already ${visibilityType}!`
+								};
+							}
+							else {
+								location.hidden = hidden;
+								await context.user.saveProperty(\"Data\", context.user.Data);
+								return {
+									reply: `Your location is now ${visibilityType}!`
+								};
+							}
+						}
+						else {
+							return {
+								success: false,
+								reply: \"No location provided!\",
+								cooldown: 2500
+							};
+						}
 					}
 
 					const query = args.join(\" \");
@@ -325,6 +354,60 @@ VALUES
 
 					return {
 						reply: `Discord description unset successfully.`
+					};
+				}
+			},
+			{
+				names: [\"birthday\", \"bday\"],
+				parameter: \"arguments\",
+				description: \"Lets you set your birthday (only day and month!) for use in other commands, like $horoscope.\",
+				set: async (context, ...args) => {
+					const query = args.join(\" \");
+					if (!query) {
+						return {
+							success: false,
+							reply: \"No date provided!\"
+						};
+					}
+					else if (!birthdayRegex.test(query)) {
+						return {
+							success: false,
+							reply: `The date you provided must be in form \"day-month\", where month is specified by 3 characters, e.g. \"Jan\" or \"Aug\"`
+						};
+					}
+
+					const date = new sb.Date(query);
+					if (!date.valueOf()) {
+						return {
+							success: false,
+							reply: \"Date could not be parsed :(\"
+						};
+					}
+
+					context.user.Data.birthday = {
+						month: date.month,
+						day: date.day,
+						string: birthdayFormatter.format(date)
+					};
+					await context.user.saveProperty(\"Data\", context.user.Data);
+					
+					return {
+						reply: `Successfully set your birthday to ${context.user.Data.birthday.string}.`
+					};
+				},
+				unset: async (context) => {
+					if (!context.user.Data.birthday) {
+						return {
+							success: false,
+							reply: `You don\'t have a birthday date set up, so there is nothing to unset!`
+						};
+					}
+
+					context.user.Data.birthday = null;
+					await context.user.saveProperty(\"Data\", context.user.Data);
+					
+					return {
+						reply: \"Your birthday date has been unset successfully!\"
 					};
 				}
 			}
