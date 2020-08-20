@@ -407,7 +407,7 @@ VALUES
 		&& i.Start_Time === startTime
 		&& i.End_Time === endTime
 	));
-	
+
 	let existsString = \"\";
 	if (exists) {
 		const string = `This video is already queued as ID ${exists.VLC_ID}!`;
@@ -431,7 +431,7 @@ VALUES
 		return {
 			reply: sb.Utils.tag.trim `
 				Your video would exceed the total video limit by ${excess} seconds!.
-				You can change the start and end points of the video with these arguments, e.g.: start:20 end:60
+				You can change the start and end points of the video with these arguments, e.g.: start:0 end:${limits.totalTime - limits.time}
 			`
 		};
 	}
