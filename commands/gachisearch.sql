@@ -26,35 +26,52 @@ VALUES
 		'(async function gachiSearch (context, ...args) {
 	const query = args.join(\" \");
 	if (!query) {
-		return { 
+		return {
 			success: false,
 			reply: \"No search query provided!\"
 		};
 	}
 
-	const searchParams = new sb.URLParams()
-		.set(\"name\", query)
-		.set(\"includeTags\", \"6\")
-		.toString();
+	const escaped = sb.Query.escapeLikeString(query);
+	const data = await sb.Query.raw(sb.Utils.tag.trim `
+		SELECT ID, Name
+		FROM music.Track
+		WHERE
+			Track.ID IN ( SELECT Track FROM music.Track_Tag WHERE Tag = 6 )
+			AND 
+			(
+				Name LIKE \'%${escaped}%\'
+				OR EXISTS (
+					SELECT 1
+					FROM music.Alias
+					WHERE
+						Target_Table = \"Track\"
+						AND Name LIKE \'%${escaped}%\'
+						AND Target_ID = Track.ID
+				)
+				OR EXISTS (
+					SELECT 1
+					FROM music.Track AS Right_Version
+					JOIN music.Track_Relationship ON Track_To = Right_Version.ID
+					WHERE
+						Relationship = \"Based on\"
+						AND Right_Version.Name LIKE \'%${escaped}%\'
+						AND Right_Version.ID = Track.ID
+				)
+			)
+	`);
 
-	const { data } = await sb.Got.instances.Supinic({
-		url: \"track/search\",
-		searchParams
-	}).json();
-
-	if (!data || data.length === 0) {
+	if (data.length === 0) {
 		return {
 			success: false,
 			reply: \"No tracks matching that query have been found!\"
 		};
 	}
 
-	const extra = (data.length > 1)
-		? `${data.length - 1} more tracks found! JSON: https://supinic.com/api/track/search?${searchParams}`
-		: \"\";
-
+	const [first, ...rest] = data;
+	const others = rest.map(i => `\"${i.Name}\" (ID ${i.ID})`).join(\"; \");
 	return {
-		reply: `${data[0].name} - https://supinic.com/track/detail/${data[0].ID} ${extra}`
+		reply: `\"${first.Name}\" - https://supinic.com/track/detail/${first.ID} More results: ${others}`
 	};
 })',
 		NULL,
