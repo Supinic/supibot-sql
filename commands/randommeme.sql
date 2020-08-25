@@ -100,6 +100,7 @@ VALUES
 		get nsfw () { return this.#nsfw; }
 		get stickied () { return this.#stickied; }
 		get isTextPost () { return this.#isTextPost; }
+		get url () { return this.#url; }
 
 		get posted () {
 			return sb.Utils.timeDelta(this.#created);
@@ -135,9 +136,14 @@ VALUES
 	};
 })()
 ',
-		'(async function randomMeme (context, subreddit) {
-	if (!subreddit) {
-		subreddit = sb.Utils.randArray(this.staticData.defaultMemeSubreddits);
+		'(async function randomMeme (context, ...args) {
+	let linkOnly = false;
+	for (let i = args.length - 1; i >= 0; i--) {
+		const token = args[i];
+		if (token.startsWith(\"linkOnly:\")) {
+			linkOnly = token.split(\":\")[1] === \"true\";
+			args.splice(i, 1);
+		}
 	}
 
 	let safeSpace = false;
@@ -148,8 +154,7 @@ VALUES
 		safeSpace = true;
 	}
 
-	subreddit = subreddit.toLowerCase();
-
+	const subreddit = (args.shift() ?? sb.Utils.randArray(this.staticData.defaultMemeSubreddits)).toLowerCase();
 	if (!this.data.subreddits[subreddit]) {
 		const data = await sb.Got.instances.Reddit(subreddit + \"/about.json\").json();
 		this.data.subreddits[subreddit] = new this.staticData.Subreddit(data);
@@ -170,6 +175,7 @@ VALUES
 	}
 	else if (safeSpace && (this.staticData.banned.includes(forum.name) || forum.nsfw)) {
 		return {
+			success: false,
 			reply: \"That subreddit is flagged as 18+, and thus not safe to post here!\"
 		};
 	}
@@ -193,6 +199,7 @@ VALUES
 	const post = sb.Utils.randArray(validPosts);
 	if (!post) {
 		return {
+			success: false,
 			reply: \"No suitable posts found!\"
 		}
 	}
@@ -201,6 +208,11 @@ VALUES
 			return {
 				success: false,
 				reason: \"pipe-nsfw\"
+			};
+		}
+		else if (linkOnly) {
+			return {
+				reply: post.url
 			};
 		}
 
