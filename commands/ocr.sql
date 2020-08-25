@@ -88,8 +88,10 @@ VALUES
 		};
 	}
 
-	const data = await sb.Got({
+	const { statusCode, body: data } = await sb.Got({
 		method: \"GET\",
+		responseType: \"json\",
+		throwHttpErrors: false,
 		url: \"https://api.ocr.space/parse/imageurl\",
 		headers: {
 			apikey: sb.Config.get(\"API_OCR_SPACE\")
@@ -102,12 +104,14 @@ VALUES
 			.set(\"OCREngine\", \"1\")
 			.set(\"isOverlayRequired\", \"false\")
 			.toString()
-	}).json();
+	});
 
-	if (data.OCRExitCode !== 1) {
+	if (statusCode !== 200 || data?.OCRExitCode !== 1) {
 		return {
 			success: false,
-			reply: data.ErrorMessage.join(\" \")
+			reply: (data?.ErrorMessage) 
+				? data.ErrorMessage.join(\" \")
+				: data
 		};
 	}
 
