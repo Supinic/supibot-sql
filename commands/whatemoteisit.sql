@@ -45,7 +45,7 @@ VALUES
 	
 	const emoteLink = \"https://twitchemotes.com/emotes/\" + emoteid;
 	return {
-		reply: `${emotecode} (ID ${emoteid}) - tier ${tier} sub emote to channel ${channel}. ${emoteLink} ${originString}`
+		reply: `${emotecode} (ID ${emoteid}) - tier ${tier} sub emote to channel #${channel.toLowerCase()}. ${emoteLink} ${originString}`
 	};
 })',
 		NULL,
