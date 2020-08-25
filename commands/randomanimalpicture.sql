@@ -46,7 +46,7 @@ VALUES
 	}
 	else if (!context.user.Data.animals?.[type]) {
 		return {
-			reply: `Only people who have verified that they have a ${type} can use this command! Verify by $suggest-ing a picture of your ${type}(s).`
+			reply: `Only people who have verified that they have a ${type} can use this command! Verify by $suggest-ing a picture of your ${type}(s), along with your name and mention that you want the command access.`
 		};
 	}
 
