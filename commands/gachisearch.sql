@@ -69,9 +69,12 @@ VALUES
 	}
 
 	const [first, ...rest] = data;
-	const others = rest.map(i => `\"${i.Name}\" (ID ${i.ID})`).join(\"; \");
+	const others = (rest.length === 0)
+		? \"\"
+		: \"More results: \" + rest.map(i => `\"${i.Name}\" (ID ${i.ID})`).join(\"; \");
+
 	return {
-		reply: `\"${first.Name}\" - https://supinic.com/track/detail/${first.ID} More results: ${others}`
+		reply: `\"${first.Name}\" - https://supinic.com/track/detail/${first.ID} ${others}`
 	};
 })',
 		NULL,
