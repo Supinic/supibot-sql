@@ -18,7 +18,7 @@ VALUES
 		169,
 		'gachisearch',
 		'[\"gs\"]',
-		'mention,pipe',
+		'link-only,mention,pipe',
 		'Searches for a given track in the gachi list, and attempts to post a link.',
 		15000,
 		NULL,
@@ -74,7 +74,8 @@ VALUES
 		: \"More results: \" + rest.map(i => `\"${i.Name}\" (ID ${i.ID})`).join(\"; \");
 
 	return {
-		reply: `\"${first.Name}\" - https://supinic.com/track/detail/${first.ID} ${others}`
+		reply: `\"${first.Name}\" - https://supinic.com/track/detail/${first.ID} ${others}`,
+		link: `https://supinic.com/track/detail/${first.ID}`
 	};
 })',
 		NULL,
