@@ -83,7 +83,8 @@ VALUES
 
 	let reminderText = args.join(\" \");
 
-	const timedRegex = /\\b(in|on|at)\\b/i;
+	// const timedRegex = /\\b(in|on|at)\\b/i;
+	const timedRegex = /\\b(in|at)\\b/i;
 	let targetReminderDate = null;
 	let targetReminderDelta = \"when they next type in chat\";
 	let delta = 0;
@@ -92,17 +93,18 @@ VALUES
 	if (timedRegex.test(reminderText)) {
 		reminderText = reminderText.replace(/\\bhr\\b/g, \"hour\");
 
-		const chronoRegex = /\\bon\\b/;
-		const chronoData = sb.Utils.parseChrono(reminderText, null, { forwardDate: true });
+		// const chronoRegex = /\\bon\\b/;
+		// const chronoData = sb.Utils.parseChrono(reminderText, null, { forwardDate: true });
 		const timeData = sb.Utils.parseDuration(reminderText, { returnData: true });
 
+/*
 		if (chronoRegex.test(chronoData?.text ?? \"\")) {
 			const isRelative = (Object.keys(chronoData.component.knownValues).length === 0);
 			if (targetUser?.Data.location && !isRelative) {
 				const location = targetUser.Data.location;
 				if (!location.timezone) {
 					const time = sb.Command.get(\"time\");
-					await time.execute({}, \"@\" + targetUser.Name);
+					await time.execute(context, \"@\" + targetUser.Name);
 				}
 
 				const { offset } = location.timezone;
@@ -119,9 +121,10 @@ VALUES
 
 			targetReminderDate.milliseconds = now.milliseconds;
 			delta = sb.Utils.round(targetReminderDate - sb.Date.now(), -3);
-
 		}
-		else if (timeData.ranges.length > 0) {
+*/
+
+		if (timeData.ranges.length > 0) {
 			const continueRegex = /^(and|[\\s\\W]+)$/;
 
 			let continues = false;
