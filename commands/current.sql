@@ -18,7 +18,7 @@ VALUES
 		68,
 		'current',
 		'[\"song\"]',
-		'mention,pipe,whitelist',
+		'link-only,mention,pipe,whitelist',
 		'Fetches the current song playing on stream.',
 		5000,
 		NULL,
@@ -30,12 +30,16 @@ VALUES
 	const state = sb.Config.get(\"SONG_REQUESTS_STATE\");
 
 	if (state === \"off\") {
-		return { reply: \"Song requests are currently turned off.\" };
+		return {
+			link: null,
+			reply: \"Song requests are currently turned off.\"
+		};
 	}
 	else if (state === \"vlc-read\") {
 		const item = sb.VideoLANConnector.currentPlaylistItem;
 		if (!item) {
 			return {
+				link: null,
 				reply: \"Nothing is currently playing.\"
 			};
 		}
@@ -46,6 +50,7 @@ VALUES
 		}
 
 		return {
+			link: null,
 			reply: `Currently playing: ${leaf.name}`
 		};
 	}
@@ -56,6 +61,7 @@ VALUES
 		const playing = sb.Platform.get(\"cytube\").controller.currentlyPlaying;
 		if (playing === null) {
 			return {
+				link: null,
 				reply: \"Nothing is currently playing on Cytube.\"
 			};
 		}
@@ -72,16 +78,8 @@ VALUES
 		const requester = playing.user ?? playing.queueby ?? \"(unknown)\";
 		const link = prefix.replace(linkSymbol, media.id);
 		return {
+			link,
 			reply: `Currently playing on Cytube: ${media.title} ${link} (${media.duration}), queued by ${requester}`
-		}
-	}
-
-	let linkOnly = false;
-	for (let i = args.length - 1; i >= 0; i--) {
-		const token = args[i];
-		if (token.startsWith(\"linkOnly\")) {
-			linkOnly = token.split(\":\")[1] === \"true\";
-			args.splice(i, 1);
 		}
 	}
 
@@ -127,12 +125,6 @@ VALUES
 
 	if (playing) {
 		const link = playing.Prefix.replace(linkSymbol, playing.Link);
-		if (linkOnly) {
-			return {
-				reply: link
-			};
-		}		
-		
 		const userData = await sb.User.get(playing.User);
 		const { length, time } = await sb.VideoLANConnector.status();
 		const position = (includePosition)
@@ -143,6 +135,7 @@ VALUES
 			: \"\";
 
 		return {
+			link,
 			reply: sb.Utils.tag.trim `
 				${introductionString}
 				${playing.Name}
@@ -157,9 +150,9 @@ VALUES
 	}
 	else {
 		return {
-			reply: (linkOnly)
-				? null
-				: \"No video is currently being played.\"
+			success: false,
+			link: null,
+			reply: \"No video is currently being played.\"
 		};
 	}
 })',

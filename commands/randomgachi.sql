@@ -18,7 +18,7 @@ VALUES
 		10,
 		'randomgachi',
 		'[\"rg\"]',
-		'mention,pipe',
+		'link-only,mention,pipe',
 		'Fetches a random gachi track from the gachi list, excluding Bilibili and Nicovideo videos with no Youtube reuploads',
 		5000,
 		NULL,
@@ -28,22 +28,18 @@ VALUES
 	await prefixRow.load(1);
 
 	let userFavourites = null;
-	let linkOnly = false;
 	const favRegex = /^fav(ou?rite)?/;
 
 	for (let i = args.length - 1; i >= 0; i--) {
 		const token = args[i];
-		if (token === \"linkOnly:true\") {
-			linkOnly = true;
-			args.splice(i, 1);
-		}
-		else if (favRegex.test(token)) {
+		if (favRegex.test(token)) {
 			const name = token.split(\":\")[1];
 			if (name) {
 				userFavourites = await sb.User.get(name);
 				if (!userFavourites) {
 					return {
 						success: false,
+						link: null,
 						reply: `User doesn\'t exist!`
 					};
 				}
@@ -94,6 +90,7 @@ VALUES
 	if (!data) {
 		return {
 			success: false,
+			link: null,
 			reply: `No available YouTube tracks found for given combination of parameters!`
 		};
 	}
@@ -102,16 +99,10 @@ VALUES
 	const authors = (authorList.length === 1) ? authorList[0] : \"(various)\";
 	const supiLink = \"https://supinic.com/track/detail/\" + data.TrackID;
 
-	if (linkOnly) {
-		return {
-			reply: `https://youtu.be/${data.TrackLink}`
-		};
-	}
-	else {
-		return {
-			reply: `Here\'s your random gachi: \"${data.TrackName}\" by ${authors} - ${supiLink} gachiGASM`
-		};
-	}
+	return {
+		link: `https://youtu.be/${data.TrackLink}`,
+		reply: `Here\'s your random gachi: \"${data.TrackName}\" by ${authors} - ${supiLink} gachiGASM`
+	};
 })',
 		'async (prefix) => {https://supinic.com
 	return [

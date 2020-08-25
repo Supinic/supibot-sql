@@ -18,21 +18,12 @@ VALUES
 		232,
 		'randomuploadervideo',
 		'[\"ruv\"]',
-		'mention,pipe',
+		'link-only,mention,pipe',
 		'On supinic\'s stream, takes the currently playing video (if there is any) and fetches another random video from the same Youtube uploader.',
 		20000,
 		'Only usable in Supinic\'s channel.',
 		NULL,
 		'(async function randomUploaderVideo (context, ...args) {
-	let linkOnly = false;
-	for (let i = args.length - 1; i >= 0; i--) {
-		const token = args[i];
-		if (token.startsWith(\"linkOnly\")) {
-			linkOnly = token.split(\":\")[1] === \"true\";
-			args.splice(i, 1);
-		}
-	}
-
 	const link = args.shift();
 	if (!link) {
 		return {
@@ -89,6 +80,7 @@ VALUES
 		perPage: 50,
 		playlistID
 	});
+
 	const playlistData = result.filter(i => i.ID !== linkData.ID);
 	if (playlistData.length === 0) {
 		return {
@@ -98,13 +90,11 @@ VALUES
 	}
 
 	const authorName = authorData?.items?.[0]?.snippet?.title ?? \"(unknown)\";
-	const prettyString = (linkOnly)
-		? \"\"
-		: `Random video from ${authorName}:`;
-
 	const { ID } = sb.Utils.randArray(playlistData);
+
 	return {
-		reply: `${prettyString} https://youtu.be/${ID}`
+		link: `https://youtu.be/${ID}`,
+		reply: `Random video from ${authorName}: https://youtu.be/${ID}`
 	};
 })',
 		NULL,

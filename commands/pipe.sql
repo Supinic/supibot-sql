@@ -49,7 +49,7 @@ VALUES
 			else if (check.Name === \"translate\") {
 				cmdArgs.push(\"direction:false\", \"confidence:false\");
 			}
-		}		
+		}
 
 		const result = await sb.Command.checkAndExecute(
 			cmd,

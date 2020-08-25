@@ -18,7 +18,7 @@ VALUES
 		77,
 		'randommeme',
 		'[\"rm\"]',
-		'mention,pipe',
+		'link-only,mention,pipe',
 		'If no parameters are provided, posts a random reddit meme. If you provide a subreddit, a post will be chosen randomly. NSFW subreddits and posts are only available on NSFW Discord channels!',
 		15000,
 		NULL,
@@ -137,15 +137,6 @@ VALUES
 })()
 ',
 		'(async function randomMeme (context, ...args) {
-	let linkOnly = false;
-	for (let i = args.length - 1; i >= 0; i--) {
-		const token = args[i];
-		if (token.startsWith(\"linkOnly:\")) {
-			linkOnly = token.split(\":\")[1] === \"true\";
-			args.splice(i, 1);
-		}
-	}
-
 	let safeSpace = false;
 	if (context.platform.Name === \"twitch\") {
 		safeSpace = true;
@@ -210,11 +201,6 @@ VALUES
 				reason: \"pipe-nsfw\"
 			};
 		}
-		else if (linkOnly) {
-			return {
-				reply: post.url
-			};
-		}
 
 		// Add the currently used post ID at the beginning of the array
 		repeatedPosts.unshift(post.id);
@@ -223,6 +209,7 @@ VALUES
 
 		const symbol = (forum.quarantine) ? \"⚠\" : \"\";
 		return {
+			link: post.url,
 			reply: `${symbol} ${post}`
 		}
 	}
