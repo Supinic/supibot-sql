@@ -162,7 +162,7 @@ VALUES
 					const person = args.shift();
 					if (!person) {
 						return {
-							reply: \"Check the Syndicate sheet here: https://poesyn.xyz/syndicate or the picture here: https://i.nuuls.com/huXFC.png\"
+							reply: \"Check the Syndicate sheet here (⚠HTTP only!⚠): http://poesyn.xyz/syndicate or the picture here: https://i.nuuls.com/huXFC.png\"
 						};
 					}
 
