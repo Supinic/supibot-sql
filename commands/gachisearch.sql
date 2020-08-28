@@ -38,7 +38,7 @@ VALUES
 		FROM music.Track
 		WHERE
 			Track.ID IN ( SELECT Track FROM music.Track_Tag WHERE Tag = 6 )
-			AND 
+			AND
 			(
 				Name LIKE \'%${escaped}%\'
 				OR EXISTS (
@@ -52,10 +52,11 @@ VALUES
 				OR EXISTS (
 					SELECT 1
 					FROM music.Track AS Right_Version
-					JOIN music.Track_Relationship ON Track_To = Right_Version.ID
+					JOIN music.Track_Relationship ON Track_From = Right_Version.ID
+					JOIN music.Track AS Left_Version ON Track_To = Left_Version.ID
 					WHERE
 						Relationship = \"Based on\"
-						AND Right_Version.Name LIKE \'%${escaped}%\'
+						AND Left_Version.Name LIKE \'%${escaped}%\'
 						AND Right_Version.ID = Track.ID
 				)
 			)
