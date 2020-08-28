@@ -24,10 +24,16 @@ VALUES
 		NULL,
 		NULL,
 		'(async function () { 
+	return {
+		reply: \"This command is not currently available - underoging maintenance.\"
+	};
+
+/*
 	const model = await sb.MarkovChain.get(\"disrespect\");
 	return {
 		reply: model.sentences(3)
 	};
+*/
 });',
 		NULL,
 		'supinic/supibot-sql'
