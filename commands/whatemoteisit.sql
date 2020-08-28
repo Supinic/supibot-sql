@@ -39,14 +39,17 @@ VALUES
 		.flat(\"ID\")
 	);
 
+	const emoteLink = \"https://twitchemotes.com/emotes/\" + emoteid;
 	const originString = (originID)
 		? `This emote has origin info - use the ${sb.Command.prefix}origin command.`
 		: \"\";
-	
-	const emoteLink = \"https://twitchemotes.com/emotes/\" + emoteid;
+
 	return {
-		reply: `${emotecode} (ID ${emoteid}) - tier ${tier} sub emote to channel #${channel.toLowerCase()}. ${emoteLink} ${originString}`
+		reply: (channel)
+			? `${emotecode} (ID ${emoteid}) - tier ${tier} sub emote to channel #${channel.toLowerCase()}. ${emoteLink} ${originString}`
+			: `${emotecode} (ID ${emoteid}) - global Twitch emote. ${emoteLink} ${originString}`
 	};
+
 })',
 		NULL,
 		'supinic/supibot-sql'
