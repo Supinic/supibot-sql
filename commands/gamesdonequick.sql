@@ -28,9 +28,6 @@ VALUES
 	return {
 		reply: comment
 	};
-
-	// const model = await sb.MarkovChain.get(\"gdq-final\");
-	// return { reply: model.sentences(2) };
 })',
 		NULL,
 		'supinic/supibot-sql'
