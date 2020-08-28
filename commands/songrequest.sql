@@ -127,7 +127,7 @@ VALUES
 
 				controller.queue(cytubeType, linkData.ID);
 				return {
-					reply: `Added to Cytube queue successfully. External playlist: ${playlist.length + 1}/${this.limits.total}`
+					reply: `Video ${linkData.link} \"${linkData.name}\" added to Cytube successfully.`
 				};
 			}
 		},
