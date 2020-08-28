@@ -28,6 +28,7 @@ VALUES
 	if (!link) {
 		return {
 			success: false,
+			link: null,
 			reply: `No link provided!`
 		};
 	}
@@ -36,12 +37,14 @@ VALUES
 	if (type === null) {
 		return {
 			success: false,
+			link: null,
 			reply: `Provided link was not recognized!`
 		};
 	}
 	else if (type !== \"youtube\") {
 		return {
 			success: false,
+			link: null,
 			reply: `Provided link is not located on YouTube - cannot continue!`
 		};
 	}
@@ -50,6 +53,7 @@ VALUES
 	if (!linkData) {
 		return {
 			success: false,
+			link: null,
 			reply: `Provided video is not available!`
 		};
 	}
@@ -69,6 +73,7 @@ VALUES
 	if (!playlistID) {
 		return {
 			success: false,
+			link: null,
 			reply: `No uploads playlist found!`
 		};
 	}
@@ -85,6 +90,7 @@ VALUES
 	if (playlistData.length === 0) {
 		return {
 			success: false,
+			link: null,
 			reply: `There are no other videos from this uploader!`
 		};
 	}
