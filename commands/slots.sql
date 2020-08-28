@@ -136,15 +136,24 @@ VALUES
 	const patterns = (await sb.Query.getRecordset(rs => rs
 		.select(\"Name\", \"Notes\")
 		.from(\"data\", \"Slots_Pattern\")
-	)).map(i => i.Name + \": \" + i.Notes);
+		.orderBy(\"Name ASC\")
+	)).map(i => `<li><code>${i.Name}</code><br>${i.Notes}</li>`).join(\"\");
 
 	return [
 		\"Rolls three random words out of the given list of words. If you get a flush, you win!\",
-		\"You can also specify special patterns, starting with the prefix #:\",
-		...patterns,
+		`Every winner is listed in <a href=\"https://supinic.com/bot/slots-winner/list\">this neat table</a>.`,
 		\"\",
-		prefix + \"slots (list of words) => randomly shuffled list of emotes\",
-		prefix + \"slots #(pattern) => shuffled list from the pattern\"
+
+		`<code>${prefix}slots (list of words)</code>`,
+		\"Three rolls will be chose randomly. Get the same one three times for a win.\",
+		\"\",
+
+		`<code>${prefix}slots #(pattern)</code>`,
+		\"Uses a pre-determined or dynamic pattern as your list of words.\",
+		\"\",
+
+		\"Supported patterns:\",
+		`<ul>${patterns}</ul>`
 	];
 }',
 		'supinic/supibot-sql'
