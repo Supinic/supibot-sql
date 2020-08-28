@@ -31,13 +31,13 @@ VALUES
 	const rg = sb.Command.get(\"rg\");
 
 	while (!link && counter < this.staticData.repeatLimit) {
-		const { reply } = await rg.execute({}, \"linkOnly:true\", ...args);
-		const data = await sb.Utils.linkParser.fetchData(reply);
+		const execution = await rg.execute({}, \"linkOnly:true\", ...args);
+		const data = await sb.Utils.linkParser.fetchData(execution.link);
 
 		if (data === null) {
 			counter++;
 
-			const videoID = sb.Utils.linkParser.parseLink(reply);
+			const videoID = sb.Utils.linkParser.parseLink(execution.link);
 			await sb.Query.getRecordUpdater(ru => ru
 				.update(\"music\", \"Track\")
 				.set(\"Available\", false)
@@ -45,7 +45,7 @@ VALUES
 			);
 		}
 		else {
-			link = reply;
+			link = execution.link
 		}
 	}
 
