@@ -68,10 +68,19 @@ VALUES
 			queue: async function (link) {
 				const properLink = sb.Utils.linkParser.autoRecognize(link);
 				if (!properLink) {
-					return {
-						success: false,
-						reply: \"Must use proper URLs for song requests!\"
-					};
+					const [bestResult] = await sb.Utils.searchYoutube(
+						link.replace(/-/g, \"\"),
+						sb.Config.get(\"API_GOOGLE_YOUTUBE\")
+					);
+					
+					if (!bestResult) {
+						return {
+							success: false, 
+							reply: `No video has been found!`
+						};
+					}
+					
+					link = `https://youtu.be/${bestResult.ID}`;
 				}
 
 				const linkData = await sb.Utils.linkParser.fetchData(link);
@@ -102,8 +111,8 @@ VALUES
 				}
 
 				const cytubeType = await sb.Query.getRecordset(rs => rs
-				    .select(\"Type\")
-				    .from(\"data\", \"Video_Type\")
+					.select(\"Type\")
+					.from(\"data\", \"Video_Type\")
 					.where(\"Parser_Name = %s\", linkData.type)
 					.limit(1)
 					.single()
@@ -190,7 +199,7 @@ VALUES
 			};
 		}
 
-		return await this.staticData.cytubeIntegration.queue(args[0]);
+		return await this.staticData.cytubeIntegration.queue(args.join(\" \"));
 	}
 	else if (args.length === 0) {
 		return { reply: \"You must search for a link or a video description!\" };
