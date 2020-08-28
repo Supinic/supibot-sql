@@ -19,7 +19,7 @@ VALUES
 		'weather',
 		NULL,
 		'mention,pipe',
-		'Fetches the current weather in a given location. You can add \"hour+#\" or \"day+#\" at the end for hourly/daily forecast, or \"week\" at the end for a weekly summary. Powered by Darksky.',
+		'Fetches the current weather in a given location. You can specify parameters to check forecast, or mention a user to get their location, if they set it up. Check all possibilities in e xtended help. Weather data powered by Darksky.',
 		10000,
 		NULL,
 		'({
