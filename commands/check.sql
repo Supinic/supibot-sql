@@ -354,6 +354,14 @@ VALUES
 			}
 		},
 		{
+			name: \"slots\",
+			aliases: [],
+			description: \"Posts the link to all winners for the slots command.\",
+			execute: () => ({
+				reply: `Check all winners here: https://supinic.com/bot/slots-winner/list`
+			})
+		},
+		{
 			name: \"sr\",
 			aliases: [\"songrequests\"],
 			description: `For supinic\'s Twitch channel, checks the current status of song requests.`,
