@@ -46,7 +46,7 @@ VALUES
 
 	if (data?.Cookie_Today) {
 		const next = new sb.Date().addDays(1);
-		const midnight = new sb.Date(sb.Date.UTC(next.year, next.month - 1, next.getUTCDate()));
+		const midnight = new sb.Date(sb.Date.UTC(next.year, next.getUTCMonth(), next.getUTCDate()));
 
 		const delta = sb.Utils.timeDelta(midnight);
 		return {
