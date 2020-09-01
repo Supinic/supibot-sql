@@ -104,7 +104,7 @@ VALUES
 			\"https://i.imgur.com/t92rgqv.png\"
 		]
 	};
-})()',
+})',
 		'(async function randomSadCat () {
 	const post = sb.Utils.randArray(this.staticData.links.filter(i => !this.data.previousPosts.includes(i)));
 	this.data.previousPosts.unshift(post);

@@ -238,7 +238,7 @@ VALUES
 		convert,
 		types
 	};
-})()',
+})',
 		'(async function textTransform (context, name, ...args) {
 	if (!name) {
 		return {

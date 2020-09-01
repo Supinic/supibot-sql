@@ -32,7 +32,7 @@ VALUES
 		maxCooldown: (this.Cooldown + (limit - 10000) * 10),
 		locales: sb.Config.get(\"TTS_LOCALE_DATA\")
 	};
-})()',
+})',
 		'(async function textToSpeech (context, ...args) {
 	if (context.channel?.ID !== 38 || args.length === 0) {
 		return {

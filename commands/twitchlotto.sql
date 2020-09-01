@@ -52,7 +52,7 @@ VALUES
 			}
 		]
 	};
-})()',
+})',
 		'(async function lotto (context, channel) {
 	if (!this.data.channels) {
 		this.data.channels = await sb.Query.getRecordset(rs => rs

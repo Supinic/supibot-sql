@@ -178,7 +178,7 @@ VALUES
 			}
 		}
 	};
-})()',
+})',
 		'(async function songRequest (context, ...args) {
 	const state = sb.Config.get(\"SONG_REQUESTS_STATE\");
 	if (state === \"off\") {

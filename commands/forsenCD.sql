@@ -81,7 +81,7 @@ VALUES
 			\"This is such a fluffy tweet. I\'m spammin my emotes on your channel now.  Hell, I throw in a ForsenCD here and there\"
 		]
 	};
-})()',
+})',
 		'(async function forsenCD (context) {
 	const post = sb.Utils.randArray(this.staticData.forsenCD.filter(i => !this.data.previousPosts.includes(i)));
 	this.data.previousPosts.unshift(post);

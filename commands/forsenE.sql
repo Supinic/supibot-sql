@@ -58,7 +58,7 @@ VALUES
 			\"Source for the ban tweet: https://twitter.com/Forsen/status/1259936964272422917\"
 		]
 	};
-})()',
+})',
 		'(async function forsenE (context) {
 	const post = sb.Utils.randArray(this.staticData.forsenE.filter(i => !this.data.previousPosts.includes(i)));
 	this.data.previousPosts.unshift(post);

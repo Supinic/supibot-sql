@@ -137,7 +137,7 @@ VALUES
 			}
 		}
 	};
-})()',
+})',
 		'(async function corona (context, ...args) {
 	const input = args.join(\" \").toLowerCase();
 	let region = null;

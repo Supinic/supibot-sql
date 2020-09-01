@@ -302,7 +302,7 @@ VALUES
 			]
 		}
 	};
-})()',
+})',
 		'(async function fakeNews (context) {
 	const eligibleHeadlines = this.staticData.construct.headlines.filter(i => !this.data.previousHeadlines.includes(i));
 	let headline = sb.Utils.randArray(eligibleHeadlines);

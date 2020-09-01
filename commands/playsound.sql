@@ -34,7 +34,7 @@ VALUES
 			.single()
 		)
 	};
-})()',
+})',
 		'(async function playSound (context, playsound) {
 	if (!sb.Config.get(\"PLAYSOUNDS_ENABLED\")) {
 		return { reply: \"Playsounds are currently disabled!\" };

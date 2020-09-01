@@ -413,7 +413,7 @@ VALUES
 			}
 		]
 	};
-})()',
+})',
 		'(async function set (context, type, ...args) {
 	if (!type) {
 		return {
