@@ -58,8 +58,10 @@ VALUES
 		return { reply: \"We are on Dubtrack, check ?song for the currently playing song :)\" };
 	}
 	else if (state === \"cytube\") {
-		const playing = sb.Platform.get(\"cytube\").controller.currentlyPlaying;
-		if (playing === null) {
+		const { controller } = sb.Platform.get(\"cytube\");
+		const playing = controller.currentlyPlaying ?? controller.playlistData[0];
+
+		if (!playing) {
 			return {
 				link: null,
 				reply: \"Nothing is currently playing on Cytube.\"
@@ -67,13 +69,14 @@ VALUES
 		}
 
 		const media = playing.media;
-		const prefix = (await sb.Query.getRecordset(rs => rs
+		const prefix = await sb.Query.getRecordset(rs => rs
 			.select(\"Link_Prefix\")
 			.from(\"data\", \"Video_Type\")
 			.where(\"Type = %s\", media.type)
 			.limit(1)
 			.single()
-		)).Link_Prefix;
+			.flat(\"Link_Prefix\")
+		);
 
 		const requester = playing.user ?? playing.queueby ?? \"(unknown)\";
 		const link = prefix.replace(linkSymbol, media.id);
