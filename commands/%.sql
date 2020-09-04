@@ -23,7 +23,7 @@ VALUES
 		5000,
 		NULL,
 		NULL,
-		'(async function _percent () {
+		'(async function percent () {
 	const number = (sb.Utils.random(0, 10000) / 100);
 	return { reply: number + \"%\" };
 })',
