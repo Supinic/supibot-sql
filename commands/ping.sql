@@ -76,7 +76,7 @@ VALUES
 			data[\"Banphrase API\"] = `Using ${type} API: ${url} (${result})`;
 		}
 		else {
-			data[\"Banphrase API\"] = \"Not connected\"
+			data[\"Banphrase API\"] = \"Not connected\";
 		}		
 	}	
 
