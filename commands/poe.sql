@@ -256,9 +256,18 @@ VALUES
 })();',
 		'(async function poe (context, type, ...args) {
 	if (!type) {
+		const heist = new sb.Date(\"2020-09-18 22:00\");
+		return {
+			reply: (heist > Date.now())
+				? `The Heist league launches ${sb.Utils.timeDelta(heist)}.`
+				: \"The Heist league has launched! Go and play!\"
+		};
+
+	/*
 		return {
 			reply: `No subcommand provided! Check the command\'s help: https://supinic.com/bot/command/${this.ID}`
 		};
+	*/
 	}
 
 	type = type.toLowerCase();
