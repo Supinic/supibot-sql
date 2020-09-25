@@ -13,15 +13,6 @@
 	const save = require("./save.js");
 	const processes = [
 		{
-			path: "./commands/",
-			directories: ["./commands", "./commands/archived"],
-			filenameColumn: "Name",
-			database: "chat_data",
-			table: "Command",
-			Query: sb.Query,
-			extraPathFunction: (row) => (row.Flags?.includes("archived")) ? "archived/" : ""
-		},
-		{
 			path: "./crons/",
 			directories: ["./crons", "./crons/inactive"],
 			filenameColumn: "Name",
