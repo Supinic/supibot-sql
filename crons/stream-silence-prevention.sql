@@ -22,18 +22,28 @@ VALUES
 		return;
 	}
 
+	const twitch = sb.Platform.get(\"twitch\");
+	const cytube = sb.Platform.get(\"cytube\");
 	const channelData = sb.Channel.get(\"supinic\", \"twitch\");
 	if (!channelData.sessionData.live) {
 		return;
 	}
 
 	const state = sb.Config.get(\"SONG_REQUESTS_STATE\");
-	if (state !== \"vlc\") {
+	if (state !== \"vlc\" && state !== \"cytube\") {
 		return;
 	}
 
-	const queue = await sb.VideoLANConnector.getNormalizedPlaylist();
-	if (queue.length !== 0) {
+	let isQueueEmpty = null;
+	if (state === \"vlc\") {
+		const queue = await sb.VideoLANConnector.getNormalizedPlaylist();
+		isQueueEmpty = (queue.length === 0);
+	}
+	else if (state === \"cytube\") {
+		isQueueEmpty = (cytube.controller.playlistData.length === 0);
+	}
+
+	if (isQueueEmpty) {
 		return;
 	}
 
@@ -41,18 +51,28 @@ VALUES
 		const playlistID = \"PL9TsqVDcBIdtyegewA00JC0mlSkoq-VnJ\";
 		const { result } = await sb.Utils.fetchYoutubePlaylist({
 			key: sb.Config.get(\"API_GOOGLE_YOUTUBE\"),
-   			playlistID
+			playlistID
 		});
 
 		this.data.videos = result.map(i => i.ID);
 	}
 
-	const self = await sb.User.get(\"supibot\");
-	const sr = sb.Command.get(\"sr\");
-	const link = \"https://youtu.be/\" + sb.Utils.randArray(this.data.videos);
+	let result = \"\";
+	const videoID = sb.Utils.randArray(this.data.videos); 
+	
+	if (state === \"vlc\") {
+		const link = \"https://youtu.be/\" + videoID;
+		const self = await sb.User.get(\"supibot\");
+		const sr = sb.Command.get(\"sr\");
 
-	const result = await sr.execute({ user: self, channel: channelData, platform: sb.Platform.get(1) }, link);
-	await channelData.send(\"Silence prevention! \" + result.reply);
+		result = await sr.execute({ user: self, channel: channelData, platform: twitch }, link);
+	}
+	else if (state === \"cytube\") {
+		await cytube.controller.queue(\"yt\", videoID);
+		result = \"Silence prevention! Successfully added to Cytube (probably)\";
+	}
+	
+	await channelData.send(result);
 })',
 		'Bot',
 		1
