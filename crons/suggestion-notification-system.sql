@@ -23,7 +23,7 @@ VALUES
 		.from(\"chat_data\", \"Event_Subscription\")
 		.where(\"Active = %b\", true)
 		.where(\"Type = %s\", \"Suggestion\")
-	);		
+	);
 	const users = subscriptions.map(i => i.User_Alias);
 
 	const suggestions = await sb.Query.getRecordset(rs => rs
@@ -44,20 +44,25 @@ VALUES
 		if (!newRow) {
 			continue;
 		}
-
-		const sub = subscriptions.find(i => i.User_Alias === oldRow.User_Alias);
-		if (oldRow.Status !== newRow.Status) {
-			await sb.Reminder.create({
-				Channel: null,
-				Platform: sub.Platform,
-				User_From: sb.Config.get(\"SELF_ID\"),
-				User_To: oldRow.User_Alias,
-				Text: `[EVENT] Suggestion ${oldRow.ID} changed: ${oldRow.Status} => ${newRow.Status}`,
-				Schedule: null,
-				Created: new sb.Date(),
-				Private_Message: true
-			});
+		else if (oldRow.Status === newRow.Status) {
+			continue;
 		}
+
+		const subscription = subscriptions.find(i => i.User_Alias === oldRow.User_Alias);
+		if (!subscription) {
+			continue;
+		}
+
+		await sb.Reminder.create({
+			Channel: null,
+			Platform: subscription.Platform,
+			User_From: sb.Config.get(\"SELF_ID\"),
+			User_To: oldRow.User_Alias,
+			Text: `[EVENT] Suggestion ${oldRow.ID} changed: ${oldRow.Status} => ${newRow.Status}`,
+			Schedule: null,
+			Created: new sb.Date(),
+			Private_Message: true
+		}, true);
 	}
 
 	this.data.previousSuggestions = suggestions;
